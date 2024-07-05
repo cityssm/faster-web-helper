@@ -1,0 +1,33 @@
+{
+  "name": "@cityssm/faster-web-helper",
+  "version": "1.0.0-dev",
+  "type": "module",
+  "description": "A service to support integrations with FASTER Web.",
+  "exports": "./app.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node ./app.js",
+    "dev": "cross-env NODE_ENV=dev DEBUG=faster-web-helper:* nodemon ./app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "faster-web"
+  ],
+  "author": "The Corporation of the City of Sault Ste. Marie",
+  "license": "MIT",
+  "dependencies": {
+    "@cityssm/configurator": "^0.1.0",
+    "basic-ftp": "^5.0.5",
+    "debug": "^4.3.5"
+  },
+  "devDependencies": {
+    "@types/debug": "^4.1.12",
+    "@types/node": "^20.14.9",
+    "eslint-config-cityssm": "^5.0.0",
+    "nodemon": "^3.1.4",
+    "prettier-config-cityssm": "^1.0.0"
+  },
+  "private": true
+}
