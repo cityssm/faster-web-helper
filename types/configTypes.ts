@@ -10,17 +10,17 @@ export interface Config {
         /**
          * W200 - Inventory Report
          */
-        w200: ConfigFtpPath
+        w200: ConfigFtpXlsxPath
 
         /**
          * W311 - Active Work Orders by Shop
          */
-        w311: ConfigFtpPath
+        w311: ConfigFtpXlsxPath
 
         /**
          * W604 - Integration Log Viewer
          */
-        w604: ConfigFtpPath
+        w604: ConfigFtpXlsxPath
       }
     }
   }
@@ -31,4 +31,8 @@ export interface ConfigFtpPath {
   filePrefix?: string
   fileSuffix?: string
   doDelete?: boolean
+}
+
+export interface ConfigFtpXlsxPath extends ConfigFtpPath {
+  fileSuffix: `${string}.xlsx` | `${string}.XLSX`
 }

@@ -10,7 +10,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./app.js",
     "dev": "cross-env NODE_ENV=dev DEBUG=faster-web-helper:* nodemon ./app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env NODE_ENV=dev DEBUG=faster-web-helper:* node --test"
   },
   "keywords": [
     "faster-web"
@@ -19,12 +19,13 @@
   "license": "MIT",
   "dependencies": {
     "@cityssm/configurator": "^0.1.0",
+    "@cityssm/faster-api": "github:cityssm/node-faster-api",
     "basic-ftp": "^5.0.5",
     "debug": "^4.3.5"
   },
   "devDependencies": {
     "@types/debug": "^4.1.12",
-    "@types/node": "^20.14.9",
+    "@types/node": "^20.14.10",
     "eslint-config-cityssm": "^5.0.0",
     "nodemon": "^3.1.4",
     "prettier-config-cityssm": "^1.0.0"
