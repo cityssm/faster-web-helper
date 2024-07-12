@@ -21,12 +21,12 @@ async function doesFileExist(filePath: string): Promise<boolean> {
   }
 }
 
-export async function downloadFilesToTemp(
-  ftpPath: ConfigFtpPath
-): Promise<string[]> {
+export async function downloadFilesToTemp<S extends string>(
+  ftpPath: ConfigFtpPath<S>
+): Promise<Array<`${string}${S}`>> {
   const ftpClient = new Client()
 
-  const downloadedFiles: string[] = []
+  const downloadedFiles: Array<`${string}${S}`> = []
 
   try {
     await ftpClient.access(getConfigProperty('ftp'))
@@ -43,16 +43,18 @@ export async function downloadFilesToTemp(
         fileOrDirectory.name.startsWith(ftpPath.filePrefix ?? '') &&
         fileOrDirectory.name.endsWith(ftpPath.fileSuffix ?? '')
       ) {
-        
         // Ensure file doesn't already exist
-        
+
         let localFileName = fileOrDirectory.name
-        
+
         while (await doesFileExist(path.join(os.tmpdir(), localFileName))) {
           localFileName = randomUUID().slice(0, 9) + fileOrDirectory.name
         }
-        
-        const localPath = path.join(os.tmpdir(), localFileName)
+
+        const localPath = path.join(
+          os.tmpdir(),
+          localFileName
+        ) as `${string}${S}`
 
         debug(`Downloading ${fileOrDirectory.name} to ${localPath} ...`)
 

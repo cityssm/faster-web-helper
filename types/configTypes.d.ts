@@ -1,32 +1,54 @@
 import type { AccessOptions } from 'basic-ftp';
+import type { Spec } from 'node-schedule';
 export interface Config {
     ftp: AccessOptions;
     modules: {
-        inventoryScanner?: {
-            isEnabled: boolean;
-            reports: {
-                /**
-                 * W200 - Inventory Report
-                 */
-                w200: ConfigFtpXlsxPath;
-                /**
-                 * W311 - Active Work Orders by Shop
-                 */
-                w311: ConfigFtpXlsxPath;
-                /**
-                 * W604 - Integration Log Viewer
-                 */
-                w604: ConfigFtpXlsxPath;
-            };
-        };
+        inventoryScanner?: ConfigModule<ConfigModuleInventoryScanner>;
+        worktechUpdate?: ConfigModule<ConfigModuleWorktechUpdate>;
     };
 }
-export interface ConfigFtpPath {
+type ConfigModule<T> = ({
+    isEnabled: false;
+} & Partial<T>) | ({
+    isEnabled: true;
+} & T);
+export interface ConfigFtpPath<S extends string> {
     directory: string;
     filePrefix?: string;
-    fileSuffix?: string;
+    fileSuffix?: S;
     doDelete?: boolean;
 }
-export interface ConfigFtpXlsxPath extends ConfigFtpPath {
-    fileSuffix: `${string}.xlsx` | `${string}.XLSX`;
+export interface ConfigScheduledFtpReport<S extends string> {
+    ftpPath: ConfigFtpPath<S>;
+    schedule: Spec;
 }
+export type ConfigFileSuffixXlsx = `${string}.xlsx` | `${string}.XLSX`;
+interface ConfigModuleInventoryScanner {
+    reports: {
+        /**
+         * W200 - Inventory Report
+         */
+        w200: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
+        /**
+         * W311 - Active Work Orders by Shop
+         */
+        w311: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
+        /**
+         * W604 - Integration Log Viewer
+         */
+        w604: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
+    };
+}
+interface ConfigModuleWorktechUpdate {
+    reports: {
+        /**
+         * W217 - Direct Charge Transactions
+         */
+        w217: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
+        /**
+         * W223 - Inventory Transaction Details Report
+         */
+        w223: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
+    };
+}
+export {};

@@ -21,11 +21,14 @@
     "@cityssm/configurator": "^0.1.0",
     "@cityssm/faster-api": "github:cityssm/node-faster-api",
     "basic-ftp": "^5.0.5",
-    "debug": "^4.3.5"
+    "better-sqlite3": "^11.1.2",
+    "debug": "^4.3.5",
+    "node-schedule": "^2.1.1"
   },
   "devDependencies": {
     "@types/debug": "^4.1.12",
     "@types/node": "^20.14.10",
+    "@types/node-schedule": "^2.1.7",
     "eslint-config-cityssm": "^5.0.0",
     "nodemon": "^3.1.4",
     "prettier-config-cityssm": "^1.0.0"

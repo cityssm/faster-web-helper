@@ -10,8 +10,8 @@ await describe('functions.sftp', async () => {
     const tempFiles = await downloadFilesToTemp(
       Object.assign(
         {},
-        getConfigProperty('modules.inventoryScanner.reports.w200'),
-        { doDelete: false }
+        getConfigProperty('modules.inventoryScanner.reports.w200').ftpPath,
+        { doDelete: false } // don't purge anything while testing
       )
     )
 
