@@ -1,5 +1,6 @@
 export const configDefaultValues = {
     ftp: undefined,
+    worktech: undefined,
     /*
      * Inventory Scanner
      */

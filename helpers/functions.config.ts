@@ -12,6 +12,7 @@ export function getConfigProperty<K extends keyof typeof configDefaultValues>(
   propertyName: K,
   fallbackValue?: (typeof configDefaultValues)[K]
 ): (typeof configDefaultValues)[K] {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return configurator.getConfigProperty(
     propertyName,
     fallbackValue

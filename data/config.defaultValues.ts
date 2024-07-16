@@ -1,4 +1,5 @@
 import type { AccessOptions } from 'basic-ftp'
+import type { config as MSSQLConfig } from 'mssql'
 
 import type {
   ConfigFileSuffixXlsx,
@@ -7,6 +8,8 @@ import type {
 
 export const configDefaultValues = {
   ftp: undefined as unknown as AccessOptions,
+
+  worktech: undefined as unknown as MSSQLConfig,
 
   /*
    * Inventory Scanner

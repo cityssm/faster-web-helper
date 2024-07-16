@@ -10,3 +10,5 @@ data/*.db-journal
 data/config.d.ts
 data/config.js
 data/config.ts
+
+temp/*

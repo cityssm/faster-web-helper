@@ -38,8 +38,8 @@ export async function downloadFilesToTemp(ftpPath) {
                 await ftpClient.downloadTo(localPath, fileOrDirectory.name);
                 downloadedFiles.push(localPath);
                 if (ftpPath.doDelete ?? false) {
-                    debug(`DELETING FILE (COMMENTTED OUT): ${fileOrDirectory.name}`);
-                    // await ftpClient.remove(fileOrDirectory.name)
+                    //debug(`DELETING FILE (COMMENTTED OUT): ${fileOrDirectory.name}`)
+                    await ftpClient.remove(fileOrDirectory.name);
                 }
             }
         }

@@ -5,6 +5,12 @@ export const config = tseslint.config(...configWebApp, {
         parserOptions: {
             project: ['./tsconfig.json', './tsconfig.client.json']
         }
+    },
+    rules: {
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+        '@typescript-eslint/no-unsafe-argument': 'off',
+        '@typescript-eslint/no-unsafe-call': 'off',
+        '@typescript-eslint/no-unsafe-member-access': 'off'
     }
 });
 export default config;

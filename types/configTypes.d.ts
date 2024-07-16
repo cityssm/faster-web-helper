@@ -1,7 +1,9 @@
 import type { AccessOptions } from 'basic-ftp';
+import type { config as MSSQLConfig } from 'mssql';
 import type { Spec } from 'node-schedule';
 export interface Config {
     ftp: AccessOptions;
+    worktech?: MSSQLConfig;
     modules: {
         inventoryScanner?: ConfigModule<ConfigModuleInventoryScanner>;
         worktechUpdate?: ConfigModule<ConfigModuleWorktechUpdate>;

@@ -28,6 +28,7 @@ See each task for additional requirements.
 ### Necessary Direct Charge Reports
 
 - 📄 **W217 - Direct Charge Transactions**, to capture the `Symptom` field for the Direct Charges.
+  Make sure "Include Returns" is set to "Yes".
 - 📄 **W223 - Inventory Transaction Details Report**, to capture items issued and returned on Direct Charges.
 
 #### Why not just _W217 - Direct Charge Transactions_?
@@ -87,8 +88,9 @@ If `Symptom` (WorkTech Work Order Number) changes in FASTER,
 do the following in WorkTech:
 
 - Get all resources currently associated with the `Document Number`.
-- Add those resources to the newly identified WorkTech Work Order.
-- Delete all records for resources associated with `Document Number`.
+
+- Update those resources with the newly identified WorkTech Work Order,
+  or if the `Symptom` is now blank, delete all records for resources associated with `Document Number`.
 
 Also, record any `Return to Vendor` records for verification purposes.
 
@@ -98,7 +100,8 @@ Filter data to only include records where:
 
 - `transactionType` = `'DC ISSUE'` or
 - `transactionType` = `'RETURN BIN'` or
-- `transactionType` = `'RETURN TO INV'` and `transactionDetails` starts with `'FROM DC ISSUE:'`
+- `transactionType` = `'RETURN TO INV'` and<br/>
+  `transactionDetails` starts with `'FROM DC ISSUE:'`
 
 For each record:
 
@@ -112,7 +115,7 @@ For each record:
 
 - Calculate the hash for the record.
 
-  - If the hash is found in the WorkTech resources, discard record.
+  - If the hash is found in the WorkTech resources, ensure the transaction date/time is correct.
 
 - If it's a `DC ISSUE` record, create a new resource record.
 

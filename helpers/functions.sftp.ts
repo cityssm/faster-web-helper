@@ -63,8 +63,8 @@ export async function downloadFilesToTemp<S extends string>(
         downloadedFiles.push(localPath)
 
         if (ftpPath.doDelete ?? false) {
-          debug(`DELETING FILE (COMMENTTED OUT): ${fileOrDirectory.name}`)
-          // await ftpClient.remove(fileOrDirectory.name)
+          //debug(`DELETING FILE (COMMENTTED OUT): ${fileOrDirectory.name}`)
+          await ftpClient.remove(fileOrDirectory.name)
         }
       }
     }
