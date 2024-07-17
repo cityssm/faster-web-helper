@@ -22,9 +22,11 @@ export function initializeWorktechUpdateDatabase() {
     let success = false;
     const database = sqlite(databasePath);
     const row = database
-        .prepare(`select name from sqlite_master
+        .prepare(
+    // eslint-disable-next-line no-secrets/no-secrets
+    `select name from sqlite_master
         where type = 'table'
-        and name = 'DocumentNumberToWorkOrderNumber'`)
+        and name = 'WorkOrderNumberMappings'`)
         .get();
     if (row === undefined) {
         debug(`Creating ${databasePath}`);

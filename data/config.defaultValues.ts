@@ -32,6 +32,10 @@ export const configDefaultValues = {
 
   'modules.worktechUpdate.isEnabled': false,
 
+  'modules.resourceItem.itemClass': 'FASTER',
+  'modules.resourceItem.itemType': 'FASTER',
+  'modules.resourceItem.unit': 'EA',
+
   'modules.worktechUpdate.reports.w217':
     undefined as unknown as ConfigScheduledFtpReport<ConfigFileSuffixXlsx>,
 

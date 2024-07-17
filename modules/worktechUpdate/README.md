@@ -105,9 +105,14 @@ Filter data to only include records where:
 
 For each record:
 
-- Check if the `Document Number` has a corresponding `Symptom`.
+- If it's a `RETURN BIN` record, it could be related to the direct charge, or not.
+  If no `documentNumber` is included in the record, it needs to be verified with `W217`.
 
-  - If no `Symptom`, discard record.
+  - If verified, update the transaction with the document number and proceed with return process.
+
+- Check the `WorkOrderNumberMappings` table if the `documentNumber` has a corresponding `workOrderNumber`.
+
+  - If no mapping is available, discard record.
 
 - Get all WorkTech resource records for the corresponding work order and direct charge document.
 
@@ -118,11 +123,6 @@ For each record:
   - If the hash is found in the WorkTech resources, ensure the transaction date/time is correct.
 
 - If it's a `DC ISSUE` record, create a new resource record.
-
-- If it's a `RETURN BIN` record, it could be related to the direct charge, or not.
-  It needs to be verified with `W217`.
-
-  - If verified, proceed with return process.
 
 - If it's a `RETURN TO INV` record or a verified `RETURN BIN` record:
 

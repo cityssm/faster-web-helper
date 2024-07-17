@@ -42,6 +42,11 @@ interface ConfigModuleInventoryScanner {
     };
 }
 interface ConfigModuleWorktechUpdate {
+    resourceItem?: {
+        itemClass?: string;
+        itemType?: string;
+        unit?: string;
+    };
     reports: {
         /**
          * W217 - Direct Charge Transactions

@@ -11,26 +11,27 @@ import {
 } from '@cityssm/utils-datetime'
 import { WorkTechAPI } from '@cityssm/worktech-api'
 import Debug from 'debug'
-import schedule from 'node-schedule'
 
 import { getConfigProperty } from '../../../helpers/functions.config.js'
 import { downloadFilesToTemp } from '../../../helpers/functions.sftp.js'
-import addReturnToVendorRecord from '../database/local/addReturnToVendorRecord.js'
-import addWorkOrderNumberMapping from '../database/local/addWorkOrderNumberMapping.js'
-import getReturnToVendorRecord from '../database/local/getReturnToVendorRecord.js'
-import getWorkOrderNumberMapping from '../database/local/getWorkOrderNumberMapping.js'
-import updateWorkOrderNumberMapping from '../database/local/updateWorkOrderNumberMapping.js'
+import addReturnToVendorRecord from '../database/addReturnToVendorRecord.js'
+import addWorkOrderNumberMapping from '../database/addWorkOrderNumberMapping.js'
+import getReturnToVendorRecord from '../database/getReturnToVendorRecord.js'
+import getWorkOrderNumberMapping from '../database/getWorkOrderNumberMapping.js'
+import updateWorkOrderNumberMapping from '../database/updateWorkOrderNumberMapping.js'
 import type { ReturnToVendorRecord } from '../worktechUpdateTypes.js'
 
-const debug = Debug('faster-web-helper:worktechUpdate:task')
+export const taskName = 'directChangeHelperTask'
 
-let worktech: WorkTechAPI
+const debug = Debug(`faster-web-helper:worktechUpdate:${taskName}`)
+
+const worktech = new WorkTechAPI(getConfigProperty('worktech'))
 
 const directChargeTransactionsConfig = getConfigProperty(
   'modules.worktechUpdate.reports.w217'
 )
 
-async function _w217UpdateWorkOrderNumberMappings(
+async function _updateWorkOrderNumberMappings(
   report: W217ExcelReportResults,
   data: W217DocumentReportData
 ): Promise<boolean> {
@@ -119,7 +120,7 @@ async function _w217UpdateWorkOrderNumberMappings(
   return true
 }
 
-function _w217TrackReturnToVendorRecords(
+function _trackReturnToVendorRecords(
   report: W217ExcelReportResults,
   data: W217DocumentReportData
 ): void {
@@ -147,10 +148,12 @@ function _w217TrackReturnToVendorRecords(
 }
 
 /**
- * - Maintains mappings between Faster document nubmers and Worktech work order numbers.
+ * - Maintains mappings between Faster document numbers and Worktech work order numbers.
  * - Tracks "Return to Vendor" transactions.
  */
-async function downloadAndUpdateDirectChargeHelperData(): Promise<void> {
+export default async function runDirectChargeHelperTask(): Promise<void> {
+  debug(`Running "${taskName}"...`)
+
   /*
    * Download files to temp
    */
@@ -163,13 +166,22 @@ async function downloadAndUpdateDirectChargeHelperData(): Promise<void> {
    * Loop through files
    */
 
+  debug(`${tempDirectChargeReportFiles.length} file(s) to process...`)
+
   for (const reportFile of tempDirectChargeReportFiles) {
     try {
       const report = parseW217ExcelReport(reportFile)
 
+      if ((report.parameters['Include Returns'] ?? '') !== 'Yes') {
+        debug(
+          'W217 reports must have "Include Returns" = "Yes", skipping file.'
+        )
+        continue
+      }
+
       for (const data of report.data) {
-        await _w217UpdateWorkOrderNumberMappings(report, data)
-        _w217TrackReturnToVendorRecords(report, data)
+        await _updateWorkOrderNumberMappings(report, data)
+        _trackReturnToVendorRecords(report, data)
       }
 
       // eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -178,18 +190,6 @@ async function downloadAndUpdateDirectChargeHelperData(): Promise<void> {
       debug(error)
     }
   }
-}
 
-export async function inititalizeWorktechUpdateTask(): Promise<void> {
-  debug('Initializing task')
-
-  worktech = new WorkTechAPI(getConfigProperty('worktech'))
-
-  await downloadAndUpdateDirectChargeHelperData()
-
-  schedule.scheduleJob(
-    'downloadAndUpdateDirectChargeHelperData()',
-    directChargeTransactionsConfig.schedule,
-    downloadAndUpdateDirectChargeHelperData
-  )
+  debug(`Finished "${taskName}".`)
 }

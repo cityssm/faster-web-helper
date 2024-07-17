@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3'
 
-import type { ReturnToVendorRecord } from '../../worktechUpdateTypes.js'
+import type { ReturnToVendorRecord } from '../worktechUpdateTypes.js'
 
 import { databasePath } from './databaseHelpers.js'
 

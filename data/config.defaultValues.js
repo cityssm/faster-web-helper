@@ -12,6 +12,9 @@ export const configDefaultValues = {
      * Worktech Update
      */
     'modules.worktechUpdate.isEnabled': false,
+    'modules.resourceItem.itemClass': 'FASTER',
+    'modules.resourceItem.itemType': 'FASTER',
+    'modules.resourceItem.unit': 'EA',
     'modules.worktechUpdate.reports.w217': undefined,
     'modules.worktechUpdate.reports.w223': undefined
 };

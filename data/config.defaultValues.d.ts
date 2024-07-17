@@ -9,6 +9,9 @@ export declare const configDefaultValues: {
     'modules.inventoryScanner.reports.w311': ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
     'modules.inventoryScanner.reports.w604': ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
     'modules.worktechUpdate.isEnabled': boolean;
+    'modules.resourceItem.itemClass': string;
+    'modules.resourceItem.itemType': string;
+    'modules.resourceItem.unit': string;
     'modules.worktechUpdate.reports.w217': ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
     'modules.worktechUpdate.reports.w223': ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
 };

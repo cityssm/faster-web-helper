@@ -3,18 +3,18 @@ import { parseW217ExcelReport } from '@cityssm/faster-api/xlsxReports.js';
 import { dateStringToInteger, timeStringToInteger } from '@cityssm/utils-datetime';
 import { WorkTechAPI } from '@cityssm/worktech-api';
 import Debug from 'debug';
-import schedule from 'node-schedule';
 import { getConfigProperty } from '../../../helpers/functions.config.js';
 import { downloadFilesToTemp } from '../../../helpers/functions.sftp.js';
-import addReturnToVendorRecord from '../database/local/addReturnToVendorRecord.js';
-import addWorkOrderNumberMapping from '../database/local/addWorkOrderNumberMapping.js';
-import getReturnToVendorRecord from '../database/local/getReturnToVendorRecord.js';
-import getWorkOrderNumberMapping from '../database/local/getWorkOrderNumberMapping.js';
-import updateWorkOrderNumberMapping from '../database/local/updateWorkOrderNumberMapping.js';
-const debug = Debug('faster-web-helper:worktechUpdate:task');
-let worktech;
+import addReturnToVendorRecord from '../database/addReturnToVendorRecord.js';
+import addWorkOrderNumberMapping from '../database/addWorkOrderNumberMapping.js';
+import getReturnToVendorRecord from '../database/getReturnToVendorRecord.js';
+import getWorkOrderNumberMapping from '../database/getWorkOrderNumberMapping.js';
+import updateWorkOrderNumberMapping from '../database/updateWorkOrderNumberMapping.js';
+export const taskName = 'directChangeHelperTask';
+const debug = Debug(`faster-web-helper:worktechUpdate:${taskName}`);
+const worktech = new WorkTechAPI(getConfigProperty('worktech'));
 const directChargeTransactionsConfig = getConfigProperty('modules.worktechUpdate.reports.w217');
-async function _w217UpdateWorkOrderNumberMappings(report, data) {
+async function _updateWorkOrderNumberMappings(report, data) {
     const mapping = getWorkOrderNumberMapping(data.documentNumber);
     const exportDate = dateStringToInteger(report.exportDate);
     const exportTime = timeStringToInteger(report.exportTime);
@@ -75,7 +75,7 @@ async function _w217UpdateWorkOrderNumberMappings(report, data) {
     }
     return true;
 }
-function _w217TrackReturnToVendorRecords(report, data) {
+function _trackReturnToVendorRecords(report, data) {
     for (const transaction of data.transactions) {
         if (transaction.repairDescription.startsWith('Return to Vendor - ')) {
             const transactionRecord = {
@@ -95,10 +95,11 @@ function _w217TrackReturnToVendorRecords(report, data) {
     }
 }
 /**
- * - Maintains mappings between Faster document nubmers and Worktech work order numbers.
+ * - Maintains mappings between Faster document numbers and Worktech work order numbers.
  * - Tracks "Return to Vendor" transactions.
  */
-async function downloadAndUpdateDirectChargeHelperData() {
+export default async function runDirectChargeHelperTask() {
+    debug(`Running "${taskName}"...`);
     /*
      * Download files to temp
      */
@@ -106,12 +107,17 @@ async function downloadAndUpdateDirectChargeHelperData() {
     /*
      * Loop through files
      */
+    debug(`${tempDirectChargeReportFiles.length} file(s) to process...`);
     for (const reportFile of tempDirectChargeReportFiles) {
         try {
             const report = parseW217ExcelReport(reportFile);
+            if ((report.parameters['Include Returns'] ?? '') !== 'Yes') {
+                debug('W217 reports must have "Include Returns" = "Yes", skipping file.');
+                continue;
+            }
             for (const data of report.data) {
-                await _w217UpdateWorkOrderNumberMappings(report, data);
-                _w217TrackReturnToVendorRecords(report, data);
+                await _updateWorkOrderNumberMappings(report, data);
+                _trackReturnToVendorRecords(report, data);
             }
             // eslint-disable-next-line security/detect-non-literal-fs-filename
             await fs.unlink(reportFile);
@@ -120,10 +126,5 @@ async function downloadAndUpdateDirectChargeHelperData() {
             debug(error);
         }
     }
-}
-export async function inititalizeWorktechUpdateTask() {
-    debug('Initializing task');
-    worktech = new WorkTechAPI(getConfigProperty('worktech'));
-    await downloadAndUpdateDirectChargeHelperData();
-    schedule.scheduleJob('downloadAndUpdateDirectChargeHelperData()', directChargeTransactionsConfig.schedule, downloadAndUpdateDirectChargeHelperData);
+    debug(`Finished "${taskName}".`);
 }

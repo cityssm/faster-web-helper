@@ -30,9 +30,10 @@ export function initializeWorktechUpdateDatabase(): boolean {
 
   const row = database
     .prepare(
+      // eslint-disable-next-line no-secrets/no-secrets
       `select name from sqlite_master
         where type = 'table'
-        and name = 'DocumentNumberToWorkOrderNumber'`
+        and name = 'WorkOrderNumberMappings'`
     )
     .get()
 
