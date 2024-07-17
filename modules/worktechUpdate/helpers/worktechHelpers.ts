@@ -30,13 +30,13 @@ export async function getOrCreateStoreroomResourceItem(
     await worktech.addResourceItem({
       itemId: storeroomItemId,
       externalItemId: storeroomData.storeroom,
+      itemDescription: storeroomData.storeroomDescription,
       itemClass: getConfigProperty('modules.resourceItem.itemClass'),
       itemType: getConfigProperty('modules.resourceItem.itemType'),
       stock: 0,
       quantityOnHand: 0,
       unit: getConfigProperty('modules.resourceItem.unit'),
       unitCost: 0,
-      comments: storeroomData.storeroomDescription
     })
 
     worktechStoreroomResourceItem = (await worktech.getItemByItemId(
