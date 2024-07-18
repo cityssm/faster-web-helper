@@ -10,6 +10,7 @@ import {
   timeStringToInteger
 } from '@cityssm/utils-datetime'
 import { WorkTechAPI } from '@cityssm/worktech-api'
+import camelCase from 'camelcase'
 import Debug from 'debug'
 
 import { getConfigProperty } from '../../../helpers/functions.config.js'
@@ -19,11 +20,12 @@ import addWorkOrderNumberMapping from '../database/addWorkOrderNumberMapping.js'
 import getReturnToVendorRecord from '../database/getReturnToVendorRecord.js'
 import getWorkOrderNumberMapping from '../database/getWorkOrderNumberMapping.js'
 import updateWorkOrderNumberMapping from '../database/updateWorkOrderNumberMapping.js'
+import { moduleName } from '../helpers/moduleHelpers.js'
 import type { ReturnToVendorRecord } from '../worktechUpdateTypes.js'
 
-export const taskName = 'directChangeHelperTask'
+export const taskName = 'Direct Change Helper Task'
 
-const debug = Debug(`faster-web-helper:worktechUpdate:${taskName}`)
+const debug = Debug(`faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`)
 
 const worktech = new WorkTechAPI(getConfigProperty('worktech'))
 

@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import { parseW217ExcelReport } from '@cityssm/faster-api/xlsxReports.js';
 import { dateStringToInteger, timeStringToInteger } from '@cityssm/utils-datetime';
 import { WorkTechAPI } from '@cityssm/worktech-api';
+import camelCase from 'camelcase';
 import Debug from 'debug';
 import { getConfigProperty } from '../../../helpers/functions.config.js';
 import { downloadFilesToTemp } from '../../../helpers/functions.sftp.js';
@@ -10,8 +11,9 @@ import addWorkOrderNumberMapping from '../database/addWorkOrderNumberMapping.js'
 import getReturnToVendorRecord from '../database/getReturnToVendorRecord.js';
 import getWorkOrderNumberMapping from '../database/getWorkOrderNumberMapping.js';
 import updateWorkOrderNumberMapping from '../database/updateWorkOrderNumberMapping.js';
-export const taskName = 'directChangeHelperTask';
-const debug = Debug(`faster-web-helper:worktechUpdate:${taskName}`);
+import { moduleName } from '../helpers/moduleHelpers.js';
+export const taskName = 'Direct Change Helper Task';
+const debug = Debug(`faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`);
 const worktech = new WorkTechAPI(getConfigProperty('worktech'));
 const directChargeTransactionsConfig = getConfigProperty('modules.worktechUpdate.reports.w217');
 async function _updateWorkOrderNumberMappings(report, data) {

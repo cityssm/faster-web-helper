@@ -1,12 +1,14 @@
 import { parseW223ExcelReport } from '@cityssm/faster-api/xlsxReports.js'
 import { type DateString, dateStringToInteger } from '@cityssm/utils-datetime'
 import { WorkTechAPI } from '@cityssm/worktech-api'
+import camelCase from 'camelcase'
 import Debug from 'debug'
 
 import { getConfigProperty } from '../../../helpers/functions.config.js'
 import { downloadFilesToTemp } from '../../../helpers/functions.sftp.js'
 import getReturnToVendorRecord from '../database/getReturnToVendorRecord.js'
 import getWorkOrderNumberMapping from '../database/getWorkOrderNumberMapping.js'
+import { moduleName } from '../helpers/moduleHelpers.js'
 import {
   type W223HashableTransactionReportData,
   buildWorkOrderResourceDescriptionHash,
@@ -14,9 +16,9 @@ import {
   getWorkOrderResources
 } from '../helpers/worktechHelpers.js'
 
-export const taskName = 'inventoryTransactionsTask'
+export const taskName = 'Inventory Transactions Task'
 
-const debug = Debug(`faster-web-helper:worktechUpdate:${taskName}`)
+const debug = Debug(`faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`)
 
 const worktech = new WorkTechAPI(getConfigProperty('worktech'))
 
@@ -198,7 +200,7 @@ export default async function runInventoryTransactionsTask(): Promise<void> {
                     worktechStoreroomResourceItem.itemId &&
                   possibleResourceItem.workDescription.includes(
                     transactionData.itemNumber
-                  ) === true &&
+                  ) &&
                   possibleResourceItem.quantity > 0 &&
                   possibleResourceItem.unitPrice ===
                     transactionData.unitTrueCost

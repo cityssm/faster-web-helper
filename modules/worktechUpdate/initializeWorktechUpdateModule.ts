@@ -1,3 +1,5 @@
+import { dateToString, dateToTimePeriodString } from '@cityssm/utils-datetime'
+import camelCase from 'camelcase'
 import Debug from 'debug'
 import exitHook from 'exit-hook'
 import schedule from 'node-schedule'
@@ -5,12 +7,15 @@ import schedule from 'node-schedule'
 import { getConfigProperty } from '../../helpers/functions.config.js'
 
 import { initializeWorktechUpdateDatabase } from './database/databaseHelpers.js'
+import { moduleName } from './helpers/moduleHelpers.js'
 import directChargeHelperTask, {
-  taskName as directChangeHelperTaskName
+  taskName as directChargeHelperTaskName
 } from './tasks/directChargeHelperTask.js'
-import inventoryTransactionsTask from './tasks/inventoryTransactionsTask.js'
+import inventoryTransactionsTask, {
+  taskName as inventoryTransactionsTaskName
+} from './tasks/inventoryTransactionsTask.js'
 
-const debug = Debug('faster-web-helper:worktechUpdate')
+const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`)
 
 const directChargeTransactionsConfig = getConfigProperty(
   'modules.worktechUpdate.reports.w217'
@@ -21,7 +26,7 @@ const inventoryTransactionsConfig = getConfigProperty(
 )
 
 export default async function initializeWorktechUpdateModule(): Promise<void> {
-  debug('Initializing "Worktech Update Module"...')
+  debug(`Initializing "${moduleName}"...`)
 
   /*
    * Ensure the local database is available.
@@ -30,31 +35,49 @@ export default async function initializeWorktechUpdateModule(): Promise<void> {
   initializeWorktechUpdateDatabase()
 
   /*
-   * Direct Charge Helper Task
+   * Run on startup
    */
 
-  debug('Running "Direct Charge Helper Task" on startup...')
-  await directChargeHelperTask()
+  if (getConfigProperty('modules.worktechUpdate.runOnStartup')) {
+    debug(`Running "${directChargeHelperTaskName}" on startup...`)
+    await directChargeHelperTask()
 
-  debug('Scheduling "Direct Charge Helper Task"...')
+    debug(`Running "${inventoryTransactionsTaskName}" on startup...`)
+    await inventoryTransactionsTask()
+  }
+
+  /*
+   * Schedule jobs
+   */
+
+  debug(`Scheduling "${directChargeHelperTaskName}"...`)
   const directChargeHelperJob = schedule.scheduleJob(
-    directChangeHelperTaskName,
+    directChargeHelperTaskName,
     directChargeTransactionsConfig.schedule,
     directChargeHelperTask
   )
 
-  /*
-   * Inventory Transactions Task
-   */
+  const directChargeHelperFirstRunDate = new Date(
+    directChargeHelperJob.nextInvocation().getTime()
+  )
 
-  debug('Running "Inventory Transactions Task" on startup...')
-  await inventoryTransactionsTask()
+  debug(
+    `Scheduled to run "${directChargeHelperTaskName}" on ${dateToString(directChargeHelperFirstRunDate)} at ${dateToTimePeriodString(directChargeHelperFirstRunDate)}`
+  )
 
-  debug('Scheduling "Inventory Transactions Task"...')
+  debug(`Scheduling "${inventoryTransactionsTaskName}"...`)
   const inventoryTransactionsJob = schedule.scheduleJob(
-    'inventoryTransactionsTask',
+    inventoryTransactionsTaskName,
     inventoryTransactionsConfig.schedule,
     inventoryTransactionsTask
+  )
+
+  const inventoryTransactionsFirstRunDate = new Date(
+    inventoryTransactionsJob.nextInvocation().getTime()
+  )
+
+  debug(
+    `Scheduled to run "${inventoryTransactionsTaskName}" on ${dateToString(inventoryTransactionsFirstRunDate)} at ${dateToTimePeriodString(inventoryTransactionsFirstRunDate)}`
   )
 
   /*
@@ -67,5 +90,5 @@ export default async function initializeWorktechUpdateModule(): Promise<void> {
     inventoryTransactionsJob.cancel()
   })
 
-  debug('"Worktech Update Module" initialized.')
+  debug(`"${moduleName}" initialized.`)
 }

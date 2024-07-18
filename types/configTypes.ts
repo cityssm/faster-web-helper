@@ -13,13 +13,16 @@ export interface Config {
   }
 }
 
-type ConfigModule<T> =
+type ConfigModule<T> = {
+  runOnStartup?: boolean
+} & (
   | ({
       isEnabled: false
     } & Partial<T>)
   | ({
       isEnabled: true
     } & T)
+)
 
 export interface ConfigFtpPath<S extends string> {
   directory: string

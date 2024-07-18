@@ -13,11 +13,11 @@ export async function getOrCreateStoreroomResourceItem(storeroomData) {
             itemId: storeroomItemId,
             externalItemId: storeroomData.storeroom,
             itemDescription: storeroomData.storeroomDescription,
-            itemClass: getConfigProperty('modules.resourceItem.itemClass'),
-            itemType: getConfigProperty('modules.resourceItem.itemType'),
+            itemClass: getConfigProperty('modules.worktechUpdate.resourceItem.itemClass'),
+            itemType: getConfigProperty('modules.worktechUpdate.resourceItem.itemType'),
             stock: 0,
             quantityOnHand: 0,
-            unit: getConfigProperty('modules.resourceItem.unit'),
+            unit: getConfigProperty('modules.worktechUpdate.resourceItem.unit'),
             unitCost: 0,
         });
         worktechStoreroomResourceItem = (await worktech.getItemByItemId(storeroomItemId));

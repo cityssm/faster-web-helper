@@ -24,6 +24,7 @@
     "@cityssm/worktech-api": "^0.3.2",
     "basic-ftp": "^5.0.5",
     "better-sqlite3": "^11.1.2",
+    "camelcase": "^8.0.0",
     "debug": "^4.3.5",
     "exit-hook": "^4.0.0",
     "node-schedule": "^2.1.1"
