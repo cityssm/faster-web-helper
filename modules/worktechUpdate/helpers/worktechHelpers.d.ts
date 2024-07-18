@@ -1,4 +1,4 @@
-import type { W223StoreroomReportData } from '@cityssm/faster-api/xlsxReports.js';
+import type { W223StoreroomReportData } from '@cityssm/faster-report-parser/xlsx';
 import { type ResourceItem, type WorkOrderResource } from '@cityssm/worktech-api';
 import type { WorkOrderNumberMapping } from '../worktechUpdateTypes.js';
 export declare function getOrCreateStoreroomResourceItem(storeroomData: W223StoreroomReportData): Promise<ResourceItem>;

@@ -19,7 +19,7 @@
   "license": "MIT",
   "dependencies": {
     "@cityssm/configurator": "^0.1.0",
-    "@cityssm/faster-api": "github:cityssm/node-faster-api",
+    "@cityssm/faster-report-parser": "^0.1.0",
     "@cityssm/utils-datetime": "^1.3.0",
     "@cityssm/worktech-api": "^0.3.2",
     "basic-ftp": "^5.0.5",

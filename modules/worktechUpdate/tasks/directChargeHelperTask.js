@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises';
-import { parseW217ExcelReport } from '@cityssm/faster-api/xlsxReports.js';
+import { parseW217ExcelReport } from '@cityssm/faster-report-parser/xlsx';
 import { dateStringToInteger, timeStringToInteger } from '@cityssm/utils-datetime';
 import { WorkTechAPI } from '@cityssm/worktech-api';
 import camelCase from 'camelcase';

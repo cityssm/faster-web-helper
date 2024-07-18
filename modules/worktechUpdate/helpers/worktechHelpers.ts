@@ -1,6 +1,6 @@
 import crypto from 'node:crypto'
 
-import type { W223StoreroomReportData } from '@cityssm/faster-api/xlsxReports.js'
+import type { W223StoreroomReportData } from '@cityssm/faster-report-parser/xlsx'
 import {
   type ResourceItem,
   type WorkOrderResource,

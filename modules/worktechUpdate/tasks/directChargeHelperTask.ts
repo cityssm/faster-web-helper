@@ -4,7 +4,7 @@ import {
   type W217DocumentReportData,
   type W217ExcelReportResults,
   parseW217ExcelReport
-} from '@cityssm/faster-api/xlsxReports.js'
+} from '@cityssm/faster-report-parser/xlsx'
 import {
   dateStringToInteger,
   timeStringToInteger
