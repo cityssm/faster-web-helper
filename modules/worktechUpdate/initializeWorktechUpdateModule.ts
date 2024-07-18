@@ -8,6 +8,7 @@ import { getConfigProperty } from '../../helpers/functions.config.js'
 
 import { initializeWorktechUpdateDatabase } from './database/databaseHelpers.js'
 import { moduleName } from './helpers/moduleHelpers.js'
+import cleanupDatabaseTask, { taskName as cleanupDatabaseTaskName } from './tasks/cleanupDatabaseTask.js'
 import directChargeHelperTask, {
   taskName as directChargeHelperTaskName
 } from './tasks/directChargeHelperTask.js'
@@ -39,6 +40,9 @@ export default async function initializeWorktechUpdateModule(): Promise<void> {
    */
 
   if (getConfigProperty('modules.worktechUpdate.runOnStartup')) {
+    debug(`Running "${cleanupDatabaseTaskName}" on startup...`)
+    cleanupDatabaseTask()   
+    
     debug(`Running "${directChargeHelperTaskName}" on startup...`)
     await directChargeHelperTask()
 
@@ -80,6 +84,23 @@ export default async function initializeWorktechUpdateModule(): Promise<void> {
     `Scheduled to run "${inventoryTransactionsTaskName}" on ${dateToString(inventoryTransactionsFirstRunDate)} at ${dateToTimePeriodString(inventoryTransactionsFirstRunDate)}`
   )
 
+  const cleanupDatabaseJob = schedule.scheduleJob(
+    cleanupDatabaseTaskName,
+    {
+      date: 1,
+      hour: 0
+    },
+    cleanupDatabaseTask
+  )
+
+  const cleanupDatabaseFirstRunDate = new Date(
+    cleanupDatabaseJob.nextInvocation().getTime()
+  )
+
+  debug(
+    `Scheduled to run "${cleanupDatabaseTaskName}" on ${dateToString(cleanupDatabaseFirstRunDate)} at ${dateToTimePeriodString(cleanupDatabaseFirstRunDate)}`
+  )
+
   /*
    * Set up exit hook
    */
@@ -88,6 +109,7 @@ export default async function initializeWorktechUpdateModule(): Promise<void> {
   exitHook(() => {
     directChargeHelperJob.cancel()
     inventoryTransactionsJob.cancel()
+    cleanupDatabaseJob.cancel()
   })
 
   debug(`"${moduleName}" initialized.`)
