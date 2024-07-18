@@ -30,16 +30,20 @@ export default async function initializeWorktechUpdateModule() {
         await inventoryTransactionsTask();
     }
     /*
-     * Schedule jobs
+     * Schedule Direct Charge Helper Job
      */
-    debug(`Scheduling "${directChargeHelperTaskName}"...`);
     const directChargeHelperJob = schedule.scheduleJob(directChargeHelperTaskName, directChargeTransactionsConfig.schedule, directChargeHelperTask);
     const directChargeHelperFirstRunDate = new Date(directChargeHelperJob.nextInvocation().getTime());
     debug(`Scheduled to run "${directChargeHelperTaskName}" on ${dateToString(directChargeHelperFirstRunDate)} at ${dateToTimePeriodString(directChargeHelperFirstRunDate)}`);
-    debug(`Scheduling "${inventoryTransactionsTaskName}"...`);
+    /*
+     * Schedule Inventory Transactions Job
+     */
     const inventoryTransactionsJob = schedule.scheduleJob(inventoryTransactionsTaskName, inventoryTransactionsConfig.schedule, inventoryTransactionsTask);
     const inventoryTransactionsFirstRunDate = new Date(inventoryTransactionsJob.nextInvocation().getTime());
     debug(`Scheduled to run "${inventoryTransactionsTaskName}" on ${dateToString(inventoryTransactionsFirstRunDate)} at ${dateToTimePeriodString(inventoryTransactionsFirstRunDate)}`);
+    /*
+     * Schedule Cleanup Database Job
+     */
     const cleanupDatabaseJob = schedule.scheduleJob(cleanupDatabaseTaskName, {
         date: 1,
         hour: 0
@@ -49,7 +53,6 @@ export default async function initializeWorktechUpdateModule() {
     /*
      * Set up exit hook
      */
-    debug('Initializing exit hook...');
     exitHook(() => {
         directChargeHelperJob.cancel();
         inventoryTransactionsJob.cancel();

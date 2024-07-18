@@ -13,5 +13,5 @@ if (getConfigProperty('modules.worktechUpdate.isEnabled')) {
 asyncExitHook(async () => {
     await schedule.gracefulShutdown();
 }, {
-    wait: 500
+    wait: 1000
 });
