@@ -11,4 +11,6 @@ data/config.d.ts
 data/config.js
 data/config.ts
 
+public/autocomplete/*.json
+
 temp/*

@@ -4,13 +4,19 @@ A service to support integrations with FASTER Web.
 
 ## Modules
 
-[Inventory Scanner](./modules/inventoryScanner/README.md)<br />
-Uses the **Inventory Import Utility** integration to offer
-a solution for issuing inventory using handheld barcode scanners.
+[Autocomplete](./modules/autocomplete/README.md)<br />
+Creates and hosts an `itemNumbers.json` file,
+compatible with the Item Numbers Autocomplete userscript.
 
 [WorkTech Work Order Resources Update](./modules/worktechUpdate/README.md)<br />
 Synchronizes items issued on Direct Charges in FASTER Web
 with resources consumed by WorkTech work orders.
+
+### Possible Modules
+
+[Inventory Scanner](./modules/inventoryScanner/README.md)<br />
+Uses the **Inventory Import Utility** integration to offer
+a solution for issuing inventory using handheld barcode scanners.
 
 ## Other FASTER Web Projects
 

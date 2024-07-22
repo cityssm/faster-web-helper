@@ -3,8 +3,13 @@ import type { config as MSSQLConfig } from 'mssql';
 import type { Spec } from 'node-schedule';
 export interface Config {
     ftp: AccessOptions;
+    webServer?: {
+        httpPort: number;
+        urlPrefix?: string;
+    };
     worktech?: MSSQLConfig;
     modules: {
+        autocomplete?: ConfigModule<ConfigModuleAutocomplete>;
         inventoryScanner?: ConfigModule<ConfigModuleInventoryScanner>;
         worktechUpdate?: ConfigModule<ConfigModuleWorktechUpdate>;
     };
@@ -27,6 +32,14 @@ export interface ConfigScheduledFtpReport<S extends string> {
     schedule: Spec;
 }
 export type ConfigFileSuffixXlsx = `${string}.xlsx` | `${string}.XLSX`;
+interface ConfigModuleAutocomplete {
+    reports: {
+        /**
+         * W200 - Inventory Report
+         */
+        w200: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
+    };
+}
 interface ConfigModuleInventoryScanner {
     reports: {
         /**

@@ -9,13 +9,27 @@ import type {
 export const configDefaultValues = {
   ftp: undefined as unknown as AccessOptions,
 
+  'webServer.httpPort': 8080,
+  'webServer.urlPrefix': '',
+
   worktech: undefined as unknown as MSSQLConfig,
+
+  /*
+   * Autocomplete
+   */
+
+  'modules.autocomplete.isEnabled': false,
+  'modules.autocomplete.runOnStartup': true,
+
+  'modules.autocomplete.reports.w200':
+    undefined as unknown as ConfigScheduledFtpReport<ConfigFileSuffixXlsx>,
 
   /*
    * Inventory Scanner
    */
 
   'modules.inventoryScanner.isEnabled': false,
+  'modules.inventoryScanner.runOnStartup': true,
 
   'modules.inventoryScanner.reports.w200':
     undefined as unknown as ConfigScheduledFtpReport<ConfigFileSuffixXlsx>,
