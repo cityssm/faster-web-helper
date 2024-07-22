@@ -1,6 +1,9 @@
 # FASTER Web Helper
 
-**Under Active Development**
+🚧 **Under Active Development** 🚧
+
+[![DeepSource](https://app.deepsource.com/gh/cityssm/faster-web-helper.svg/?label=active+issues&show_trend=true&token=u_wO1FIhQ1v-pNxtKl8dZxM4)](https://app.deepsource.com/gh/cityssm/faster-web-helper/)
+[![Maintainability](https://api.codeclimate.com/v1/badges/f30a366c800b38bd9eb7/maintainability)](https://codeclimate.com/github/cityssm/faster-web-helper/maintainability)
 
 A service to support integrations with FASTER Web.
 
