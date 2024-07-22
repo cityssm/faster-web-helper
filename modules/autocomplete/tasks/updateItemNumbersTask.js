@@ -6,11 +6,11 @@ import Debug from 'debug';
 import { getConfigProperty } from '../../../helpers/functions.config.js';
 import { downloadFilesToTemp } from '../../../helpers/functions.sftp.js';
 import { moduleName } from '../helpers/moduleHelpers.js';
-export const taskName = 'Update Files Task';
+export const taskName = 'Update Item Numbers Task';
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`);
 const inventoryConfig = getConfigProperty('modules.autocomplete.reports.w200');
 let maxInventoryDateMillis = 0;
-export default async function runUpdateFilesTask() {
+export default async function runUpdateItemNumbersTask() {
     debug(`Running "${taskName}"...`);
     /*
      * Download files to temp

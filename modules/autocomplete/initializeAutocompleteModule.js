@@ -7,7 +7,7 @@ import express from 'express';
 import schedule from 'node-schedule';
 import { getConfigProperty } from '../../helpers/functions.config.js';
 import { moduleName } from './helpers/moduleHelpers.js';
-import runUpdateFilesTask, { taskName as updateFilesTaskName } from './tasks/updateFilesTask.js';
+import runUpdateItemNumbersTask, { taskName as updateItemNumbersTaskName } from './tasks/updateItemNumbersTask.js';
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`);
 const itemNumbersConfig = getConfigProperty('modules.autocomplete.reports.w200');
 export default async function initializeAutocompleteModule(app) {
@@ -20,20 +20,20 @@ export default async function initializeAutocompleteModule(app) {
      * Run startup tasks
      */
     if (getConfigProperty('modules.autocomplete.runOnStartup')) {
-        debug(`Running "${updateFilesTaskName}" on startup...`);
-        await runUpdateFilesTask();
+        debug(`Running "${updateItemNumbersTaskName}" on startup...`);
+        await runUpdateItemNumbersTask();
     }
     /*
      * Schedule Update Files Job
      */
-    const updateFilesJob = schedule.scheduleJob(updateFilesTaskName, itemNumbersConfig.schedule, runUpdateFilesTask);
-    const updateFilesFirstRunDate = new Date(updateFilesJob.nextInvocation().getTime());
-    debug(`Scheduled to run "${updateFilesTaskName}" on ${dateToString(updateFilesFirstRunDate)} at ${dateToTimePeriodString(updateFilesFirstRunDate)}`);
+    const updateItemNumbersJob = schedule.scheduleJob(updateItemNumbersTaskName, itemNumbersConfig.schedule, runUpdateItemNumbersTask);
+    const updateItemNumbersFirstRunDate = new Date(updateItemNumbersJob.nextInvocation().getTime());
+    debug(`Scheduled to run "${updateItemNumbersTaskName}" on ${dateToString(updateItemNumbersFirstRunDate)} at ${dateToTimePeriodString(updateItemNumbersFirstRunDate)}`);
     /*
      * Set up exit hook
      */
     exitHook(() => {
-        updateFilesJob.cancel();
+        updateItemNumbersJob.cancel();
     });
     debug(`"${moduleName}" initialized.`);
 }

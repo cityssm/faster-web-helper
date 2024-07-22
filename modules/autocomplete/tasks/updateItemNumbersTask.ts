@@ -9,7 +9,7 @@ import { getConfigProperty } from '../../../helpers/functions.config.js'
 import { downloadFilesToTemp } from '../../../helpers/functions.sftp.js'
 import { moduleName } from '../helpers/moduleHelpers.js'
 
-export const taskName = 'Update Files Task'
+export const taskName = 'Update Item Numbers Task'
 
 const debug = Debug(
   `faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`
@@ -21,7 +21,7 @@ const inventoryConfig = getConfigProperty(
 
 let maxInventoryDateMillis = 0
 
-export default async function runUpdateFilesTask(): Promise<void> {
+export default async function runUpdateItemNumbersTask(): Promise<void> {
   debug(`Running "${taskName}"...`)
 
   /*

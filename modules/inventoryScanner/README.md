@@ -1,5 +1,7 @@
 # FASTER Web Inventory Scanner
 
+💡 **Just an idea, not yet implemented.**
+
 A solution for issuing inventory using handheld barcode scanners.
 
 ## Requirements
