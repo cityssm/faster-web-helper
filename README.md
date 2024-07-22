@@ -5,9 +5,10 @@
 [![DeepSource](https://app.deepsource.com/gh/cityssm/faster-web-helper.svg/?label=active+issues&show_trend=true&token=u_wO1FIhQ1v-pNxtKl8dZxM4)](https://app.deepsource.com/gh/cityssm/faster-web-helper/)
 [![Maintainability](https://api.codeclimate.com/v1/badges/f30a366c800b38bd9eb7/maintainability)](https://codeclimate.com/github/cityssm/faster-web-helper/maintainability)
 
-A service to support integrations with FASTER Web.
+A service to support integrations with the
+[FASTER Web Fleet Management System](https://fasterasset.com/products/fleet-management-software/).
 
-## Modules
+## Available Modules
 
 [Autocomplete](./modules/autocomplete/README.md)<br />
 Creates and hosts an `itemNumbers.json` file,
@@ -37,4 +38,5 @@ and offer autocomplete.
 
 ## Other Related Projects
 
-[Unofficial WorkTech API for Node](https://github.com/cityssm/node-worktech-api)
+[Unofficial WorkTech API for Node](https://github.com/cityssm/node-worktech-api)<br />
+Select queries to help with integrations with the WorkTech work order management system.

@@ -18,6 +18,72 @@ Performs two main tasks:
 
 See each task for additional requirements.
 
+## Sample of the Necessary Configuration
+
+Configuration located at `data/config.js`.
+
+```javascript
+export const config: Config = {
+  ftp: {
+    host: 'ftp.example.com',
+    port: 990,
+    user: 'ftpUser',
+    password: 'ftpP@ssw0rd'
+  },
+  worktech: {
+    server: 'sqlServer',
+    user: 'sqlUser',
+    password: 'sqlP@ssw0rd',
+    database: 'WT_DB'
+  },
+
+  modules: {
+    worktechUpdate: {
+      isEnabled: true,
+      runOnStartup: true,
+      reports: {
+        w217: {
+          ftpPath: {
+            directory: 'worktechUpdate',
+            filePrefix: 'directChargeTransactions_',
+            fileSuffix: '.xlsx',
+            doDelete: true
+          },
+          schedule: {
+            dayOfWeek: [1, 2, 3, 4, 5],
+            hour: 18,
+            minute: 15
+          }
+        },
+        w223: {
+          ftpPath: {
+            directory: 'worktechUpdate',
+            filePrefix: 'inventoryTransactionDetails_',
+            fileSuffix: '.xlsx',
+            doDelete: true
+          },
+          schedule: {
+            dayOfWeek: [1, 2, 3, 4, 5],
+            hour: 18,
+            minute: 20
+          }
+        }
+      }
+    }
+  }
+}
+
+export default config
+```
+
+### Configuration Tips
+
+- For assistance with the available `ftp` options, see the [basic-ftp](https://www.npmjs.com/package/basic-ftp) documentation.
+
+- For assistance with the available `schedule` options, see the [node-schedule](https://www.npmjs.com/package/node-schedule) documentation.
+
+- Schedule retrieval from FTP ten or so minutes after the report is scheduled in FASTER to ensure the report is ready.
+
 ## Direct Charges Task
 
 ### Direct Change Specific Requirements
@@ -30,6 +96,9 @@ See each task for additional requirements.
 - 📄 **W217 - Direct Charge Transactions**, to capture the `Symptom` field for the Direct Charges.
   Make sure "Include Returns" is set to "Yes".
 - 📄 **W223 - Inventory Transaction Details Report**, to capture items issued and returned on Direct Charges.
+
+For best results, schedule **W217** to export first. This will ensure necessary cross reference details
+are available.
 
 #### Why not just _W217 - Direct Charge Transactions_?
 
