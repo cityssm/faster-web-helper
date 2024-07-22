@@ -9,8 +9,8 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./app.js",
-    "dev": "cross-env NODE_ENV=dev DEBUG=faster-web-helper:*,faster-api:* nodemon ./app.js",
-    "test": "cross-env NODE_ENV=dev DEBUG=faster-web-helper:*,faster-api:* node --test"
+    "dev": "cross-env NODE_ENV=dev DEBUG=faster-web-helper:*,faster-report-parser:* nodemon ./app.js",
+    "test": "cross-env NODE_ENV=dev DEBUG=faster-web-helper:*,faster-report-parser:* node --test"
   },
   "keywords": [
     "faster-web",
