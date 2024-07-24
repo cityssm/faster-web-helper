@@ -1,7 +1,6 @@
 # FASTER Autocomplete Fields
 
-Creates and hosts an `itemNumbers.json` file,
-compatible with the Item Numbers Autocomplete userscript.
+Creates and hosts JSON files compatible with Autocomplete userscripts.
 
 ## Requirements
 
@@ -9,6 +8,7 @@ compatible with the Item Numbers Autocomplete userscript.
 
 ### Required Excel Reports Regularly Exported to FTP
 
+- 📄 **W114 - Asset Master List**, for building `assetNumbers.json`.
 - 📄 **W200 - Inventory Report**, for building `itemNumbers.json`.
 
 ## Sample of the Necessary Configuration
@@ -31,6 +31,19 @@ export const config = {
       isEnabled: true,
       runOnStartup: true,
       reports: {
+         w114: {
+          ftpPath: {
+            directory: 'autocomplete',
+            filePrefix: 'assetMasterList_',
+            fileSuffix: '.xlsx',
+            doDelete: true
+          },
+          schedule: {
+            dayOfWeek: [1, 2, 3, 4, 5],
+            hour: 6,
+            minute: 10
+          }
+        },
         w200: {
           ftpPath: {
             directory: 'autocomplete',
@@ -62,14 +75,19 @@ export default config
 
 ## Usage
 
-Install the **Item Numbers Autocomplete** userscript
+Install the **Asset Numbers Autocomplete** userscript
+and/or the **Item Numbers Autocomplete** userscript
 from [the City's userscript library](https://cityssm.github.io/userscripts/#userscripts-for-faster-web).
 
-Navigate to an "Issue Part" page. Under the options menu for the userscript,
-look for the option _Set "itemNumbers.json" path_.
+Navigate to a page with an asset number or item number text field.
+
+Under the options menu for the userscript,
+look for the option _Set "xxx.json" path_.
 
 The path will be something like this, depending on your configuration settings.
 
 ```text
+http://serverNameOrIp:9000/autocomplete/assetNumbers.json
+-- or --
 http://serverNameOrIp:9000/autocomplete/itemNumbers.json
 ```

@@ -8,7 +8,8 @@ export declare const configDefaultValues: {
     worktech: MSSQLConfig;
     'modules.autocomplete.isEnabled': boolean;
     'modules.autocomplete.runOnStartup': boolean;
-    'modules.autocomplete.reports.w200': ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
+    'modules.autocomplete.reports.w114': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
+    'modules.autocomplete.reports.w200': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
     'modules.inventoryScanner.isEnabled': boolean;
     'modules.inventoryScanner.runOnStartup': boolean;
     'modules.inventoryScanner.reports.w200': ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;

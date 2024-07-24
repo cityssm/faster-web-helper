@@ -21,8 +21,11 @@ export const configDefaultValues = {
   'modules.autocomplete.isEnabled': false,
   'modules.autocomplete.runOnStartup': true,
 
+  'modules.autocomplete.reports.w114':
+    undefined as unknown as ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined,
+
   'modules.autocomplete.reports.w200':
-    undefined as unknown as ConfigScheduledFtpReport<ConfigFileSuffixXlsx>,
+    undefined as unknown as ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined,
 
   /*
    * Inventory Scanner

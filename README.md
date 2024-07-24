@@ -11,8 +11,7 @@ A service to support integrations with the
 ## Available Modules
 
 [Autocomplete](./modules/autocomplete/README.md)<br />
-Creates and hosts an `itemNumbers.json` file,
-compatible with the Item Numbers Autocomplete userscript.
+Creates and hosts JSON files compatible with Autocomplete userscripts.
 
 [WorkTech Work Order Resources Update](./modules/worktechUpdate/README.md)<br />
 Synchronizes items issued on Direct Charges in FASTER Web

@@ -1,5 +1,3 @@
-import fs from 'node:fs/promises'
-
 import {
   type W217DocumentReportData,
   type W217ExcelReportResults,
@@ -185,9 +183,6 @@ export default async function runDirectChargeHelperTask(): Promise<void> {
         await _updateWorkOrderNumberMappings(report, data)
         _trackReturnToVendorRecords(report, data)
       }
-
-      // eslint-disable-next-line security/detect-non-literal-fs-filename
-      await fs.unlink(reportFile)
     } catch (error) {
       debug(error)
     }

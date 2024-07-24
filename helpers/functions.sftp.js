@@ -15,6 +15,10 @@ async function doesFileExist(filePath) {
         return false;
     }
 }
+const tempFolderPath = path.join(os.tmpdir(), 'fasterWebHelper');
+if (!(await doesFileExist(tempFolderPath))) {
+    await fs.mkdir(tempFolderPath);
+}
 export async function downloadFilesToTemp(ftpPath) {
     const ftpClient = new Client();
     const downloadedFiles = [];
@@ -33,7 +37,7 @@ export async function downloadFilesToTemp(ftpPath) {
                 while (await doesFileExist(path.join(os.tmpdir(), localFileName))) {
                     localFileName = randomUUID().slice(0, 9) + fileOrDirectory.name;
                 }
-                const localPath = path.join(os.tmpdir(), localFileName);
+                const localPath = path.join(tempFolderPath, localFileName);
                 debug(`Downloading ${fileOrDirectory.name} to ${localPath} ...`);
                 await ftpClient.downloadTo(localPath, fileOrDirectory.name);
                 downloadedFiles.push(localPath);

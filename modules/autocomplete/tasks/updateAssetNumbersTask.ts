@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
 
-import { parseW200ExcelReport } from '@cityssm/faster-report-parser/xlsx'
+import { parseW114ExcelReport } from '@cityssm/faster-report-parser/xlsx'
 import { dateStringToDate } from '@cityssm/utils-datetime'
 import camelCase from 'camelcase'
 import Debug from 'debug'
@@ -13,59 +13,57 @@ import type {
 } from '../../../types/configTypes.js'
 import { moduleName } from '../helpers/moduleHelpers.js'
 
-export const taskName = 'Update Item Numbers Task'
+export const taskName = 'Update Asset Numbers Task'
 
 const debug = Debug(
   `faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`
 )
 
-const inventoryConfig = getConfigProperty(
-  'modules.autocomplete.reports.w200'
+const assetConfig = getConfigProperty(
+  'modules.autocomplete.reports.w114'
 ) as ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
 
-let maxInventoryDateMillis = 0
+let maxAssetDateMillis = 0
 
-export default async function runUpdateItemNumbersTask(): Promise<void> {
+export default async function runUpdateAssetNumbersTask(): Promise<void> {
   debug(`Running "${taskName}"...`)
 
   /*
    * Download files to temp
    */
 
-  const tempInventoryReportFiles = await downloadFilesToTemp(
-    inventoryConfig.ftpPath
+  const tempAssetReportFiles = await downloadFilesToTemp(
+    assetConfig.ftpPath
   )
 
   /*
    * Loop through the files
    */
 
-  for (const reportFile of tempInventoryReportFiles) {
+  for (const reportFile of tempAssetReportFiles) {
     try {
-      const report = parseW200ExcelReport(reportFile)
+      const report = parseW114ExcelReport(reportFile)
 
       const reportDateMillis = (
         dateStringToDate(report.exportDate, report.exportTime) as Date
       ).getTime()
 
-      if (reportDateMillis < maxInventoryDateMillis) {
+      if (reportDateMillis < maxAssetDateMillis) {
         continue
       }
 
-      maxInventoryDateMillis = reportDateMillis
+      maxAssetDateMillis = reportDateMillis
 
-      const itemNumbers: string[] = []
+      const assetNumbers: string[] = []
 
-      for (const storeroom of report.data) {
-        for (const item of storeroom.items) {
-          itemNumbers.push(item.itemNumber)
-        }
+      for (const asset of report.data) {
+        assetNumbers.push(asset.assetNumber)
       }
 
       await fs.writeFile(
-        './public/autocomplete/itemNumbers.json',
+        './public/autocomplete/assetNumbers.json',
         JSON.stringify({
-          itemNumbers
+          assetNumbers
         })
       )
     } catch (error) {

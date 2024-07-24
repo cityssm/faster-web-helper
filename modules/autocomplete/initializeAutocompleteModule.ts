@@ -10,12 +10,18 @@ import schedule from 'node-schedule'
 import { getConfigProperty } from '../../helpers/functions.config.js'
 
 import { moduleName } from './helpers/moduleHelpers.js'
+import runUpdateAssetNumbersTask, {
+  taskName as updateAssetNumbersTaskName
+} from './tasks/updateAssetNumbersTask.js'
 import runUpdateItemNumbersTask, {
   taskName as updateItemNumbersTaskName
 } from './tasks/updateItemNumbersTask.js'
 
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`)
 
+const assetNumbersConfig = getConfigProperty(
+  'modules.autocomplete.reports.w114'
+)
 const itemNumbersConfig = getConfigProperty('modules.autocomplete.reports.w200')
 
 export default async function initializeAutocompleteModule(
@@ -38,33 +44,68 @@ export default async function initializeAutocompleteModule(
 
   if (getConfigProperty('modules.autocomplete.runOnStartup')) {
     debug(`Running "${updateItemNumbersTaskName}" on startup...`)
-    await runUpdateItemNumbersTask()
+
+    if (assetNumbersConfig !== undefined) {
+      await runUpdateAssetNumbersTask()
+    }
+
+    if (itemNumbersConfig !== undefined) {
+      await runUpdateItemNumbersTask()
+    }
   }
 
   /*
-   * Schedule Update Files Job
+   * Schedule Jobs
    */
 
-  const updateItemNumbersJob = schedule.scheduleJob(
-    updateItemNumbersTaskName,
-    itemNumbersConfig.schedule,
-    runUpdateItemNumbersTask
-  )
+  let updateAssetNumbersJob: schedule.Job | undefined
 
-  const updateItemNumbersFirstRunDate = new Date(
-    updateItemNumbersJob.nextInvocation().getTime()
-  )
+  if (assetNumbersConfig !== undefined) {
+    updateAssetNumbersJob = schedule.scheduleJob(
+      updateAssetNumbersTaskName,
+      assetNumbersConfig.schedule,
+      runUpdateAssetNumbersTask
+    )
 
-  debug(
-    `Scheduled to run "${updateItemNumbersTaskName}" on ${dateToString(updateItemNumbersFirstRunDate)} at ${dateToTimePeriodString(updateItemNumbersFirstRunDate)}`
-  )
+    const updateAssetNumbersFirstRunDate = new Date(
+      updateAssetNumbersJob.nextInvocation().getTime()
+    )
+
+    debug(
+      `Scheduled to run "${updateAssetNumbersTaskName}" on ${dateToString(updateAssetNumbersFirstRunDate)} at ${dateToTimePeriodString(updateAssetNumbersFirstRunDate)}`
+    )
+  }
+
+  let updateItemNumbersJob: schedule.Job | undefined
+
+  if (itemNumbersConfig !== undefined) {
+    updateItemNumbersJob = schedule.scheduleJob(
+      updateItemNumbersTaskName,
+      itemNumbersConfig.schedule,
+      runUpdateItemNumbersTask
+    )
+
+    const updateItemNumbersFirstRunDate = new Date(
+      updateItemNumbersJob.nextInvocation().getTime()
+    )
+
+    debug(
+      `Scheduled to run "${updateItemNumbersTaskName}" on ${dateToString(updateItemNumbersFirstRunDate)} at ${dateToTimePeriodString(updateItemNumbersFirstRunDate)}`
+    )
+  }
 
   /*
    * Set up exit hook
    */
 
   exitHook(() => {
-    updateItemNumbersJob.cancel()
+    if (updateAssetNumbersJob !== undefined) {
+      updateAssetNumbersJob.cancel()
+    }
+
+    if (updateItemNumbersJob !== undefined) {
+      updateItemNumbersJob.cancel()
+    }
   })
 
   debug(`"${moduleName}" initialized.`)

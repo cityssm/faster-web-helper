@@ -47,9 +47,14 @@ export type ConfigFileSuffixXlsx = `${string}.xlsx` | `${string}.XLSX`
 interface ConfigModuleAutocomplete {
   reports: {
     /**
+     * W114 - Asset Master List
+     */
+    w114?: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
+    
+    /**
      * W200 - Inventory Report
      */
-    w200: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
+    w200?: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
   }
 }
 

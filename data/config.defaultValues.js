@@ -8,6 +8,7 @@ export const configDefaultValues = {
      */
     'modules.autocomplete.isEnabled': false,
     'modules.autocomplete.runOnStartup': true,
+    'modules.autocomplete.reports.w114': undefined,
     'modules.autocomplete.reports.w200': undefined,
     /*
      * Inventory Scanner

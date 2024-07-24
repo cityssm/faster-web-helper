@@ -1,4 +1,3 @@
-import fs from 'node:fs/promises';
 import { parseW217ExcelReport } from '@cityssm/faster-report-parser/xlsx';
 import { dateStringToInteger, timeStringToInteger } from '@cityssm/utils-datetime';
 import { WorkTechAPI } from '@cityssm/worktech-api';
@@ -121,8 +120,6 @@ export default async function runDirectChargeHelperTask() {
                 await _updateWorkOrderNumberMappings(report, data);
                 _trackReturnToVendorRecords(report, data);
             }
-            // eslint-disable-next-line security/detect-non-literal-fs-filename
-            await fs.unlink(reportFile);
         }
         catch (error) {
             debug(error);
