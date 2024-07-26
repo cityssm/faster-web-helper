@@ -15,11 +15,15 @@ async function doesFileExist(filePath) {
         return false;
     }
 }
-const tempFolderPath = path.join(os.tmpdir(), 'fasterWebHelper');
-if (!(await doesFileExist(tempFolderPath))) {
-    await fs.mkdir(tempFolderPath);
+export const tempFolderPath = path.join(os.tmpdir(), 'fasterWebHelper');
+export async function ensureTempFolderExists() {
+    if (!(await doesFileExist(tempFolderPath))) {
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
+        await fs.mkdir(tempFolderPath);
+    }
 }
 export async function downloadFilesToTemp(ftpPath) {
+    await ensureTempFolderExists();
     const ftpClient = new Client();
     const downloadedFiles = [];
     try {
@@ -42,7 +46,6 @@ export async function downloadFilesToTemp(ftpPath) {
                 await ftpClient.downloadTo(localPath, fileOrDirectory.name);
                 downloadedFiles.push(localPath);
                 if (ftpPath.doDelete ?? false) {
-                    //debug(`DELETING FILE (COMMENTTED OUT): ${fileOrDirectory.name}`)
                     await ftpClient.remove(fileOrDirectory.name);
                 }
             }

@@ -1,5 +1,6 @@
 import type { AccessOptions } from 'basic-ftp';
 import type { config as MSSQLConfig } from 'mssql';
+import type { Spec } from 'node-schedule';
 import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from '../types/configTypes.js';
 export declare const configDefaultValues: {
     ftp: AccessOptions;
@@ -22,4 +23,8 @@ export declare const configDefaultValues: {
     'modules.worktechUpdate.resourceItem.unit': string;
     'modules.worktechUpdate.reports.w217': ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
     'modules.worktechUpdate.reports.w223': ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
+    'modules.tempFolderCleanup.isEnabled': boolean;
+    'modules.tempFolderCleanup.runOnStartup': boolean;
+    'modules.tempFolderCleanup.schedule': Spec;
+    'modules.tempFolderCleanup.maxAgeDays': number;
 };

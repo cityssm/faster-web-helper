@@ -6,7 +6,7 @@ Creates and hosts JSON files compatible with Autocomplete userscripts.
 
 - 📂 **SFTP access** for sending and receiving files.
 
-### Required Excel Reports Regularly Exported to FTP
+### Optional Excel Reports Regularly Exported to FTP
 
 - 📄 **W114 - Asset Master List**, for building `assetNumbers.json`.
 - 📄 **W200 - Inventory Report**, for building `itemNumbers.json`.

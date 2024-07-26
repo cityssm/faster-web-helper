@@ -7,6 +7,7 @@ import schedule from 'node-schedule'
 
 import { getConfigProperty } from './helpers/functions.config.js'
 import initializeAutocompleteModule from './modules/autocomplete/initializeAutocompleteModule.js'
+import initializeTempFolderCleanupModule from './modules/tempFolderCleanup/initializeTempFolderCleanupModule.js'
 import initializeWorktechUpdateModule from './modules/worktechUpdate/initializeWorktechUpdateModule.js'
 
 const debug = Debug('faster-web-helper:app')
@@ -31,6 +32,10 @@ if (getConfigProperty('modules.inventoryScanner.isEnabled')) {
 
 if (getConfigProperty('modules.worktechUpdate.isEnabled')) {
   await initializeWorktechUpdateModule()
+}
+
+if (getConfigProperty('modules.tempFolderCleanup.isEnabled')) {
+  await initializeTempFolderCleanupModule()
 }
 
 /*

@@ -1,5 +1,6 @@
 import type { AccessOptions } from 'basic-ftp'
 import type { config as MSSQLConfig } from 'mssql'
+import type { Spec } from 'node-schedule'
 
 import type {
   ConfigFileSuffixXlsx,
@@ -21,11 +22,13 @@ export const configDefaultValues = {
   'modules.autocomplete.isEnabled': false,
   'modules.autocomplete.runOnStartup': true,
 
-  'modules.autocomplete.reports.w114':
-    undefined as unknown as ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined,
+  'modules.autocomplete.reports.w114': undefined as unknown as
+    | ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
+    | undefined,
 
-  'modules.autocomplete.reports.w200':
-    undefined as unknown as ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined,
+  'modules.autocomplete.reports.w200': undefined as unknown as
+    | ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
+    | undefined,
 
   /*
    * Inventory Scanner
@@ -58,5 +61,17 @@ export const configDefaultValues = {
     undefined as unknown as ConfigScheduledFtpReport<ConfigFileSuffixXlsx>,
 
   'modules.worktechUpdate.reports.w223':
-    undefined as unknown as ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
+    undefined as unknown as ConfigScheduledFtpReport<ConfigFileSuffixXlsx>,
+
+  /*
+   * Temp Folder Cleanup
+   */
+
+  'modules.tempFolderCleanup.isEnabled': true,
+  'modules.tempFolderCleanup.runOnStartup': false,
+  'modules.tempFolderCleanup.schedule': {
+    dayOfWeek: 0,
+    hour: 1
+  } as unknown as Spec,
+  'modules.tempFolderCleanup.maxAgeDays': 35
 }

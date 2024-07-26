@@ -21,15 +21,21 @@ async function doesFileExist(filePath: string): Promise<boolean> {
   }
 }
 
-const tempFolderPath = path.join(os.tmpdir(), 'fasterWebHelper')
+export const tempFolderPath = path.join(os.tmpdir(), 'fasterWebHelper')
 
-if (!(await doesFileExist(tempFolderPath))) {
-  await fs.mkdir(tempFolderPath)
+export async function ensureTempFolderExists(): Promise<void> {
+
+  if (!(await doesFileExist(tempFolderPath))) {
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    await fs.mkdir(tempFolderPath)
+  }
 }
 
 export async function downloadFilesToTemp<S extends string>(
   ftpPath: ConfigFtpPath<S>
 ): Promise<Array<`${string}${S}`>> {
+  await ensureTempFolderExists()
+
   const ftpClient = new Client()
 
   const downloadedFiles: Array<`${string}${S}`> = []
@@ -69,7 +75,6 @@ export async function downloadFilesToTemp<S extends string>(
         downloadedFiles.push(localPath)
 
         if (ftpPath.doDelete ?? false) {
-          //debug(`DELETING FILE (COMMENTTED OUT): ${fileOrDirectory.name}`)
           await ftpClient.remove(fileOrDirectory.name)
         }
       }

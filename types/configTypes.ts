@@ -16,6 +16,7 @@ export interface Config {
     autocomplete?: ConfigModule<ConfigModuleAutocomplete>
     inventoryScanner?: ConfigModule<ConfigModuleInventoryScanner>
     worktechUpdate?: ConfigModule<ConfigModuleWorktechUpdate>
+    tempFolderCleanup?: ConfigModule<ConfigModuleTempFolderCleanup>
   }
 }
 
@@ -95,4 +96,9 @@ interface ConfigModuleWorktechUpdate {
      */
     w223: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
   }
+}
+
+interface ConfigModuleTempFolderCleanup {
+  schedule?: Spec
+  maxAgeDays?: number
 }
