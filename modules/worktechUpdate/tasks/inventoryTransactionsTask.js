@@ -14,6 +14,9 @@ const debug = Debug(`faster-web-helper:${camelCase(moduleName)}:${camelCase(task
 const worktech = new WorkTechAPI(getConfigProperty('worktech'));
 const inventoryTransactionsConfig = getConfigProperty('modules.worktechUpdate.reports.w223');
 export default async function runInventoryTransactionsTask() {
+    if (inventoryTransactionsConfig === undefined) {
+        return;
+    }
     debug(`Running "${taskName}"...`);
     const tempInventoryTransactionsReportFiles = await downloadFilesToTemp(inventoryTransactionsConfig.ftpPath);
     /*

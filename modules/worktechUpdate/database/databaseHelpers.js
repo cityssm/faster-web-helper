@@ -1,6 +1,8 @@
 import sqlite from 'better-sqlite3';
+import camelcase from 'camelcase';
 import Debug from 'debug';
-const debug = Debug('faster-web-helper:worktechUpdate:databaseHelpers');
+import { moduleName } from '../helpers/moduleHelpers.js';
+const debug = Debug(`faster-web-helper:${camelcase(moduleName)}:databaseHelpers`);
 export const databasePath = 'data/worktechUpdate.db';
 const createStatements = [
     // eslint-disable-next-line no-secrets/no-secrets

@@ -10,6 +10,23 @@ Performs two main tasks:
 - [**Synchronizes active equipment**](#active-equipment-task) from FASTER Web with WorkTech's equipment list.
   Useful when equipment usage is tracked in WorkTech.
 
+## Layout
+
+```mermaid
+flowchart
+    faster["FASTER Web"]
+    sftp["SFTP"]
+    helper["FASTER Web Helper"]
+    worktech[("WorkTech Database")]
+
+    faster-->|Direct Charge Exports|sftp
+    faster-->|Active Equipment Exports|sftp
+
+    sftp-->|Download reports|helper
+
+    helper-->worktech
+```
+
 ## General Requirements
 
 - 📂 **SFTP access** for transferring files from FASTER Web.

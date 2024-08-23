@@ -8,7 +8,12 @@ import { getConfigProperty } from '../../helpers/functions.config.js'
 
 import { initializeWorktechUpdateDatabase } from './database/databaseHelpers.js'
 import { moduleName } from './helpers/moduleHelpers.js'
-import cleanupDatabaseTask, { taskName as cleanupDatabaseTaskName } from './tasks/cleanupDatabaseTask.js'
+import activeEquipmentTask, {
+  taskName as activeEquipmentTaskName
+} from './tasks/activeEquipmentTask.js'
+import cleanupDatabaseTask, {
+  taskName as cleanupDatabaseTaskName
+} from './tasks/cleanupDatabaseTask.js'
 import directChargeHelperTask, {
   taskName as directChargeHelperTaskName
 } from './tasks/directChargeHelperTask.js'
@@ -26,6 +31,10 @@ const inventoryTransactionsConfig = getConfigProperty(
   'modules.worktechUpdate.reports.w223'
 )
 
+const activeEquipmentConfig = getConfigProperty(
+  'modules.worktechUpdate.reports.w114'
+)
+
 export default async function initializeWorktechUpdateModule(): Promise<void> {
   debug(`Initializing "${moduleName}"...`)
 
@@ -41,50 +50,63 @@ export default async function initializeWorktechUpdateModule(): Promise<void> {
 
   if (getConfigProperty('modules.worktechUpdate.runOnStartup')) {
     debug(`Running "${cleanupDatabaseTaskName}" on startup...`)
-    cleanupDatabaseTask()   
-    
-    debug(`Running "${directChargeHelperTaskName}" on startup...`)
-    await directChargeHelperTask()
+    cleanupDatabaseTask()
 
-    debug(`Running "${inventoryTransactionsTaskName}" on startup...`)
-    await inventoryTransactionsTask()
+    if (
+      directChargeTransactionsConfig !== undefined &&
+      inventoryTransactionsConfig !== undefined
+    ) {
+      debug(`Running "${directChargeHelperTaskName}" on startup...`)
+      await directChargeHelperTask()
+
+      debug(`Running "${inventoryTransactionsTaskName}" on startup...`)
+      await inventoryTransactionsTask()
+    }
   }
 
-  /*
-   * Schedule Direct Charge Helper Job
-   */
+  let directChargeHelperJob: schedule.Job | undefined
+  let inventoryTransactionsJob: schedule.Job | undefined
 
-  const directChargeHelperJob = schedule.scheduleJob(
-    directChargeHelperTaskName,
-    directChargeTransactionsConfig.schedule,
-    directChargeHelperTask
-  )
+  if (
+    directChargeTransactionsConfig !== undefined &&
+    inventoryTransactionsConfig !== undefined
+  ) {
+    /*
+     * Schedule Direct Charge Helper Job
+     */
 
-  const directChargeHelperFirstRunDate = new Date(
-    directChargeHelperJob.nextInvocation().getTime()
-  )
+    directChargeHelperJob = schedule.scheduleJob(
+      directChargeHelperTaskName,
+      directChargeTransactionsConfig.schedule,
+      directChargeHelperTask
+    )
 
-  debug(
-    `Scheduled to run "${directChargeHelperTaskName}" on ${dateToString(directChargeHelperFirstRunDate)} at ${dateToTimePeriodString(directChargeHelperFirstRunDate)}`
-  )
+    const directChargeHelperFirstRunDate = new Date(
+      directChargeHelperJob.nextInvocation().getTime()
+    )
 
-  /*
-   * Schedule Inventory Transactions Job
-   */
+    debug(
+      `Scheduled to run "${directChargeHelperTaskName}" on ${dateToString(directChargeHelperFirstRunDate)} at ${dateToTimePeriodString(directChargeHelperFirstRunDate)}`
+    )
 
-  const inventoryTransactionsJob = schedule.scheduleJob(
-    inventoryTransactionsTaskName,
-    inventoryTransactionsConfig.schedule,
-    inventoryTransactionsTask
-  )
+    /*
+     * Schedule Inventory Transactions Job
+     */
 
-  const inventoryTransactionsFirstRunDate = new Date(
-    inventoryTransactionsJob.nextInvocation().getTime()
-  )
+    inventoryTransactionsJob = schedule.scheduleJob(
+      inventoryTransactionsTaskName,
+      inventoryTransactionsConfig.schedule,
+      inventoryTransactionsTask
+    )
 
-  debug(
-    `Scheduled to run "${inventoryTransactionsTaskName}" on ${dateToString(inventoryTransactionsFirstRunDate)} at ${dateToTimePeriodString(inventoryTransactionsFirstRunDate)}`
-  )
+    const inventoryTransactionsFirstRunDate = new Date(
+      inventoryTransactionsJob.nextInvocation().getTime()
+    )
+
+    debug(
+      `Scheduled to run "${inventoryTransactionsTaskName}" on ${dateToString(inventoryTransactionsFirstRunDate)} at ${dateToTimePeriodString(inventoryTransactionsFirstRunDate)}`
+    )
+  }
 
   /*
    * Schedule Cleanup Database Job
@@ -108,13 +130,45 @@ export default async function initializeWorktechUpdateModule(): Promise<void> {
   )
 
   /*
+   * Active Equipment Job
+   */
+
+  let activeEquipmentJob: schedule.Job | undefined
+
+  if (activeEquipmentConfig !== undefined) {
+    activeEquipmentJob = schedule.scheduleJob(
+      activeEquipmentTaskName,
+      activeEquipmentConfig.schedule,
+      activeEquipmentTask
+    )
+
+    const activeEquipmentFirstRunDate = new Date(
+      activeEquipmentJob.nextInvocation().getTime()
+    )
+
+    debug(
+      `Scheduled to run "${activeEquipmentTaskName}" on ${dateToString(activeEquipmentFirstRunDate)} at ${dateToTimePeriodString(activeEquipmentFirstRunDate)}`
+    )
+  }
+
+  /*
    * Set up exit hook
    */
 
   exitHook(() => {
-    directChargeHelperJob.cancel()
-    inventoryTransactionsJob.cancel()
+    if (directChargeHelperJob !== undefined) {
+      directChargeHelperJob.cancel()
+    }
+
+    if (inventoryTransactionsJob !== undefined) {
+      inventoryTransactionsJob.cancel()
+    }
+
     cleanupDatabaseJob.cancel()
+
+    if (activeEquipmentJob !== undefined) {
+      activeEquipmentJob.cancel()
+    }
   })
 
   debug(`"${moduleName}" initialized.`)

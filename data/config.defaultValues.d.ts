@@ -1,3 +1,4 @@
+import type { ADWebAuthAuthenticatorConfiguration, ActiveDirectoryAuthenticatorConfiguration } from '@cityssm/authentication-helper';
 import type { AccessOptions } from 'basic-ftp';
 import type { config as MSSQLConfig } from 'mssql';
 import type { Spec } from 'node-schedule';
@@ -13,18 +14,32 @@ export declare const configDefaultValues: {
     'modules.autocomplete.reports.w200': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
     'modules.inventoryScanner.isEnabled': boolean;
     'modules.inventoryScanner.runOnStartup': boolean;
-    'modules.inventoryScanner.reports.w200': ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
-    'modules.inventoryScanner.reports.w311': ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
-    'modules.inventoryScanner.reports.w604': ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
+    'modules.inventoryScanner.reports.w200': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
+    'modules.inventoryScanner.reports.w311': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
+    'modules.inventoryScanner.reports.w604': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
     'modules.worktechUpdate.isEnabled': boolean;
     'modules.worktechUpdate.runOnStartup': boolean;
     'modules.worktechUpdate.resourceItem.itemClass': string;
     'modules.worktechUpdate.resourceItem.itemType': string;
     'modules.worktechUpdate.resourceItem.unit': string;
-    'modules.worktechUpdate.reports.w217': ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
-    'modules.worktechUpdate.reports.w223': ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
+    'modules.worktechUpdate.reports.w114': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
+    'modules.worktechUpdate.reports.w217': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
+    'modules.worktechUpdate.reports.w223': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
     'modules.tempFolderCleanup.isEnabled': boolean;
     'modules.tempFolderCleanup.runOnStartup': boolean;
     'modules.tempFolderCleanup.schedule': Spec;
     'modules.tempFolderCleanup.maxAgeDays': number;
+    'modules.purchaseOrderApprovals.isEnabled': boolean;
+    'modules.purchaseOrderApprovals.runOnStartup': boolean;
+    'modules.purchaseOrderApprovals.session.cookieName': string;
+    'modules.purchaseOrderApprovals.session.secret': string;
+    'modules.purchaseOrderApprovals.session.maxAgeMillis': number;
+    'modules.purchaseOrderApprovals.domain': string;
+    'modules.purchaseOrderApprovals.authentication': {
+        type: "activeDirectory";
+        config: ActiveDirectoryAuthenticatorConfiguration;
+    } | {
+        type: "adWebAuth";
+        config: ADWebAuthAuthenticatorConfiguration;
+    } | undefined;
 };

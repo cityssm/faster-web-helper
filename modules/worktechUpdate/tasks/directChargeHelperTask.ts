@@ -152,6 +152,10 @@ function _trackReturnToVendorRecords(
  * - Tracks "Return to Vendor" transactions.
  */
 export default async function runDirectChargeHelperTask(): Promise<void> {
+  if (directChargeTransactionsConfig === undefined) {
+    return
+  }
+  
   debug(`Running "${taskName}"...`)
 
   /*

@@ -1,3 +1,7 @@
+import type {
+  ADWebAuthAuthenticatorConfiguration,
+  ActiveDirectoryAuthenticatorConfiguration
+} from '@cityssm/authentication-helper'
 import type { AccessOptions } from 'basic-ftp'
 import type { config as MSSQLConfig } from 'mssql'
 import type { Spec } from 'node-schedule'
@@ -37,14 +41,17 @@ export const configDefaultValues = {
   'modules.inventoryScanner.isEnabled': false,
   'modules.inventoryScanner.runOnStartup': true,
 
-  'modules.inventoryScanner.reports.w200':
-    undefined as unknown as ConfigScheduledFtpReport<ConfigFileSuffixXlsx>,
+  'modules.inventoryScanner.reports.w200': undefined as unknown as
+    | ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
+    | undefined,
 
-  'modules.inventoryScanner.reports.w311':
-    undefined as unknown as ConfigScheduledFtpReport<ConfigFileSuffixXlsx>,
+  'modules.inventoryScanner.reports.w311': undefined as unknown as
+    | ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
+    | undefined,
 
-  'modules.inventoryScanner.reports.w604':
-    undefined as unknown as ConfigScheduledFtpReport<ConfigFileSuffixXlsx>,
+  'modules.inventoryScanner.reports.w604': undefined as unknown as
+    | ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
+    | undefined,
 
   /*
    * Worktech Update
@@ -57,11 +64,17 @@ export const configDefaultValues = {
   'modules.worktechUpdate.resourceItem.itemType': 'FASTER',
   'modules.worktechUpdate.resourceItem.unit': 'EA',
 
-  'modules.worktechUpdate.reports.w217':
-    undefined as unknown as ConfigScheduledFtpReport<ConfigFileSuffixXlsx>,
+  'modules.worktechUpdate.reports.w114': undefined as unknown as
+    | ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
+    | undefined,
 
-  'modules.worktechUpdate.reports.w223':
-    undefined as unknown as ConfigScheduledFtpReport<ConfigFileSuffixXlsx>,
+  'modules.worktechUpdate.reports.w217': undefined as unknown as
+    | ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
+    | undefined,
+
+  'modules.worktechUpdate.reports.w223': undefined as unknown as
+    | ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
+    | undefined,
 
   /*
    * Temp Folder Cleanup
@@ -73,5 +86,28 @@ export const configDefaultValues = {
     dayOfWeek: 0,
     hour: 1
   } as unknown as Spec,
-  'modules.tempFolderCleanup.maxAgeDays': 35
+  'modules.tempFolderCleanup.maxAgeDays': 35,
+
+  /*
+   * Purchase Order Approvals
+   */
+
+  'modules.purchaseOrderApprovals.isEnabled': false,
+  'modules.purchaseOrderApprovals.runOnStartup': true,
+
+  'modules.purchaseOrderApprovals.session.cookieName': 'faster-web-helper-user-sid',
+  'modules.purchaseOrderApprovals.session.secret': 'cityssm/faster-web-helper',
+  'modules.purchaseOrderApprovals.session.maxAgeMillis': 12 * 60 * 60 * 1000,
+
+  'modules.purchaseOrderApprovals.domain': '',
+  'modules.purchaseOrderApprovals.authentication': undefined as
+    | {
+        type: 'activeDirectory'
+        config: ActiveDirectoryAuthenticatorConfiguration
+      }
+    | {
+        type: 'adWebAuth'
+        config: ADWebAuthAuthenticatorConfiguration
+      }
+    | undefined
 }

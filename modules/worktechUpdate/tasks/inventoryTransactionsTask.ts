@@ -18,7 +18,9 @@ import {
 
 export const taskName = 'Inventory Transactions Task'
 
-const debug = Debug(`faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`)
+const debug = Debug(
+  `faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`
+)
 
 const worktech = new WorkTechAPI(getConfigProperty('worktech'))
 
@@ -27,6 +29,10 @@ const inventoryTransactionsConfig = getConfigProperty(
 )
 
 export default async function runInventoryTransactionsTask(): Promise<void> {
+  if (inventoryTransactionsConfig === undefined) {
+    return
+  }
+
   debug(`Running "${taskName}"...`)
 
   const tempInventoryTransactionsReportFiles = await downloadFilesToTemp(
