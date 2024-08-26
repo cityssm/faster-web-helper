@@ -1,11 +1,9 @@
 import sqlite from 'better-sqlite3'
 
-import type {
-  PurchaseOrder,
-  PurchaseOrderApproval
-} from '../types/recordTypes.js'
+import type { PurchaseOrder } from '../types/recordTypes.js'
 
 import { databasePath } from './databaseHelpers.js'
+import getApprovals from './getApprovals.js'
 
 export default function getPurchaseOrder(
   tenant: string,
@@ -18,6 +16,7 @@ export default function getPurchaseOrder(
   const purchaseOrder = database
     .prepare(
       `select tenant, orderNumber,
+        initiatingUserName,
         orderTotal, purchaseOrderKeyGuid,
         lastUpdatedDate, lastUpdatedTime
         from PurchaseOrders
@@ -27,15 +26,7 @@ export default function getPurchaseOrder(
     .get(tenant, orderNumber) as PurchaseOrder | undefined
 
   if (purchaseOrder !== undefined) {
-    purchaseOrder.approvals = database
-      .prepare(
-        `select userName, approvalAmount, isApproved,
-          lastUpdatedDate, lastUpdatedTime
-          from Approvals
-          where tenant = ?
-          and orderNumber = ?`
-      )
-      .all(tenant, orderNumber) as PurchaseOrderApproval[]
+    purchaseOrder.approvals = getApprovals(database, tenant, orderNumber)
   }
 
   database.close()

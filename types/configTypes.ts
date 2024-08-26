@@ -5,6 +5,7 @@ import type {
 import type { AccessOptions } from 'basic-ftp'
 import type { config as MSSQLConfig } from 'mssql'
 import type { Spec } from 'node-schedule'
+import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js'
 
 export interface Config {
   ftp: AccessOptions
@@ -13,6 +14,8 @@ export interface Config {
     httpPort: number
     urlPrefix?: string
   }
+
+  smtp?: SMTPTransport.Options
 
   worktech?: MSSQLConfig
 

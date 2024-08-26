@@ -2,6 +2,7 @@ export interface PurchaseOrder {
     tenant: string;
     orderNumber: number;
     orderTotal: number;
+    initiatingUserName: string;
     purchaseOrderKeyGuid: string;
     lastUpdatedDate: number;
     lastUpdatedTime: number;
@@ -19,13 +20,13 @@ export interface PurchaseOrderApproval {
 export interface PurchaseOrderApprovalUser extends PurchaseOrderApprovalSessionUser {
     fasterWebUserName?: string;
     emailAddress?: string;
-    approvalMax: number;
     parentUserName?: string;
     backupUserName?: string;
 }
 declare global {
     export interface PurchaseOrderApprovalSessionUser {
         userName: string;
+        approvalMax: number;
         isAdmin: boolean;
         userKeyGuid: string;
     }

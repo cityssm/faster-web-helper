@@ -2,12 +2,14 @@ import type { ADWebAuthAuthenticatorConfiguration, ActiveDirectoryAuthenticatorC
 import type { AccessOptions } from 'basic-ftp';
 import type { config as MSSQLConfig } from 'mssql';
 import type { Spec } from 'node-schedule';
+import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
 export interface Config {
     ftp: AccessOptions;
     webServer?: {
         httpPort: number;
         urlPrefix?: string;
     };
+    smtp?: SMTPTransport.Options;
     worktech?: MSSQLConfig;
     modules: {
         autocomplete?: ConfigModule<ConfigModuleAutocomplete>;

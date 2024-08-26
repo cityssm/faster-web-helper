@@ -30,6 +30,7 @@ export default async function handler(
       request.session.purchaseOrderApprovalUser = {
         userName,
         userKeyGuid: user.userKeyGuid,
+        approvalMax: user.approvalMax,
         isAdmin: user.isAdmin
       }
 

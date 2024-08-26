@@ -18,6 +18,7 @@ const createStatements = [
     `create table if not exists PurchaseOrders (
     tenant varchar(50) not null,
     orderNumber integer not null,
+    initiatingUserName varchar(20) not null,
     lastUpdatedDate integer not null,
     lastUpdatedTime integer not null,
     orderTotal decimal(10, 2) not null default 0,
@@ -29,6 +30,14 @@ const createStatements = [
     userName varchar(20) not null,
     isApproved bit not null default 0,
     approvalAmount decimal(10, 2) not null default 0,
+    lastUpdatedDate integer not null,
+    lastUpdatedTime integer not null,
+    primary key (tenant, orderNumber, userName),
+    foreign key (tenant, orderNumber) references PurchaseOrders (tenant, orderNumber))`,
+    `create table if not exists OutstandingApprovals (
+    tenant varchar(50) not null,
+    orderNumber integer not null,
+    userName varchar(20) not null,
     lastUpdatedDate integer not null,
     lastUpdatedTime integer not null,
     primary key (tenant, orderNumber, userName),

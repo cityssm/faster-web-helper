@@ -14,6 +14,7 @@ export default function handler(request: Request, response: Response): void {
   } else {
     request.session.purchaseOrderApprovalUser = {
       userName: user.userName,
+      approvalMax: user.approvalMax,
       userKeyGuid: user.userKeyGuid,
       isAdmin: user.isAdmin
     }

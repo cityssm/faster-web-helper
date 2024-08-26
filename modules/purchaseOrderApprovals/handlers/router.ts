@@ -8,6 +8,7 @@ import { getConfigProperty } from '../../../helpers/functions.config.js'
 import { moduleName } from '../helpers/moduleHelpers.js'
 
 import handler_doGetLoginConfig from './get/doGetLoginConfig.js'
+import handler_doCreatePurchaseOrder from './post/doCreatePurchaseOrder.js'
 import handler_doGetPurchaseOrder from './post/doGetPurchaseOrder.js'
 import handler_doLogin from './post/doLogin.js'
 import handler_doValidateUserKeyGuid from './post/doValidateUserKeyGuid.js'
@@ -73,5 +74,11 @@ router.post(
 )
 
 router.post('/doGetPurchaseOrder', sessionChecker, handler_doGetPurchaseOrder)
+
+router.post(
+  '/doCreatePurchaseOrder',
+  sessionChecker,
+  handler_doCreatePurchaseOrder
+)
 
 export default router
