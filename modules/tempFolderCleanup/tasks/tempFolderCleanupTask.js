@@ -2,6 +2,7 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { daysToMillis } from '@cityssm/to-millis';
 import camelCase from 'camelcase';
 import Debug from 'debug';
 import { getConfigProperty } from '../../../helpers/functions.config.js';
@@ -12,7 +13,7 @@ const debug = Debug(`faster-web-helper:${camelCase(moduleName)}:${camelCase(task
 export default async function runTempFolderCleanupTask() {
     await ensureTempFolderExists();
     const maxAgeMillis = Date.now() -
-        getConfigProperty('modules.tempFolderCleanup.maxAgeDays') * 86_400 * 1000;
+        daysToMillis(getConfigProperty('modules.tempFolderCleanup.maxAgeDays'));
     const fileNames = await fs.readdir(tempFolderPath);
     for (const fileName of fileNames) {
         const fullFilePath = path.join(tempFolderPath, fileName);

@@ -1,3 +1,4 @@
+import { hoursToMillis } from '@cityssm/to-millis';
 export const configDefaultValues = {
     ftp: undefined,
     'webServer.httpPort': 8080,
@@ -46,7 +47,7 @@ export const configDefaultValues = {
     'modules.purchaseOrderApprovals.runOnStartup': true,
     'modules.purchaseOrderApprovals.session.cookieName': 'faster-web-helper-user-sid',
     'modules.purchaseOrderApprovals.session.secret': 'cityssm/faster-web-helper',
-    'modules.purchaseOrderApprovals.session.maxAgeMillis': 12 * 60 * 60 * 1000,
+    'modules.purchaseOrderApprovals.session.maxAgeMillis': hoursToMillis(12),
     'modules.purchaseOrderApprovals.domain': '',
     'modules.purchaseOrderApprovals.authentication': undefined
 };

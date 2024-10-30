@@ -4,6 +4,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
+import { daysToMillis } from '@cityssm/to-millis'
 import camelCase from 'camelcase'
 import Debug from 'debug'
 
@@ -25,7 +26,7 @@ export default async function runTempFolderCleanupTask(): Promise<void> {
 
   const maxAgeMillis =
     Date.now() -
-    getConfigProperty('modules.tempFolderCleanup.maxAgeDays') * 86_400 * 1000
+    daysToMillis(getConfigProperty('modules.tempFolderCleanup.maxAgeDays'))
 
   const fileNames = await fs.readdir(tempFolderPath)
 

@@ -1,6 +1,7 @@
 import http from 'node:http'
 import path from 'node:path'
 
+import { secondsToMillis } from '@cityssm/to-millis'
 import cookieParser from 'cookie-parser'
 import Debug from 'debug'
 import { asyncExitHook } from 'exit-hook'
@@ -8,10 +9,7 @@ import express from 'express'
 import schedule from 'node-schedule'
 
 import { getConfigProperty } from './helpers/functions.config.js'
-import initializeAutocompleteModule from './modules/autocomplete/initializeAutocompleteModule.js'
-import initializePurchaseOrderApprovalsModule from './modules/purchaseOrderApprovals/initializePurchaseOrderApprovalsModule.js'
-import initializeTempFolderCleanupModule from './modules/tempFolderCleanup/initializeTempFolderCleanupModule.js'
-import initializeWorktechUpdateModule from './modules/worktechUpdate/initializeWorktechUpdateModule.js'
+import type { ModuleInitializerOptions } from './modules/types.js'
 
 const debug = Debug('faster-web-helper:app')
 
@@ -39,13 +37,19 @@ app.use(
 
 app.use(cookieParser())
 
-
 /*
  * Initialize modules
  */
 
+const options: ModuleInitializerOptions = {
+  app
+}
+
 if (getConfigProperty('modules.autocomplete.isEnabled')) {
-  await initializeAutocompleteModule(app)
+  const initializeAutocompleteModule = await import(
+    './modules/autocomplete/initializeAutocompleteModule.js'
+  )
+  await initializeAutocompleteModule.default(options)
 }
 
 if (getConfigProperty('modules.inventoryScanner.isEnabled')) {
@@ -53,15 +57,24 @@ if (getConfigProperty('modules.inventoryScanner.isEnabled')) {
 }
 
 if (getConfigProperty('modules.worktechUpdate.isEnabled')) {
-  await initializeWorktechUpdateModule()
+  const initializeWorktechUpdateModule = await import(
+    './modules/worktechUpdate/initializeWorktechUpdateModule.js'
+  )
+  await initializeWorktechUpdateModule.default(options)
 }
 
 if (getConfigProperty('modules.tempFolderCleanup.isEnabled')) {
-  await initializeTempFolderCleanupModule()
+  const initializeTempFolderCleanupModule = await import(
+    './modules/tempFolderCleanup/initializeTempFolderCleanupModule.js'
+  )
+  await initializeTempFolderCleanupModule.default(options)
 }
 
 if (getConfigProperty('modules.purchaseOrderApprovals.isEnabled')) {
-  initializePurchaseOrderApprovalsModule(app)
+  const initializePurchaseOrderApprovalsModule = await import(
+    './modules/purchaseOrderApprovals/initializePurchaseOrderApprovalsModule.js'
+  )
+  initializePurchaseOrderApprovalsModule.default(options)
 }
 
 /*
@@ -69,6 +82,8 @@ if (getConfigProperty('modules.purchaseOrderApprovals.isEnabled')) {
  */
 
 const httpPort = getConfigProperty('webServer.httpPort')
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises, sonarjs/no-misused-promises
 const httpServer = http.createServer(app)
 
 httpServer.listen(httpPort)
@@ -80,6 +95,6 @@ asyncExitHook(
     httpServer.close()
   },
   {
-    wait: 1000
+    wait: secondsToMillis(1)
   }
 )

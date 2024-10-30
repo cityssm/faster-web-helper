@@ -2,6 +2,7 @@ import type {
   ADWebAuthAuthenticatorConfiguration,
   ActiveDirectoryAuthenticatorConfiguration
 } from '@cityssm/authentication-helper'
+import { hoursToMillis } from '@cityssm/to-millis'
 import type { AccessOptions } from 'basic-ftp'
 import type { config as MSSQLConfig } from 'mssql'
 import type { Spec } from 'node-schedule'
@@ -97,7 +98,7 @@ export const configDefaultValues = {
 
   'modules.purchaseOrderApprovals.session.cookieName': 'faster-web-helper-user-sid',
   'modules.purchaseOrderApprovals.session.secret': 'cityssm/faster-web-helper',
-  'modules.purchaseOrderApprovals.session.maxAgeMillis': 12 * 60 * 60 * 1000,
+  'modules.purchaseOrderApprovals.session.maxAgeMillis': hoursToMillis(12),
 
   'modules.purchaseOrderApprovals.domain': '',
   'modules.purchaseOrderApprovals.authentication': undefined as

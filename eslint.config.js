@@ -1,5 +1,4 @@
-import { configWebApp } from 'eslint-config-cityssm';
-import tseslint from 'typescript-eslint';
+import { configWebApp, cspellWords, tseslint } from 'eslint-config-cityssm';
 export const config = tseslint.config(...configWebApp, {
     languageOptions: {
         parserOptions: {
@@ -7,6 +6,14 @@ export const config = tseslint.config(...configWebApp, {
         }
     },
     rules: {
+        '@cspell/spellchecker': [
+            'warn',
+            {
+                cspell: {
+                    words: [...cspellWords, 'worktech']
+                }
+            }
+        ],
         '@typescript-eslint/no-unsafe-assignment': 'off',
         '@typescript-eslint/no-unsafe-argument': 'off',
         '@typescript-eslint/no-unsafe-call': 'off',

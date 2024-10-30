@@ -7,7 +7,7 @@ import { getConfigProperty } from '../../helpers/functions.config.js';
 import { moduleName } from './helpers/moduleHelpers.js';
 import runTempFolderCleanupTask, { taskName as tempFolderCleanupTaskName } from './tasks/tempFolderCleanupTask.js';
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`);
-export default async function initializeTempFolderCleanupModule() {
+export default async function initializeTempFolderCleanupModule(options) {
     debug(`Initializing "${moduleName}"...`);
     if (getConfigProperty('modules.tempFolderCleanup.runOnStartup')) {
         debug(`Running "${tempFolderCleanupTaskName}" on startup...`);

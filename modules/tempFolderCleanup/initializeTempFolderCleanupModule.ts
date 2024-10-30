@@ -5,6 +5,7 @@ import exitHook from 'exit-hook'
 import schedule from 'node-schedule'
 
 import { getConfigProperty } from '../../helpers/functions.config.js'
+import type { ModuleInitializerOptions } from '../types.js'
 
 import { moduleName } from './helpers/moduleHelpers.js'
 import runTempFolderCleanupTask, {
@@ -13,7 +14,9 @@ import runTempFolderCleanupTask, {
 
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`)
 
-export default async function initializeTempFolderCleanupModule(): Promise<void> {
+export default async function initializeTempFolderCleanupModule(
+  options?: ModuleInitializerOptions
+): Promise<void> {
   debug(`Initializing "${moduleName}"...`)
 
   if (getConfigProperty('modules.tempFolderCleanup.runOnStartup')) {

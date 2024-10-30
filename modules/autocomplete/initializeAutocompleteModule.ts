@@ -8,6 +8,7 @@ import express from 'express'
 import schedule from 'node-schedule'
 
 import { getConfigProperty } from '../../helpers/functions.config.js'
+import type { ModuleInitializerOptions } from '../types.js'
 
 import { moduleName } from './helpers/moduleHelpers.js'
 import runUpdateAssetNumbersTask, {
@@ -25,7 +26,7 @@ const assetNumbersConfig = getConfigProperty(
 const itemNumbersConfig = getConfigProperty('modules.autocomplete.reports.w200')
 
 export default async function initializeAutocompleteModule(
-  app: express.Express
+  options: ModuleInitializerOptions
 ): Promise<void> {
   debug(`Initializing "${moduleName}"...`)
 
@@ -33,7 +34,7 @@ export default async function initializeAutocompleteModule(
    * Set up static server
    */
 
-  app.use(
+  options.app.use(
     getConfigProperty('webServer.urlPrefix') + '/autocomplete',
     express.static(path.join('public', 'autocomplete'))
   )

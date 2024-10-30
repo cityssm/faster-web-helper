@@ -1,8 +1,8 @@
 import camelCase from 'camelcase'
 import Debug from 'debug'
-import type express from 'express'
 
 import { getConfigProperty } from '../../helpers/functions.config.js'
+import type { ModuleInitializerOptions } from '../types.js'
 
 import { initializePurchaseOrderApprovalsDatabase } from './database/databaseHelpers.js'
 import router from './handlers/router.js'
@@ -13,13 +13,13 @@ const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`)
 const urlPrefix = getConfigProperty('webServer.urlPrefix')
 
 export default function initializePurchaseOrderApprovalsModule(
-  app: express.Express
+  options: ModuleInitializerOptions
 ): void {
   debug(`Initializing "${moduleName}"...`)
 
   initializePurchaseOrderApprovalsDatabase()
 
-  app.use(`${urlPrefix}/purchaseOrderApprovals`, router)
+  options.app.use(`${urlPrefix}/purchaseOrderApprovals`, router)
 
   debug(`"${moduleName}" initialized.`)
 }

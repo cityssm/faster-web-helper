@@ -1,1 +1,2 @@
-export default function initializeTempFolderCleanupModule(): Promise<void>;
+import type { ModuleInitializerOptions } from '../types.js';
+export default function initializeTempFolderCleanupModule(options?: ModuleInitializerOptions): Promise<void>;

@@ -12,12 +12,12 @@ import runUpdateItemNumbersTask, { taskName as updateItemNumbersTaskName } from 
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`);
 const assetNumbersConfig = getConfigProperty('modules.autocomplete.reports.w114');
 const itemNumbersConfig = getConfigProperty('modules.autocomplete.reports.w200');
-export default async function initializeAutocompleteModule(app) {
+export default async function initializeAutocompleteModule(options) {
     debug(`Initializing "${moduleName}"...`);
     /*
      * Set up static server
      */
-    app.use(getConfigProperty('webServer.urlPrefix') + '/autocomplete', express.static(path.join('public', 'autocomplete')));
+    options.app.use(getConfigProperty('webServer.urlPrefix') + '/autocomplete', express.static(path.join('public', 'autocomplete')));
     /*
      * Run startup tasks
      */

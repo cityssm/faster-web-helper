@@ -5,6 +5,7 @@ import exitHook from 'exit-hook'
 import schedule from 'node-schedule'
 
 import { getConfigProperty } from '../../helpers/functions.config.js'
+import type { ModuleInitializerOptions } from '../types.js'
 
 import { initializeWorktechUpdateDatabase } from './database/databaseHelpers.js'
 import { moduleName } from './helpers/moduleHelpers.js'
@@ -35,7 +36,7 @@ const activeEquipmentConfig = getConfigProperty(
   'modules.worktechUpdate.reports.w114'
 )
 
-export default async function initializeWorktechUpdateModule(): Promise<void> {
+export default async function initializeWorktechUpdateModule(options?: ModuleInitializerOptions): Promise<void> {
   debug(`Initializing "${moduleName}"...`)
 
   /*

@@ -6,9 +6,9 @@ import router from './handlers/router.js';
 import { moduleName } from './helpers/moduleHelpers.js';
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`);
 const urlPrefix = getConfigProperty('webServer.urlPrefix');
-export default function initializePurchaseOrderApprovalsModule(app) {
+export default function initializePurchaseOrderApprovalsModule(options) {
     debug(`Initializing "${moduleName}"...`);
     initializePurchaseOrderApprovalsDatabase();
-    app.use(`${urlPrefix}/purchaseOrderApprovals`, router);
+    options.app.use(`${urlPrefix}/purchaseOrderApprovals`, router);
     debug(`"${moduleName}" initialized.`);
 }

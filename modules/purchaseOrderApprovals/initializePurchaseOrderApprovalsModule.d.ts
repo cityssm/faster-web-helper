@@ -1,2 +1,2 @@
-import type express from 'express';
-export default function initializePurchaseOrderApprovalsModule(app: express.Express): void;
+import type { ModuleInitializerOptions } from '../types.js';
+export default function initializePurchaseOrderApprovalsModule(options: ModuleInitializerOptions): void;
