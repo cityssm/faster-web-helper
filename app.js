@@ -115,8 +115,8 @@ if (configFunctions.getConfigProperty('modules.autocomplete.isEnabled')) {
     await initializeAutocompleteModule.default(options);
 }
 if (configFunctions.getConfigProperty('modules.inventoryScanner.isEnabled')) {
-    const initializeInventoryScannerModules = await import('./modules/inventoryScanner/initializeInventoryScannerModule.js');
-    initializeInventoryScannerModules.default(options);
+    const initializeInventoryScannerModule = await import('./modules/inventoryScanner/initialize.js');
+    initializeInventoryScannerModule.default(options);
 }
 if (configFunctions.getConfigProperty('modules.worktechUpdate.isEnabled')) {
     const initializeWorktechUpdateModule = await import('./modules/worktechUpdate/initializeWorktechUpdateModule.js');

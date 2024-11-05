@@ -1,11 +1,17 @@
-import sqlite from 'better-sqlite3';
-import camelcase from 'camelcase';
-import Debug from 'debug';
-import { moduleName } from '../helpers/moduleHelpers.js';
-const debug = Debug(`faster-web-helper:${camelcase(moduleName)}:databaseHelpers`);
-export const databasePath = 'data/inventoryScanner.db';
+import sqlite from 'better-sqlite3'
+import camelcase from 'camelcase'
+import Debug from 'debug'
+
+import { moduleName } from '../helpers/module.js'
+
+const debug = Debug(
+  `faster-web-helper:${camelcase(moduleName)}:databaseHelpers`
+)
+
+export const databasePath = 'data/inventoryScanner.db'
+
 const createStatements = [
-    `create table if not exists ItemValidationRecords (
+  `create table if not exists ItemValidationRecords (
     itemStoreroom varchar(3) not null,
     itemNumber varchar(22) not null,
     itemDescription varchar(40) not null default '',
@@ -15,7 +21,8 @@ const createStatements = [
     recordUpdate_timeMillis integer not null,
     recordDelete_timeMillis integer,
     primary key (itemStoreroom, itemNumber))`,
-    `create table if not exists WorkOrderValidationRecords (
+
+  `create table if not exists WorkOrderValidationRecords (
     workOrderNumber varchar(10) not null primary key,
     workOrderType varchar(10) not null default 'faster',
     workOrderDescription varchar(500) not null default '',
@@ -26,7 +33,8 @@ const createStatements = [
     recordCreate_timeMillis integer not null,
     recordUpdate_timeMillis integer not null,
     recordDelete_timeMillis integer)`,
-    `create table if not exists InventoryScannerRecords (
+
+  `create table if not exists InventoryScannerRecords (
     recordId integer primary key autoincrement,
     scannerKey char(10) not null,
     scanDate integer not null,
@@ -52,22 +60,32 @@ const createStatements = [
     recordUpdate_timeMillis integer not null,
     recordDelete_userName varchar(20),
     recordDelete_timeMillis integer)`
-];
-export function initializeInventoryScannerDatabase() {
-    let success = false;
-    const database = sqlite(databasePath);
-    const row = database
-        .prepare(`select name from sqlite_master
+]
+
+export function initializeInventoryScannerDatabase(): boolean {
+  let success = false
+
+  const database = sqlite(databasePath)
+
+  const row = database
+    .prepare(
+      `select name from sqlite_master
         where type = 'table'
-        and name = 'InventoryScannerRecords'`)
-        .get();
-    if (row === undefined) {
-        debug(`Creating ${databasePath}`);
-        for (const sql of createStatements) {
-            database.prepare(sql).run();
-        }
-        success = true;
+        and name = 'InventoryScannerRecords'`
+    )
+    .get()
+
+  if (row === undefined) {
+    debug(`Creating ${databasePath}`)
+
+    for (const sql of createStatements) {
+      database.prepare(sql).run()
     }
-    database.close();
-    return success;
+
+    success = true
+  }
+
+  database.close()
+
+  return success
 }
