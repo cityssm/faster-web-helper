@@ -10,7 +10,7 @@ export const config = tseslint.config(...configWebApp, {
             'warn',
             {
                 cspell: {
-                    words: [...cspellWords, 'worktech']
+                    words: [...cspellWords, 'autoincrement', 'worktech']
                 }
             }
         ],
