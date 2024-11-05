@@ -13,7 +13,8 @@ A service to support integrations with the
 [Autocomplete](./modules/autocomplete/README.md)<br />
 Creates and hosts JSON files compatible with Autocomplete userscripts.
 
-[WorkTech Work Order Resources Update](./modules/worktechUpdate/README.md)<br />
+[WorkTech Update](./modules/worktechUpdate/README.md)<br />
+Synchronizes active equipment with WorkTech's equipment list.
 Synchronizes items issued on Direct Charges in FASTER Web
 with resources consumed by WorkTech work orders.
 

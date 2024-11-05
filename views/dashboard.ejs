@@ -1,0 +1,21 @@
+<%- include('_header'); -%>
+
+<h1 class="title">Available Modules</h1>
+
+<% if (configFunctions.getConfigProperty('modules.inventoryScanner.isEnabled') && (user.settings['inventoryScanner_hasAccess'] ?? 'false') === 'true') { %>
+
+  <a class="box" href="<%= urlPrefix %>/modules/inventoryScanner">
+    <div class="columns">
+      <div class="column is-narrow">
+        <i class="fa-solid fa-barcode fa-6x" aria-hidden="true"></i>
+      </div>
+      <div class="column">
+        <h2 class="title is-4 mb-0">Inventory Scanner</h2>
+        <p>Manage scanned inventory transactions.</p>
+      </div>
+    </div>
+  </a>
+<% } %>
+
+<%- include('_footerA'); -%>
+<%- include('_footerB'); -%>

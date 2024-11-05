@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html class="has-background-grey" id="is-login-page" lang="en">
+
+<head>  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    Login: FASTER Web Helper
+  </title>
+
+  <link rel="icon" href="<%= urlPrefix %>/images/logo.svg" />
+  <link rel="stylesheet" href="<%= urlPrefix %>/lib/bulma/bulma.min.css" />
+  <link rel="stylesheet" href="<%= urlPrefix %>/lib/fa/css/all.min.css" />
+</head>
+
+<body>
+  <div class="columns is-vcentered is-centered has-min-page-height is-marginless">
+    <div class="column is-half-widescreen is-two-thirds-desktop is-three-quarters-tablet">
+      <main class="box mx-3 my-3">
+        <div class="columns is-vcentered">
+          <div class="column has-text-centered" aria-hidden="true">
+            <img src="<%= urlPrefix %>/images/logo.svg" alt="" style="max-height:300px" />
+          </div>
+          <div class="column">
+            <h1 class="title is-3 has-text-centered">
+              FASTER Web Helper
+            </h1>
+            <form id="form--login" method="post" action="<%= urlPrefix %>/login" aria-label="Login Form">
+              <input name="_csrf" type="hidden" value="<%= csrfToken %>" />
+              <input name="redirect" type="hidden" value="<%= redirect %>" />
+
+              <label class="sr-only" for="login--userName">User Name</label>
+              <div class="field has-addons">
+                <div class="control">
+                  <span class="button is-static" aria-label="User Domain"><%= configFunctions.getConfigProperty("login.domain") %>\</span>
+                </div>
+                <div class="control is-expanded has-tooltip-right" data-tooltip="User Name">
+                  <input class="input" id="login--userName" name="userName" type="text" placeholder="User Name" value="<%= userName %>" autocomplete="username" autofocus required />
+                </div>
+              </div>
+              <div class="field">
+                <label class="sr-only" for="login--password">Password</label>
+                <div class="control has-icons-left has-tooltip-right" data-tooltip="Password">
+                  <input class="input" id="login--password" name="password" type="password" placeholder="Password" autocomplete="current-password" required />
+                  <span class="icon is-small is-left" aria-hidden="true">
+                    <i class="fas fa-key"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="level is-mobile">
+                <div class="level-left has-text-danger">
+                    <% if (message !== "") { %>
+                    <span class="icon">
+                      <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                    </span>
+                    <span><%= message %></span>
+                  <% } %>
+                </div>
+                <div class="level-right has-text-right">
+                  <button class="button is-link" type="submit">
+                    <span class="icon">
+                      <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                    </span>
+                    <span>Log In</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    try {
+      window.localStorage.clear();
+    } catch (e) {}
+  </script>
+</body>
+
+</html>

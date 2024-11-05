@@ -13,6 +13,24 @@ export interface Config {
   webServer?: {
     httpPort: number
     urlPrefix?: string
+    session?: {
+      cookieName?: string
+      secret?: string
+      maxAgeMillis?: number
+    }
+  }
+
+  login?: {
+    domain: string
+    authentication:
+      | {
+          type: 'activeDirectory'
+          config: ActiveDirectoryAuthenticatorConfiguration
+        }
+      | {
+          type: 'adWebAuth'
+          config: ADWebAuthAuthenticatorConfiguration
+        }
   }
 
   smtp?: SMTPTransport.Options
@@ -24,7 +42,6 @@ export interface Config {
     inventoryScanner?: ConfigModule<ConfigModuleInventoryScanner>
     worktechUpdate?: ConfigModule<ConfigModuleWorktechUpdate>
     tempFolderCleanup?: ConfigModule<ConfigModuleTempFolderCleanup>
-    purchaseOrderApprovals?: ConfigModule<ConfigModulePurchaseOrderApprovals>
   }
 }
 
@@ -109,22 +126,4 @@ interface ConfigModuleWorktechUpdate {
 interface ConfigModuleTempFolderCleanup {
   schedule?: Spec
   maxAgeDays?: number
-}
-
-interface ConfigModulePurchaseOrderApprovals {
-  session?: {
-    cookieName?: string
-    secret?: string
-    maxAgeMillis?: number
-  }
-  domain: string
-  authentication:
-    | {
-        type: 'activeDirectory'
-        config: ActiveDirectoryAuthenticatorConfiguration
-      }
-    | {
-        type: 'adWebAuth'
-        config: ADWebAuthAuthenticatorConfiguration
-      }
 }

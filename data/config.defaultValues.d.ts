@@ -7,6 +7,17 @@ export declare const configDefaultValues: {
     ftp: AccessOptions;
     'webServer.httpPort': number;
     'webServer.urlPrefix': string;
+    'webServer.session.cookieName': string;
+    'webServer.session.secret': string;
+    'webServer.session.maxAgeMillis': number;
+    'login.domain': string;
+    'login.authentication': {
+        type: "activeDirectory";
+        config: ActiveDirectoryAuthenticatorConfiguration;
+    } | {
+        type: "adWebAuth";
+        config: ADWebAuthAuthenticatorConfiguration;
+    } | undefined;
     worktech: MSSQLConfig;
     'modules.autocomplete.isEnabled': boolean;
     'modules.autocomplete.runOnStartup': boolean;
@@ -29,17 +40,4 @@ export declare const configDefaultValues: {
     'modules.tempFolderCleanup.runOnStartup': boolean;
     'modules.tempFolderCleanup.schedule': Spec;
     'modules.tempFolderCleanup.maxAgeDays': number;
-    'modules.purchaseOrderApprovals.isEnabled': boolean;
-    'modules.purchaseOrderApprovals.runOnStartup': boolean;
-    'modules.purchaseOrderApprovals.session.cookieName': string;
-    'modules.purchaseOrderApprovals.session.secret': string;
-    'modules.purchaseOrderApprovals.session.maxAgeMillis': number;
-    'modules.purchaseOrderApprovals.domain': string;
-    'modules.purchaseOrderApprovals.authentication': {
-        type: "activeDirectory";
-        config: ActiveDirectoryAuthenticatorConfiguration;
-    } | {
-        type: "adWebAuth";
-        config: ADWebAuthAuthenticatorConfiguration;
-    } | undefined;
 };

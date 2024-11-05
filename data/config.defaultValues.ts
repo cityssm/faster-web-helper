@@ -18,6 +18,22 @@ export const configDefaultValues = {
   'webServer.httpPort': 8080,
   'webServer.urlPrefix': '',
 
+  'webServer.session.cookieName': 'faster-web-helper-user-sid',
+  'webServer.session.secret': 'cityssm/faster-web-helper',
+  'webServer.session.maxAgeMillis': hoursToMillis(12),
+
+  'login.domain': '',
+  'login.authentication': undefined as
+    | {
+        type: 'activeDirectory'
+        config: ActiveDirectoryAuthenticatorConfiguration
+      }
+    | {
+        type: 'adWebAuth'
+        config: ADWebAuthAuthenticatorConfiguration
+      }
+    | undefined,
+
   worktech: undefined as unknown as MSSQLConfig,
 
   /*
@@ -87,28 +103,5 @@ export const configDefaultValues = {
     dayOfWeek: 0,
     hour: 1
   } as unknown as Spec,
-  'modules.tempFolderCleanup.maxAgeDays': 35,
-
-  /*
-   * Purchase Order Approvals
-   */
-
-  'modules.purchaseOrderApprovals.isEnabled': false,
-  'modules.purchaseOrderApprovals.runOnStartup': true,
-
-  'modules.purchaseOrderApprovals.session.cookieName': 'faster-web-helper-user-sid',
-  'modules.purchaseOrderApprovals.session.secret': 'cityssm/faster-web-helper',
-  'modules.purchaseOrderApprovals.session.maxAgeMillis': hoursToMillis(12),
-
-  'modules.purchaseOrderApprovals.domain': '',
-  'modules.purchaseOrderApprovals.authentication': undefined as
-    | {
-        type: 'activeDirectory'
-        config: ActiveDirectoryAuthenticatorConfiguration
-      }
-    | {
-        type: 'adWebAuth'
-        config: ADWebAuthAuthenticatorConfiguration
-      }
-    | undefined
+  'modules.tempFolderCleanup.maxAgeDays': 35
 }
