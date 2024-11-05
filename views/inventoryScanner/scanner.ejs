@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    Scanner: FASTER Web Helper
+  </title>
+
+  <link rel="icon" href="<%= urlPrefix %>/images/logo.svg" />
+  <link rel="stylesheet" href="<%= urlPrefix %>/lib/bulma/bulma.min.css" />
+  <link rel="stylesheet" href="<%= urlPrefix %>/lib/fa/css/all.min.css" />
+</head>
+
+<body>
+  <div class="columns is-vcentered is-centered">
+    <div class="column is-one-third-widescreen is-half-tablet">
+      <form class="m-2" id="form--scanner">
+        <input name="_csrf" type="hidden" value="<%= csrfToken %>" />
+
+        <div class="field">
+          <label class="label" for="scanner--workOrderNumber">Work Order Number</label>
+          <div class="control">
+            <input class="input" id="scanner--workOrderNumber" name="workOrderNumber" type="text" maxlength="10" required autofocus />
+          </div>
+        </div>
+        
+        <div class="field">
+          <label class="label" for="scanner--itemNumber">Item Number</label>
+          <div class="control">
+            <input class="input" id="scanner--itemNumber" name="itemNumber" type="text" maxlength="22" required />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="scanner--quantity">Quantity</label>
+          <div class="control">
+            <input class="input" id="scanner--quantity" name="quantity" type="text" inputmode="numeric" pattern="\d+" maxlength="3" required />
+          </div>
+        </div>
+      </form>
+      
+    </div>
+  </div>
+</body>
+
+</html>

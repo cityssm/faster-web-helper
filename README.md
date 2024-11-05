@@ -1,4 +1,8 @@
+<div align=center>
+
 # FASTER Web Helper
+
+<img src="public/images/logo.svg" height="200" />
 
 🚧 **Under Active Development** 🚧
 
@@ -8,23 +12,23 @@
 A service to support integrations with the
 [FASTER Web Fleet Management System](https://fasterasset.com/products/fleet-management-software/).
 
+_This helper service is completely unofficial and is in no way affiliated with or endorsed by FASTER Asset Solutions or Transit Technologies._
+
+</div>
+
 ## Available Modules
 
-[Autocomplete](./modules/autocomplete/README.md)<br />
-Creates and hosts JSON files compatible with Autocomplete userscripts.
+⭐ [**Inventory Scanner**](./modules/inventoryScanner/README.md) ⭐<br />
+Uses the **Inventory Import Utility** integration to offer
+a solution for issuing inventory using handheld barcode scanners.
 
-[WorkTech Update](./modules/worktechUpdate/README.md)<br />
+[**WorkTech Update**](./modules/worktechUpdate/README.md)<br />
 Synchronizes active equipment with WorkTech's equipment list.
 Synchronizes items issued on Direct Charges in FASTER Web
 with resources consumed by WorkTech work orders.
 
-### Possible Modules
-
-⭐ The modules below are under consideration, but are **not** currently being developed.
-
-[Inventory Scanner](./modules/inventoryScanner/README.md)<br />
-Uses the **Inventory Import Utility** integration to offer
-a solution for issuing inventory using handheld barcode scanners.
+[**Autocomplete**](./modules/autocomplete/README.md)<br />
+Creates and hosts JSON files compatible with Autocomplete userscripts.
 
 ## Other FASTER Web Projects
 

@@ -85,21 +85,39 @@ interface ConfigModuleAutocomplete {
 }
 
 interface ConfigModuleInventoryScanner {
-  reports: {
+  scannerIpAddressRegex?: RegExp
+  
+  workOrders?: {
+    acceptNotValidated?: boolean
+    fasterRegex?: RegExp
+    acceptWorkTech?: boolean
+    workTechRegex?: RegExp
+  }
+
+  items?: {
+    acceptNotValidated?: boolean
+  }
+
+  quantities?: {
+    acceptOverages?: boolean
+    acceptNegatives?: boolean
+  }
+
+  reports?: {
     /**
      * W200 - Inventory Report
      */
-    w200: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
+    w200?: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
 
     /**
      * W311 - Active Work Orders by Shop
      */
-    w311: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
+    w311?: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
 
     /**
      * W604 - Integration Log Viewer
      */
-    w604: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
+    w604?: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
   }
 }
 

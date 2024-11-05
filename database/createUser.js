@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3';
 import { generateKeyGuid } from '../helpers/functions.user.js';
-import { databasePath } from './userDatabaseHelpers.js';
+import { databasePath } from './helpers.userDatabase.js';
 export default function createUser(user) {
     const rightNow = Date.now();
     const database = sqlite(databasePath);

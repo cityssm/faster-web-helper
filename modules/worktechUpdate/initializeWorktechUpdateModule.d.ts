@@ -1,2 +1,2 @@
 import type { ModuleInitializerOptions } from '../types.js';
-export default function initializeWorktechUpdateModule(options?: ModuleInitializerOptions): Promise<void>;
+export default function initializeWorktechUpdateModule(_options?: ModuleInitializerOptions): Promise<void>;

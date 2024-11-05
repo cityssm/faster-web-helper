@@ -1,5 +1,5 @@
 export default function handler(request, response) {
-    response.render('inventoryScanner', {
+    response.render('inventoryScanner/scanner', {
         headTitle: 'Inventory Scanner'
     });
 }

@@ -25,6 +25,14 @@ export declare const configDefaultValues: {
     'modules.autocomplete.reports.w200': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
     'modules.inventoryScanner.isEnabled': boolean;
     'modules.inventoryScanner.runOnStartup': boolean;
+    'modules.inventoryScanner.scannerIpAddressRegex': RegExp | undefined;
+    'modules.inventoryScanner.workOrders.acceptNotValidated': boolean;
+    'modules.inventoryScanner.workOrders.fasterRegex': RegExp;
+    'modules.inventoryScanner.workOrders.acceptWorkTech': boolean;
+    'modules.inventoryScanner.workOrders.workTechRegex': RegExp;
+    'modules.inventoryScanner.items.acceptNotValidated': boolean;
+    'modules.inventoryScanner.quantities.acceptOverages': boolean;
+    'modules.inventoryScanner.quantities.acceptNegatives': boolean;
     'modules.inventoryScanner.reports.w200': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
     'modules.inventoryScanner.reports.w311': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
     'modules.inventoryScanner.reports.w604': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;

@@ -6,6 +6,7 @@ import type { ModuleInitializerOptions } from '../types.js'
 
 import { initializeInventoryScannerDatabase } from './database/helpers.database.js'
 import router from './handlers/router.js'
+import scannerRouter from './handlers/router.scanner.js'
 import { moduleName } from './helpers/module.js'
 
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`)
@@ -23,6 +24,10 @@ export default function initializeInventoryScannerModules(
 
   initializeInventoryScannerDatabase()
 
+  /*
+   * Initialize router for admin interface
+   */
+
   options.app.use(
     `${urlPrefix}/modules/inventoryScanner`,
     (request, response, nextFunction) => {
@@ -38,4 +43,32 @@ export default function initializeInventoryScannerModules(
     },
     router
   )
+
+  /*
+   * Initialize router for scanner
+   */
+
+  options.app.use(
+    `${urlPrefix}/apps/inventoryScanner`,
+    (request, response, nextFunction) => {
+      const requestIp = request.ip ?? ''
+
+      const requestIpRegex = getConfigProperty(
+        'modules.inventoryScanner.scannerIpAddressRegex'
+      )
+
+      if (requestIpRegex === undefined || requestIpRegex.test(requestIp)) {
+        nextFunction()
+        return
+      }
+
+      response.json({
+        error: 403,
+        requestIp
+      })
+    },
+    scannerRouter
+  )
+
+  debug(`"${moduleName}" initialized.`)
 }

@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3';
 import Debug from 'debug';
-const debug = Debug(`faster-web-helper:userDatabaseHelpers`);
+const debug = Debug('faster-web-helper:helpers.userDatabase');
 export const databasePath = 'data/users.db';
 const createStatements = [
     `create table if not exists Users (

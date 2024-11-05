@@ -1,5 +1,5 @@
 import sqlite from 'better-sqlite3';
-import { databasePath } from './userDatabaseHelpers.js';
+import { databasePath } from './helpers.userDatabase.js';
 function getUserByField(userDataField, userDataValue) {
     const database = sqlite(databasePath, {
         readonly: true

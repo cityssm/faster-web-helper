@@ -36,7 +36,7 @@ const activeEquipmentConfig = getConfigProperty(
   'modules.worktechUpdate.reports.w114'
 )
 
-export default async function initializeWorktechUpdateModule(options?: ModuleInitializerOptions): Promise<void> {
+export default async function initializeWorktechUpdateModule(_options?: ModuleInitializerOptions): Promise<void> {
   debug(`Initializing "${moduleName}"...`)
 
   /*

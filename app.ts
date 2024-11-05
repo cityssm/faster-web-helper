@@ -12,7 +12,7 @@ import createError from 'http-errors'
 import schedule from 'node-schedule'
 import FileStore from 'session-file-store'
 
-import { initializeUserDatabase } from './database/userDatabaseHelpers.js'
+import { initializeUserDatabase } from './database/helpers.userDatabase.js'
 import { sessionCheckHandler } from './handlers/session.js'
 import * as configFunctions from './helpers/functions.config.js'
 import type { ModuleInitializerOptions } from './modules/types.js'

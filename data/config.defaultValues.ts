@@ -58,6 +58,24 @@ export const configDefaultValues = {
   'modules.inventoryScanner.isEnabled': false,
   'modules.inventoryScanner.runOnStartup': true,
 
+  'modules.inventoryScanner.scannerIpAddressRegex': undefined as unknown as
+    | RegExp
+    | undefined,
+
+  'modules.inventoryScanner.workOrders.acceptNotValidated': true,
+  'modules.inventoryScanner.workOrders.fasterRegex': /^\d+/,
+
+  // eslint-disable-next-line no-secrets/no-secrets
+  'modules.inventoryScanner.workOrders.acceptWorkTech': false,
+
+  // eslint-disable-next-line no-secrets/no-secrets
+  'modules.inventoryScanner.workOrders.workTechRegex': /^[A-Z]{2}.\d{2}.\d{5}$/,
+
+  'modules.inventoryScanner.items.acceptNotValidated': true,
+
+  'modules.inventoryScanner.quantities.acceptOverages': true,
+  'modules.inventoryScanner.quantities.acceptNegatives': true,
+
   'modules.inventoryScanner.reports.w200': undefined as unknown as
     | ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
     | undefined,

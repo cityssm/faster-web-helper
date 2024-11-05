@@ -14,7 +14,7 @@ const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`);
 const directChargeTransactionsConfig = getConfigProperty('modules.worktechUpdate.reports.w217');
 const inventoryTransactionsConfig = getConfigProperty('modules.worktechUpdate.reports.w223');
 const activeEquipmentConfig = getConfigProperty('modules.worktechUpdate.reports.w114');
-export default async function initializeWorktechUpdateModule(options) {
+export default async function initializeWorktechUpdateModule(_options) {
     debug(`Initializing "${moduleName}"...`);
     /*
      * Ensure the local database is available.
