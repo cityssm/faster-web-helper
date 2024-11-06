@@ -1,3 +1,4 @@
+import { isLocal } from '@cityssm/is-private-network-address'
 import camelCase from 'camelcase'
 import Debug from 'debug'
 
@@ -57,7 +58,7 @@ export default function initializeInventoryScannerModules(
         'modules.inventoryScanner.scannerIpAddressRegex'
       )
 
-      if (requestIpRegex === undefined || requestIpRegex.test(requestIp)) {
+      if (isLocal(requestIp) || requestIpRegex.test(requestIp)) {
         nextFunction()
         return
       }

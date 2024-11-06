@@ -58,9 +58,7 @@ export const configDefaultValues = {
   'modules.inventoryScanner.isEnabled': false,
   'modules.inventoryScanner.runOnStartup': true,
 
-  'modules.inventoryScanner.scannerIpAddressRegex': undefined as unknown as
-    | RegExp
-    | undefined,
+  'modules.inventoryScanner.scannerIpAddressRegex': /^$/,
 
   'modules.inventoryScanner.workOrders.acceptNotValidated': true,
   'modules.inventoryScanner.workOrders.fasterRegex': /^\d+/,

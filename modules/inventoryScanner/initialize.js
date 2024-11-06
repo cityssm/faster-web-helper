@@ -1,3 +1,4 @@
+import { isLocal } from '@cityssm/is-private-network-address';
 import camelCase from 'camelcase';
 import Debug from 'debug';
 import { getConfigProperty } from '../../helpers/functions.config.js';
@@ -30,7 +31,7 @@ export default function initializeInventoryScannerModules(options) {
     options.app.use(`${urlPrefix}/apps/inventoryScanner`, (request, response, nextFunction) => {
         const requestIp = request.ip ?? '';
         const requestIpRegex = getConfigProperty('modules.inventoryScanner.scannerIpAddressRegex');
-        if (requestIpRegex === undefined || requestIpRegex.test(requestIp)) {
+        if (isLocal(requestIp) || requestIpRegex.test(requestIp)) {
             nextFunction();
             return;
         }

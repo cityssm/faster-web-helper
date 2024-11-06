@@ -25,7 +25,7 @@ export declare const configDefaultValues: {
     'modules.autocomplete.reports.w200': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
     'modules.inventoryScanner.isEnabled': boolean;
     'modules.inventoryScanner.runOnStartup': boolean;
-    'modules.inventoryScanner.scannerIpAddressRegex': RegExp | undefined;
+    'modules.inventoryScanner.scannerIpAddressRegex': RegExp;
     'modules.inventoryScanner.workOrders.acceptNotValidated': boolean;
     'modules.inventoryScanner.workOrders.fasterRegex': RegExp;
     'modules.inventoryScanner.workOrders.acceptWorkTech': boolean;
