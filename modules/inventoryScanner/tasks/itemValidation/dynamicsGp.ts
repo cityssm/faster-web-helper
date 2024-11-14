@@ -1,13 +1,15 @@
 import { DynamicsGP } from '@cityssm/dynamics-gp'
 import camelCase from 'camelcase'
 import Debug from 'debug'
+import exitHook from 'exit-hook'
+import { scheduleJob } from 'node-schedule'
 
 import { getConfigProperty } from '../../../../helpers/functions.config.js'
-import type { DefaultAsyncTaskExport } from '../../../../types/taskTypes.js'
 import type { ConfigItemValidationDynamicsGP } from '../../configTypes.js'
 import createOrUpdateItemValidation from '../../database/createOrUpdateItemValidation.js'
 import deleteItemValidation from '../../database/deleteItemValidation.js'
 import { moduleName } from '../../helpers/module.js'
+
 
 export const taskName = 'Inventory Validation Task - Dynamics GP'
 
@@ -82,9 +84,11 @@ export async function runUpdateItemValidationFromDynamicsGpTask(): Promise<void>
   debug(`Finished "${taskName}".`)
 }
 
-export default {
+await runUpdateItemValidationFromDynamicsGpTask()
+
+const job = scheduleJob(
   taskName,
-  schedule: taskConfig.schedule ?? {
+  taskConfig.schedule ?? {
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     dayOfWeek: [1, 2, 3, 4, 5],
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
@@ -92,5 +96,11 @@ export default {
     minute: 15,
     second: 0
   },
-  task: runUpdateItemValidationFromDynamicsGpTask
-} satisfies DefaultAsyncTaskExport
+  runUpdateItemValidationFromDynamicsGpTask
+)
+
+exitHook(() => {
+  try {
+    job.cancel()
+  } catch {}
+})

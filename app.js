@@ -48,6 +48,7 @@ app.use(urlPrefix, express.static(path.join('public')));
 app.use(`${urlPrefix}/lib/fa`, express.static(path.join('node_modules', '@fortawesome', 'fontawesome-free')));
 app.use(`${urlPrefix}/lib/bulma`, express.static(path.join('node_modules', 'bulma', 'css')));
 app.use(`${urlPrefix}/lib/cityssm-bulma-js`, express.static(path.join('node_modules', '@cityssm', 'bulma-js', 'dist')));
+app.use(`${urlPrefix}/lib/cityssm-bulma-webapp-js`, express.static(path.join('node_modules', '@cityssm', 'bulma-webapp-js', 'dist')));
 /*
  * SESSION MANAGEMENT
  */
@@ -110,9 +111,10 @@ app.get(`${urlPrefix}/logout`, (request, response) => {
 const options = {
     app
 };
+const promises = [];
 if (configFunctions.getConfigProperty('modules.autocomplete.isEnabled')) {
     const initializeAutocompleteModule = await import('./modules/autocomplete/initializeAutocompleteModule.js');
-    await initializeAutocompleteModule.default(options);
+    promises.push(initializeAutocompleteModule.default(options));
 }
 if (configFunctions.getConfigProperty('modules.inventoryScanner.isEnabled')) {
     const initializeInventoryScannerModule = await import('./modules/inventoryScanner/initialize.js');
@@ -120,12 +122,13 @@ if (configFunctions.getConfigProperty('modules.inventoryScanner.isEnabled')) {
 }
 if (configFunctions.getConfigProperty('modules.worktechUpdate.isEnabled')) {
     const initializeWorktechUpdateModule = await import('./modules/worktechUpdate/initializeWorktechUpdateModule.js');
-    await initializeWorktechUpdateModule.default(options);
+    promises.push(initializeWorktechUpdateModule.default(options));
 }
 if (configFunctions.getConfigProperty('modules.tempFolderCleanup.isEnabled')) {
     const initializeTempFolderCleanupModule = await import('./modules/tempFolderCleanup/initializeTempFolderCleanupModule.js');
-    await initializeTempFolderCleanupModule.default(options);
+    promises.push(initializeTempFolderCleanupModule.default(options));
 }
+await Promise.all(promises);
 /*
  * Error handling
  */

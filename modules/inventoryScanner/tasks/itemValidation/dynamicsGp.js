@@ -1,6 +1,8 @@
 import { DynamicsGP } from '@cityssm/dynamics-gp';
 import camelCase from 'camelcase';
 import Debug from 'debug';
+import exitHook from 'exit-hook';
+import { scheduleJob } from 'node-schedule';
 import { getConfigProperty } from '../../../../helpers/functions.config.js';
 import createOrUpdateItemValidation from '../../database/createOrUpdateItemValidation.js';
 import deleteItemValidation from '../../database/deleteItemValidation.js';
@@ -45,15 +47,18 @@ export async function runUpdateItemValidationFromDynamicsGpTask() {
     }
     debug(`Finished "${taskName}".`);
 }
-export default {
-    taskName,
-    schedule: taskConfig.schedule ?? {
-        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        dayOfWeek: [1, 2, 3, 4, 5],
-        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        hour: [4, 6, 8, 10, 12, 14, 16, 18, 20],
-        minute: 15,
-        second: 0
-    },
-    task: runUpdateItemValidationFromDynamicsGpTask
-};
+await runUpdateItemValidationFromDynamicsGpTask();
+const job = scheduleJob(taskName, taskConfig.schedule ?? {
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+    dayOfWeek: [1, 2, 3, 4, 5],
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+    hour: [4, 6, 8, 10, 12, 14, 16, 18, 20],
+    minute: 15,
+    second: 0
+}, runUpdateItemValidationFromDynamicsGpTask);
+exitHook(() => {
+    try {
+        job.cancel();
+    }
+    catch { }
+});

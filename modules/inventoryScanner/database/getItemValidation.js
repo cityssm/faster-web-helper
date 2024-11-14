@@ -8,7 +8,7 @@ export default function getItemValidation(itemStoreroom, itemNumber, includeDele
         from ItemValidationRecords
         where itemStoreroom = ?
         and itemNumber = ?
-        ${includeDeleted ? '' : ' and recordDelete_timeMillis in not null'}`)
+        ${includeDeleted ? '' : ' and recordDelete_timeMillis is not null'}`)
         .get(itemStoreroom, itemNumber);
     if (connectedDatabase === undefined) {
         database.close();

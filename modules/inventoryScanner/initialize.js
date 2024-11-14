@@ -1,8 +1,8 @@
+import { fork } from 'node:child_process';
 import { isLocal } from '@cityssm/is-private-network-address';
 import camelCase from 'camelcase';
 import Debug from 'debug';
 import exitHook from 'exit-hook';
-import schedule from 'node-schedule';
 import { getConfigProperty } from '../../helpers/functions.config.js';
 import { initializeInventoryScannerDatabase } from './database/helpers.database.js';
 import router from './handlers/router.js';
@@ -10,7 +10,7 @@ import scannerRouter from './handlers/router.scanner.js';
 import { moduleName } from './helpers/module.js';
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`);
 const urlPrefix = getConfigProperty('webServer.urlPrefix');
-export default async function initializeInventoryScannerModules(options) {
+export default function initializeInventoryScannerModules(options) {
     debug(`Initializing "${moduleName}"...`);
     /*
      * Ensure the local database is available.
@@ -19,21 +19,18 @@ export default async function initializeInventoryScannerModules(options) {
     /*
      * Initialize validation tasks
      */
-    let itemValidationJob;
+    let itemValidationProcess;
     const itemValidationConfig = getConfigProperty('modules.inventoryScanner.items.validation');
     if (itemValidationConfig !== undefined) {
-        let itemValidationTask;
+        let itemValidationTaskPath = '';
         if (itemValidationConfig.source === 'dynamicsGP') {
-            const importedTask = await import('./tasks/itemValidation/dynamicsGp.js');
-            itemValidationTask = importedTask.default;
-            debug(`Running  "${itemValidationTask.taskName}" on startup...`);
-            await itemValidationTask.task();
+            itemValidationTaskPath = './modules/inventoryScanner/tasks/itemValidation/dynamicsGp.js';
         }
         else {
             debug(`Item validation not implemented: ${itemValidationConfig.source}`);
         }
-        if (itemValidationTask !== undefined) {
-            itemValidationJob = schedule.scheduleJob(itemValidationTask.taskName, itemValidationTask.schedule, itemValidationTask.task);
+        if (itemValidationTaskPath !== '') {
+            itemValidationProcess = fork(itemValidationTaskPath);
         }
     }
     /*
@@ -66,8 +63,8 @@ export default async function initializeInventoryScannerModules(options) {
      * Set up exit hook
      */
     exitHook(() => {
-        if (itemValidationJob !== undefined) {
-            itemValidationJob.cancel();
+        if (itemValidationProcess !== undefined) {
+            itemValidationProcess.kill();
         }
     });
     debug(`"${moduleName}" initialized.`);

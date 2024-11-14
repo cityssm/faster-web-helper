@@ -1,10 +1,11 @@
 import { configWebApp, cspellWords, tseslint } from 'eslint-config-cityssm';
-export const config = tseslint.config(...configWebApp, {
+export const config = tseslint.config({
     languageOptions: {
         parserOptions: {
-            project: ['./tsconfig.json', './tsconfig.client.json']
+            project: true
         }
-    },
+    }
+}, ...configWebApp, {
     rules: {
         '@cspell/spellchecker': [
             'warn',

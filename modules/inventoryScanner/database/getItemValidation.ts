@@ -19,7 +19,7 @@ export default function getItemValidation(
         from ItemValidationRecords
         where itemStoreroom = ?
         and itemNumber = ?
-        ${includeDeleted ? '' : ' and recordDelete_timeMillis in not null'}`
+        ${includeDeleted ? '' : ' and recordDelete_timeMillis is not null'}`
     )
     .get(itemStoreroom, itemNumber) as ItemValidationRecord | undefined
 

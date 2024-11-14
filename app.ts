@@ -81,6 +81,11 @@ app.use(
   express.static(path.join('node_modules', '@cityssm', 'bulma-js', 'dist'))
 )
 
+app.use(
+  `${urlPrefix}/lib/cityssm-bulma-webapp-js`,
+  express.static(path.join('node_modules', '@cityssm', 'bulma-webapp-js', 'dist'))
+)
+
 /*
  * SESSION MANAGEMENT
  */
@@ -171,11 +176,13 @@ const options: ModuleInitializerOptions = {
   app
 }
 
+const promises: Array<Promise<void>> = []
+
 if (configFunctions.getConfigProperty('modules.autocomplete.isEnabled')) {
   const initializeAutocompleteModule = await import(
     './modules/autocomplete/initializeAutocompleteModule.js'
   )
-  await initializeAutocompleteModule.default(options)
+  promises.push(initializeAutocompleteModule.default(options))
 }
 
 if (configFunctions.getConfigProperty('modules.inventoryScanner.isEnabled')) {
@@ -189,15 +196,17 @@ if (configFunctions.getConfigProperty('modules.worktechUpdate.isEnabled')) {
   const initializeWorktechUpdateModule = await import(
     './modules/worktechUpdate/initializeWorktechUpdateModule.js'
   )
-  await initializeWorktechUpdateModule.default(options)
+  promises.push(initializeWorktechUpdateModule.default(options))
 }
 
 if (configFunctions.getConfigProperty('modules.tempFolderCleanup.isEnabled')) {
   const initializeTempFolderCleanupModule = await import(
     './modules/tempFolderCleanup/initializeTempFolderCleanupModule.js'
   )
-  await initializeTempFolderCleanupModule.default(options)
+  promises.push(initializeTempFolderCleanupModule.default(options))
 }
+
+await Promise.all(promises)
 
 /*
  * Error handling

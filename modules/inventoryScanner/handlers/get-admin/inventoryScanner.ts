@@ -1,7 +1,12 @@
 import type { Request, Response } from 'express'
 
+import getItemValidationRecords from '../../database/getItemValidationRecords.js'
+
 export default function handler(request: Request, response: Response): void {
-  response.render('inventoryScanner/dashboard', {
-    headTitle: 'Inventory Scanner'
+  const inventory = getItemValidationRecords()
+
+  response.render('inventoryScanner/admin', {
+    headTitle: 'Inventory Scanner',
+    inventory
   })
 }

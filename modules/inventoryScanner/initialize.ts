@@ -1,11 +1,11 @@
+import { type ChildProcess, fork } from 'node:child_process'
+
 import { isLocal } from '@cityssm/is-private-network-address'
 import camelCase from 'camelcase'
 import Debug from 'debug'
 import exitHook from 'exit-hook'
-import schedule from 'node-schedule'
 
 import { getConfigProperty } from '../../helpers/functions.config.js'
-import type { DefaultAsyncTaskExport } from '../../types/taskTypes.js'
 import type { ModuleInitializerOptions } from '../types.js'
 
 import { initializeInventoryScannerDatabase } from './database/helpers.database.js'
@@ -17,9 +17,9 @@ const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`)
 
 const urlPrefix = getConfigProperty('webServer.urlPrefix')
 
-export default async function initializeInventoryScannerModules(
+export default function initializeInventoryScannerModules(
   options: ModuleInitializerOptions
-): Promise<void> {
+): void {
   debug(`Initializing "${moduleName}"...`)
 
   /*
@@ -32,30 +32,23 @@ export default async function initializeInventoryScannerModules(
    * Initialize validation tasks
    */
 
-  let itemValidationJob: schedule.Job | undefined
+  let itemValidationProcess: ChildProcess | undefined
+
   const itemValidationConfig = getConfigProperty(
     'modules.inventoryScanner.items.validation'
   )
 
   if (itemValidationConfig !== undefined) {
-    let itemValidationTask: DefaultAsyncTaskExport | undefined
+    let itemValidationTaskPath = ''
 
     if (itemValidationConfig.source === 'dynamicsGP') {
-      const importedTask = await import('./tasks/itemValidation/dynamicsGp.js')
-      itemValidationTask = importedTask.default
-
-      debug(`Running  "${itemValidationTask.taskName}" on startup...`)
-      await itemValidationTask.task()
+      itemValidationTaskPath = './modules/inventoryScanner/tasks/itemValidation/dynamicsGp.js'
     } else {
       debug(`Item validation not implemented: ${itemValidationConfig.source}`)
     }
 
-    if (itemValidationTask !== undefined) {
-      itemValidationJob = schedule.scheduleJob(
-        itemValidationTask.taskName,
-        itemValidationTask.schedule,
-        itemValidationTask.task
-      )
+    if (itemValidationTaskPath !== '') {
+      itemValidationProcess = fork(itemValidationTaskPath)
     }
   }
 
@@ -110,8 +103,8 @@ export default async function initializeInventoryScannerModules(
    */
 
   exitHook(() => {
-    if (itemValidationJob !== undefined) {
-      itemValidationJob.cancel()
+    if (itemValidationProcess !== undefined) {
+      itemValidationProcess.kill()
     }
   })
 

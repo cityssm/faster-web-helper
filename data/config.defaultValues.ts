@@ -123,7 +123,9 @@ export const configDefaultValues = {
   'modules.tempFolderCleanup.runOnStartup': false,
   'modules.tempFolderCleanup.schedule': {
     dayOfWeek: 0,
-    hour: 1
+    hour: 1,
+    minute: 0,
+    second: 0
   } as unknown as Spec,
   'modules.tempFolderCleanup.maxAgeDays': 35
 }
