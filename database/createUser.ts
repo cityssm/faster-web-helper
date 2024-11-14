@@ -40,7 +40,7 @@ export default function createUser(
       )
   } else if (userRecord.recordDelete_timeMillis !== null) {
 
-    database.prepare(`delete from UserSettings where userName = ?`).run(user.userName)
+    database.prepare('delete from UserSettings where userName = ?').run(user.userName)
 
     database
       .prepare(

@@ -42,12 +42,12 @@ app.use(csurf({ cookie: true }));
  */
 const urlPrefix = configFunctions.getConfigProperty('webServer.urlPrefix');
 if (urlPrefix !== '') {
-    debug('urlPrefix = ' + urlPrefix);
+    debug(`urlPrefix = ${urlPrefix}`);
 }
 app.use(urlPrefix, express.static(path.join('public')));
-app.use(urlPrefix + '/lib/fa', express.static(path.join('node_modules', '@fortawesome', 'fontawesome-free')));
-app.use(urlPrefix + '/lib/bulma', express.static(path.join('node_modules', 'bulma', 'css')));
-app.use(urlPrefix + '/lib/cityssm-bulma-js', express.static(path.join('node_modules', '@cityssm', 'bulma-js', 'dist')));
+app.use(`${urlPrefix}/lib/fa`, express.static(path.join('node_modules', '@fortawesome', 'fontawesome-free')));
+app.use(`${urlPrefix}/lib/bulma`, express.static(path.join('node_modules', 'bulma', 'css')));
+app.use(`${urlPrefix}/lib/cityssm-bulma-js`, express.static(path.join('node_modules', '@cityssm', 'bulma-js', 'dist')));
 /*
  * SESSION MANAGEMENT
  */

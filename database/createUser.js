@@ -19,7 +19,7 @@ export default function createUser(user) {
             .run(user.userName, user.fasterWebUserName, user.emailAddress, user.userKeyGuid ?? generateKeyGuid(), user.userName, rightNow, user.userName, rightNow);
     }
     else if (userRecord.recordDelete_timeMillis !== null) {
-        database.prepare(`delete from UserSettings where userName = ?`).run(user.userName);
+        database.prepare('delete from UserSettings where userName = ?').run(user.userName);
         database
             .prepare(`update Users
           set fasterWebUserName = ?,
