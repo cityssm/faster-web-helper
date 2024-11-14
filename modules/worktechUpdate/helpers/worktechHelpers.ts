@@ -1,6 +1,7 @@
 import crypto from 'node:crypto'
 
 import type { W223StoreroomReportData } from '@cityssm/faster-report-parser/xlsx'
+import type { mssqlTypes } from '@cityssm/mssql-multi-pool'
 import {
   type ResourceItem,
   type WorkOrderResource,
@@ -10,7 +11,7 @@ import {
 import { getConfigProperty } from '../../../helpers/functions.config.js'
 import type { WorkOrderNumberMapping } from '../worktechUpdateTypes.js'
 
-const worktech = new WorkTechAPI(getConfigProperty('worktech'))
+const worktech = new WorkTechAPI(getConfigProperty('worktech') as mssqlTypes.config)
 
 function buildWorkOrderResourceItemId(
   storeroomData: W223StoreroomReportData
@@ -70,6 +71,7 @@ export function buildWorkOrderResourceDescriptionHash(
     occuranceIndex.toString()
   ]
 
+  // eslint-disable-next-line sonarjs/hashing
   return crypto.createHash('md5').update(keys.join('::')).digest('hex')
 }
 
@@ -81,9 +83,7 @@ export async function getWorkOrderResources(
       workOrderNumberMapping.workOrderNumber
     )
 
-  return unfilteredWorkOrderResources.filter((possibleResourceRecord) => {
-    return possibleResourceRecord.workDescription.startsWith(
+  return unfilteredWorkOrderResources.filter((possibleResourceRecord) => possibleResourceRecord.workDescription.startsWith(
       workOrderNumberMapping.documentNumber.toString()
-    )
-  })
+    ))
 }

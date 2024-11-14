@@ -6,7 +6,7 @@ import path from 'node:path'
 import { Client } from 'basic-ftp'
 import Debug from 'debug'
 
-import type { ConfigFtpPath } from '../types/configTypes.js'
+import type { ConfigFtpPath } from '../types/configHelperTypes.js'
 
 import { getConfigProperty } from './functions.config.js'
 

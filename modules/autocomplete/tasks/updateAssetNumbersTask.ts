@@ -10,7 +10,7 @@ import { downloadFilesToTemp } from '../../../helpers/functions.sftp.js'
 import type {
   ConfigFileSuffixXlsx,
   ConfigScheduledFtpReport
-} from '../../../types/configTypes.js'
+} from '../../../types/configHelperTypes.js'
 import { moduleName } from '../helpers/moduleHelpers.js'
 
 export const taskName = 'Update Asset Numbers Task'

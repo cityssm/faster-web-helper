@@ -1,4 +1,5 @@
 import { parseW223ExcelReport } from '@cityssm/faster-report-parser/xlsx'
+import type { mssqlTypes } from '@cityssm/mssql-multi-pool'
 import { type DateString, dateStringToInteger } from '@cityssm/utils-datetime'
 import { WorkTechAPI } from '@cityssm/worktech-api'
 import camelCase from 'camelcase'
@@ -22,7 +23,7 @@ const debug = Debug(
   `faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`
 )
 
-const worktech = new WorkTechAPI(getConfigProperty('worktech'))
+const worktech = new WorkTechAPI(getConfigProperty('worktech') as mssqlTypes.config)
 
 const inventoryTransactionsConfig = getConfigProperty(
   'modules.worktechUpdate.reports.w223'
@@ -161,11 +162,9 @@ export default async function runInventoryTransactionsTask(): Promise<void> {
            */
 
           const transactionIsRecorded = workOrderResources.some(
-            (possibleResourceRecord) => {
-              return possibleResourceRecord.workDescription.includes(
+            (possibleResourceRecord) => possibleResourceRecord.workDescription.includes(
                 transactionHash
               )
-            }
           )
 
           if (transactionIsRecorded) {
@@ -200,8 +199,7 @@ export default async function runInventoryTransactionsTask(): Promise<void> {
             })
           } else {
             const debitableWorkOrderResources = workOrderResources
-              .filter((possibleResourceItem) => {
-                return (
+              .filter((possibleResourceItem) => (
                   possibleResourceItem.itemId ===
                     worktechStoreroomResourceItem.itemId &&
                   possibleResourceItem.workDescription.includes(
@@ -210,8 +208,7 @@ export default async function runInventoryTransactionsTask(): Promise<void> {
                   possibleResourceItem.quantity > 0 &&
                   possibleResourceItem.unitPrice ===
                     transactionData.unitTrueCost
-                )
-              })
+                ))
               .reverse()
 
             let remainingQuantityToDebit = Math.abs(transactionData.quantity)

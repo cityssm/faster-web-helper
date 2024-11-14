@@ -2,10 +2,14 @@ import type {
   ADWebAuthAuthenticatorConfiguration,
   ActiveDirectoryAuthenticatorConfiguration
 } from '@cityssm/authentication-helper'
+import type { mssqlTypes } from '@cityssm/mssql-multi-pool'
 import type { AccessOptions } from 'basic-ftp'
-import type { config as MSSQLConfig } from 'mssql'
 import type { Spec } from 'node-schedule'
 import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js'
+
+import type { ConfigModuleInventoryScanner } from '../modules/inventoryScanner/configTypes.js'
+
+import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from './configHelperTypes.js'
 
 export interface Config {
   ftp: AccessOptions
@@ -35,7 +39,9 @@ export interface Config {
 
   smtp?: SMTPTransport.Options
 
-  worktech?: MSSQLConfig
+  worktech?: mssqlTypes.config
+
+  dynamicsGP?: mssqlTypes.config
 
   modules: {
     autocomplete?: ConfigModule<ConfigModuleAutocomplete>
@@ -56,20 +62,6 @@ type ConfigModule<T> = {
     } & T)
 )
 
-export interface ConfigFtpPath<S extends string> {
-  directory: string
-  filePrefix?: string
-  fileSuffix?: S
-  doDelete?: boolean
-}
-
-export interface ConfigScheduledFtpReport<S extends string> {
-  ftpPath: ConfigFtpPath<S>
-  schedule: Spec
-}
-
-export type ConfigFileSuffixXlsx = `${string}.xlsx` | `${string}.XLSX`
-
 interface ConfigModuleAutocomplete {
   reports: {
     /**
@@ -81,43 +73,6 @@ interface ConfigModuleAutocomplete {
      * W200 - Inventory Report
      */
     w200?: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
-  }
-}
-
-interface ConfigModuleInventoryScanner {
-  scannerIpAddressRegex?: RegExp
-  
-  workOrders?: {
-    acceptNotValidated?: boolean
-    fasterRegex?: RegExp
-    acceptWorkTech?: boolean
-    workTechRegex?: RegExp
-  }
-
-  items?: {
-    acceptNotValidated?: boolean
-  }
-
-  quantities?: {
-    acceptOverages?: boolean
-    acceptNegatives?: boolean
-  }
-
-  reports?: {
-    /**
-     * W200 - Inventory Report
-     */
-    w200?: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
-
-    /**
-     * W311 - Active Work Orders by Shop
-     */
-    w311?: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
-
-    /**
-     * W604 - Integration Log Viewer
-     */
-    w604?: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
   }
 }
 

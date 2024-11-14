@@ -3,6 +3,7 @@ import {
   type W217ExcelReportResults,
   parseW217ExcelReport
 } from '@cityssm/faster-report-parser/xlsx'
+import type { mssqlTypes } from '@cityssm/mssql-multi-pool'
 import {
   dateStringToInteger,
   timeStringToInteger
@@ -25,7 +26,7 @@ export const taskName = 'Direct Change Helper Task'
 
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`)
 
-const worktech = new WorkTechAPI(getConfigProperty('worktech'))
+const worktech = new WorkTechAPI(getConfigProperty('worktech') as mssqlTypes.config)
 
 const directChargeTransactionsConfig = getConfigProperty(
   'modules.worktechUpdate.reports.w217'
@@ -98,8 +99,8 @@ async function _updateWorkOrderNumberMappings(
           await worktech.updateWorkOrderResource({
             serviceRequestItemSystemId:
               oldResourceRecord.serviceRequestItemSystemId,
-            serviceRequestSystemId: newWorkOrder?.serviceRequestSystemId,
-            workOrderNumber: newWorkOrder?.workOrderNumber
+            serviceRequestSystemId: newWorkOrder.serviceRequestSystemId,
+            workOrderNumber: newWorkOrder.workOrderNumber
           })
         }
       }

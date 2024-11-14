@@ -9,6 +9,7 @@ export const configDefaultValues = {
     'login.domain': '',
     'login.authentication': undefined,
     worktech: undefined,
+    dynamicsGP: undefined,
     /*
      * Autocomplete
      */
@@ -29,9 +30,10 @@ export const configDefaultValues = {
     // eslint-disable-next-line no-secrets/no-secrets
     'modules.inventoryScanner.workOrders.workTechRegex': /^[A-Z]{2}.\d{2}.\d{5}$/,
     'modules.inventoryScanner.items.acceptNotValidated': true,
+    'modules.inventoryScanner.items.itemNumberRegex': undefined,
+    'modules.inventoryScanner.items.validation': undefined,
     'modules.inventoryScanner.quantities.acceptOverages': true,
     'modules.inventoryScanner.quantities.acceptNegatives': true,
-    'modules.inventoryScanner.reports.w200': undefined,
     'modules.inventoryScanner.reports.w311': undefined,
     'modules.inventoryScanner.reports.w604': undefined,
     /*

@@ -8,9 +8,13 @@ import type { config as MSSQLConfig } from 'mssql'
 import type { Spec } from 'node-schedule'
 
 import type {
+  ConfigItemValidationDynamicsGP,
+  ConfigItemValidationFaster
+} from '../modules/inventoryScanner/configTypes.js'
+import type {
   ConfigFileSuffixXlsx,
   ConfigScheduledFtpReport
-} from '../types/configTypes.js'
+} from '../types/configHelperTypes.js'
 
 export const configDefaultValues = {
   ftp: undefined as unknown as AccessOptions,
@@ -34,7 +38,8 @@ export const configDefaultValues = {
       }
     | undefined,
 
-  worktech: undefined as unknown as MSSQLConfig,
+  worktech: undefined as unknown as MSSQLConfig | undefined,
+  dynamicsGP: undefined as unknown as MSSQLConfig | undefined,
 
   /*
    * Autocomplete
@@ -70,13 +75,14 @@ export const configDefaultValues = {
   'modules.inventoryScanner.workOrders.workTechRegex': /^[A-Z]{2}.\d{2}.\d{5}$/,
 
   'modules.inventoryScanner.items.acceptNotValidated': true,
+  'modules.inventoryScanner.items.itemNumberRegex': undefined as unknown as RegExp | undefined,
+  'modules.inventoryScanner.items.validation': undefined as unknown as
+    | ConfigItemValidationDynamicsGP
+    | ConfigItemValidationFaster
+    | undefined,
 
   'modules.inventoryScanner.quantities.acceptOverages': true,
   'modules.inventoryScanner.quantities.acceptNegatives': true,
-
-  'modules.inventoryScanner.reports.w200': undefined as unknown as
-    | ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
-    | undefined,
 
   'modules.inventoryScanner.reports.w311': undefined as unknown as
     | ConfigScheduledFtpReport<ConfigFileSuffixXlsx>

@@ -34,11 +34,10 @@ export function buildWorkOrderResourceDescriptionHash(storeroomData, transaction
         transactionData.createdDateTime,
         occuranceIndex.toString()
     ];
+    // eslint-disable-next-line sonarjs/hashing
     return crypto.createHash('md5').update(keys.join('::')).digest('hex');
 }
 export async function getWorkOrderResources(workOrderNumberMapping) {
     const unfilteredWorkOrderResources = await worktech.getWorkOrderResourcesByWorkOrderNumber(workOrderNumberMapping.workOrderNumber);
-    return unfilteredWorkOrderResources.filter((possibleResourceRecord) => {
-        return possibleResourceRecord.workDescription.startsWith(workOrderNumberMapping.documentNumber.toString());
-    });
+    return unfilteredWorkOrderResources.filter((possibleResourceRecord) => possibleResourceRecord.workDescription.startsWith(workOrderNumberMapping.documentNumber.toString()));
 }

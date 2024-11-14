@@ -1,4 +1,5 @@
 import { parseW114ExcelReport } from '@cityssm/faster-report-parser/xlsx'
+import type { mssqlTypes } from '@cityssm/mssql-multi-pool'
 import { WorkTechAPI } from '@cityssm/worktech-api'
 import camelCase from 'camelcase'
 import Debug from 'debug'
@@ -11,7 +12,7 @@ export const taskName = 'Active Equipment Task'
 
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`)
 
-const worktech = new WorkTechAPI(getConfigProperty('worktech'))
+const worktech = new WorkTechAPI(getConfigProperty('worktech') as mssqlTypes.config)
 
 const assetListConfig = getConfigProperty(
   'modules.worktechUpdate.reports.w114'

@@ -2,7 +2,8 @@ import type { ADWebAuthAuthenticatorConfiguration, ActiveDirectoryAuthenticatorC
 import type { AccessOptions } from 'basic-ftp';
 import type { config as MSSQLConfig } from 'mssql';
 import type { Spec } from 'node-schedule';
-import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from '../types/configTypes.js';
+import type { ConfigItemValidationDynamicsGP, ConfigItemValidationFaster } from '../modules/inventoryScanner/configTypes.js';
+import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from '../types/configHelperTypes.js';
 export declare const configDefaultValues: {
     ftp: AccessOptions;
     'webServer.httpPort': number;
@@ -18,7 +19,8 @@ export declare const configDefaultValues: {
         type: "adWebAuth";
         config: ADWebAuthAuthenticatorConfiguration;
     } | undefined;
-    worktech: MSSQLConfig;
+    worktech: MSSQLConfig | undefined;
+    dynamicsGP: MSSQLConfig | undefined;
     'modules.autocomplete.isEnabled': boolean;
     'modules.autocomplete.runOnStartup': boolean;
     'modules.autocomplete.reports.w114': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
@@ -31,9 +33,10 @@ export declare const configDefaultValues: {
     'modules.inventoryScanner.workOrders.acceptWorkTech': boolean;
     'modules.inventoryScanner.workOrders.workTechRegex': RegExp;
     'modules.inventoryScanner.items.acceptNotValidated': boolean;
+    'modules.inventoryScanner.items.itemNumberRegex': RegExp | undefined;
+    'modules.inventoryScanner.items.validation': ConfigItemValidationDynamicsGP | ConfigItemValidationFaster | undefined;
     'modules.inventoryScanner.quantities.acceptOverages': boolean;
     'modules.inventoryScanner.quantities.acceptNegatives': boolean;
-    'modules.inventoryScanner.reports.w200': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
     'modules.inventoryScanner.reports.w311': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
     'modules.inventoryScanner.reports.w604': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
     'modules.worktechUpdate.isEnabled': boolean;

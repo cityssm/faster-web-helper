@@ -58,8 +58,8 @@ async function _updateWorkOrderNumberMappings(report, data) {
                 for (const oldResourceRecord of oldResourceRecords) {
                     await worktech.updateWorkOrderResource({
                         serviceRequestItemSystemId: oldResourceRecord.serviceRequestItemSystemId,
-                        serviceRequestSystemId: newWorkOrder?.serviceRequestSystemId,
-                        workOrderNumber: newWorkOrder?.workOrderNumber
+                        serviceRequestSystemId: newWorkOrder.serviceRequestSystemId,
+                        workOrderNumber: newWorkOrder.workOrderNumber
                     });
                 }
             }

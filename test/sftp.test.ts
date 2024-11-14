@@ -8,7 +8,7 @@ import { downloadFilesToTemp } from '../helpers/functions.sftp.js'
 await describe('functions.sftp', async () => {
   await it('Downloads files to temp', async () => {
     const tempFiles = await downloadFilesToTemp({
-      ...getConfigProperty('modules.inventoryScanner.reports.w200').ftpPath,
+      ...getConfigProperty('modules.inventoryScanner.reports.w200')!.ftpPath,
       doDelete: false // don't purge anything while testing
     })
 

@@ -1,6 +1,8 @@
 import { isLocal } from '@cityssm/is-private-network-address';
 import camelCase from 'camelcase';
 import Debug from 'debug';
+import exitHook from 'exit-hook';
+import schedule from 'node-schedule';
 import { getConfigProperty } from '../../helpers/functions.config.js';
 import { initializeInventoryScannerDatabase } from './database/helpers.database.js';
 import router from './handlers/router.js';
@@ -8,12 +10,32 @@ import scannerRouter from './handlers/router.scanner.js';
 import { moduleName } from './helpers/module.js';
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`);
 const urlPrefix = getConfigProperty('webServer.urlPrefix');
-export default function initializeInventoryScannerModules(options) {
+export default async function initializeInventoryScannerModules(options) {
     debug(`Initializing "${moduleName}"...`);
     /*
      * Ensure the local database is available.
      */
     initializeInventoryScannerDatabase();
+    /*
+     * Initialize validation tasks
+     */
+    let itemValidationJob;
+    const itemValidationConfig = getConfigProperty('modules.inventoryScanner.items.validation');
+    if (itemValidationConfig !== undefined) {
+        let itemValidationTask;
+        if (itemValidationConfig.source === 'dynamicsGP') {
+            const importedTask = await import('./tasks/itemValidation/dynamicsGp.js');
+            itemValidationTask = importedTask.default;
+            debug(`Running  "${itemValidationTask.taskName}" on startup...`);
+            await itemValidationTask.task();
+        }
+        else {
+            debug(`Item validation not implemented: ${itemValidationConfig.source}`);
+        }
+        if (itemValidationTask !== undefined) {
+            itemValidationJob = schedule.scheduleJob(itemValidationTask.taskName, itemValidationTask.schedule, itemValidationTask.task);
+        }
+    }
     /*
      * Initialize router for admin interface
      */
@@ -40,5 +62,13 @@ export default function initializeInventoryScannerModules(options) {
             requestIp
         });
     }, scannerRouter);
+    /*
+     * Set up exit hook
+     */
+    exitHook(() => {
+        if (itemValidationJob !== undefined) {
+            itemValidationJob.cancel();
+        }
+    });
     debug(`"${moduleName}" initialized.`);
 }

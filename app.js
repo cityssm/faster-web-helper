@@ -147,7 +147,7 @@ app.use((error, request, response) => {
  * Initialize server
  */
 const httpPort = configFunctions.getConfigProperty('webServer.httpPort');
-// eslint-disable-next-line @typescript-eslint/no-misused-promises, sonarjs/no-misused-promises
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 const httpServer = http.createServer(app);
 httpServer.listen(httpPort);
 debug(`HTTP listening on ${httpPort.toString()}`);

@@ -94,9 +94,7 @@ export default async function runInventoryTransactionsTask() {
                     /*
                      * Check if hash has already been recorded.
                      */
-                    const transactionIsRecorded = workOrderResources.some((possibleResourceRecord) => {
-                        return possibleResourceRecord.workDescription.includes(transactionHash);
-                    });
+                    const transactionIsRecorded = workOrderResources.some((possibleResourceRecord) => possibleResourceRecord.workDescription.includes(transactionHash));
                     if (transactionIsRecorded) {
                         debug(`Transaction already recorded: ${JSON.stringify(transactionData)}`);
                         continue;
@@ -121,14 +119,12 @@ export default async function runInventoryTransactionsTask() {
                     }
                     else {
                         const debitableWorkOrderResources = workOrderResources
-                            .filter((possibleResourceItem) => {
-                            return (possibleResourceItem.itemId ===
-                                worktechStoreroomResourceItem.itemId &&
-                                possibleResourceItem.workDescription.includes(transactionData.itemNumber) &&
-                                possibleResourceItem.quantity > 0 &&
-                                possibleResourceItem.unitPrice ===
-                                    transactionData.unitTrueCost);
-                        })
+                            .filter((possibleResourceItem) => (possibleResourceItem.itemId ===
+                            worktechStoreroomResourceItem.itemId &&
+                            possibleResourceItem.workDescription.includes(transactionData.itemNumber) &&
+                            possibleResourceItem.quantity > 0 &&
+                            possibleResourceItem.unitPrice ===
+                                transactionData.unitTrueCost))
                             .reverse();
                         let remainingQuantityToDebit = Math.abs(transactionData.quantity);
                         for (const workOrderResourceToDebit of debitableWorkOrderResources) {
