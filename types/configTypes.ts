@@ -39,6 +39,10 @@ export interface Config {
 
   smtp?: SMTPTransport.Options
 
+  fasterWeb?: {
+    tenant?: string
+  }
+
   worktech?: mssqlTypes.config
 
   dynamicsGP?: mssqlTypes.config

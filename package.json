@@ -26,6 +26,7 @@
     "@cityssm/dynamics-gp": "^1.0.5",
     "@cityssm/faster-report-exporter": "^0.3.2",
     "@cityssm/faster-report-parser": "^0.2.0",
+    "@cityssm/faster-url-builder": "^0.1.0",
     "@cityssm/is-private-network-address": "^1.0.0",
     "@cityssm/mssql-multi-pool": "^4.0.0",
     "@cityssm/to-millis": "^0.2.0",

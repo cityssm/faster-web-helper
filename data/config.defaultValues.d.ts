@@ -19,6 +19,7 @@ export declare const configDefaultValues: {
         type: "adWebAuth";
         config: ADWebAuthAuthenticatorConfiguration;
     } | undefined;
+    'fasterWeb.tenant': string | undefined;
     worktech: MSSQLConfig | undefined;
     dynamicsGP: MSSQLConfig | undefined;
     'modules.autocomplete.isEnabled': boolean;

@@ -8,6 +8,7 @@ export const configDefaultValues = {
     'webServer.session.maxAgeMillis': hoursToMillis(12),
     'login.domain': '',
     'login.authentication': undefined,
+    'fasterWeb.tenant': undefined,
     worktech: undefined,
     dynamicsGP: undefined,
     /*
@@ -24,7 +25,7 @@ export const configDefaultValues = {
     'modules.inventoryScanner.runOnStartup': true,
     'modules.inventoryScanner.scannerIpAddressRegex': /^$/,
     'modules.inventoryScanner.workOrders.acceptNotValidated': true,
-    'modules.inventoryScanner.workOrders.fasterRegex': /^\d+/,
+    'modules.inventoryScanner.workOrders.fasterRegex': /^\d+$/,
     // eslint-disable-next-line no-secrets/no-secrets
     'modules.inventoryScanner.workOrders.acceptWorkTech': false,
     // eslint-disable-next-line no-secrets/no-secrets

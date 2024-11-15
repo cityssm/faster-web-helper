@@ -23,7 +23,7 @@ const createStatements = [
     primary key (itemStoreroom, itemNumber))`,
 
   `create table if not exists WorkOrderValidationRecords (
-    workOrderNumber varchar(10) not null primary key,
+    workOrderNumber varchar(15) not null primary key,
     workOrderType varchar(10) not null default 'faster',
     workOrderDescription varchar(500) not null default '',
     technicianId varchar(22),
@@ -39,7 +39,7 @@ const createStatements = [
     scannerKey char(10) not null,
     scanDate integer not null,
     scanTime integer not null,
-    workOrderNumber varchar(10) not null,
+    workOrderNumber varchar(15) not null,
     workOrderType varchar(10) not null default 'faster',
     itemStoreroom varchar(3) not null,
     itemNumber varchar(22) not null,

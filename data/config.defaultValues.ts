@@ -38,6 +38,8 @@ export const configDefaultValues = {
       }
     | undefined,
 
+  'fasterWeb.tenant': undefined as unknown as string | undefined,
+
   worktech: undefined as unknown as MSSQLConfig | undefined,
   dynamicsGP: undefined as unknown as MSSQLConfig | undefined,
 
@@ -66,7 +68,7 @@ export const configDefaultValues = {
   'modules.inventoryScanner.scannerIpAddressRegex': /^$/,
 
   'modules.inventoryScanner.workOrders.acceptNotValidated': true,
-  'modules.inventoryScanner.workOrders.fasterRegex': /^\d+/,
+  'modules.inventoryScanner.workOrders.fasterRegex': /^\d+$/,
 
   // eslint-disable-next-line no-secrets/no-secrets
   'modules.inventoryScanner.workOrders.acceptWorkTech': false,

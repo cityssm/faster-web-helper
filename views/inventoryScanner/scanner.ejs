@@ -11,8 +11,17 @@
 
   <link rel="icon" href="<%= urlPrefix %>/images/logo.svg" />
   <link rel="stylesheet" href="<%= urlPrefix %>/lib/bulma/bulma.min.css" />
-  <link rel="stylesheet" href="<%= urlPrefix %>/lib/fa/css/all.min.css" />
 </head>
+
+<%
+  let workOrderPattern = configFunctions.getConfigProperty('modules.inventoryScanner.workOrders.fasterRegex').source
+
+  if (configFunctions.getConfigProperty('modules.inventoryScanner.workOrders.acceptWorkTech')) {
+    workOrderPattern = `(?:${workOrderPattern}|${configFunctions.getConfigProperty('modules.inventoryScanner.workOrders.workTechRegex').source})`
+  }
+
+  const itemNumberPattern = configFunctions.getConfigProperty('modules.inventoryScanner.items.itemNumberRegex')?.source
+%>
 
 <body>
   <div class="columns is-vcentered is-centered">
@@ -20,30 +29,67 @@
       <form class="m-2" id="form--scanner">
         <input name="_csrf" type="hidden" value="<%= csrfToken %>" />
 
-        <div class="field">
-          <label class="label" for="scanner--workOrderNumber">Work Order Number</label>
+        <label class="label" for="scanner--workOrderNumber">Work Order Number</label>
+        <div class="field has-addons">
+          <div class="control is-expanded">
+            <input class="input" id="scanner--workOrderNumber" name="workOrderNumber" type="text" maxlength="15" pattern="<%- workOrderPattern %>" required autofocus />
+          </div>
           <div class="control">
-            <input class="input" id="scanner--workOrderNumber" name="workOrderNumber" type="text" maxlength="10" required autofocus />
+            <button class="button is-clear-button" type="button" title="Clear Work Order">
+              <span class="icon">
+                <i class="fa-solid fa-trash" aria-hidden="true"></i>
+              </span>
+            </button>
           </div>
         </div>
         
-        <div class="field">
-          <label class="label" for="scanner--itemNumber">Item Number</label>
+        <label class="label" for="scanner--itemNumber">Item Number</label>
+        <div class="field has-addons">
+          <div class="control is-expanded">
+            <input class="input" id="scanner--itemNumber" name="itemNumber" type="text" maxlength="22"
+              <% if (itemNumberPattern !== undefined) { %>
+                pattern="<%- itemNumberPattern %>"
+              <% } %>
+              required />
+          </div>
           <div class="control">
-            <input class="input" id="scanner--itemNumber" name="itemNumber" type="text" maxlength="22" required />
+            <button class="button is-clear-button" type="button" title="Clear Item">
+              <span class="icon">
+                <i class="fa-solid fa-trash" aria-hidden="true"></i>
+              </span>
+            </button>
           </div>
         </div>
 
-        <div class="field">
-          <label class="label" for="scanner--quantity">Quantity</label>
+        <label class="label" for="scanner--quantity">Quantity</label>
+        <div class="field has-addons">
+          <div class="control is-expanded">
+            <input class="input has-text-right" id="scanner--quantity" name="quantity" type="text" value="1" inputmode="numeric" pattern="\d+" maxlength="3" required />
+          </div>
           <div class="control">
-            <input class="input" id="scanner--quantity" name="quantity" type="text" inputmode="numeric" pattern="\d+" maxlength="3" required />
+            <button class="button is-clear-button" type="button" title="Clear Quantity">
+              <span class="icon">
+                <i class="fa-solid fa-trash" aria-hidden="true"></i>
+              </span>
+            </button>
           </div>
         </div>
       </form>
       
     </div>
   </div>
+
+  <script>
+    window.exports = window.exports || {};
+  </script>
+  <script src="<%= urlPrefix %>/lib/cityssm-bulma-js/bulma-js.js"></script>
+  <script>
+    bulmaJS.init();
+  </script>
+  <script src="<%= urlPrefix %>/lib/fa/js/all.min.js" defer></script>
+
+  <script src="<%= urlPrefix %>/inventoryScanner/javascripts/scanner.js"></script>
+
 </body>
 
 </html>

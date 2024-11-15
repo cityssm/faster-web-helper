@@ -1,5 +1,6 @@
 import http from 'node:http';
 import path from 'node:path';
+import FasterUrlBuilder from '@cityssm/faster-url-builder';
 import { secondsToMillis } from '@cityssm/to-millis';
 import cookieParser from 'cookie-parser';
 import csurf from 'csurf';
@@ -85,6 +86,10 @@ app.use((request, response, next) => {
     response.locals.user = request.session.user;
     response.locals.csrfToken = request.csrfToken();
     response.locals.configFunctions = configFunctions;
+    response.locals.fasterUrlBuilder =
+        configFunctions.getConfigProperty('fasterWeb.tenant') === undefined
+            ? undefined
+            : new FasterUrlBuilder(configFunctions.getConfigProperty('fasterWeb.tenant'));
     response.locals.urlPrefix = configFunctions.getConfigProperty('webServer.urlPrefix');
     next();
 });

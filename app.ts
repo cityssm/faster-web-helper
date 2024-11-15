@@ -1,6 +1,7 @@
 import http from 'node:http'
 import path from 'node:path'
 
+import FasterUrlBuilder from '@cityssm/faster-url-builder'
 import { secondsToMillis } from '@cityssm/to-millis'
 import cookieParser from 'cookie-parser'
 import csurf from 'csurf'
@@ -83,7 +84,9 @@ app.use(
 
 app.use(
   `${urlPrefix}/lib/cityssm-bulma-webapp-js`,
-  express.static(path.join('node_modules', '@cityssm', 'bulma-webapp-js', 'dist'))
+  express.static(
+    path.join('node_modules', '@cityssm', 'bulma-webapp-js', 'dist')
+  )
 )
 
 /*
@@ -138,6 +141,13 @@ app.use((request, response, next) => {
   response.locals.csrfToken = request.csrfToken()
 
   response.locals.configFunctions = configFunctions
+
+  response.locals.fasterUrlBuilder =
+    configFunctions.getConfigProperty('fasterWeb.tenant') === undefined
+      ? undefined
+      : new FasterUrlBuilder(
+          configFunctions.getConfigProperty('fasterWeb.tenant') as string
+        )
 
   response.locals.urlPrefix = configFunctions.getConfigProperty(
     'webServer.urlPrefix'

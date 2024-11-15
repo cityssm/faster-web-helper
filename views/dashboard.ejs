@@ -1,21 +1,44 @@
 <%- include('_header'); -%>
 
-<h1 class="title">Available Modules</h1>
+<h1 class="title is-2">FASTER Web Helper</h1>
 
-<% if (configFunctions.getConfigProperty('modules.inventoryScanner.isEnabled') && (user.settings['inventoryScanner_hasAccess'] ?? 'false') === 'true') { %>
+<div class="columns">
+  <div class="column is-two-thirds">
+    <h2 class="title">Available Modules</h2>
 
-  <a class="box" href="<%= urlPrefix %>/modules/inventoryScanner">
-    <div class="columns">
-      <div class="column is-narrow">
-        <i class="fa-solid fa-barcode fa-6x" aria-hidden="true"></i>
-      </div>
-      <div class="column">
-        <h2 class="title is-4 mb-0">Inventory Scanner</h2>
-        <p>Manage scanned inventory transactions.</p>
-      </div>
-    </div>
-  </a>
-<% } %>
+    <% if (configFunctions.getConfigProperty('modules.inventoryScanner.isEnabled') && (user.settings['inventoryScanner_hasAccess'] ?? 'false') === 'true') { %>
+      <a class="box" href="<%= urlPrefix %>/modules/inventoryScanner">
+        <div class="columns">
+          <div class="column is-narrow">
+            <i class="fa-solid fa-barcode fa-6x" aria-hidden="true"></i>
+          </div>
+          <div class="column">
+            <h3 class="title is-4 mb-0">Inventory Scanner</h3>
+            <p>Manage scanned inventory transactions.</p>
+          </div>
+        </div>
+      </a>
+    <% } %>
+  </div>
+  <div class="column">
+    <h2 class="title">More Links</h2>
+
+    <% if (fasterUrlBuilder !== undefined) { %>
+      <a class="box" href="<%= fasterUrlBuilder.baseUrl %>">
+        <div class="columns">
+          <div class="column is-narrow">
+            <i class="fa-solid fa-link fa-3x" aria-hidden="true"></i>
+          </div>
+          <div class="column">
+            <h2 class="title is-4 mb-0">FASTER Web</h2>
+          </div>
+        </div>
+      </a>
+    <% } %>
+  </div>
+</div>
+
+
 
 <%- include('_footerA'); -%>
 <%- include('_footerB'); -%>
