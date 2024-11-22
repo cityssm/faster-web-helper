@@ -9,15 +9,17 @@ import type { Spec } from 'node-schedule'
 
 import type {
   ConfigItemValidationDynamicsGP,
-  ConfigItemValidationFaster
+  ConfigItemValidationFaster,
+  ConfigWorkOrderValidationFasterApi
 } from '../modules/inventoryScanner/configTypes.js'
 import type {
   ConfigFileSuffixXlsx,
   ConfigScheduledFtpReport
 } from '../types/configHelperTypes.js'
+import type { ConfigFasterWeb } from '../types/configTypes.js'
 
 export const configDefaultValues = {
-  ftp: undefined as unknown as AccessOptions,
+  ftp: undefined as unknown as AccessOptions | undefined,
 
   'webServer.httpPort': 8080,
   'webServer.urlPrefix': '',
@@ -38,7 +40,7 @@ export const configDefaultValues = {
       }
     | undefined,
 
-  'fasterWeb.tenant': undefined as unknown as string | undefined,
+  fasterWeb: { tenantOrBaseUrl: '' } as unknown as ConfigFasterWeb,
 
   worktech: undefined as unknown as MSSQLConfig | undefined,
   dynamicsGP: undefined as unknown as MSSQLConfig | undefined,
@@ -76,8 +78,14 @@ export const configDefaultValues = {
   // eslint-disable-next-line no-secrets/no-secrets
   'modules.inventoryScanner.workOrders.workTechRegex': /^[A-Z]{2}.\d{2}.\d{5}$/,
 
+  'modules.inventoryScanner.workOrders.validationSources': [] as Array<
+    'fasterApi' | 'worktech'
+  >,
+
   'modules.inventoryScanner.items.acceptNotValidated': true,
-  'modules.inventoryScanner.items.itemNumberRegex': undefined as unknown as RegExp | undefined,
+  'modules.inventoryScanner.items.itemNumberRegex': undefined as unknown as
+    | RegExp
+    | undefined,
   'modules.inventoryScanner.items.validation': undefined as unknown as
     | ConfigItemValidationDynamicsGP
     | ConfigItemValidationFaster

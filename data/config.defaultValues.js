@@ -8,7 +8,7 @@ export const configDefaultValues = {
     'webServer.session.maxAgeMillis': hoursToMillis(12),
     'login.domain': '',
     'login.authentication': undefined,
-    'fasterWeb.tenant': undefined,
+    fasterWeb: { tenantOrBaseUrl: '' },
     worktech: undefined,
     dynamicsGP: undefined,
     /*
@@ -30,6 +30,7 @@ export const configDefaultValues = {
     'modules.inventoryScanner.workOrders.acceptWorkTech': false,
     // eslint-disable-next-line no-secrets/no-secrets
     'modules.inventoryScanner.workOrders.workTechRegex': /^[A-Z]{2}.\d{2}.\d{5}$/,
+    'modules.inventoryScanner.workOrders.validationSources': [],
     'modules.inventoryScanner.items.acceptNotValidated': true,
     'modules.inventoryScanner.items.itemNumberRegex': undefined,
     'modules.inventoryScanner.items.validation': undefined,

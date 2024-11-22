@@ -25,15 +25,16 @@
     "@cityssm/configurator": "^0.1.0",
     "@cityssm/dynamics-gp": "^1.0.5",
     "@cityssm/faster-report-exporter": "^0.3.2",
-    "@cityssm/faster-report-parser": "^0.2.0",
-    "@cityssm/faster-url-builder": "^0.1.0",
+    "@cityssm/faster-report-parser": "^0.3.0",
+    "@cityssm/faster-url-builder": "^0.2.1",
+    "@cityssm/has-package": "^0.1.1",
     "@cityssm/is-private-network-address": "^1.0.0",
     "@cityssm/mssql-multi-pool": "^4.0.0",
     "@cityssm/to-millis": "^0.2.0",
     "@cityssm/utils-datetime": "^1.3.0",
     "@cityssm/worktech-api": "github:cityssm/node-worktech-api",
-    "@fortawesome/fontawesome-free": "^6.6.0",
-    "@types/nodemailer": "^6.4.16",
+    "@fortawesome/fontawesome-free": "^6.7.1",
+    "@types/nodemailer": "^6.4.17",
     "basic-ftp": "^5.0.5",
     "better-sqlite3": "^11.5.0",
     "bulma": "^1.0.2",
@@ -50,18 +51,21 @@
     "session-file-store": "^1.5.0"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.11",
+    "@types/better-sqlite3": "^7.6.12",
     "@types/cookie-parser": "^1.4.7",
     "@types/csurf": "^1.11.5",
     "@types/debug": "^4.1.12",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.0",
-    "@types/node": "^22.9.0",
+    "@types/node": "^22.9.1",
     "@types/node-schedule": "^2.1.7",
     "@types/session-file-store": "^1.2.5",
     "eslint-config-cityssm": "^15.2.0",
     "nodemon": "^3.1.7",
     "prettier-config-cityssm": "^1.0.0"
+  },
+  "optionalDependencies": {
+    "@cityssm/faster-api": "github:cityssm/node-faster-api"
   },
   "private": true
 }

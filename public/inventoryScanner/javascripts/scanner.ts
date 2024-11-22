@@ -1,4 +1,8 @@
+import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
+
+declare const cityssm: cityssmGlobal
 (() => {
+  const urlPrefix = document.querySelector('main')?.dataset.urlPrefix ?? ''
 
   function clearFieldAndFocus(event: Event): void {
     event.preventDefault()
@@ -14,4 +18,15 @@
   for (const clearButtonElement of clearButtonElements) {
     clearButtonElement.addEventListener('click', clearFieldAndFocus)
   }
+
+  document.querySelector('#form--scanner')?.addEventListener('submit', (formEvent) => {
+    formEvent.preventDefault()
+
+    cityssm.postJSON(`${urlPrefix}/apps/inventoryScanner/doRecordScan`,
+      formEvent.currentTarget,
+      (responseJSON) => {
+        
+      }
+    )
+  })
 })()

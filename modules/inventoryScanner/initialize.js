@@ -19,18 +19,33 @@ export default function initializeInventoryScannerModules(options) {
     /*
      * Initialize validation tasks
      */
-    let itemValidationProcess;
+    const validationProcesses = [];
     const itemValidationConfig = getConfigProperty('modules.inventoryScanner.items.validation');
     if (itemValidationConfig !== undefined) {
         let itemValidationTaskPath = '';
         if (itemValidationConfig.source === 'dynamicsGP') {
-            itemValidationTaskPath = './modules/inventoryScanner/tasks/itemValidation/dynamicsGp.js';
+            itemValidationTaskPath =
+                './modules/inventoryScanner/tasks/itemValidation/dynamicsGp.js';
         }
         else {
             debug(`Item validation not implemented: ${itemValidationConfig.source}`);
         }
         if (itemValidationTaskPath !== '') {
-            itemValidationProcess = fork(itemValidationTaskPath);
+            validationProcesses.push(fork(itemValidationTaskPath));
+        }
+    }
+    const workOrderValidationSources = getConfigProperty('modules.inventoryScanner.workOrders.validationSources');
+    for (const workOrderValidationSource of workOrderValidationSources) {
+        let workOrderValidationTaskPath = '';
+        if (workOrderValidationSource === 'fasterApi') {
+            workOrderValidationTaskPath =
+                './modules/inventoryScanner/tasks/workOrderValidation/fasterApi.js';
+        }
+        else {
+            debug(`Work order validation not implemented: ${workOrderValidationSource}`);
+        }
+        if (workOrderValidationTaskPath !== '') {
+            validationProcesses.push(fork(workOrderValidationTaskPath));
         }
     }
     /*
@@ -63,8 +78,8 @@ export default function initializeInventoryScannerModules(options) {
      * Set up exit hook
      */
     exitHook(() => {
-        if (itemValidationProcess !== undefined) {
-            itemValidationProcess.kill();
+        for (const validationProcess of validationProcesses) {
+            validationProcess.kill();
         }
     });
     debug(`"${moduleName}" initialized.`);

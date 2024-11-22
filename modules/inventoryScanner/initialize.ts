@@ -32,7 +32,7 @@ export default function initializeInventoryScannerModules(
    * Initialize validation tasks
    */
 
-  let itemValidationProcess: ChildProcess | undefined
+  const validationProcesses: ChildProcess[] = []
 
   const itemValidationConfig = getConfigProperty(
     'modules.inventoryScanner.items.validation'
@@ -42,13 +42,35 @@ export default function initializeInventoryScannerModules(
     let itemValidationTaskPath = ''
 
     if (itemValidationConfig.source === 'dynamicsGP') {
-      itemValidationTaskPath = './modules/inventoryScanner/tasks/itemValidation/dynamicsGp.js'
+      itemValidationTaskPath =
+        './modules/inventoryScanner/tasks/itemValidation/dynamicsGp.js'
     } else {
       debug(`Item validation not implemented: ${itemValidationConfig.source}`)
     }
 
     if (itemValidationTaskPath !== '') {
-      itemValidationProcess = fork(itemValidationTaskPath)
+      validationProcesses.push(fork(itemValidationTaskPath))
+    }
+  }
+
+  const workOrderValidationSources = getConfigProperty(
+    'modules.inventoryScanner.workOrders.validationSources'
+  )
+
+  for (const workOrderValidationSource of workOrderValidationSources) {
+    let workOrderValidationTaskPath = ''
+
+    if (workOrderValidationSource === 'fasterApi') {
+      workOrderValidationTaskPath =
+        './modules/inventoryScanner/tasks/workOrderValidation/fasterApi.js'
+    } else {
+      debug(
+        `Work order validation not implemented: ${workOrderValidationSource}`
+      )
+    }
+
+    if (workOrderValidationTaskPath !== '') {
+      validationProcesses.push(fork(workOrderValidationTaskPath))
     }
   }
 
@@ -103,8 +125,8 @@ export default function initializeInventoryScannerModules(
    */
 
   exitHook(() => {
-    if (itemValidationProcess !== undefined) {
-      itemValidationProcess.kill()
+    for (const validationProcess of validationProcesses) {
+      validationProcess.kill()
     }
   })
 

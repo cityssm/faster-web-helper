@@ -1,6 +1,7 @@
 import http from 'node:http';
 import path from 'node:path';
 import FasterUrlBuilder from '@cityssm/faster-url-builder';
+import hasPackage from '@cityssm/has-package';
 import { secondsToMillis } from '@cityssm/to-millis';
 import cookieParser from 'cookie-parser';
 import csurf from 'csurf';
@@ -86,10 +87,7 @@ app.use((request, response, next) => {
     response.locals.user = request.session.user;
     response.locals.csrfToken = request.csrfToken();
     response.locals.configFunctions = configFunctions;
-    response.locals.fasterUrlBuilder =
-        configFunctions.getConfigProperty('fasterWeb.tenant') === undefined
-            ? undefined
-            : new FasterUrlBuilder(configFunctions.getConfigProperty('fasterWeb.tenant'));
+    response.locals.fasterUrlBuilder = new FasterUrlBuilder(configFunctions.getConfigProperty('fasterWeb').tenantOrBaseUrl);
     response.locals.urlPrefix = configFunctions.getConfigProperty('webServer.urlPrefix');
     next();
 });
@@ -113,6 +111,7 @@ app.get(`${urlPrefix}/logout`, (request, response) => {
 /*
  * Initialize modules
  */
+const hasFasterApi = await hasPackage('@cityssm/faster-api');
 const options = {
     app
 };
@@ -122,8 +121,13 @@ if (configFunctions.getConfigProperty('modules.autocomplete.isEnabled')) {
     promises.push(initializeAutocompleteModule.default(options));
 }
 if (configFunctions.getConfigProperty('modules.inventoryScanner.isEnabled')) {
-    const initializeInventoryScannerModule = await import('./modules/inventoryScanner/initialize.js');
-    initializeInventoryScannerModule.default(options);
+    if (hasFasterApi) {
+        const initializeInventoryScannerModule = await import('./modules/inventoryScanner/initialize.js');
+        initializeInventoryScannerModule.default(options);
+    }
+    else {
+        debug(`@cityssm/faster-api required for inventory scanner.`);
+    }
 }
 if (configFunctions.getConfigProperty('modules.worktechUpdate.isEnabled')) {
     const initializeWorktechUpdateModule = await import('./modules/worktechUpdate/initializeWorktechUpdateModule.js');

@@ -28,6 +28,7 @@ export interface ConfigModuleInventoryScanner {
     fasterRegex?: RegExp
     acceptWorkTech?: boolean
     workTechRegex?: RegExp
+    validationSources?: Array<'fasterApi' | 'worktech'>
   }
 
   items?: {

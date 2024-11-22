@@ -23,30 +23,33 @@ const createStatements = [
     primary key (itemStoreroom, itemNumber))`,
 
   `create table if not exists WorkOrderValidationRecords (
-    workOrderNumber varchar(15) not null primary key,
+    workOrderNumber varchar(15) not null,
     workOrderType varchar(10) not null default 'faster',
     workOrderDescription varchar(500) not null default '',
+    repairId integer,
+    repairDescription varchar(500),
     technicianId varchar(22),
     technicianDescription varchar(500),
-    repairId varchar(22),
-    repairDescription varchar(500),
     recordCreate_timeMillis integer not null,
     recordUpdate_timeMillis integer not null,
-    recordDelete_timeMillis integer)`,
+    recordDelete_timeMillis integer,
+    primary key (workOrderNumber, workOrderType, repairId))`,
 
   `create table if not exists InventoryScannerRecords (
     recordId integer primary key autoincrement,
     scannerKey char(10) not null,
     scanDate integer not null,
     scanTime integer not null,
+
     workOrderNumber varchar(15) not null,
     workOrderType varchar(10) not null default 'faster',
-    itemStoreroom varchar(3) not null,
-    itemNumber varchar(22) not null,
     technicianId varchar(22),
-    repairId varchar(22),
+    repairId integer,
+
+    itemStoreroom varchar(3),
+    itemNumber varchar(22) not null,
     quantity integer not null,
-    unitPrice decimal(18, 4) not null,
+    unitPrice decimal(18, 4),
     
     recordSync_userName varchar(20),
     recordSync_timeMillis integer,

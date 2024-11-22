@@ -9,10 +9,15 @@ import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js'
 
 import type { ConfigModuleInventoryScanner } from '../modules/inventoryScanner/configTypes.js'
 
-import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from './configHelperTypes.js'
+import type {
+  ConfigFileSuffixXlsx,
+  ConfigScheduledFtpReport
+} from './configHelperTypes.js'
 
 export interface Config {
-  ftp: AccessOptions
+  fasterWeb: ConfigFasterWeb
+
+  ftp?: AccessOptions
 
   webServer?: {
     httpPort: number
@@ -39,10 +44,6 @@ export interface Config {
 
   smtp?: SMTPTransport.Options
 
-  fasterWeb?: {
-    tenant?: string
-  }
-
   worktech?: mssqlTypes.config
 
   dynamicsGP?: mssqlTypes.config
@@ -65,6 +66,12 @@ type ConfigModule<T> = {
       isEnabled: true
     } & T)
 )
+
+export interface ConfigFasterWeb {
+  tenantOrBaseUrl: string
+  apiUserName?: string
+  apiPassword?: string
+}
 
 interface ConfigModuleAutocomplete {
   reports: {

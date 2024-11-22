@@ -24,65 +24,77 @@
 %>
 
 <body>
-  <div class="columns is-vcentered is-centered">
-    <div class="column is-one-third-widescreen is-half-tablet">
-      <form class="m-2" id="form--scanner">
-        <input name="_csrf" type="hidden" value="<%= csrfToken %>" />
+  <main data-url-prefix="<%= urlPrefix %>">
+    <div class="columns is-vcentered is-centered">
+      <div class="column is-one-third-widescreen is-half-tablet">
+        <form class="m-2" id="form--scanner">
+          <input name="_csrf" type="hidden" value="<%= csrfToken %>" />
 
-        <label class="label" for="scanner--workOrderNumber">Work Order Number</label>
-        <div class="field has-addons">
-          <div class="control is-expanded">
-            <input class="input" id="scanner--workOrderNumber" name="workOrderNumber" type="text" maxlength="15" pattern="<%- workOrderPattern %>" required autofocus />
+          <label class="label" for="scanner--workOrderNumber">Work Order Number</label>
+          <div class="field has-addons">
+            <div class="control is-expanded">
+              <input class="input" id="scanner--workOrderNumber" name="workOrderNumber" type="text" maxlength="15" pattern="<%- workOrderPattern %>" required autofocus />
+            </div>
+            <div class="control">
+              <button class="button is-clear-button" type="button" title="Clear Work Order">
+                <span class="icon">
+                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                </span>
+              </button>
+            </div>
           </div>
-          <div class="control">
-            <button class="button is-clear-button" type="button" title="Clear Work Order">
-              <span class="icon">
-                <i class="fa-solid fa-trash" aria-hidden="true"></i>
-              </span>
-            </button>
+          
+          <label class="label" for="scanner--itemNumber">Item Number</label>
+          <div class="field has-addons">
+            <div class="control is-expanded">
+              <input class="input" id="scanner--itemNumber" name="itemNumber" type="text" maxlength="22"
+                <% if (itemNumberPattern !== undefined) { %>
+                  pattern="<%- itemNumberPattern %>"
+                <% } %>
+                required />
+            </div>
+            <div class="control">
+              <button class="button is-clear-button" type="button" title="Clear Item">
+                <span class="icon">
+                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                </span>
+              </button>
+            </div>
           </div>
-        </div>
+
+          <div class="columns is-mobile is-align-items-end">
+            <div class="column is-two-thirds">
+              <label class="label" for="scanner--quantity">Quantity</label>
+              <div class="field has-addons">
+                <div class="control is-expanded">
+                  <input class="input has-text-right" id="scanner--quantity" name="quantity" type="text" value="1" inputmode="numeric" pattern="^\d+$" maxlength="3" required />
+                </div>
+                <div class="control">
+                  <button class="button is-clear-button" type="button" title="Clear Quantity">
+                    <span class="icon">
+                      <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="column">
+              <button class="button is-fullwidth is-primary" type="submit">
+                Save
+              </button>
+            </div>
+          </div>
+        </form>
         
-        <label class="label" for="scanner--itemNumber">Item Number</label>
-        <div class="field has-addons">
-          <div class="control is-expanded">
-            <input class="input" id="scanner--itemNumber" name="itemNumber" type="text" maxlength="22"
-              <% if (itemNumberPattern !== undefined) { %>
-                pattern="<%- itemNumberPattern %>"
-              <% } %>
-              required />
-          </div>
-          <div class="control">
-            <button class="button is-clear-button" type="button" title="Clear Item">
-              <span class="icon">
-                <i class="fa-solid fa-trash" aria-hidden="true"></i>
-              </span>
-            </button>
-          </div>
-        </div>
-
-        <label class="label" for="scanner--quantity">Quantity</label>
-        <div class="field has-addons">
-          <div class="control is-expanded">
-            <input class="input has-text-right" id="scanner--quantity" name="quantity" type="text" value="1" inputmode="numeric" pattern="\d+" maxlength="3" required />
-          </div>
-          <div class="control">
-            <button class="button is-clear-button" type="button" title="Clear Quantity">
-              <span class="icon">
-                <i class="fa-solid fa-trash" aria-hidden="true"></i>
-              </span>
-            </button>
-          </div>
-        </div>
-      </form>
-      
+      </div>
     </div>
-  </div>
+  </main>
 
   <script>
     window.exports = window.exports || {};
   </script>
   <script src="<%= urlPrefix %>/lib/cityssm-bulma-js/bulma-js.js"></script>
+  <script src="<%= urlPrefix %>/lib/cityssm-bulma-webapp-js/cityssm.min.js"></script>
   <script>
     bulmaJS.init();
   </script>

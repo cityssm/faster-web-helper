@@ -4,8 +4,9 @@ import type { config as MSSQLConfig } from 'mssql';
 import type { Spec } from 'node-schedule';
 import type { ConfigItemValidationDynamicsGP, ConfigItemValidationFaster } from '../modules/inventoryScanner/configTypes.js';
 import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from '../types/configHelperTypes.js';
+import type { ConfigFasterWeb } from '../types/configTypes.js';
 export declare const configDefaultValues: {
-    ftp: AccessOptions;
+    ftp: AccessOptions | undefined;
     'webServer.httpPort': number;
     'webServer.urlPrefix': string;
     'webServer.session.cookieName': string;
@@ -19,7 +20,7 @@ export declare const configDefaultValues: {
         type: "adWebAuth";
         config: ADWebAuthAuthenticatorConfiguration;
     } | undefined;
-    'fasterWeb.tenant': string | undefined;
+    fasterWeb: ConfigFasterWeb;
     worktech: MSSQLConfig | undefined;
     dynamicsGP: MSSQLConfig | undefined;
     'modules.autocomplete.isEnabled': boolean;
@@ -33,6 +34,7 @@ export declare const configDefaultValues: {
     'modules.inventoryScanner.workOrders.fasterRegex': RegExp;
     'modules.inventoryScanner.workOrders.acceptWorkTech': boolean;
     'modules.inventoryScanner.workOrders.workTechRegex': RegExp;
+    'modules.inventoryScanner.workOrders.validationSources': Array<"fasterApi" | "worktech">;
     'modules.inventoryScanner.items.acceptNotValidated': boolean;
     'modules.inventoryScanner.items.itemNumberRegex': RegExp | undefined;
     'modules.inventoryScanner.items.validation': ConfigItemValidationDynamicsGP | ConfigItemValidationFaster | undefined;
