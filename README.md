@@ -32,13 +32,11 @@ Creates and hosts JSON files compatible with Autocomplete userscripts.
 
 ## Other FASTER Web Projects
 
-[FASTER Web Report Parser](https://github.com/cityssm/node-faster-report-parser)<br />
-Parses select Excel and CSV reports from FASTER Web into usable data objects.
+This application is made possible through several FASTER Web specific projects.
 
-[Userscripts for FASTER Web](https://github.com/cityssm/userscripts?tab=readme-ov-file#userscripts-for-faster-web)<br />
-Helps with some of the common irks when using FASTER Web.
-Includes userscripts to enforce field validation, correct varying header heights,
-and offer autocomplete.
+_Building an intergration with FASTER Web?_
+
+[Have a look at the City's open source projects related to FASTER Web](https://github.com/cityssm/faster-web-projects).
 
 ## Other Related Projects
 
