@@ -135,7 +135,7 @@ declare const cityssm: cityssmGlobal
         }
 
         if (responseJSON.success) {
-          quantityElement.value = ''
+          quantityElement.value = '1'
           itemNumberElement.value = ''
           itemNumberElement.focus()
         } else {

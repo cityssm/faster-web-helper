@@ -80,7 +80,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.postJSON(`${scannerUrlPrefix}/doCreateScannerRecord`, formEvent.currentTarget, (rawResponseJSON) => {
             const responseJSON = rawResponseJSON;
             if (responseJSON.success) {
-                quantityElement.value = '';
+                quantityElement.value = '1';
                 itemNumberElement.value = '';
                 itemNumberElement.focus();
             }
