@@ -16,7 +16,9 @@ export default function getWorkOrderValidationRepairIds(
     sqlParameters.push(workOrderNumber)
   }
 
-  const database = sqlite(databasePath)
+  const database = sqlite(databasePath, {
+    readonly: true
+  })
 
   const result = database
     .prepare(

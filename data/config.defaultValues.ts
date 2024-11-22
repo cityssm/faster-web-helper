@@ -9,8 +9,7 @@ import type { Spec } from 'node-schedule'
 
 import type {
   ConfigItemValidationDynamicsGP,
-  ConfigItemValidationFaster,
-  ConfigWorkOrderValidationFasterApi
+  ConfigItemValidationFaster
 } from '../modules/inventoryScanner/configTypes.js'
 import type {
   ConfigFileSuffixXlsx,

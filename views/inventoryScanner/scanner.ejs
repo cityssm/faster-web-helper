@@ -28,7 +28,7 @@
     <div class="columns is-vcentered is-centered">
       <div class="column is-one-third-widescreen is-half-tablet">
         <form class="m-2" id="form--scanner">
-          <input name="_csrf" type="hidden" value="<%= csrfToken %>" />
+          <input id="scanner--scannerKey" name="scannerKey" type="hidden" />
 
           <label class="label" for="scanner--workOrderNumber">Work Order Number</label>
           <div class="field has-addons">
@@ -37,6 +37,24 @@
             </div>
             <div class="control">
               <button class="button is-clear-button" type="button" title="Clear Work Order">
+                <span class="icon">
+                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <label class="label" for="scanner--repairId">Repair</label>
+          <div class="field has-addons">
+            <div class="control is-expanded">
+              <div class="select is-fullwidth">
+                <select id="scanner--repairId" name="repairId">
+                  <option value="">(Auto-Detect)</option>
+                </select>
+              </div>
+            </div>
+            <div class="control">
+              <button class="button is-clear-button" type="button" title="Clear Repair">
                 <span class="icon">
                   <i class="fa-solid fa-trash" aria-hidden="true"></i>
                 </span>

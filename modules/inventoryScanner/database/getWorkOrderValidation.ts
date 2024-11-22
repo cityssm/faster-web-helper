@@ -13,7 +13,11 @@ export default function getWorkOrderValidation(
   includeDeleted: boolean,
   connectedDatabase?: sqlite.Database
 ): WorkOrderValidationRecord | undefined {
-  const database = connectedDatabase ?? sqlite(databasePath)
+  const database =
+    connectedDatabase ??
+    sqlite(databasePath, {
+      readonly: true
+    })
 
   const sqlParameters: unknown[] = [
     validationRecord.workOrderNumber,

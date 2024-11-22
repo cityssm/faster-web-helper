@@ -21,7 +21,7 @@ export interface CreateScannerRecordForm {
   workOrderNumber: string
   workOrderType?: WorkOrderType
   technicianId?: string
-  repairId?: string
+  repairId: string
 
   itemStoreroom?: string
   itemNumber: string
@@ -61,7 +61,7 @@ export default function createScannerRecord(
       scannerRecord.workOrderType ??
         getWorkOrderTypeFromWorkOrderNumber(scannerRecord.workOrderNumber),
       scannerRecord.technicianId,
-      scannerRecord.repairId,
+      scannerRecord.repairId === '' ? undefined : scannerRecord.repairId,
       scannerRecord.itemStoreroom,
       scannerRecord.itemNumber,
       scannerRecord.quantity,

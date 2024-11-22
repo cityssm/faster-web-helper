@@ -10,7 +10,9 @@ export default function getUnsyncedWorkOrderNumbersAndRepairIds(
   workOrderNumbers: string[]
   repairIds: number[]
 } {
-  const database = sqlite(databasePath)
+  const database = sqlite(databasePath, {
+    readonly: true
+  })
 
   const records = database
     .prepare(

@@ -11,6 +11,7 @@ import type { ModuleInitializerOptions } from '../types.js'
 import { initializeInventoryScannerDatabase } from './database/helpers.database.js'
 import router from './handlers/router.js'
 import scannerRouter from './handlers/router.scanner.js'
+import { hasFasterApi } from './helpers/faster.js'
 import { moduleName } from './helpers/module.js'
 
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`)
@@ -61,8 +62,14 @@ export default function initializeInventoryScannerModules(
     let workOrderValidationTaskPath = ''
 
     if (workOrderValidationSource === 'fasterApi') {
-      workOrderValidationTaskPath =
-        './modules/inventoryScanner/tasks/workOrderValidation/fasterApi.js'
+      if (hasFasterApi) {
+        workOrderValidationTaskPath =
+          './modules/inventoryScanner/tasks/workOrderValidation/fasterApi.js'
+      } else {
+        debug(
+          'Optional "@cityssm/faster-api" package is required for work order validation by FASTER API.'
+        )
+      }
     } else {
       debug(
         `Work order validation not implemented: ${workOrderValidationSource}`

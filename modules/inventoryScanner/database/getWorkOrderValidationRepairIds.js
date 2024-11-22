@@ -7,7 +7,9 @@ export default function getWorkOrderValidationRepairIds(workOrderNumbers, workOr
         workOrderWhereClause.push('workOrderNumber = ?');
         sqlParameters.push(workOrderNumber);
     }
-    const database = sqlite(databasePath);
+    const database = sqlite(databasePath, {
+        readonly: true
+    });
     const result = database
         .prepare(`select repairId
         from WorkOrderValidationRecords

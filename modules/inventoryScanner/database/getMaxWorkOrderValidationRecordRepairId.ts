@@ -4,8 +4,12 @@ import type { WorkOrderType } from '../types.js'
 
 import { databasePath } from './helpers.database.js'
 
-export default function getMaxWorkOrderValidationRepairId(workOrderType: WorkOrderType = 'faster'): number {
-  const database = sqlite(databasePath)
+export default function getMaxWorkOrderValidationRepairId(
+  workOrderType: WorkOrderType = 'faster'
+): number {
+  const database = sqlite(databasePath, {
+    readonly: true
+  })
 
   const result = database
     .prepare(

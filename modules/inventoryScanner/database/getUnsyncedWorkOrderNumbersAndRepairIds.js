@@ -1,7 +1,9 @@
 import sqlite from 'better-sqlite3';
 import { databasePath } from './helpers.database.js';
 export default function getUnsyncedWorkOrderNumbersAndRepairIds(workOrderType = 'faster') {
-    const database = sqlite(databasePath);
+    const database = sqlite(databasePath, {
+        readonly: true
+    });
     const records = database
         .prepare(`select workOrderNumber, repairId from InventoryScannerRecords
         where recordSync_timeMillis is null

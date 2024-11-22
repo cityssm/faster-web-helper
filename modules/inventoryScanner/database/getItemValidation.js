@@ -1,7 +1,10 @@
 import sqlite from 'better-sqlite3';
 import { databasePath } from './helpers.database.js';
 export default function getItemValidation(itemStoreroom, itemNumber, includeDeleted, connectedDatabase) {
-    const database = connectedDatabase ?? sqlite(databasePath);
+    const database = connectedDatabase ??
+        sqlite(databasePath, {
+            readonly: true
+        });
     const result = database
         .prepare(`select itemStoreroom, itemNumber,
         itemDescription, availableQuantity, unitPrice

@@ -5,7 +5,9 @@ import type { ItemValidationRecord } from '../types.js'
 import { databasePath } from './helpers.database.js'
 
 export default function getItemValidationRecords(): ItemValidationRecord[] {
-  const database = sqlite(databasePath)
+  const database = sqlite(databasePath, {
+    readonly: true
+  })
 
   const result = database
     .prepare(

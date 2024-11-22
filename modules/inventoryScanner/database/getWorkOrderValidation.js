@@ -1,7 +1,10 @@
 import sqlite from 'better-sqlite3';
 import { databasePath } from './helpers.database.js';
 export default function getWorkOrderValidation(validationRecord, includeDeleted, connectedDatabase) {
-    const database = connectedDatabase ?? sqlite(databasePath);
+    const database = connectedDatabase ??
+        sqlite(databasePath, {
+            readonly: true
+        });
     const sqlParameters = [
         validationRecord.workOrderNumber,
         validationRecord.workOrderType

@@ -40,7 +40,6 @@
     "bulma": "^1.0.2",
     "camelcase": "^8.0.0",
     "cookie-parser": "^1.4.7",
-    "csurf": "^1.11.0",
     "debug": "^4.3.7",
     "ejs": "^3.1.10",
     "exit-hook": "^4.0.0",
@@ -53,7 +52,6 @@
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.12",
     "@types/cookie-parser": "^1.4.7",
-    "@types/csurf": "^1.11.5",
     "@types/debug": "^4.1.12",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.0",

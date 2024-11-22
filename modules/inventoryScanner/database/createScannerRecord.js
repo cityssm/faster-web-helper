@@ -21,7 +21,7 @@ export default function createScannerRecord(scannerRecord) {
         : dateStringToInteger(scannerRecord.scannerDateString), scannerRecord.scannerTimeString === undefined
         ? dateToTimeInteger(rightNow)
         : timeStringToInteger(scannerRecord.scannerTimeString), scannerRecord.workOrderNumber, scannerRecord.workOrderType ??
-        getWorkOrderTypeFromWorkOrderNumber(scannerRecord.workOrderNumber), scannerRecord.technicianId, scannerRecord.repairId, scannerRecord.itemStoreroom, scannerRecord.itemNumber, scannerRecord.quantity, scannerRecord.unitPrice, `scanner:${scannerRecord.scannerKey}`, rightNow.getTime(), `scanner:${scannerRecord.scannerKey}`, rightNow.getTime());
+        getWorkOrderTypeFromWorkOrderNumber(scannerRecord.workOrderNumber), scannerRecord.technicianId, scannerRecord.repairId === '' ? undefined : scannerRecord.repairId, scannerRecord.itemStoreroom, scannerRecord.itemNumber, scannerRecord.quantity, scannerRecord.unitPrice, `scanner:${scannerRecord.scannerKey}`, rightNow.getTime(), `scanner:${scannerRecord.scannerKey}`, rightNow.getTime());
     database.close();
     return result.changes > 0;
 }

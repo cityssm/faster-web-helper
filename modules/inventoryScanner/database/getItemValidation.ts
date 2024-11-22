@@ -10,7 +10,11 @@ export default function getItemValidation(
   includeDeleted: boolean,
   connectedDatabase?: sqlite.Database
 ): ItemValidationRecord | undefined {
-  const database = connectedDatabase ?? sqlite(databasePath)
+  const database =
+    connectedDatabase ??
+    sqlite(databasePath, {
+      readonly: true
+    })
 
   const result = database
     .prepare(

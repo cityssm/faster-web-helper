@@ -7,6 +7,7 @@ import schedule from 'node-schedule'
 
 import { getConfigProperty } from '../../../../helpers/functions.config.js'
 import createOrUpdateWorkOrderValidation from '../../database/createOrUpdateWorkOrderValidation.js'
+import deleteWorkOrderValidation from '../../database/deleteWorkOrderValidation.js'
 import getMaxWorkOrderValidationRecordUpdateMillis from '../../database/getMaxWorkOrderValidationRecordUpdateMillis.js'
 import { getRepairIdsToRefresh } from '../../helpers/faster.js'
 import { moduleName } from '../../helpers/module.js'
@@ -49,15 +50,18 @@ export async function runUpdateWorkOrderValidationFromFasterApiTask(): Promise<v
 
   const repairIdsToRefresh = getRepairIdsToRefresh()
 
+  debug(`Querying ${repairIdsToRefresh.length} repairs from the FASTER API...`)
   const repairResponse = await fasterApi.getRepairs(repairIdsToRefresh)
 
   if (!repairResponse.success) {
-    debug(`API error: ${JSON.stringify(repairResponse.error)}`)
+    debug(`FASTER API error: ${JSON.stringify(repairResponse.error)}`)
     return
   }
 
   for (const repair of repairResponse.response.results) {
-    if (repair.documentID !== 0) {
+    if (repair.documentID === 0) {
+      deleteWorkOrderValidation(repair.repairID, 'faster')
+    } else {
       createOrUpdateWorkOrderValidation(
         {
           workOrderNumber: repair.documentID.toString(),

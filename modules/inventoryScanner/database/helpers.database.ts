@@ -33,7 +33,7 @@ const createStatements = [
     recordCreate_timeMillis integer not null,
     recordUpdate_timeMillis integer not null,
     recordDelete_timeMillis integer,
-    primary key (workOrderNumber, workOrderType, repairId))`,
+    primary key (repairId, workOrderType, workOrderNumber))`,
 
   `create table if not exists InventoryScannerRecords (
     recordId integer primary key autoincrement,

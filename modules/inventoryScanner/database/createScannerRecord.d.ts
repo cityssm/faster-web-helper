@@ -7,7 +7,7 @@ export interface CreateScannerRecordForm {
     workOrderNumber: string;
     workOrderType?: WorkOrderType;
     technicianId?: string;
-    repairId?: string;
+    repairId: string;
     itemStoreroom?: string;
     itemNumber: string;
     quantity: number | string;
