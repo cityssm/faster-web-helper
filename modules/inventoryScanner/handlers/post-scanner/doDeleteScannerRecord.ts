@@ -1,21 +1,21 @@
 import type { Request, Response } from 'express'
 
-import createScannerRecord from '../../database/createScannerRecord.js'
+import deleteScannerRecord from '../../database/deleteScannerRecord.js'
 import getScannerRecords from '../../database/getScannerRecords.js'
 
-interface DoCreateScannerRecordForm {
+interface DoDeleteScannerRecordForm {
+  recordId: string
   scannerKey: string
-  workOrderNumber: string
-  repairId: string
-  itemNumber: string
-  quantity: string
 }
 
 export default function handler(
-  request: Request<unknown, unknown, DoCreateScannerRecordForm>,
+  request: Request<unknown, unknown, DoDeleteScannerRecordForm>,
   response: Response
 ): void {
-  const success = createScannerRecord(request.body)
+  const success = deleteScannerRecord(
+    request.body.recordId,
+    request.body.scannerKey
+  )
 
   const records = getScannerRecords({
     scannerKey: request.body.scannerKey

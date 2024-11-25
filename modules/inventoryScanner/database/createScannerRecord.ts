@@ -8,9 +8,11 @@ import {
 } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
+import { scannerKeyToUserName } from '../helpers/scanner.js'
 import { getWorkOrderTypeFromWorkOrderNumber } from '../helpers/workOrders.js'
 import type { WorkOrderType } from '../types.js'
 
+import { getItemValidationRecordsByItemNumber } from './getItemValidationRecords.js'
 import { databasePath } from './helpers.database.js'
 
 export interface CreateScannerRecordForm {
@@ -35,6 +37,26 @@ export default function createScannerRecord(
   const rightNow = new Date()
 
   const database = sqlite(databasePath)
+
+  let itemStoreroom = scannerRecord.itemStoreroom
+  let unitPrice = scannerRecord.unitPrice
+
+  if (itemStoreroom === undefined || unitPrice === undefined) {
+    const items = getItemValidationRecordsByItemNumber(scannerRecord.itemNumber)
+    
+    for (const item of items) {
+      if (itemStoreroom === undefined) {
+        itemStoreroom = item.itemStoreroom
+      }
+
+      if (itemStoreroom === item.itemStoreroom && unitPrice === undefined) {
+        unitPrice = item.unitPrice
+        break
+      }
+    }
+  }
+
+  const userName = scannerKeyToUserName(scannerRecord.scannerKey)
 
   const result = database
     .prepare(
@@ -62,13 +84,13 @@ export default function createScannerRecord(
         getWorkOrderTypeFromWorkOrderNumber(scannerRecord.workOrderNumber),
       scannerRecord.technicianId,
       scannerRecord.repairId === '' ? undefined : scannerRecord.repairId,
-      scannerRecord.itemStoreroom,
+      itemStoreroom,
       scannerRecord.itemNumber,
       scannerRecord.quantity,
-      scannerRecord.unitPrice,
-      `scanner:${scannerRecord.scannerKey}`,
+      unitPrice,
+      userName,
       rightNow.getTime(),
-      `scanner:${scannerRecord.scannerKey}`,
+      userName,
       rightNow.getTime()
     )
 

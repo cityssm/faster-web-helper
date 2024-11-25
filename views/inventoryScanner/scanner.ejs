@@ -25,84 +25,142 @@
 
 <body>
   <main data-url-prefix="<%= urlPrefix %>">
+    <div class="navbar is-hidden is-mobile is-success is-fixed-top" id="scanner--successMessage">
+      <div class="navbar-brand">
+        <div class="navbar-item">
+          <i class="fa-solid fa-check" aria-hidden="true"></i>
+          <strong>Record Saved Successfully</strong>
+        </div>
+      </div>
+    </div>
+
     <div class="columns is-vcentered is-centered">
       <div class="column is-one-third-widescreen is-half-tablet">
-        <form class="m-2" id="form--scanner">
-          <input id="scanner--scannerKey" name="scannerKey" type="hidden" />
+        <div class="tabs">
+          <ul>
+            <li class="is-active">
+              <a href="#tab--scanner">
+                <span class="icon is-small"><i class="fa-solid fa-barcode" aria-hidden="true"></i></span>
+                <span>Scan</span>
+              </a>
+            </li>
+            <li>
+              <a href="#tab--history">
+                <span class="icon is-small"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i></span>
+                <span>History</span>
+              </a>
+            </li>
+            <li>
+              <a href="#tab--about">
+                <span class="icon is-small"><i class="fa-solid fa-circle-info" aria-hidden="true"></i></span>
+                <span>Info</span>
+              </a>
+            </li>
+          </ul>
+        </div>
 
-          <label class="label" for="scanner--workOrderNumber">Work Order Number</label>
-          <div class="field has-addons">
-            <div class="control is-expanded">
-              <input class="input" id="scanner--workOrderNumber" name="workOrderNumber" type="text" maxlength="15" pattern="<%- workOrderPattern %>" required autofocus />
-            </div>
-            <div class="control">
-              <button class="button is-clear-button" type="button" title="Clear Work Order">
-                <span class="icon">
-                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
-                </span>
-              </button>
-            </div>
-          </div>
-
-          <label class="label" for="scanner--repairId">Repair</label>
-          <div class="field has-addons">
-            <div class="control is-expanded">
-              <div class="select is-fullwidth">
-                <select id="scanner--repairId" name="repairId">
-                  <option value="">(Auto-Detect)</option>
-                </select>
-              </div>
-            </div>
-            <div class="control">
-              <button class="button is-clear-button" type="button" title="Clear Repair">
-                <span class="icon">
-                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
-                </span>
-              </button>
-            </div>
-          </div>
-          
-          <label class="label" for="scanner--itemNumber">Item Number</label>
-          <div class="field has-addons">
-            <div class="control is-expanded">
-              <input class="input" id="scanner--itemNumber" name="itemNumber" type="text" maxlength="22"
-                <% if (itemNumberPattern !== undefined) { %>
-                  pattern="<%- itemNumberPattern %>"
-                <% } %>
-                required />
-            </div>
-            <div class="control">
-              <button class="button is-clear-button" type="button" title="Clear Item">
-                <span class="icon">
-                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
-                </span>
-              </button>
-            </div>
-          </div>
-
-          <div class="columns is-mobile is-align-items-end">
-            <div class="column is-two-thirds">
-              <label class="label" for="scanner--quantity">Quantity</label>
+        <div class="tab-containers m-2">
+          <div id="tab--scanner">
+            <form id="form--scanner">
+              <input id="scanner--scannerKey" name="scannerKey" type="hidden" />
+    
+              <label class="label" for="scanner--workOrderNumber">Work Order Number</label>
               <div class="field has-addons">
-                <div class="control is-expanded">
-                  <input class="input has-text-right" id="scanner--quantity" name="quantity" type="text" value="1" inputmode="numeric" pattern="^\d+$" maxlength="3" required />
+                <div class="control has-icons-left is-expanded">
+                  <input class="input" id="scanner--workOrderNumber" name="workOrderNumber" type="text" maxlength="15" pattern="<%- workOrderPattern %>" autocomplete="off" required autofocus />
+                  <span class="icon is-small is-left">
+                    <i class="fa-solid fa-clipboard" aria-hidden="true"></i>
+                  </span>
                 </div>
                 <div class="control">
-                  <button class="button is-clear-button" type="button" title="Clear Quantity">
+                  <button class="button is-clear-button" type="button" title="Clear Work Order">
                     <span class="icon">
                       <i class="fa-solid fa-trash" aria-hidden="true"></i>
                     </span>
                   </button>
                 </div>
               </div>
-            </div>
-            <div class="column">
-              <button class="button is-fullwidth is-primary" type="submit">
-                Save
-              </button>
+    
+              <label class="label" for="scanner--repairId">Repair</label>
+              <div class="field has-addons">
+                <div class="control has-icons-left is-expanded">
+                  <div class="select is-fullwidth">
+                    <select id="scanner--repairId" name="repairId">
+                      <option value="">(Auto-Detect)</option>
+                    </select>
+                  </div>
+                  <span class="icon is-small is-left">
+                    <i class="fa-solid fa-wrench" aria-hidden="true"></i>
+                  </span>
+                </div>
+                <div class="control">
+                  <button class="button is-clear-button" type="button" title="Clear Repair">
+                    <span class="icon">
+                      <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                    </span>
+                  </button>
+                </div>
+              </div>
+              
+              <label class="label" for="scanner--itemNumber">Item Number</label>
+              <div class="field has-addons">
+                <div class="control has-icons-left is-expanded">
+                  <input class="input" id="scanner--itemNumber" name="itemNumber" type="text" maxlength="22"
+                    <% if (itemNumberPattern !== undefined) { %>
+                      pattern="<%- itemNumberPattern %>"
+                    <% } %>
+                    autocomplete="off" required />
+                  <span class="icon is-small is-left">
+                    <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+                  </span>
+                </div>
+                <div class="control">
+                  <button class="button is-clear-button" type="button" title="Clear Item">
+                    <span class="icon">
+                      <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                    </span>
+                  </button>
+                </div>
+              </div>
+    
+              <div class="columns is-mobile is-align-items-end">
+                <div class="column is-two-thirds">
+                  <label class="label" for="scanner--quantity">Quantity</label>
+                  <div class="field has-addons">
+                    <div class="control is-expanded">
+                      <input class="input has-text-right" id="scanner--quantity" name="quantity" type="text" value="1" inputmode="numeric" pattern="^\d+$" maxlength="3" autocomplete="off" required />
+                    </div>
+                    <div class="control">
+                      <button class="button is-clear-button" type="button" title="Clear Quantity">
+                        <span class="icon">
+                          <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="column">
+                  <button class="button is-fullwidth is-primary" type="submit">
+                    Save
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="is-hidden" id="tab--history">
+            <div id="history--container">
+              <p class="has-text-centered">
+                <i class="fa-solid fa-5x fa-spinner fa-spin-pulse" aria-hidden="true"></i>
+              </p>
             </div>
           </div>
-        </form>
+          <div class="is-hidden" id="tab--about">
+            <p>
+              <strong>Scanner Key</strong><br />
+              <span id="about--scannerKey"></span>
+            </p>
+          </div>
+        </div>
         
       </div>
     </div>

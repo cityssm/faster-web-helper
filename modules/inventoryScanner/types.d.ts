@@ -24,12 +24,14 @@ export interface InventoryScannerRecord {
     scanTimeString: string;
     workOrderNumber: string;
     workOrderType: WorkOrderType;
-    itemStoreroom: string;
+    itemStoreroom: string | null;
     itemNumber: string;
+    itemDescription: string | null;
     technicianId: string | null;
     repairId: number | null;
+    repairDescription: string | null;
     quantity: number;
-    unitPrice: number;
+    unitPrice: number | null;
     recordSync_userName: string | null;
     recordSync_timeMillis: number | null;
     recordSync_isSuccessful: boolean | null;

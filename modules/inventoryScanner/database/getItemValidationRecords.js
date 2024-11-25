@@ -14,3 +14,21 @@ export default function getItemValidationRecords() {
     database.close();
     return result;
 }
+export function getItemValidationRecordsByItemNumber(itemNumber, connectedDatabase) {
+    const database = connectedDatabase ??
+        sqlite(databasePath, {
+            readonly: true
+        });
+    const result = database
+        .prepare(`select itemStoreroom, itemNumber,
+        itemDescription, availableQuantity, unitPrice
+        from ItemValidationRecords
+        where recordDelete_timeMillis is null
+        and itemNumber = ?
+        order by itemStoreroom`)
+        .all(itemNumber);
+    if (connectedDatabase === undefined) {
+        database.close();
+    }
+    return result;
+}

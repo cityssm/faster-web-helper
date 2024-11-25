@@ -1,7 +1,7 @@
-import createScannerRecord from '../../database/createScannerRecord.js';
+import deleteScannerRecord from '../../database/deleteScannerRecord.js';
 import getScannerRecords from '../../database/getScannerRecords.js';
 export default function handler(request, response) {
-    const success = createScannerRecord(request.body);
+    const success = deleteScannerRecord(request.body.recordId, request.body.scannerKey);
     const records = getScannerRecords({
         scannerKey: request.body.scannerKey
     });
