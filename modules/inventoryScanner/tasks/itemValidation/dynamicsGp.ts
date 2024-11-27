@@ -31,7 +31,7 @@ const taskConfig = getConfigProperty(
 
 const dynamicsGpDatabaseConfig = getConfigProperty('dynamicsGP')
 
-export async function runUpdateItemValidationFromDynamicsGpTask(): Promise<void> {
+async function runUpdateItemValidationFromDynamicsGpTask(): Promise<void> {
   if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
     debug('Skipping run.')
     return

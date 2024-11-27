@@ -23,7 +23,7 @@ const debug = Debug(
 
 const fasterWebConfig = getConfigProperty('fasterWeb')
 
-export async function runUpdateWorkOrderValidationFromFasterApiTask(): Promise<void> {
+async function runUpdateWorkOrderValidationFromFasterApiTask(): Promise<void> {
   if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
     debug('Skipping run.')
     return

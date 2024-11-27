@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
-    const urlPrefix = document.querySelector('main')?.dataset.urlPrefix ?? '';
+    const moduleUrlPrefix = (document.querySelector('main')?.dataset.urlPrefix ?? '') +
+        '/modules/inventoryScanner';
     let inventory = exports.inventory;
     const inventoryFilterElement = document.querySelector('#filter--inventory');
     const inventoryDisplayCountElement = document.querySelector('#displayCount--inventory');
@@ -49,7 +50,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
             tableRowElement.querySelector('[data-field="itemNumber"]').textContent = item.itemNumber;
             tableRowElement.querySelector('[data-field="itemDescription"]').textContent = item.itemDescription;
             tableRowElement.querySelector('[data-field="unitPrice"]').textContent = '$' + item.unitPrice.toFixed(2);
-            tableRowElement.querySelector('[data-field="availableQuantity"]').textContent = item.availableQuantity.toString();
+            const availableQuantityElement = tableRowElement.querySelector('[data-field="availableQuantity"]');
+            availableQuantityElement.textContent = item.availableQuantity.toString();
+            if (item.availableQuantity === 0) {
+                availableQuantityElement.classList.add('is-warning');
+            }
+            else if (item.availableQuantity < 0) {
+                availableQuantityElement.classList.add('is-danger');
+            }
             tableElement.querySelector('tbody')?.append(tableRowElement);
         }
         inventoryDisplayCountElement.textContent = `${displayCount} / ${inventory.length}`;
@@ -67,7 +75,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         inventoryContainerElement.innerHTML = `<div class="message is-info">
       <p class="message-body">Reloading items...</p>
       </div>`;
-        cityssm.postJSON(`${urlPrefix}/modules/inventoryScanner/doGetInventory`, {}, (rawResponseJson) => {
+        cityssm.postJSON(`${moduleUrlPrefix}/doGetInventory`, {}, (rawResponseJson) => {
             const responseJson = rawResponseJson;
             inventory = responseJson.inventory;
             renderInventory();
@@ -75,5 +83,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     renderInventory();
     inventoryFilterElement.addEventListener('keyup', renderInventory);
-    document.querySelector('#reload--inventory')?.addEventListener('click', reloadInventory);
+    document
+        .querySelector('#reload--inventory')
+        ?.addEventListener('click', reloadInventory);
 })();

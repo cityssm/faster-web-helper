@@ -16,7 +16,17 @@
   <div id="tab--pending">
     <div class="box">
       <div class="columns">
-        <div class="column"></div>
+        <div class="column is-narrow">
+          <label class="checkbox mt-2">
+            <input id="pending--autoRefresh" type="checkbox" />
+            Auto Refresh
+          </label>
+        </div>
+        <div class="column">
+          <button id="pending--doRefresh" class="button is-primary" type="button">
+            Refresh Now
+          </button>
+        </div>
         <div class="column is-narrow">
           <div class="dropdown is-right">
             <div class="dropdown-trigger">
@@ -34,8 +44,9 @@
                 </a>
                 <% if (fasterUrlBuilder !== undefined) { %>
                   <hr class="dropdown-divider" />
+                  <div class="dropdown-item"><strong>FASTER Web</strong></div>
                   <a class="dropdown-item" href="<%= fasterUrlBuilder.inventorySearchUrl() %>" target="_blank">
-                    FASTER Web Inventory Search
+                    Inventory Search
                   </a>
                 <% } %>
               </div>
@@ -44,6 +55,22 @@
         </div>
       </div>
     </div>
+    <table class="table is-fullwidth is-hoverable is-striped">
+      <thead>
+        <tr>
+          <th>Scan Time</th>
+          <th>Work Order</th>
+          <th>Repair</th>
+          <th>Item</th>
+          <th class="has-text-right">Quantity</th>
+          <th class="has-text-right">Unit Price</th>
+          <th class="has-text-centered">
+            <i class="fa-solid fa-gear" title="Options"></i>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="tbody--pending"></tbody>
+    </table>
   </div>
   <div class="is-hidden" id="tab--inventory">
     <div class="box">
@@ -91,8 +118,14 @@
 <%- include('../_footerA'); -%>
 
 <script>
+  cityssm.htmlModalFolder = "<%= urlPrefix %>/inventoryScanner/html/";
+
+  exports.fasterWorkOrderUrl = "<%= fasterUrlBuilder.workOrderUrl('{workOrderNumber}') %>"
+  exports.pendingRecords = <%- JSON.stringify(pendingRecords) %>;
+
   exports.inventory = <%- JSON.stringify(inventory) %>;
 </script>
+<script src="<%= urlPrefix %>/inventoryScanner/javascripts/adminPending.js"></script>
 <script src="<%= urlPrefix %>/inventoryScanner/javascripts/adminInventory.js"></script>
 
 <%- include('../_footerB'); -%>

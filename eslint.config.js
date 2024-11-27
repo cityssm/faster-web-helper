@@ -11,7 +11,14 @@ export const config = tseslint.config({
             'warn',
             {
                 cspell: {
-                    words: [...cspellWords, 'autoincrement', 'worktech']
+                    words: [
+                        ...cspellWords,
+                        'autoincrement',
+                        'fasterwebcloud',
+                        'fontawesome',
+                        'unvalidated',
+                        'worktech'
+                    ]
                 }
             }
         ],

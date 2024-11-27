@@ -81,6 +81,12 @@ export default function initializeInventoryScannerModules(
     }
   }
 
+  validationProcesses.push(
+    fork(
+      './modules/inventoryScanner/tasks/inventoryScanner/updateRecordsFromValidation.js'
+    )
+  )
+
   /*
    * Initialize router for admin interface
    */

@@ -1,6 +1,8 @@
 import type { InventoryScannerRecord } from '../types.js';
 interface GetScannerRecordsFilters {
     scannerKey?: string;
+    isSynced?: boolean;
+    hasMissingValidation?: boolean;
 }
 interface GetScannerRecordsOptions {
     limit: number;

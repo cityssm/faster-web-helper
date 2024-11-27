@@ -54,6 +54,7 @@ export default function initializeInventoryScannerModules(options) {
             validationProcesses.push(fork(workOrderValidationTaskPath));
         }
     }
+    validationProcesses.push(fork('./modules/inventoryScanner/tasks/inventoryScanner/updateRecordsFromValidation.js'));
     /*
      * Initialize router for admin interface
      */

@@ -15,7 +15,7 @@ let lastRunMillis = getMaxWorkOrderValidationRecordUpdateMillis();
 export const taskName = 'Work Order Validation Task - FASTER API';
 const debug = Debug(`faster-web-helper:${camelcase(moduleName)}:${camelcase(taskName)}`);
 const fasterWebConfig = getConfigProperty('fasterWeb');
-export async function runUpdateWorkOrderValidationFromFasterApiTask() {
+async function runUpdateWorkOrderValidationFromFasterApiTask() {
     if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
         debug('Skipping run.');
         return;

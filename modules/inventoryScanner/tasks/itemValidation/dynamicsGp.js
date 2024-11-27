@@ -16,7 +16,7 @@ const debug = Debug(`faster-web-helper:${camelCase(moduleName)}:${camelCase(task
 const itemNumberRegex = getConfigProperty('modules.inventoryScanner.items.itemNumberRegex');
 const taskConfig = getConfigProperty('modules.inventoryScanner.items.validation');
 const dynamicsGpDatabaseConfig = getConfigProperty('dynamicsGP');
-export async function runUpdateItemValidationFromDynamicsGpTask() {
+async function runUpdateItemValidationFromDynamicsGpTask() {
     if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
         debug('Skipping run.');
         return;

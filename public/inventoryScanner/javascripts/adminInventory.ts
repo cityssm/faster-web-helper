@@ -8,7 +8,9 @@ declare const exports: {
 
 declare const cityssm: cityssmGlobal
 ;(() => {
-  const urlPrefix = document.querySelector('main')?.dataset.urlPrefix ?? ''
+  const moduleUrlPrefix =
+    (document.querySelector('main')?.dataset.urlPrefix ?? '') +
+    '/modules/inventoryScanner'
 
   let inventory = exports.inventory
 
@@ -95,11 +97,19 @@ declare const cityssm: cityssmGlobal
           '[data-field="unitPrice"]'
         ) as HTMLTableCellElement
       ).textContent = '$' + item.unitPrice.toFixed(2)
-      ;(
-        tableRowElement.querySelector(
-          '[data-field="availableQuantity"]'
-        ) as HTMLTableCellElement
-      ).textContent = item.availableQuantity.toString()
+
+      const availableQuantityElement = tableRowElement.querySelector(
+        '[data-field="availableQuantity"]'
+      ) as HTMLTableCellElement
+
+      availableQuantityElement.textContent = item.availableQuantity.toString()
+
+      if (item.availableQuantity === 0) {
+        availableQuantityElement.classList.add('is-warning')
+      }
+      else if (item.availableQuantity < 0) {
+        availableQuantityElement.classList.add('is-danger')
+      }
 
       tableElement.querySelector('tbody')?.append(tableRowElement)
     }
@@ -122,15 +132,23 @@ declare const cityssm: cityssmGlobal
       <p class="message-body">Reloading items...</p>
       </div>`
 
-    cityssm.postJSON(`${urlPrefix}/modules/inventoryScanner/doGetInventory`, {}, (rawResponseJson) => {
-      const responseJson = rawResponseJson as unknown as {inventory: ItemValidationRecord[]}
-      inventory = responseJson.inventory
-      renderInventory()
-    })
+    cityssm.postJSON(
+      `${moduleUrlPrefix}/doGetInventory`,
+      {},
+      (rawResponseJson) => {
+        const responseJson = rawResponseJson as unknown as {
+          inventory: ItemValidationRecord[]
+        }
+        inventory = responseJson.inventory
+        renderInventory()
+      }
+    )
   }
 
   renderInventory()
   inventoryFilterElement.addEventListener('keyup', renderInventory)
 
-  document.querySelector('#reload--inventory')?.addEventListener('click', reloadInventory)
+  document
+    .querySelector('#reload--inventory')
+    ?.addEventListener('click', reloadInventory)
 })()

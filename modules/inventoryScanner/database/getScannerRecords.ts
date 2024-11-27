@@ -10,6 +10,8 @@ import { databasePath } from './helpers.database.js'
 
 interface GetScannerRecordsFilters {
   scannerKey?: string
+  isSynced?: boolean
+  hasMissingValidation?: boolean
 }
 
 interface GetScannerRecordsOptions {
@@ -29,6 +31,10 @@ export default function getScannerRecords(
     ...userOptions
   }
 
+  /*
+   * Filters
+   */
+
   const sqlParameters: unknown[] = []
   let sqlWhereClause = 'where s.recordDelete_timeMillis is null'
 
@@ -36,6 +42,32 @@ export default function getScannerRecords(
     sqlWhereClause += ' and s.scannerKey = ?'
     sqlParameters.push(filters.scannerKey)
   }
+
+  if (filters.isSynced !== undefined) {
+    sqlWhereClause += filters.isSynced
+      ? ' and s.recordSync_timeMillis is not null'
+      : ' and s.recordSync_timeMillis is null'
+  }
+
+  if (filters.hasMissingValidation !== undefined) {
+    sqlWhereClause += filters.hasMissingValidation
+      ? ` and (
+          (s.workOrderType = 'faster' and (s.repairId is null or w.repairDescription is null))
+          or s.itemStoreRoom is null
+          or s.unitPrice is null
+          or i.itemDescription is null
+          )`
+      : `and (
+          (s.workOrderType <> 'faster' or (s.repairId is not null and w.repairDescription is not null))
+          and s.itemStoreroom is not null
+          and s.unitPrice is not null
+          and i.itemDescription is not null
+          )`
+  }
+
+  /*
+   * Do Query
+   */
 
   const database = sqlite(databasePath, {
     readonly: true
@@ -67,7 +99,7 @@ export default function getScannerRecords(
           and w.recordDelete_timeMillis is null
         ${sqlWhereClause}
         order by s.scanDate desc, s.scanTime desc, s.recordId desc
-        limit ${options.limit}`
+        ${options.limit === -1 ? '' : 'limit ' + options.limit}`
     )
     .all(sqlParameters) as InventoryScannerRecord[]
 
