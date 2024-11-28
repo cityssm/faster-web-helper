@@ -17,7 +17,7 @@ export default async function initializeAutocompleteModule(options) {
     /*
      * Set up static server
      */
-    options.app.use(getConfigProperty('webServer.urlPrefix') + '/autocomplete', express.static(path.join('public', 'autocomplete')));
+    options.app.use(`${getConfigProperty('webServer.urlPrefix')}/autocomplete`, express.static(path.join('public', 'autocomplete')));
     /*
      * Run startup tasks
      */

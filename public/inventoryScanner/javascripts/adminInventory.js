@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
-    const moduleUrlPrefix = (document.querySelector('main')?.dataset.urlPrefix ?? '') +
-        '/modules/inventoryScanner';
+    const moduleUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/modules/inventoryScanner`;
     let inventory = exports.inventory;
     const inventoryFilterElement = document.querySelector('#filter--inventory');
     const inventoryDisplayCountElement = document.querySelector('#displayCount--inventory');
@@ -49,7 +48,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             tableRowElement.querySelector('[data-field="itemStoreroom"]').textContent = item.itemStoreroom;
             tableRowElement.querySelector('[data-field="itemNumber"]').textContent = item.itemNumber;
             tableRowElement.querySelector('[data-field="itemDescription"]').textContent = item.itemDescription;
-            tableRowElement.querySelector('[data-field="unitPrice"]').textContent = '$' + item.unitPrice.toFixed(2);
+            tableRowElement.querySelector('[data-field="unitPrice"]').textContent = `$${item.unitPrice.toFixed(2)}`;
             const availableQuantityElement = tableRowElement.querySelector('[data-field="availableQuantity"]');
             availableQuantityElement.textContent = item.availableQuantity.toString();
             if (item.availableQuantity === 0) {

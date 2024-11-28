@@ -9,9 +9,7 @@ import type {
 declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
 ;(() => {
-  const scannerUrlPrefix =
-    (document.querySelector('main')?.dataset.urlPrefix ?? '') +
-    '/apps/inventoryScanner'
+  const scannerUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/apps/inventoryScanner`
 
   const formElement = document.querySelector(
     '#form--scanner'
@@ -39,9 +37,8 @@ declare const cityssm: cityssmGlobal
   ;(
     formElement.querySelector('#scanner--scannerKey') as HTMLInputElement
   ).value = scannerKey
-  ;(
-    document.querySelector('#about--scannerKey') as HTMLElement
-  ).textContent = scannerKey
+  ;(document.querySelector('#about--scannerKey') as HTMLElement).textContent =
+    scannerKey
 
   /*
    * History
@@ -188,7 +185,9 @@ declare const cityssm: cityssmGlobal
                         <i class="fa-solid fa-trash" aria-hidden="true"></i>
                       </button>
                     </div>`
-                : `<div class="column">Synced</div>`
+                : `<div class="column">
+                    Synced
+                    </div>`
             }
             </div>
           </div>

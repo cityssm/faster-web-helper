@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
-    const scannerUrlPrefix = (document.querySelector('main')?.dataset.urlPrefix ?? '') +
-        '/apps/inventoryScanner';
+    const scannerUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/apps/inventoryScanner`;
     const formElement = document.querySelector('#form--scanner');
     const successMessageElement = document.querySelector('#scanner--successMessage');
     function hideSuccessMessage() {
@@ -18,7 +17,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     ;
     formElement.querySelector('#scanner--scannerKey').value = scannerKey;
-    document.querySelector('#about--scannerKey').textContent = scannerKey;
+    document.querySelector('#about--scannerKey').textContent =
+        scannerKey;
     /*
      * History
      */
@@ -142,7 +142,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         <i class="fa-solid fa-trash" aria-hidden="true"></i>
                       </button>
                     </div>`
-                : `<div class="column">Synced</div>`}
+                : `<div class="column">
+                    Synced
+                    </div>`}
             </div>
           </div>
         </div>`;

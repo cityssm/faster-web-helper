@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
-    const moduleUrlPrefix = (document.querySelector('main')?.dataset.urlPrefix ?? '') +
-        '/modules/inventoryScanner';
+    const moduleUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/modules/inventoryScanner`;
     let pendingRecords = exports.pendingRecords;
     const pendingRecordsTbodyElement = document.querySelector('#tbody--pending');
     function openUpdateScannerRecord(clickEvent) {
@@ -58,7 +57,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         </td><td class="has-text-right">
           ${cityssm.escapeHTML(record.quantity.toString())}
         </td><td class="has-text-right">
-          ${cityssm.escapeHTML(record.unitPrice === null ? '(Unknown Price)' : '$' + record.unitPrice.toFixed(2))}
+          ${cityssm.escapeHTML(record.unitPrice === null ? '(Unknown Price)' : `$${record.unitPrice.toFixed(2)}`)}
         </td><td class="has-text-centered">
           <button class="button" type="button" title="Record Options">
             <i class="fa-solid fa-gear" aria-hidden="true"></i>

@@ -8,9 +8,7 @@ declare const exports: {
 
 declare const cityssm: cityssmGlobal
 ;(() => {
-  const moduleUrlPrefix =
-    (document.querySelector('main')?.dataset.urlPrefix ?? '') +
-    '/modules/inventoryScanner'
+  const moduleUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/modules/inventoryScanner`
 
   let inventory = exports.inventory
 
@@ -96,7 +94,7 @@ declare const cityssm: cityssmGlobal
         tableRowElement.querySelector(
           '[data-field="unitPrice"]'
         ) as HTMLTableCellElement
-      ).textContent = '$' + item.unitPrice.toFixed(2)
+      ).textContent = `$${item.unitPrice.toFixed(2)}`
 
       const availableQuantityElement = tableRowElement.querySelector(
         '[data-field="availableQuantity"]'
@@ -106,8 +104,7 @@ declare const cityssm: cityssmGlobal
 
       if (item.availableQuantity === 0) {
         availableQuantityElement.classList.add('is-warning')
-      }
-      else if (item.availableQuantity < 0) {
+      } else if (item.availableQuantity < 0) {
         availableQuantityElement.classList.add('is-danger')
       }
 
