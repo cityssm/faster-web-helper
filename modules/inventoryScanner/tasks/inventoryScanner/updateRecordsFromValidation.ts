@@ -103,5 +103,7 @@ const job = schedule.scheduleJob(
 exitHook(() => {
   try {
     job.cancel()
-  } catch {}
+  } catch {
+    // ignore
+  }
 })

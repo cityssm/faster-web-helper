@@ -62,5 +62,7 @@ exitHook(() => {
     try {
         job.cancel();
     }
-    catch { }
+    catch {
+        // ignore
+    }
 });

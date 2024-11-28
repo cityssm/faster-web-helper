@@ -5,28 +5,33 @@ import {
   ActiveDirectoryAuthenticator,
   type BaseAuthenticator
 } from '@cityssm/authentication-helper'
+import Debug from 'debug'
 
 import { getConfigProperty } from './functions.config.js'
+
+const debug = Debug('faster-web-helper:functions.user')
 
 // eslint-disable-next-line @typescript-eslint/init-declarations
 let authenticator: BaseAuthenticator | undefined
 
-const authenticationConfig = getConfigProperty(
-  'login.authentication'
-)
+const authenticationConfig = getConfigProperty('login.authentication')
 
 const domain = getConfigProperty('login.domain')
 
-switch (authenticationConfig?.type) {
-  case 'activeDirectory': {
-    authenticator = new ActiveDirectoryAuthenticator(
-      authenticationConfig.config
-    )
-    break
-  }
-  case 'adWebAuth': {
-    authenticator = new ADWebAuthAuthenticator(authenticationConfig.config)
-    break
+if (authenticationConfig === undefined) {
+  debug('Authentication not defined.')
+} else {
+  switch (authenticationConfig.type) {
+    case 'activeDirectory': {
+      authenticator = new ActiveDirectoryAuthenticator(
+        authenticationConfig.config
+      )
+      break
+    }
+    case 'adWebAuth': {
+      authenticator = new ADWebAuthAuthenticator(authenticationConfig.config)
+      break
+    }
   }
 }
 
