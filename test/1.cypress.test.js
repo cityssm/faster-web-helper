@@ -2,7 +2,7 @@ import assert from 'node:assert';
 import { exec, fork } from 'node:child_process';
 import { describe, it } from 'node:test';
 await describe('faster-web-helper', async () => {
-    await it('should run Cypress tests', () => {
+    await it('should run Cypress tests', (context, done) => {
         const appProcess = fork('app.js');
         let cypressCommand = 'cypress run --config-file cypress.config.ts --browser chrome';
         if ((process.env.CYPRESS_RECORD_KEY ?? '') !== '') {
@@ -25,6 +25,7 @@ await describe('faster-web-helper', async () => {
                 // ignore
             }
             assert.ok(code === 0);
+            done();
         });
     });
 });
