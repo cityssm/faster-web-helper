@@ -10,7 +10,7 @@ await describe('faster-web-helper', async () => {
       'cypress run --config-file cypress.config.ts --browser chrome'
 
     if ((process.env.CYPRESS_RECORD_KEY ?? '') !== '') {
-      cypressCommand += ' --record'
+      cypressCommand += ` --tag "chrome,${process.version}" --record`
     }
 
     // eslint-disable-next-line security/detect-child-process, sonarjs/os-command
