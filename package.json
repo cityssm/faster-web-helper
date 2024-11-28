@@ -10,7 +10,10 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./app.js",
     "dev": "cross-env NODE_ENV=dev DEBUG=faster-web-helper:*,faster-report-parser:* nodemon ./app.js",
-    "test": "cross-env NODE_ENV=dev DEBUG=faster-web-helper:*,faster-report-parser:* node --test"
+    "cy:open": "cypress open --config-file cypress.config.ts",
+    "cy:run": "cypress run --config-file cypress.config.ts",
+    "test": "cross-env NODE_ENV=dev DEBUG=faster-web-helper:*,faster-report-parser:* node --test",
+    "coverage": "cross-env NODE_ENV=dev DEBUG=faster-web-helper:*,faster-report-parser:* c8 --reporter=lcov --reporter=text --reporter=text-summary node --test"
   },
   "keywords": [
     "faster-web",
@@ -55,10 +58,12 @@
     "@types/debug": "^4.1.12",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.1",
-    "@types/node": "^22.10.0",
+    "@types/node": "^22.10.1",
     "@types/node-schedule": "^2.1.7",
     "@types/session-file-store": "^1.2.5",
-    "eslint-config-cityssm": "^16.0.0",
+    "cypress": "^13.16.0",
+    "cypress-axe": "^1.5.0",
+    "eslint-config-cityssm": "^17.0.0",
     "nodemon": "^3.1.7",
     "prettier-config-cityssm": "^1.0.0"
   },
