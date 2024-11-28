@@ -19,7 +19,7 @@ const authenticationConfig = getConfigProperty('login.authentication')
 const domain = getConfigProperty('login.domain')
 
 if (authenticationConfig === undefined) {
-  debug('Authentication not defined.')
+  debug('`login.authentication` not defined.')
 } else {
   switch (authenticationConfig.type) {
     case 'activeDirectory': {
@@ -31,6 +31,10 @@ if (authenticationConfig === undefined) {
     case 'adWebAuth': {
       authenticator = new ADWebAuthAuthenticator(authenticationConfig.config)
       break
+    }
+    // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
+    default: {
+      debug('Unknown `login.authentication`.')
     }
   }
 }
