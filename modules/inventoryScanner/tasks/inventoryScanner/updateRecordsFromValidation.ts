@@ -7,7 +7,7 @@ import schedule from 'node-schedule'
 import { getItemValidationRecordsByItemNumber } from '../../database/getItemValidationRecords.js'
 import getScannerRecords from '../../database/getScannerRecords.js'
 import getWorkOrderValidationRecords from '../../database/getWorkOrderValidationRecords.js'
-import { updateScannerRecord } from '../../database/updateScannerRecord.js'
+import { updateScannerRecordField } from '../../database/updateScannerRecordField.js'
 import { moduleName } from '../../helpers/module.js'
 
 const minimumMillisBetweenRuns = minutesToMillis(2)
@@ -45,7 +45,7 @@ function updateRecordsFromValidationTask(): void {
     if (workOrderValidationRecords.length > 0 && record.repairId === null) {
       for (const workOrderValidationRecord of workOrderValidationRecords) {
         if (workOrderValidationRecord.repairId !== null) {
-          updateScannerRecord(
+          updateScannerRecordField(
             record.recordId,
             'repairId',
             workOrderValidationRecord.repairId,
@@ -63,7 +63,7 @@ function updateRecordsFromValidationTask(): void {
 
     if (itemValidationRecords.length > 0) {
       if (record.itemStoreroom === null) {
-        updateScannerRecord(
+        updateScannerRecordField(
           record.recordId,
           'itemStoreroom',
           itemValidationRecords[0].itemStoreroom,
@@ -72,7 +72,7 @@ function updateRecordsFromValidationTask(): void {
       }
 
       if (record.unitPrice === null) {
-        updateScannerRecord(
+        updateScannerRecordField(
           record.recordId,
           'unitPrice',
           itemValidationRecords[0].unitPrice,

@@ -6,7 +6,7 @@ import schedule from 'node-schedule';
 import { getItemValidationRecordsByItemNumber } from '../../database/getItemValidationRecords.js';
 import getScannerRecords from '../../database/getScannerRecords.js';
 import getWorkOrderValidationRecords from '../../database/getWorkOrderValidationRecords.js';
-import { updateScannerRecord } from '../../database/updateScannerRecord.js';
+import { updateScannerRecordField } from '../../database/updateScannerRecordField.js';
 import { moduleName } from '../../helpers/module.js';
 const minimumMillisBetweenRuns = minutesToMillis(2);
 const lastRunMillis = 0;
@@ -30,7 +30,7 @@ function updateRecordsFromValidationTask() {
         if (workOrderValidationRecords.length > 0 && record.repairId === null) {
             for (const workOrderValidationRecord of workOrderValidationRecords) {
                 if (workOrderValidationRecord.repairId !== null) {
-                    updateScannerRecord(record.recordId, 'repairId', workOrderValidationRecord.repairId, taskUserName);
+                    updateScannerRecordField(record.recordId, 'repairId', workOrderValidationRecord.repairId, taskUserName);
                     break;
                 }
             }
@@ -40,10 +40,10 @@ function updateRecordsFromValidationTask() {
             : [];
         if (itemValidationRecords.length > 0) {
             if (record.itemStoreroom === null) {
-                updateScannerRecord(record.recordId, 'itemStoreroom', itemValidationRecords[0].itemStoreroom, taskUserName);
+                updateScannerRecordField(record.recordId, 'itemStoreroom', itemValidationRecords[0].itemStoreroom, taskUserName);
             }
             if (record.unitPrice === null) {
-                updateScannerRecord(record.recordId, 'unitPrice', itemValidationRecords[0].unitPrice, taskUserName);
+                updateScannerRecordField(record.recordId, 'unitPrice', itemValidationRecords[0].unitPrice, taskUserName);
             }
         }
     }

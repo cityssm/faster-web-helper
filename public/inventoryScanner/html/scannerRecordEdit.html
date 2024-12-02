@@ -16,25 +16,127 @@
     </div>
     <div class="modal-card-body">
       <form id="form--updatePending">
+        <input id="updatePending--recordId" name="recordId" type="hidden" />
+        <div class="columns">
+          <div class="column">
+            <strong>Scanner Record ID</strong><br />
+            <span id="updatePending--recordIdSpan"></span>
+          </div>
+          <div class="column">
+            <strong>Scan Time</strong><br />
+            <span id="updatePending--scanDateTimeSpan"></span>
+          </div>
+        </div>
+        <label class="label" for="updatePending--workOrderNumber">Work Order Number</label>
+        <div class="field has-addons">
+          <div class="control has-icons-left is-expanded">
+            <input class="input" id="updatePending--workOrderNumber" name="workOrderNumber" maxlength="15" readonly required />
+            <span class="icon is-small is-left">
+              <i class="fa-solid fa-clipboard" aria-hidden="true"></i>
+            </span>
+          </div>
+          <div class="control">
+            <button class="button is-unlock-button" type="button" title="Unlock Work Order Field">
+              <span class="icon">
+                <i class="fa-solid fa-unlock" aria-hidden="true"></i>
+              </span>
+            </button>
+          </div>
+        </div>
+        
+        <label class="label" for="updatePending--repairId">Repair</label>
+        <div class="field has-addons">
+          <div class="control has-icons-left is-expanded">
+            <div class="select is-fullwidth">
+              <select id="updatePending--repairId" name="repairId" readonly></select>
+            </div>
+            <span class="icon is-small is-left">
+              <i class="fa-solid fa-wrench" aria-hidden="true"></i>
+            </span>
+          </div>
+          <div class="control">
+            <button class="button is-unlock-button" type="button" title="Unlock Repair Field">
+              <span class="icon">
+                <i class="fa-solid fa-unlock" aria-hidden="true"></i>
+              </span>
+            </button>
+          </div>
+        </div>
 
+        <label class="label" for="updatePending--itemNumber">Item Number</label>
+        <div class="field has-addons">
+          <div class="control has-icons-left is-expanded">
+            <input class="input" id="updatePending--itemNumber" name="itemNumber" maxlength="22" readonly required />
+            <span class="icon is-small is-left">
+              <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+            </span>
+          </div>
+          <div class="control">
+            <button class="button is-unlock-button" type="button" title="Unlock Item Field">
+              <span class="icon">
+                <i class="fa-solid fa-unlock" aria-hidden="true"></i>
+              </span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="columns">
+          <div class="column">
+            <label class="label" for="updatePending--quantity">Quantity</label>
+            <div class="field has-addons">
+              <div class="control is-expanded">
+                <input class="input has-text-right" id="updatePending--quantity" name="quantity" pattern="^\d+$" inputmode="numeric" maxlength="3" readonly required />
+              </div>
+              <div class="control">
+                <button class="button is-unlock-button" type="button" title="Unlock Quantity Field">
+                  <span class="icon">
+                    <i class="fa-solid fa-unlock" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <label class="label" for="updatePending--unitPrice">Unit Price</label>
+            <div class="field has-addons">
+              <div class="control has-icons-left is-expanded">
+                <input class="input has-text-right" id="updatePending--unitPrice" name="unitPrice" pattern="^\d+(\.\d{0,4})?$" maxlength="19" readonly />
+                <span class="icon is-small is-left">
+                  <i class="fa-solid fa-dollar-sign" aria-hidden="true"></i>
+                </span>
+              </div>
+              <div class="control">
+                <button class="button is-unlock-button" type="button" title="Unlock Price Field">
+                  <span class="icon">
+                    <i class="fa-solid fa-unlock" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </form>
     </div>
     <div class="modal-card-foot is-justify-content-right">
-      <button class="button is-primary mr-2" type="submit" form="form--updatePending">Update Record</button>
+      <div class="buttons">
+        <button class="button is-danger is-light is-close-modal-button" type="button">Cancel</button>
 
-      <div class="dropdown is-right is-up">
-        <div class="dropdown-trigger">
-          <button class="button" type="button">
-            <span>More</span>
-            <span class="icon is-small"><i class="fas fa-angle-down" aria-hidden="true"></i></span>
-          </button>
-        </div>
-        <div class="dropdown-menu">
-          <div class="dropdown-content">
-            <a class="dropdown-item is-delete-button" href="#">
-              <span class="icon is-small"><i class="fa-solid fa-trash has-text-danger" aria-hidden="true"></i></span>
-              <span>Delete Record</span>
-            </a>
+        <button class="button is-primary" type="submit" form="form--updatePending">Update Record</button>
+
+        <div class="dropdown is-right is-up">
+          <div class="dropdown-trigger">
+            <button class="button" type="button">
+              <span>More</span>
+              <span class="icon is-small"><i class="fas fa-angle-down" aria-hidden="true"></i></span>
+            </button>
+          </div>
+          <div class="dropdown-menu">
+            <div class="dropdown-content">
+              <a class="dropdown-item is-delete-button" href="#">
+                <span class="icon is-small"><i class="fa-solid fa-trash has-text-danger" aria-hidden="true"></i></span>
+                <span>Delete Record</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>

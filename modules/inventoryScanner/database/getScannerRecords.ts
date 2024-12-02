@@ -93,7 +93,7 @@ export default function getScannerRecords(
     order by s.scanDate desc, s.scanTime desc, s.recordId desc`
 
   if (options.limit !== -1) {
-    sql += `limit ${options.limit.toString()}`
+    sql += ` limit ${options.limit.toString()}`
   }
 
   /*

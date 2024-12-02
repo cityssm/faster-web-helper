@@ -5,7 +5,13 @@
 <div class="tabs is-boxed">
   <ul>
     <li class="is-active">
-      <a href="#tab--pending">Pending Scanner Records</a>
+      <a href="#tab--pending">
+        Pending Scanner Records
+        <span class="tag is-warning ml-2 is-hidden" id="pending--unknownCount" title="Unknown Count">
+          <i class="fa-solid fa-exclamation-triangle" aria-hidden="true"></i>
+          <span class="ml-1">0</span>
+        </span>
+      </a>
     </li>
     <li>
       <a href="#tab--inventory">Inventory List</a>
@@ -19,7 +25,7 @@
         <div class="column is-narrow">
           <label class="checkbox mt-2">
             <input id="pending--autoRefresh" type="checkbox" />
-            Auto Refresh
+            Auto Refresh (5 Minutes)
           </label>
         </div>
         <div class="column">

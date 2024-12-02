@@ -1,14 +1,136 @@
 "use strict";
+// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
     const moduleUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/modules/inventoryScanner`;
     let pendingRecords = exports.pendingRecords;
+    const pendingRecordsUnknownCountElement = document.querySelector('#pending--unknownCount');
     const pendingRecordsTbodyElement = document.querySelector('#tbody--pending');
+    function unlockField(clickEvent) {
+        clickEvent.preventDefault();
+        const inputOrSelectElement = clickEvent.currentTarget
+            .closest('.field')
+            ?.querySelector('input, select');
+        inputOrSelectElement.removeAttribute('readonly');
+        if (inputOrSelectElement.tagName === 'SELECT') {
+            const optionElements = inputOrSelectElement.querySelectorAll('option');
+            for (const optionElement of optionElements) {
+                optionElement.classList.remove('is-hidden');
+                optionElement.disabled = false;
+            }
+        }
+        inputOrSelectElement.focus();
+    }
+    function renderRepairIds(records) {
+        const repairIdSelectElement = document.querySelector('#updatePending--repairId');
+        if (repairIdSelectElement === null) {
+            return;
+        }
+        for (const record of records) {
+            if (record.repairId !== null) {
+                const optionElement = document.createElement('option');
+                if (repairIdSelectElement.hasAttribute('readonly')) {
+                    optionElement.classList.add('is-hidden');
+                    optionElement.disabled = true;
+                }
+                optionElement.textContent = record.repairDescription;
+                optionElement.value = record.repairId.toString();
+                repairIdSelectElement.append(optionElement);
+            }
+        }
+    }
+    let lastSearchedWorkOrderNumber = '';
+    function refreshRepairIdSelect(clearOptions = true) {
+        const workOrderNumberElement = document.querySelector('#updatePending--workOrderNumber');
+        const repairIdSelectElement = document.querySelector('#updatePending--repairId');
+        if (workOrderNumberElement === null ||
+            repairIdSelectElement === null ||
+            lastSearchedWorkOrderNumber === workOrderNumberElement.value ||
+            (clearOptions && workOrderNumberElement.readOnly)) {
+            return;
+        }
+        lastSearchedWorkOrderNumber = workOrderNumberElement.value;
+        if (clearOptions) {
+            repairIdSelectElement.replaceChildren();
+            repairIdSelectElement.innerHTML =
+                '<option value="">(Auto-Detect)</option>';
+            repairIdSelectElement.value = '';
+        }
+        if (lastSearchedWorkOrderNumber === '') {
+            renderRepairIds([]);
+            return;
+        }
+        cityssm.postJSON(`${moduleUrlPrefix}/doGetRepairRecords`, {
+            workOrderNumber: lastSearchedWorkOrderNumber
+        }, (rawResponseJSON) => {
+            const responseJSON = rawResponseJSON;
+            renderRepairIds(responseJSON.records);
+        });
+    }
+    function updatePendingRecord(formElement, callbackFunction) {
+        cityssm.postJSON(`${moduleUrlPrefix}/doUpdatePendingRecord`, formElement, (rawResponseJSON) => {
+            const responseJSON = rawResponseJSON;
+            if (responseJSON.success) {
+                pendingRecords = responseJSON.pendingRecords;
+                if (callbackFunction !== undefined) {
+                    callbackFunction();
+                }
+                renderPendingRecords();
+            }
+            else {
+                bulmaJS.alert({
+                    title: 'Error Updating Record',
+                    message: 'Please try again.',
+                    contextualColorName: 'danger'
+                });
+            }
+        });
+    }
     function openUpdateScannerRecord(clickEvent) {
+        clickEvent.preventDefault();
+        const recordIndex = Number.parseInt(clickEvent.currentTarget.closest('tr')?.dataset
+            .recordIndex ?? '');
+        lastSearchedWorkOrderNumber = '';
+        const pendingRecord = pendingRecords[recordIndex];
         cityssm.openHtmlModal('scannerRecordEdit', {
+            onshow(modalElement) {
+                ;
+                modalElement.querySelector('#updatePending--recordId').value = pendingRecord.recordId.toString();
+                modalElement.querySelector('#updatePending--recordIdSpan').textContent = pendingRecord.recordId.toString();
+                modalElement.querySelector('#updatePending--scanDateTimeSpan').textContent =
+                    pendingRecord.scanDateString + ' ' + pendingRecord.scanTimeString;
+                modalElement.querySelector('#updatePending--workOrderNumber').value = pendingRecord.workOrderNumber;
+                const repairSelectElement = modalElement.querySelector('#updatePending--repairId');
+                repairSelectElement.innerHTML = `<option value="${cityssm.escapeHTML(pendingRecord.repairId?.toString() ?? '')}">
+          ${cityssm.escapeHTML(pendingRecord.repairId === null ? '(Auto-Detect)' : pendingRecord.repairDescription ?? `(Unknown Repair ID: ${pendingRecord.repairId})`)}
+          </option>`;
+                modalElement.querySelector('#updatePending--itemNumber').value = pendingRecord.itemNumber;
+                modalElement.querySelector('#updatePending--quantity').value = pendingRecord.quantity.toString();
+                modalElement.querySelector('#updatePending--unitPrice').value =
+                    pendingRecord.unitPrice === null
+                        ? ''
+                        : pendingRecord.unitPrice.toPrecision(4);
+            },
             onshown(modalElement, closeModalFunction) {
                 bulmaJS.toggleHtmlClipped();
                 bulmaJS.init(modalElement);
+                modalElement
+                    .querySelector('form')
+                    ?.addEventListener('submit', (formEvent) => {
+                    formEvent.preventDefault();
+                    updatePendingRecord(formEvent.currentTarget, closeModalFunction);
+                });
+                const unlockButtonElements = modalElement.querySelectorAll('.is-unlock-button');
+                for (const unlockButtonElement of unlockButtonElements) {
+                    unlockButtonElement.addEventListener('click', unlockField);
+                }
+                modalElement
+                    .querySelector('#updatePending--workOrderNumber')
+                    ?.addEventListener('keyup', () => {
+                    refreshRepairIdSelect(true);
+                });
+                refreshRepairIdSelect(false);
             },
             onremoved() {
                 bulmaJS.toggleHtmlClipped();
@@ -17,16 +139,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     function recordHasUnknowns(record) {
         return ((record.workOrderType === 'faster' &&
-            (record.repairId === null || record.repairDescription === '')) ||
+            record.repairDescription === null) ||
             record.itemDescription === null ||
             record.unitPrice === null);
     }
     function renderPendingRecords() {
         const rowElements = [];
+        let unknownCount = 0;
         for (const [recordIndex, record] of pendingRecords.entries()) {
             const rowElement = document.createElement('tr');
             if (recordHasUnknowns(record)) {
-                rowElement.classList.add('is-warning');
+                unknownCount += 1;
             }
             rowElement.dataset.recordId = record.recordId.toString();
             rowElement.dataset.recordIndex = recordIndex.toString();
@@ -34,24 +157,40 @@ Object.defineProperty(exports, "__esModule", { value: true });
           ${cityssm.escapeHTML(record.scanDateString)} ${cityssm.escapeHTML(record.scanTimeString)}<br />
           <small title="Scanner Record ID">#${cityssm.escapeHTML(record.recordId.toString())}</small>
         </td>`;
-            let workOrderHTML = '';
-            workOrderHTML =
+            const workOrderCellElement = document.createElement('td');
+            // eslint-disable-next-line no-unsanitized/property
+            workOrderCellElement.innerHTML =
                 record.workOrderType === 'faster'
                     ? `<a href="${exports.fasterWorkOrderUrl.replace('{workOrderNumber}', record.workOrderNumber)}"
-              title="Open Work Order In FASTER Web"
+              title="Open Work Order in FASTER Web"
               target="_blank">
               ${cityssm.escapeHTML(record.workOrderNumber)}
               </a>`
                     : `${cityssm.escapeHTML(record.workOrderNumber)}<br />
               <small>${cityssm.escapeHTML(record.workOrderType)}</small>`;
-            // eslint-disable-next-line no-unsanitized/method
+            rowElement.append(workOrderCellElement);
+            const repairCellElement = document.createElement('td');
+            if (record.workOrderType === 'faster' &&
+                record.repairDescription === null) {
+                repairCellElement.classList.add('has-background-warning-light');
+            }
+            if (record.repairId === null) {
+                repairCellElement.innerHTML = `<span
+          class="${cityssm.escapeHTML(record.workOrderType === 'faster' ? 'has-text-weight-bold' : 'has-text-grey-dark')}">
+          (No Repair Set)
+          </span>`;
+            }
+            else if (record.repairDescription === null) {
+                repairCellElement.innerHTML = `<span class="has-text-weight-bold">
+          (Unknown Repair ID: ${cityssm.escapeHTML(record.repairId.toString())})
+          </span>`;
+            }
+            else {
+                repairCellElement.innerHTML = `${cityssm.escapeHTML(record.repairDescription)}<br />
+          <small>Repair ID: ${cityssm.escapeHTML(record.repairId.toString())}</small>`;
+            }
+            rowElement.append(repairCellElement);
             rowElement.insertAdjacentHTML('beforeend', `<td>
-          ${workOrderHTML}
-        </td>`);
-            rowElement.insertAdjacentHTML('beforeend', `<td>
-          ${cityssm.escapeHTML(record.repairDescription ?? '(Unknown Repair)')}<br />
-          <small title="Repair ID">${cityssm.escapeHTML((record.repairId ?? '').toString())}</small>
-        </td><td>
           ${cityssm.escapeHTML(record.itemNumber)}<br />
           <small>${cityssm.escapeHTML(record.itemDescription ?? '(Unknown Item)')}</small>
         </td><td class="has-text-right">
@@ -69,6 +208,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
             rowElements.push(rowElement);
         }
         pendingRecordsTbodyElement.replaceChildren(...rowElements);
+        if (unknownCount === 0) {
+            pendingRecordsUnknownCountElement.classList.add('is-hidden');
+        }
+        else {
+            ;
+            pendingRecordsUnknownCountElement.querySelector('span').textContent = unknownCount.toString();
+            pendingRecordsUnknownCountElement.classList.remove('is-hidden');
+        }
     }
     const autoRefreshElement = document.querySelector('#pending--autoRefresh');
     function refreshPendingRecords(clickEvent) {
