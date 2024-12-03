@@ -6,6 +6,7 @@ import handler_doGetInventory from './post-admin/doGetInventory.js'
 import handler_doGetItemRequestsCount from './post-admin/doGetItemRequestsCount.js'
 import handler_doGetPendingRecords from './post-admin/doGetPendingRecords.js'
 import handler_doGetRepairRecords from './post-admin/doGetRepairRecords.js'
+import handler_doSyncScannerRecords from './post-admin/doSyncScannerRecords.js'
 import handler_doUpdatePendingRecord from './post-admin/doUpdatePendingRecord.js'
 
 export const router = Router()
@@ -25,6 +26,8 @@ router.post('/doGetRepairRecords', handler_doGetRepairRecords)
 router.post('/doUpdatePendingRecord', handler_doUpdatePendingRecord)
 
 router.post('/doDeletePendingRecord', handler_doDeletePendingRecord)
+
+router.post('/doSyncScannerRecords', handler_doSyncScannerRecords)
 
 /*
  * Inventory

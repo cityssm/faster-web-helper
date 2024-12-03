@@ -74,6 +74,13 @@ export const configDefaultValues = {
 
   'modules.inventoryScanner.scannerIpAddressRegex': /^$/,
 
+  'modules.inventoryScanner.integrationId': undefined as unknown as
+    | number
+    | undefined,
+
+  // eslint-disable-next-line no-secrets/no-secrets
+  'modules.inventoryScanner.exportFileNamePrefix': '',
+
   'modules.inventoryScanner.workOrders.acceptNotValidated': true,
   'modules.inventoryScanner.workOrders.fasterRegex': /^\d+$/,
 

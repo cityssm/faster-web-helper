@@ -28,6 +28,9 @@ export const configDefaultValues = {
     'modules.inventoryScanner.isEnabled': false,
     'modules.inventoryScanner.runOnStartup': true,
     'modules.inventoryScanner.scannerIpAddressRegex': /^$/,
+    'modules.inventoryScanner.integrationId': undefined,
+    // eslint-disable-next-line no-secrets/no-secrets
+    'modules.inventoryScanner.exportFileNamePrefix': '',
     'modules.inventoryScanner.workOrders.acceptNotValidated': true,
     'modules.inventoryScanner.workOrders.fasterRegex': /^\d+$/,
     // eslint-disable-next-line no-secrets/no-secrets

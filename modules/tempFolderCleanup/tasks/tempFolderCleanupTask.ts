@@ -12,7 +12,7 @@ import { getConfigProperty } from '../../../helpers/functions.config.js'
 import {
   ensureTempFolderExists,
   tempFolderPath
-} from '../../../helpers/functions.sftp.js'
+} from '../../../helpers/functions.filesystem.js'
 import { moduleName } from '../helpers/moduleHelpers.js'
 
 export const taskName = 'Cleanup Database Task'

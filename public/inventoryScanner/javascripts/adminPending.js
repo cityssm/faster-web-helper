@@ -284,4 +284,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
         .querySelector('#pending--doRefresh')
         ?.addEventListener('click', refreshPendingRecords);
     globalThis.setInterval(autoRefreshPendingRecords, 5 * 60_000);
+    function syncScannerRecords() {
+        cityssm.postJSON(`${moduleUrlPrefix}/doSyncScannerRecords`, {}, (rawResponseJSON) => {
+            const responseJSON = rawResponseJSON;
+            bulmaJS.alert({
+                title: `${responseJSON.syncedRecordCount} Record(s) Marked for Syncing`,
+                message: 'The syncing process has started. The records should appear on their respective work orders shortly.',
+                contextualColorName: responseJSON.syncedRecordCount === 0 ? 'info' : 'success'
+            });
+            pendingRecords = responseJSON.pendingRecords;
+            renderPendingRecords();
+        });
+    }
+    document.querySelector('#pending--doSync')?.addEventListener('click', () => {
+        bulmaJS.confirm({
+            title: 'Sync Scanner Records',
+            message: 'Are you sure you are ready to sync all pending scanner records?',
+            contextualColorName: 'warning',
+            okButton: {
+                text: 'Yes, Sync Pending Scanner Records',
+                callbackFunction: syncScannerRecords
+            }
+        });
+    });
 })();

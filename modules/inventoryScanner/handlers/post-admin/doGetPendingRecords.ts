@@ -7,10 +7,7 @@ export default function handler(
   request: Request,
   response: Response<{ pendingRecords: InventoryScannerRecord[] }>
 ): void {
-  const pendingRecords = getScannerRecords(
-    { isSynced: false },
-    { limit: -1 }
-  )
+  const pendingRecords = getScannerRecords({ isSynced: false }, { limit: -1 })
 
   response.json({ pendingRecords })
 }

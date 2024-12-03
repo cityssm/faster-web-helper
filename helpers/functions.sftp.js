@@ -1,27 +1,11 @@
 import { randomUUID } from 'node:crypto';
-import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { Client } from 'basic-ftp';
 import Debug from 'debug';
 import { getConfigProperty } from './functions.config.js';
+import { doesFileExist, ensureTempFolderExists, tempFolderPath } from './functions.filesystem.js';
 const debug = Debug('faster-web-helper:functions.sftp');
-async function doesFileExist(filePath) {
-    try {
-        await fs.access(filePath, fs.constants.F_OK);
-        return true;
-    }
-    catch {
-        return false;
-    }
-}
-export const tempFolderPath = path.join(os.tmpdir(), 'fasterWebHelper');
-export async function ensureTempFolderExists() {
-    if (!(await doesFileExist(tempFolderPath))) {
-        // eslint-disable-next-line security/detect-non-literal-fs-filename
-        await fs.mkdir(tempFolderPath);
-    }
-}
 export async function downloadFilesToTemp(ftpPath) {
     await ensureTempFolderExists();
     const ftpClient = new Client();

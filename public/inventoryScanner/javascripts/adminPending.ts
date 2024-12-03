@@ -461,4 +461,41 @@ declare const cityssm: cityssmGlobal
     ?.addEventListener('click', refreshPendingRecords)
 
   globalThis.setInterval(autoRefreshPendingRecords, 5 * 60_000)
+
+  function syncScannerRecords(): void {
+    cityssm.postJSON(
+      `${moduleUrlPrefix}/doSyncScannerRecords`,
+      {},
+      (rawResponseJSON) => {
+        const responseJSON = rawResponseJSON as unknown as {
+          syncedRecordCount: number
+          pendingRecords: InventoryScannerRecord[]
+        }
+
+        bulmaJS.alert({
+          title: `${responseJSON.syncedRecordCount} Record(s) Marked for Syncing`,
+          message:
+            'The syncing process has started. The records should appear on their respective work orders shortly.',
+          contextualColorName:
+            responseJSON.syncedRecordCount === 0 ? 'info' : 'success'
+        })
+
+        pendingRecords = responseJSON.pendingRecords
+        renderPendingRecords()
+      }
+    )
+  }
+
+  document.querySelector('#pending--doSync')?.addEventListener('click', () => {
+    bulmaJS.confirm({
+      title: 'Sync Scanner Records',
+      message:
+        'Are you sure you are ready to sync all pending scanner records?',
+      contextualColorName: 'warning',
+      okButton: {
+        text: 'Yes, Sync Pending Scanner Records',
+        callbackFunction: syncScannerRecords
+      }
+    })
+  })
 })()

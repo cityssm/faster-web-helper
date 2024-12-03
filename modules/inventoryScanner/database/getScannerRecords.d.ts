@@ -2,6 +2,7 @@ import type { InventoryScannerRecord } from '../types.js';
 interface GetScannerRecordsFilters {
     scannerKey?: string;
     isSynced?: boolean;
+    isMarkedForSync?: boolean;
     hasMissingValidation?: boolean;
 }
 interface GetScannerRecordsOptions {

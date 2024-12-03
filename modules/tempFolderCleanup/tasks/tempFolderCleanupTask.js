@@ -6,7 +6,7 @@ import { daysToMillis } from '@cityssm/to-millis';
 import camelCase from 'camelcase';
 import Debug from 'debug';
 import { getConfigProperty } from '../../../helpers/functions.config.js';
-import { ensureTempFolderExists, tempFolderPath } from '../../../helpers/functions.sftp.js';
+import { ensureTempFolderExists, tempFolderPath } from '../../../helpers/functions.filesystem.js';
 import { moduleName } from '../helpers/moduleHelpers.js';
 export const taskName = 'Cleanup Database Task';
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`);

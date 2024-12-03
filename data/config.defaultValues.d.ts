@@ -32,6 +32,8 @@ export declare const configDefaultValues: {
     'modules.inventoryScanner.isEnabled': boolean;
     'modules.inventoryScanner.runOnStartup': boolean;
     'modules.inventoryScanner.scannerIpAddressRegex': RegExp;
+    'modules.inventoryScanner.integrationId': number | undefined;
+    'modules.inventoryScanner.exportFileNamePrefix': string;
     'modules.inventoryScanner.workOrders.acceptNotValidated': boolean;
     'modules.inventoryScanner.workOrders.fasterRegex': RegExp;
     'modules.inventoryScanner.workOrders.acceptWorkTech': boolean;

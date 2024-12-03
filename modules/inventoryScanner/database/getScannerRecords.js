@@ -2,7 +2,7 @@ import { dateIntegerToString, timeIntegerToString } from '@cityssm/utils-datetim
 import sqlite from 'better-sqlite3';
 import { databasePath } from './helpers.database.js';
 const defaultOptions = {
-    limit: 20
+    limit: -1
 };
 export default function getScannerRecords(filters, userOptions = {}) {
     const options = {
@@ -22,6 +22,11 @@ export default function getScannerRecords(filters, userOptions = {}) {
         sqlWhereClause += filters.isSynced
             ? ' and s.recordSync_timeMillis is not null'
             : ' and s.recordSync_timeMillis is null';
+    }
+    if (filters.isMarkedForSync !== undefined) {
+        sqlWhereClause += filters.isMarkedForSync
+            ? ' and s.recordSync_timeMillis is not null and recordSync_isSuccessful is null'
+            : ' and (s.recordSync_timeMillis is null or s.recordSync_isSuccessful is not null)';
     }
     if (filters.hasMissingValidation !== undefined) {
         sqlWhereClause += filters.hasMissingValidation

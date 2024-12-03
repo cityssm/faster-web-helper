@@ -20,6 +20,9 @@ export interface ConfigItemValidationFaster {
 
 export interface ConfigModuleInventoryScanner {
   scannerIpAddressRegex?: RegExp
+  
+  integrationId?: number
+  exportFileNamePrefix?: string
 
   workOrders?: {
     acceptNotValidated?: boolean

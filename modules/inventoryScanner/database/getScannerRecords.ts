@@ -11,6 +11,7 @@ import { databasePath } from './helpers.database.js'
 interface GetScannerRecordsFilters {
   scannerKey?: string
   isSynced?: boolean
+  isMarkedForSync?: boolean
   hasMissingValidation?: boolean
 }
 
@@ -19,7 +20,7 @@ interface GetScannerRecordsOptions {
 }
 
 const defaultOptions: GetScannerRecordsOptions = {
-  limit: 20
+  limit: -1
 }
 
 export default function getScannerRecords(
@@ -47,6 +48,12 @@ export default function getScannerRecords(
     sqlWhereClause += filters.isSynced
       ? ' and s.recordSync_timeMillis is not null'
       : ' and s.recordSync_timeMillis is null'
+  }
+
+  if (filters.isMarkedForSync !== undefined) {
+    sqlWhereClause += filters.isMarkedForSync
+      ? ' and s.recordSync_timeMillis is not null and recordSync_isSuccessful is null'
+      : ' and (s.recordSync_timeMillis is null or s.recordSync_isSuccessful is not null)'
   }
 
   if (filters.hasMissingValidation !== undefined) {
