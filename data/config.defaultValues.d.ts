@@ -6,6 +6,8 @@ import type { ConfigItemValidationDynamicsGP, ConfigItemValidationFaster } from 
 import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from '../types/configHelperTypes.js';
 import type { ConfigFasterWeb } from '../types/configTypes.js';
 export declare const configDefaultValues: {
+    'application.workDays': number[];
+    'application.workHours': number[];
     ftp: AccessOptions | undefined;
     'webServer.httpPort': number;
     'webServer.urlPrefix': string;

@@ -56,10 +56,8 @@ async function runUpdateWorkOrderValidationFromFasterApiTask() {
 }
 await runUpdateWorkOrderValidationFromFasterApiTask();
 const job = schedule.scheduleJob(taskName, {
-    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    dayOfWeek: new schedule.Range(1, 5),
-    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    hour: new schedule.Range(4, 20),
+    dayOfWeek: getConfigProperty('application.workDays'),
+    hour: getConfigProperty('application.workHours'),
     minute: [5, 35],
     second: 0
 }, runUpdateWorkOrderValidationFromFasterApiTask);

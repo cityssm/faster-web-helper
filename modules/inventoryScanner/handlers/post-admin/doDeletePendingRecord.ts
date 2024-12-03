@@ -3,24 +3,20 @@ import type { Request, Response } from 'express'
 import deleteScannerRecord from '../../database/deleteScannerRecord.js'
 import getScannerRecords from '../../database/getScannerRecords.js'
 
-interface DoDeleteScannerRecordForm {
+interface DoDeletePendingRecordForm {
   recordId: string
-  scannerKey: string
 }
 
 export default function handler(
-  request: Request<unknown, unknown, DoDeleteScannerRecordForm>,
+  request: Request<unknown, unknown, DoDeletePendingRecordForm>,
   response: Response
 ): void {
   const success = deleteScannerRecord(
     request.body.recordId,
-    undefined,
-    request.body.scannerKey
+    request.session.user
   )
 
-  const records = getScannerRecords({
-    scannerKey: request.body.scannerKey
-  })
+  const pendingRecords = getScannerRecords({ isSynced: false }, { limit: -1 })
 
-  response.json({ success, records })
+  response.json({ success, pendingRecords })
 }

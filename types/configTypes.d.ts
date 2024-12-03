@@ -6,6 +6,10 @@ import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
 import type { ConfigModuleInventoryScanner } from '../modules/inventoryScanner/configTypes.js';
 import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from './configHelperTypes.js';
 export interface Config {
+    application?: {
+        workDays?: number[];
+        workHours?: number[];
+    };
     fasterWeb: ConfigFasterWeb;
     ftp?: AccessOptions;
     webServer?: {

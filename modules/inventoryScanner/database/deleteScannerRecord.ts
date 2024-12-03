@@ -6,17 +6,20 @@ import { databasePath } from './helpers.database.js'
 
 export default function deleteScannerRecord(
   recordId: number | string,
+  deleteUser?: FasterWebHelperSessionUser,
   scannerKey?: string
 ): boolean {
   const database = sqlite(databasePath)
 
-  const userName = scannerKey === undefined ? '' : scannerKeyToUserName(scannerKey)
+  let userName = ''
 
-  const sqlParameters = [
-    userName,
-    Date.now(),
-    recordId
-  ]
+  if (deleteUser !== undefined) {
+    userName = deleteUser.userName
+  } else if (scannerKey !== undefined) {
+    userName = scannerKeyToUserName(scannerKey)
+  }
+
+  const sqlParameters = [userName, Date.now(), recordId]
 
   let scannerKeyWhereClause = ''
 
@@ -36,7 +39,6 @@ export default function deleteScannerRecord(
         ${scannerKeyWhereClause}`
     )
     .run(sqlParameters)
-
 
   database.close()
 

@@ -18,9 +18,9 @@ export default function initializeInventoryScannerModules(options) {
      */
     initializeInventoryScannerDatabase();
     /*
-     * Initialize validation tasks
+     * Initialize tasks
      */
-    const validationProcesses = [];
+    const childProcesses = [];
     const itemValidationConfig = getConfigProperty('modules.inventoryScanner.items.validation');
     if (itemValidationConfig !== undefined) {
         let itemValidationTaskPath = '';
@@ -32,7 +32,7 @@ export default function initializeInventoryScannerModules(options) {
             debug(`Item validation not implemented: ${itemValidationConfig.source}`);
         }
         if (itemValidationTaskPath !== '') {
-            validationProcesses.push(fork(itemValidationTaskPath));
+            childProcesses.push(fork(itemValidationTaskPath));
         }
     }
     const workOrderValidationSources = getConfigProperty('modules.inventoryScanner.workOrders.validationSources');
@@ -51,10 +51,13 @@ export default function initializeInventoryScannerModules(options) {
             debug(`Work order validation not implemented: ${workOrderValidationSource}`);
         }
         if (workOrderValidationTaskPath !== '') {
-            validationProcesses.push(fork(workOrderValidationTaskPath));
+            childProcesses.push(fork(workOrderValidationTaskPath));
         }
     }
-    validationProcesses.push(fork('./modules/inventoryScanner/tasks/inventoryScanner/updateRecordsFromValidation.js'));
+    childProcesses.push(fork('./modules/inventoryScanner/tasks/inventoryScanner/updateRecordsFromValidation.js'));
+    if (hasFasterApi) {
+        childProcesses.push(fork('./modules/inventoryScanner/tasks/outstandingItemRequests.js'));
+    }
     /*
      * Initialize router for admin interface
      */
@@ -85,7 +88,7 @@ export default function initializeInventoryScannerModules(options) {
      * Set up exit hook
      */
     exitHook(() => {
-        for (const validationProcess of validationProcesses) {
+        for (const validationProcess of childProcesses) {
             validationProcess.kill();
         }
     });

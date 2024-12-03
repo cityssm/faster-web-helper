@@ -1,1 +1,1 @@
-export default function deleteScannerRecord(recordId: number | string, scannerKey?: string): boolean;
+export default function deleteScannerRecord(recordId: number | string, deleteUser?: FasterWebHelperSessionUser, scannerKey?: string): boolean;

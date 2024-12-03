@@ -106,9 +106,9 @@ declare const cityssm: cityssmGlobal
       availableQuantityElement.textContent = item.availableQuantity.toString()
 
       if (item.availableQuantity === 0) {
-        availableQuantityElement.classList.add('is-warning')
+        availableQuantityElement.classList.add('has-background-warning-light')
       } else if (item.availableQuantity < 0) {
-        availableQuantityElement.classList.add('is-danger')
+        availableQuantityElement.classList.add('has-background-danger-light')
       }
 
       tableElement.querySelector('tbody')?.append(tableRowElement)

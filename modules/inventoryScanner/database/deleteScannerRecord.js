@@ -1,14 +1,16 @@
 import sqlite from 'better-sqlite3';
 import { scannerKeyToUserName } from '../helpers/scanner.js';
 import { databasePath } from './helpers.database.js';
-export default function deleteScannerRecord(recordId, scannerKey) {
+export default function deleteScannerRecord(recordId, deleteUser, scannerKey) {
     const database = sqlite(databasePath);
-    const userName = scannerKey === undefined ? '' : scannerKeyToUserName(scannerKey);
-    const sqlParameters = [
-        userName,
-        Date.now(),
-        recordId
-    ];
+    let userName = '';
+    if (deleteUser !== undefined) {
+        userName = deleteUser.userName;
+    }
+    else if (scannerKey !== undefined) {
+        userName = scannerKeyToUserName(scannerKey);
+    }
+    const sqlParameters = [userName, Date.now(), recordId];
     let scannerKeyWhereClause = '';
     if (scannerKey !== undefined) {
         scannerKeyWhereClause = ' and scannerKey = ?';

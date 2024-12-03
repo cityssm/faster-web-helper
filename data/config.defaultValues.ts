@@ -1,3 +1,6 @@
+// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/no-magic-numbers, @typescript-eslint/no-unsafe-type-assertion */
+
 import type {
   ADWebAuthAuthenticatorConfiguration,
   ActiveDirectoryAuthenticatorConfiguration
@@ -18,6 +21,9 @@ import type {
 import type { ConfigFasterWeb } from '../types/configTypes.js'
 
 export const configDefaultValues = {
+  'application.workDays': [1, 2, 3, 4, 5],
+  'application.workHours': [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+
   ftp: undefined as unknown as AccessOptions | undefined,
 
   'webServer.httpPort': 8080,

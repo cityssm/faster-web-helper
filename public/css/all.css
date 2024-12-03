@@ -1,0 +1,8 @@
+.input[readonly],
+.select select[readonly] {
+  background-color: var(--bulma-input-disabled-background-color);
+  border-color: var(--bulma-input-disabled-border-color);
+  box-shadow: none;
+  color: var(--bulma-input-disabled-color);
+  cursor: not-allowed;
+}

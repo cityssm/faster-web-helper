@@ -36,7 +36,7 @@ async function runUpdateItemValidationFromDynamicsGpTask(): Promise<void> {
     debug('Skipping run.')
     return
   }
-   
+
   if (dynamicsGpDatabaseConfig === undefined) {
     debug('Missing configuration.')
     return
@@ -98,11 +98,9 @@ await runUpdateItemValidationFromDynamicsGpTask()
 
 const job = schedule.scheduleJob(
   taskName,
-  taskConfig.schedule ?? {
-    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    dayOfWeek: new schedule.Range(1, 5),
-    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    hour: new schedule.Range(4, 20),
+  {
+    dayOfWeek: getConfigProperty('application.workDays'),
+    hour: getConfigProperty('application.workHours'),
     minute: 15,
     second: 0
   },

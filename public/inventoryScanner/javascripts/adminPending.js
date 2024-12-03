@@ -87,6 +87,36 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     }
+    function deletePendingRecord(recordId, callbackFunction) {
+        function doDelete() {
+            cityssm.postJSON(`${moduleUrlPrefix}/doDeletePendingRecord`, {
+                recordId
+            }, (rawResponseJSON) => {
+                const responseJSON = rawResponseJSON;
+                if (responseJSON.success) {
+                    pendingRecords = responseJSON.pendingRecords;
+                    callbackFunction();
+                    renderPendingRecords();
+                }
+                else {
+                    bulmaJS.alert({
+                        title: 'Error Deleting Record',
+                        message: 'Please try again.',
+                        contextualColorName: 'danger'
+                    });
+                }
+            });
+        }
+        bulmaJS.confirm({
+            title: 'Delete Pending Record',
+            message: 'Are you sure you want to delete this pending scanner record?',
+            contextualColorName: 'warning',
+            okButton: {
+                text: 'Yes, Delete Record',
+                callbackFunction: doDelete
+            }
+        });
+    }
     function openUpdateScannerRecord(clickEvent) {
         clickEvent.preventDefault();
         const recordIndex = Number.parseInt(clickEvent.currentTarget.closest('tr')?.dataset
@@ -131,6 +161,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     refreshRepairIdSelect(true);
                 });
                 refreshRepairIdSelect(false);
+                modalElement
+                    .querySelector('.is-delete-button')
+                    ?.addEventListener('click', (clickEvent) => {
+                    clickEvent.preventDefault();
+                    deletePendingRecord(pendingRecord.recordId, closeModalFunction);
+                });
             },
             onremoved() {
                 bulmaJS.toggleHtmlClipped();
@@ -195,9 +231,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
           <small>${cityssm.escapeHTML(record.itemDescription ?? '(Unknown Item)')}</small>
         </td><td class="has-text-right">
           ${cityssm.escapeHTML(record.quantity.toString())}
-        </td><td class="has-text-right">
-          ${cityssm.escapeHTML(record.unitPrice === null ? '(Unknown Price)' : `$${record.unitPrice.toFixed(2)}`)}
-        </td><td class="has-text-centered">
+        </td>`);
+            const unitPriceCellElement = document.createElement('td');
+            if (record.unitPrice === null) {
+                unitPriceCellElement.classList.add('has-background-warning-light', 'has-text-weight-bold');
+                unitPriceCellElement.textContent = '(Unknown Price)';
+            }
+            else {
+                unitPriceCellElement.classList.add('has-text-right');
+                unitPriceCellElement.textContent = `$${record.unitPrice.toFixed(2)}`;
+            }
+            rowElement.append(unitPriceCellElement);
+            rowElement.insertAdjacentHTML('beforeend', `<td class="has-text-centered">
           <button class="button" type="button" title="Record Options">
             <i class="fa-solid fa-gear" aria-hidden="true"></i>
           </button>

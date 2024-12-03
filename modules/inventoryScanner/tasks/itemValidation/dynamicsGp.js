@@ -57,11 +57,9 @@ async function runUpdateItemValidationFromDynamicsGpTask() {
     debug(`Finished "${taskName}".`);
 }
 await runUpdateItemValidationFromDynamicsGpTask();
-const job = schedule.scheduleJob(taskName, taskConfig.schedule ?? {
-    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    dayOfWeek: new schedule.Range(1, 5),
-    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    hour: new schedule.Range(4, 20),
+const job = schedule.scheduleJob(taskName, {
+    dayOfWeek: getConfigProperty('application.workDays'),
+    hour: getConfigProperty('application.workHours'),
     minute: 15,
     second: 0
 }, runUpdateItemValidationFromDynamicsGpTask);

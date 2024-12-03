@@ -4,6 +4,7 @@ import Debug from 'debug'
 import exitHook from 'exit-hook'
 import schedule from 'node-schedule'
 
+import { getConfigProperty } from '../../../../helpers/functions.config.js'
 import { getItemValidationRecordsByItemNumber } from '../../database/getItemValidationRecords.js'
 import getScannerRecords from '../../database/getScannerRecords.js'
 import getWorkOrderValidationRecords from '../../database/getWorkOrderValidationRecords.js'
@@ -90,10 +91,8 @@ updateRecordsFromValidationTask()
 const job = schedule.scheduleJob(
   taskName,
   {
-    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    dayOfWeek: new schedule.Range(1, 5),
-    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    hour: new schedule.Range(4, 20),
+    dayOfWeek: getConfigProperty('application.workDays'),
+    hour: getConfigProperty('application.workHours'),
     minute: new schedule.Range(0, 55, 5),
     second: 0
   },

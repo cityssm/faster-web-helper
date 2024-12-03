@@ -4,6 +4,8 @@ import Debug from 'debug'
 
 import { moduleName } from '../helpers/module.js'
 
+export type SettingName = 'itemRequests.count'
+
 const debug = Debug(
   `faster-web-helper:${camelcase(moduleName)}:databaseHelpers`
 )
@@ -62,7 +64,13 @@ const createStatements = [
     recordUpdate_userName varchar(20) not null default '',
     recordUpdate_timeMillis integer not null,
     recordDelete_userName varchar(20),
-    recordDelete_timeMillis integer)`
+    recordDelete_timeMillis integer)`,
+
+  `create table if not exists InventoryScannerSettings (
+    settingName varchar(100) not null primary key,
+    settingValue varchar(500),
+    recordUpdate_timeMillis integer not null
+  )`
 ]
 
 export function initializeInventoryScannerDatabase(): boolean {
@@ -74,7 +82,7 @@ export function initializeInventoryScannerDatabase(): boolean {
     .prepare(
       `select name from sqlite_master
         where type = 'table'
-        and name = 'InventoryScannerRecords'`
+        and name = 'InventoryScannerSettings'`
     )
     .get()
 

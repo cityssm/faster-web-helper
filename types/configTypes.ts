@@ -15,6 +15,11 @@ import type {
 } from './configHelperTypes.js'
 
 export interface Config {
+  application?: {
+    workDays?: number[]
+    workHours?: number[]
+  }
+
   fasterWeb: ConfigFasterWeb
 
   ftp?: AccessOptions

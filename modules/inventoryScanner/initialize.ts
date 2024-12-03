@@ -30,10 +30,10 @@ export default function initializeInventoryScannerModules(
   initializeInventoryScannerDatabase()
 
   /*
-   * Initialize validation tasks
+   * Initialize tasks
    */
 
-  const validationProcesses: ChildProcess[] = []
+  const childProcesses: ChildProcess[] = []
 
   const itemValidationConfig = getConfigProperty(
     'modules.inventoryScanner.items.validation'
@@ -50,7 +50,7 @@ export default function initializeInventoryScannerModules(
     }
 
     if (itemValidationTaskPath !== '') {
-      validationProcesses.push(fork(itemValidationTaskPath))
+      childProcesses.push(fork(itemValidationTaskPath))
     }
   }
 
@@ -77,15 +77,21 @@ export default function initializeInventoryScannerModules(
     }
 
     if (workOrderValidationTaskPath !== '') {
-      validationProcesses.push(fork(workOrderValidationTaskPath))
+      childProcesses.push(fork(workOrderValidationTaskPath))
     }
   }
 
-  validationProcesses.push(
+  childProcesses.push(
     fork(
       './modules/inventoryScanner/tasks/inventoryScanner/updateRecordsFromValidation.js'
     )
   )
+
+  if (hasFasterApi) {
+    childProcesses.push(
+      fork('./modules/inventoryScanner/tasks/outstandingItemRequests.js')
+    )
+  }
 
   /*
    * Initialize router for admin interface
@@ -138,7 +144,7 @@ export default function initializeInventoryScannerModules(
    */
 
   exitHook(() => {
-    for (const validationProcess of validationProcesses) {
+    for (const validationProcess of childProcesses) {
       validationProcess.kill()
     }
   })
