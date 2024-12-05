@@ -32,9 +32,10 @@ export declare const configDefaultValues: {
     'modules.inventoryScanner.isEnabled': boolean;
     'modules.inventoryScanner.runOnStartup': boolean;
     'modules.inventoryScanner.scannerIpAddressRegex': RegExp;
-    'modules.inventoryScanner.integrationId': number | undefined;
-    'modules.inventoryScanner.exportFileNamePrefix': string;
-    'modules.inventoryScanner.ftpPath': string;
+    'modules.inventoryScanner.fasterSync.integrationId': number | undefined;
+    'modules.inventoryScanner.fasterSync.exportFileNamePrefix': string;
+    'modules.inventoryScanner.fasterSync.ftpPath': string;
+    'modules.inventoryScanner.fasterSync.defaultTechnicianId': number;
     'modules.inventoryScanner.workOrders.acceptNotValidated': boolean;
     'modules.inventoryScanner.workOrders.fasterRegex': RegExp;
     'modules.inventoryScanner.workOrders.acceptWorkTech': boolean;

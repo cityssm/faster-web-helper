@@ -2,6 +2,8 @@
 
 🧑‍💻 **Under development**
 
+![Inventory Scanner Module Workflow](./docs/scanConfirmView.png)
+
 A solution for issuing inventory using handheld barcode scanners.
 
 - Lets storeroom staff use handheld scanners to issue parts on FASTER Web work orders.

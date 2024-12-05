@@ -12,9 +12,12 @@ export interface ConfigItemValidationFaster {
 }
 export interface ConfigModuleInventoryScanner {
     scannerIpAddressRegex?: RegExp;
-    integrationId?: number;
-    exportFileNamePrefix?: string;
-    ftpPath?: string;
+    fasterSync?: {
+        integrationId?: number;
+        exportFileNamePrefix?: string;
+        ftpPath?: string;
+        defaultTechnicianId?: number;
+    };
     workOrders?: {
         acceptNotValidated?: boolean;
         fasterRegex?: RegExp;

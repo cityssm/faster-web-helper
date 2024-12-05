@@ -28,10 +28,11 @@ export const configDefaultValues = {
     'modules.inventoryScanner.isEnabled': false,
     'modules.inventoryScanner.runOnStartup': true,
     'modules.inventoryScanner.scannerIpAddressRegex': /^$/,
-    'modules.inventoryScanner.integrationId': undefined,
+    'modules.inventoryScanner.fasterSync.integrationId': undefined,
     // eslint-disable-next-line no-secrets/no-secrets
-    'modules.inventoryScanner.exportFileNamePrefix': '',
-    'modules.inventoryScanner.ftpPath': '',
+    'modules.inventoryScanner.fasterSync.exportFileNamePrefix': '',
+    'modules.inventoryScanner.fasterSync.ftpPath': '',
+    'modules.inventoryScanner.fasterSync.defaultTechnicianId': 1,
     'modules.inventoryScanner.workOrders.acceptNotValidated': true,
     'modules.inventoryScanner.workOrders.fasterRegex': /^\d+$/,
     // eslint-disable-next-line no-secrets/no-secrets

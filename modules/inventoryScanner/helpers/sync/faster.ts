@@ -27,7 +27,12 @@ function recordToExportDataLine(record: InventoryScannerRecord): string {
   dataPieces.push(record.itemStoreroom ?? '')
 
   // D - Technician ID
-  dataPieces.push(record.technicianId ?? '')
+  dataPieces.push(
+    record.technicianId ??
+      getConfigProperty(
+        'modules.inventoryScanner.fasterSync.defaultTechnicianId'
+      ).toString()
+  )
 
   // E - Invoice Number
   dataPieces.push(record.recordId.toString().padStart(14, 'X'))
@@ -76,8 +81,7 @@ function recordToExportDataLine(record: InventoryScannerRecord): string {
   )
 
   if (itemDescription.includes(',')) {
-    itemDescription =
-      '"' + itemDescription.replaceAll('"', String.raw`\"`) + '"'
+    itemDescription = '"' + itemDescription.replaceAll('"', '``') + '"'
   }
 
   dataPieces.push(itemDescription)
@@ -111,7 +115,7 @@ function getExportFileName(): string {
     rightNow.getFullYear().toString() +
     '-' +
     (rightNow.getMonth() + 1).toString().padStart(2, '0') +
-    '-' + 
+    '-' +
     rightNow.getDate().toString().padStart(2, '0') +
     '_' +
     rightNow.getHours().toString().padStart(2, '0') +
@@ -120,8 +124,10 @@ function getExportFileName(): string {
     timezoneString
 
   const fileName =
-    // eslint-disable-next-line no-secrets/no-secrets
-    getConfigProperty('modules.inventoryScanner.exportFileNamePrefix') +
+    getConfigProperty(
+      // eslint-disable-next-line no-secrets/no-secrets
+      'modules.inventoryScanner.fasterSync.exportFileNamePrefix'
+    ) +
     dateString +
     '.csv'
 
@@ -203,7 +209,9 @@ export async function syncScannerRecordsWithFaster(
    * Upload file
    */
 
-  const targetFtpPath = getConfigProperty('modules.inventoryScanner.ftpPath')
+  const targetFtpPath = getConfigProperty(
+    'modules.inventoryScanner.fasterSync.ftpPath'
+  )
 
   try {
     await uploadFile(targetFtpPath, exportFilePath)
@@ -221,7 +229,7 @@ export async function syncScannerRecordsWithFaster(
    */
 
   const integrationId = getConfigProperty(
-    'modules.inventoryScanner.integrationId'
+    'modules.inventoryScanner.fasterSync.integrationId'
   )
 
   if (hasFasterApi && integrationId !== undefined) {

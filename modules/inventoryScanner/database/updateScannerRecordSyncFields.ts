@@ -14,8 +14,6 @@ export function updateScannerRecordSyncFields(
 ): boolean {
   const database = sqlite(databasePath)
 
-  console.log(recordForm)
-
   const result = database
     .prepare(
       `update InventoryScannerRecords

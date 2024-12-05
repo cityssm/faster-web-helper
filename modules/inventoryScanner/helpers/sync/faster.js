@@ -16,7 +16,8 @@ function recordToExportDataLine(record) {
     // C - Storeroom
     dataPieces.push(record.itemStoreroom ?? '');
     // D - Technician ID
-    dataPieces.push(record.technicianId ?? '');
+    dataPieces.push(record.technicianId ??
+        getConfigProperty('modules.inventoryScanner.fasterSync.defaultTechnicianId').toString());
     // E - Invoice Number
     dataPieces.push(record.recordId.toString().padStart(14, 'X'));
     // F - Invoice Date
@@ -46,8 +47,7 @@ function recordToExportDataLine(record) {
     // N - Description
     let itemDescription = (record.itemDescription ?? record.itemNumber).slice(0, 40);
     if (itemDescription.includes(',')) {
-        itemDescription =
-            '"' + itemDescription.replaceAll('"', String.raw `\"`) + '"';
+        itemDescription = '"' + itemDescription.replaceAll('"', '``') + '"';
     }
     dataPieces.push(itemDescription);
     // O - Ignored
@@ -76,9 +76,9 @@ function getExportFileName() {
         rightNow.getMinutes().toString().padStart(2, '0') +
         rightNow.getSeconds().toString().padStart(2, '0') +
         timezoneString;
-    const fileName = 
+    const fileName = getConfigProperty(
     // eslint-disable-next-line no-secrets/no-secrets
-    getConfigProperty('modules.inventoryScanner.exportFileNamePrefix') +
+    'modules.inventoryScanner.fasterSync.exportFileNamePrefix') +
         dateString +
         '.csv';
     return fileName;
@@ -136,7 +136,7 @@ export async function syncScannerRecordsWithFaster(records) {
     /*
      * Upload file
      */
-    const targetFtpPath = getConfigProperty('modules.inventoryScanner.ftpPath');
+    const targetFtpPath = getConfigProperty('modules.inventoryScanner.fasterSync.ftpPath');
     try {
         await uploadFile(targetFtpPath, exportFilePath);
     }
@@ -150,7 +150,7 @@ export async function syncScannerRecordsWithFaster(records) {
     /*
      * Ping IIU
      */
-    const integrationId = getConfigProperty('modules.inventoryScanner.integrationId');
+    const integrationId = getConfigProperty('modules.inventoryScanner.fasterSync.integrationId');
     if (hasFasterApi && integrationId !== undefined) {
         const fasterApiImport = await import('@cityssm/faster-api');
         const fasterApiConfig = getConfigProperty('fasterWeb');

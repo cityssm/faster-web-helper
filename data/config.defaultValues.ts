@@ -74,14 +74,16 @@ export const configDefaultValues = {
 
   'modules.inventoryScanner.scannerIpAddressRegex': /^$/,
 
-  'modules.inventoryScanner.integrationId': undefined as unknown as
+  'modules.inventoryScanner.fasterSync.integrationId': undefined as unknown as
     | number
     | undefined,
 
   // eslint-disable-next-line no-secrets/no-secrets
-  'modules.inventoryScanner.exportFileNamePrefix': '',
+  'modules.inventoryScanner.fasterSync.exportFileNamePrefix': '',
 
-  'modules.inventoryScanner.ftpPath': '',
+  'modules.inventoryScanner.fasterSync.ftpPath': '',
+
+  'modules.inventoryScanner.fasterSync.defaultTechnicianId': 1,
 
   'modules.inventoryScanner.workOrders.acceptNotValidated': true,
   'modules.inventoryScanner.workOrders.fasterRegex': /^\d+$/,

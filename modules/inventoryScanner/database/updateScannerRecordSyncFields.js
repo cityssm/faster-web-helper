@@ -2,7 +2,6 @@ import sqlite from 'better-sqlite3';
 import { databasePath } from './helpers.database.js';
 export function updateScannerRecordSyncFields(recordForm) {
     const database = sqlite(databasePath);
-    console.log(recordForm);
     const result = database
         .prepare(`update InventoryScannerRecords
         set recordSync_isSuccessful = ?,
