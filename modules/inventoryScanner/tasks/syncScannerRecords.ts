@@ -13,7 +13,7 @@ const debug = Debug(
   `faster-web-helper:${camelcase(moduleName)}:${camelcase(taskName)}`
 )
 
-function syncScannerRecordsTask(): void {
+async function syncScannerRecordsTask(): Promise<void> {
   debug(`Running "${taskName}"...`)
 
   const recordsToSyncList = getScannerRecords({
@@ -25,7 +25,7 @@ function syncScannerRecordsTask(): void {
   for (const [workOrderType, records] of Object.entries(recordsToSync)) {
     switch (workOrderType) {
       case 'faster': {
-        syncScannerRecordsWithFaster(records)
+        await syncScannerRecordsWithFaster(records)
         break
       }
       case 'worktech': {
@@ -38,4 +38,4 @@ function syncScannerRecordsTask(): void {
   debug(`Finished "${taskName}", synced ${recordsToSyncList.length} record(s).`)
 }
 
-syncScannerRecordsTask()
+await syncScannerRecordsTask()

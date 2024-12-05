@@ -23,6 +23,7 @@ export interface ConfigModuleInventoryScanner {
   
   integrationId?: number
   exportFileNamePrefix?: string
+  ftpPath?: string
 
   workOrders?: {
     acceptNotValidated?: boolean

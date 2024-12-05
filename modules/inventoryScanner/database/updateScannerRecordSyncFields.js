@@ -2,6 +2,7 @@ import sqlite from 'better-sqlite3';
 import { databasePath } from './helpers.database.js';
 export function updateScannerRecordSyncFields(recordForm) {
     const database = sqlite(databasePath);
+    console.log(recordForm);
     const result = database
         .prepare(`update InventoryScannerRecords
         set recordSync_isSuccessful = ?,
@@ -10,7 +11,7 @@ export function updateScannerRecordSyncFields(recordForm) {
         where recordId = ?
         and recordDelete_timeMillis is null
         and recordSync_timeMillis is not null`)
-        .run(recordForm.isSuccessful, recordForm.syncedRecordId, (recordForm.message ?? '').slice(0, 500), recordForm.recordId);
+        .run(recordForm.isSuccessful ? 1 : 0, recordForm.syncedRecordId, (recordForm.message ?? '').slice(0, 500), recordForm.recordId);
     database.close();
     return result.changes > 0;
 }

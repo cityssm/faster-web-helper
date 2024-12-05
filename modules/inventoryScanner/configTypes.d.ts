@@ -14,6 +14,7 @@ export interface ConfigModuleInventoryScanner {
     scannerIpAddressRegex?: RegExp;
     integrationId?: number;
     exportFileNamePrefix?: string;
+    ftpPath?: string;
     workOrders?: {
         acceptNotValidated?: boolean;
         fasterRegex?: RegExp;

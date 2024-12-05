@@ -14,6 +14,8 @@ export function updateScannerRecordSyncFields(
 ): boolean {
   const database = sqlite(databasePath)
 
+  console.log(recordForm)
+
   const result = database
     .prepare(
       `update InventoryScannerRecords
@@ -25,7 +27,7 @@ export function updateScannerRecordSyncFields(
         and recordSync_timeMillis is not null`
     )
     .run(
-      recordForm.isSuccessful,
+      recordForm.isSuccessful ? 1 : 0,
       recordForm.syncedRecordId,
       (recordForm.message ?? '').slice(0, 500),
       recordForm.recordId

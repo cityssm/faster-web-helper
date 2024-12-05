@@ -5,6 +5,8 @@ import path from 'node:path';
 import { dateIntegerToDate } from '@cityssm/utils-datetime';
 import { getConfigProperty } from '../../../../helpers/functions.config.js';
 import { ensureTempFolderExists, tempFolderPath } from '../../../../helpers/functions.filesystem.js';
+import { uploadFile } from '../../../../helpers/functions.sftp.js';
+import { hasFasterApi } from '../../../../helpers/helpers.faster.js';
 import { updateScannerRecordSyncFields } from '../../database/updateScannerRecordSyncFields.js';
 function recordToExportDataLine(record) {
     // A - "RDC"
@@ -74,7 +76,9 @@ function getExportFileName() {
         rightNow.getMinutes().toString().padStart(2, '0') +
         rightNow.getSeconds().toString().padStart(2, '0') +
         timezoneString;
-    const fileName = getConfigProperty('modules.inventoryScanner.exportFileNamePrefix') +
+    const fileName = 
+    // eslint-disable-next-line no-secrets/no-secrets
+    getConfigProperty('modules.inventoryScanner.exportFileNamePrefix') +
         dateString +
         '.csv';
     return fileName;
@@ -127,11 +131,45 @@ export async function syncScannerRecordsWithFaster(records) {
             isSuccessful: false,
             message: `Error writing file to temp folder: ${exportFilePath}`
         });
+        return;
     }
     /*
      * Upload file
      */
+    const targetFtpPath = getConfigProperty('modules.inventoryScanner.ftpPath');
+    try {
+        await uploadFile(targetFtpPath, exportFilePath);
+    }
+    catch {
+        updateMultipleScannerRecords(records, errorRecordIds, {
+            isSuccessful: false,
+            message: `Error uploading file to FTP path: ${targetFtpPath}`
+        });
+        return;
+    }
     /*
      * Ping IIU
      */
+    const integrationId = getConfigProperty('modules.inventoryScanner.integrationId');
+    if (hasFasterApi && integrationId !== undefined) {
+        const fasterApiImport = await import('@cityssm/faster-api');
+        const fasterApiConfig = getConfigProperty('fasterWeb');
+        const fasterApi = new fasterApiImport.FasterApi(fasterApiConfig.tenantOrBaseUrl, fasterApiConfig.apiUserName ?? '', fasterApiConfig.apiPassword ?? '');
+        await fasterApi.createIntegrationLogMessage({
+            integrationId,
+            integrationLogLevel: 'Information',
+            integrationLogMessageType: 'Summary',
+            message: 'File uploaded to FTP.',
+            transactionData: JSON.stringify({
+                ftpHost: getConfigProperty('ftp')?.host,
+                folderPath: targetFtpPath,
+                fileName: exportFileName,
+                recordCount: exportFileDataLines.length
+            }, undefined, 2)
+        });
+    }
+    updateMultipleScannerRecords(records, errorRecordIds, {
+        isSuccessful: true,
+        message: `File successfully uploaded: ${exportFileName}`
+    });
 }

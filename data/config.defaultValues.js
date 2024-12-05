@@ -31,6 +31,7 @@ export const configDefaultValues = {
     'modules.inventoryScanner.integrationId': undefined,
     // eslint-disable-next-line no-secrets/no-secrets
     'modules.inventoryScanner.exportFileNamePrefix': '',
+    'modules.inventoryScanner.ftpPath': '',
     'modules.inventoryScanner.workOrders.acceptNotValidated': true,
     'modules.inventoryScanner.workOrders.fasterRegex': /^\d+$/,
     // eslint-disable-next-line no-secrets/no-secrets

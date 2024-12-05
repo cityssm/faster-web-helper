@@ -70,3 +70,30 @@ export async function downloadFilesToTemp<S extends string>(
 
   return downloadedFiles
 }
+
+export async function uploadFile(
+  targetFtpFolderPath: string,
+  localFilePath: string
+): Promise<boolean> {
+  const ftpConfig = getConfigProperty('ftp')
+
+  const ftpClient = new Client()
+
+  const localFileName = localFilePath.split(path.sep).at(-1) ?? 'upload.txt'
+
+  try {
+    await ftpClient.access(ftpConfig)
+
+    debug(`Connected to ${ftpConfig?.host}`)
+
+    if (targetFtpFolderPath !== '') {
+      await ftpClient.cd(targetFtpFolderPath)
+    }
+
+    await ftpClient.uploadFrom(localFilePath, localFileName)
+  } finally {
+    ftpClient.close()
+  }
+
+  return true
+}
