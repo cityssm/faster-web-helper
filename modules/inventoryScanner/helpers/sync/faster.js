@@ -8,6 +8,7 @@ import { ensureTempFolderExists, tempFolderPath } from '../../../../helpers/func
 import { uploadFile } from '../../../../helpers/functions.sftp.js';
 import { hasFasterApi } from '../../../../helpers/helpers.faster.js';
 import { updateScannerRecordSyncFields } from '../../database/updateScannerRecordSyncFields.js';
+import { updateMultipleScannerRecords } from './syncHelpers.js';
 function recordToExportDataLine(record) {
     // A - "RDC"
     const dataPieces = ['RDC'];
@@ -83,19 +84,6 @@ function getExportFileName() {
         '.csv';
     return fileName;
 }
-function updateMultipleScannerRecords(records, recordIdsToSkip, fields) {
-    for (const record of records) {
-        if (recordIdsToSkip.has(record.recordId)) {
-            continue;
-        }
-        updateScannerRecordSyncFields({
-            recordId: record.recordId,
-            isSuccessful: fields.isSuccessful,
-            syncedRecordId: fields.syncedRecordId,
-            message: fields.message
-        });
-    }
-}
 export async function syncScannerRecordsWithFaster(records) {
     /*
      * Build file data
@@ -167,9 +155,11 @@ export async function syncScannerRecordsWithFaster(records) {
                 recordCount: exportFileDataLines.length
             }, undefined, 2)
         });
+        await fasterApi.executeIntegration(fasterApiImport.helpers.inventoryImportUtilityIntegrationName);
     }
     updateMultipleScannerRecords(records, errorRecordIds, {
         isSuccessful: true,
-        message: `File successfully uploaded: ${exportFileName}`
+        message: 'File successfully uploaded to FTP.',
+        syncedRecordId: exportFileName
     });
 }

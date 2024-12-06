@@ -28,6 +28,10 @@ export interface ConfigModuleInventoryScanner {
     defaultTechnicianId?: number
   }
 
+  worktechSync?: {
+    
+  }
+
   workOrders?: {
     acceptNotValidated?: boolean
     fasterRegex?: RegExp

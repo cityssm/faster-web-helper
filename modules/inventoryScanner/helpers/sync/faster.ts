@@ -16,6 +16,8 @@ import { hasFasterApi } from '../../../../helpers/helpers.faster.js'
 import { updateScannerRecordSyncFields } from '../../database/updateScannerRecordSyncFields.js'
 import type { InventoryScannerRecord } from '../../types.js'
 
+import { updateMultipleScannerRecords } from './syncHelpers.js'
+
 function recordToExportDataLine(record: InventoryScannerRecord): string {
   // A - "RDC"
   const dataPieces = ['RDC']
@@ -134,29 +136,6 @@ function getExportFileName(): string {
   return fileName
 }
 
-function updateMultipleScannerRecords(
-  records: InventoryScannerRecord[],
-  recordIdsToSkip: Set<number>,
-  fields: {
-    isSuccessful: boolean
-    syncedRecordId?: string
-    message?: string
-  }
-): void {
-  for (const record of records) {
-    if (recordIdsToSkip.has(record.recordId)) {
-      continue
-    }
-
-    updateScannerRecordSyncFields({
-      recordId: record.recordId,
-      isSuccessful: fields.isSuccessful,
-      syncedRecordId: fields.syncedRecordId,
-      message: fields.message
-    })
-  }
-}
-
 export async function syncScannerRecordsWithFaster(
   records: InventoryScannerRecord[]
 ): Promise<void> {
@@ -259,10 +238,15 @@ export async function syncScannerRecordsWithFaster(
         2
       )
     })
+
+    await fasterApi.executeIntegration(
+      fasterApiImport.helpers.inventoryImportUtilityIntegrationName
+    )
   }
 
   updateMultipleScannerRecords(records, errorRecordIds, {
     isSuccessful: true,
-    message: `File successfully uploaded: ${exportFileName}`
+    message: 'File successfully uploaded to FTP.',
+    syncedRecordId: exportFileName
   })
 }

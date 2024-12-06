@@ -18,6 +18,7 @@ export interface ConfigModuleInventoryScanner {
         ftpPath?: string;
         defaultTechnicianId?: number;
     };
+    worktechSync?: {};
     workOrders?: {
         acceptNotValidated?: boolean;
         fasterRegex?: RegExp;
