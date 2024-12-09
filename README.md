@@ -30,6 +30,20 @@ with resources consumed by WorkTech work orders.
 [**Autocomplete**](./modules/autocomplete/README.md)<br />
 Creates and hosts JSON files compatible with Autocomplete userscripts.
 
+## Note About FASTER API Calls
+
+Calls to the FASTER Web API are made using the `@cityssm/faster-api` package.
+Unfortunately, due to a Non-Disclosure Agreement from FASTER, that package is private,
+and marked as optional by this project. 😔
+
+Some of the processes the FASTER Web API is used for:
+
+- **Inventory Scanner** - Retrieving repair-related information.
+- **Inventory Scanner** - Adding upload information to integration logs.
+
+If you want access and can prove you have access to the FASTER Web APIs,
+read-only or collaborator access can be granted.
+
 ## Other FASTER Web Projects
 
 This application is made possible through several FASTER Web specific projects.
