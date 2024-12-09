@@ -153,8 +153,7 @@ declare const cityssm: cityssmGlobal
             <div class="column">
               ${cityssm.escapeHTML(record.workOrderNumber)}
                 (${cityssm.escapeHTML(record.workOrderType)})<br />
-              ${cityssm.escapeHTML(record.repairDescription ?? '')}
-                (${cityssm.escapeHTML(record.repairId === null ? '' : record.repairId.toString())})
+              <span class="repairContainer"></span>
             </div>
           </div>
           <div class="columns is-mobile">
@@ -195,6 +194,14 @@ declare const cityssm: cityssmGlobal
             </div>
           </div>
         </div>`
+
+      if (record.repairId !== null || record.repairDescription !== null) {
+        panelBlockElement.querySelector('.repairContainer')?.insertAdjacentHTML(
+          'beforeend',
+          `${cityssm.escapeHTML(record.repairDescription ?? '')}
+            (${cityssm.escapeHTML(record.repairId === null ? '' : record.repairId.toString())})`
+        )
+      }
 
       panelBlockElement
         .querySelector('.is-view-more-button')
@@ -295,28 +302,37 @@ declare const cityssm: cityssmGlobal
    * Quantity Multiplier
    */
 
-  const quantityMultiplierElement = formElement.querySelector('#scanner--quantityMultiplier') as HTMLInputElement
+  const quantityMultiplierElement = formElement.querySelector(
+    '#scanner--quantityMultiplier'
+  ) as HTMLInputElement
 
-  const quantityMultiplierToggleElement = formElement.querySelector('#is-toggle-quantity-multiplier') as HTMLButtonElement
+  const quantityMultiplierToggleElement = formElement.querySelector(
+    '#is-toggle-quantity-multiplier'
+  ) as HTMLButtonElement
 
   const quantityElement = formElement.querySelector(
     '#scanner--quantity'
   ) as HTMLInputElement
 
-  const submitButtonElement = formElement.querySelector('button[type="submit"]') as HTMLButtonElement
+  const submitButtonElement = formElement.querySelector(
+    'button[type="submit"]'
+  ) as HTMLButtonElement
 
   function renderQuantityMultiplier(): void {
     if (quantityMultiplierElement.value === '1') {
-      quantityMultiplierToggleElement.innerHTML = '<span class="icon"><i class="fa-solid fa-plus" aria-hidden="true"></i></span>'
+      quantityMultiplierToggleElement.innerHTML =
+        '<span class="icon"><i class="fa-solid fa-plus" aria-hidden="true"></i></span>'
       submitButtonElement.textContent = 'Issue Item(s)'
     } else {
-      quantityMultiplierToggleElement.innerHTML = '<span class="icon"><i class="fa-solid fa-minus" aria-hidden="true"></i></span>'
+      quantityMultiplierToggleElement.innerHTML =
+        '<span class="icon"><i class="fa-solid fa-minus" aria-hidden="true"></i></span>'
       submitButtonElement.textContent = 'Return Item(s)'
     }
   }
 
   quantityMultiplierToggleElement.addEventListener('click', () => {
-    quantityMultiplierElement.value = quantityMultiplierElement.value === '1' ? '-1' : '1'
+    quantityMultiplierElement.value =
+      quantityMultiplierElement.value === '1' ? '-1' : '1'
     renderQuantityMultiplier()
   })
 
@@ -373,6 +389,11 @@ declare const cityssm: cityssmGlobal
     formEvent.preventDefault()
 
     if (!formElement.checkValidity()) {
+      return
+    }
+
+    if (quantityElement.value === '0') {
+      quantityElement.focus()
       return
     }
 

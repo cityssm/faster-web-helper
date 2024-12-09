@@ -229,9 +229,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
             rowElement.insertAdjacentHTML('beforeend', `<td>
           ${cityssm.escapeHTML(record.itemNumber)}<br />
           <small>${cityssm.escapeHTML(record.itemDescription ?? '(Unknown Item)')}</small>
-        </td><td class="has-text-right">
-          ${cityssm.escapeHTML(record.quantity.toString())}
         </td>`);
+            const quantityCellElement = document.createElement('td');
+            quantityCellElement.className = 'has-text-right';
+            if (record.quantity <= 0) {
+                quantityCellElement.classList.add('has-text-danger-dark');
+            }
+            quantityCellElement.textContent = record.quantity.toString();
+            rowElement.append(quantityCellElement);
             const unitPriceCellElement = document.createElement('td');
             if (record.unitPrice === null) {
                 unitPriceCellElement.classList.add('has-background-warning-light', 'has-text-weight-bold');

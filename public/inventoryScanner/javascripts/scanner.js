@@ -110,8 +110,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             <div class="column">
               ${cityssm.escapeHTML(record.workOrderNumber)}
                 (${cityssm.escapeHTML(record.workOrderType)})<br />
-              ${cityssm.escapeHTML(record.repairDescription ?? '')}
-                (${cityssm.escapeHTML(record.repairId === null ? '' : record.repairId.toString())})
+              <span class="repairContainer"></span>
             </div>
           </div>
           <div class="columns is-mobile">
@@ -150,6 +149,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
             </div>
           </div>
         </div>`;
+            if (record.repairId !== null || record.repairDescription !== null) {
+                panelBlockElement.querySelector('.repairContainer')?.insertAdjacentHTML('beforeend', `${cityssm.escapeHTML(record.repairDescription ?? '')}
+            (${cityssm.escapeHTML(record.repairId === null ? '' : record.repairId.toString())})`);
+            }
             panelBlockElement
                 .querySelector('.is-view-more-button')
                 ?.addEventListener('click', toggleHistoryViewMore);
@@ -217,16 +220,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const submitButtonElement = formElement.querySelector('button[type="submit"]');
     function renderQuantityMultiplier() {
         if (quantityMultiplierElement.value === '1') {
-            quantityMultiplierToggleElement.innerHTML = '<span class="icon"><i class="fa-solid fa-plus" aria-hidden="true"></i></span>';
+            quantityMultiplierToggleElement.innerHTML =
+                '<span class="icon"><i class="fa-solid fa-plus" aria-hidden="true"></i></span>';
             submitButtonElement.textContent = 'Issue Item(s)';
         }
         else {
-            quantityMultiplierToggleElement.innerHTML = '<span class="icon"><i class="fa-solid fa-minus" aria-hidden="true"></i></span>';
+            quantityMultiplierToggleElement.innerHTML =
+                '<span class="icon"><i class="fa-solid fa-minus" aria-hidden="true"></i></span>';
             submitButtonElement.textContent = 'Return Item(s)';
         }
     }
     quantityMultiplierToggleElement.addEventListener('click', () => {
-        quantityMultiplierElement.value = quantityMultiplierElement.value === '1' ? '-1' : '1';
+        quantityMultiplierElement.value =
+            quantityMultiplierElement.value === '1' ? '-1' : '1';
         renderQuantityMultiplier();
     });
     quantityMultiplierElement.value = '1';
@@ -264,6 +270,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
     formElement.addEventListener('submit', (formEvent) => {
         formEvent.preventDefault();
         if (!formElement.checkValidity()) {
+            return;
+        }
+        if (quantityElement.value === '0') {
+            quantityElement.focus();
             return;
         }
         cityssm.postJSON(`${scannerUrlPrefix}/doCreateScannerRecord`, formElement, (rawResponseJSON) => {
