@@ -242,7 +242,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
     formElement.addEventListener('submit', (formEvent) => {
         formEvent.preventDefault();
         if (!formElement.checkValidity()) {
-            console.log('invalid');
             return;
         }
         cityssm.postJSON(`${scannerUrlPrefix}/doCreateScannerRecord`, formElement, (rawResponseJSON) => {

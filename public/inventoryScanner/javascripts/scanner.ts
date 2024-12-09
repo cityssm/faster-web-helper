@@ -344,7 +344,6 @@ declare const cityssm: cityssmGlobal
     formEvent.preventDefault()
 
     if (!formElement.checkValidity()) {
-      console.log('invalid')
       return
     }
 
