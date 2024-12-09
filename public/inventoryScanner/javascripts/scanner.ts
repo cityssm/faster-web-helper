@@ -330,12 +330,27 @@ declare const cityssm: cityssmGlobal
     '#scanner--quantity'
   ) as HTMLInputElement
 
+  function blockInputSubmit(inputEvent: KeyboardEvent): void {
+    if (inputEvent.key === 'Enter') {
+      inputEvent.preventDefault()
+      inputEvent.stopPropagation()
+    }
+  }
+
+  workOrderNumberInputElement.addEventListener('keypress', blockInputSubmit)
+  itemNumberElement.addEventListener('keypress', blockInputSubmit)
+
   formElement.addEventListener('submit', (formEvent) => {
     formEvent.preventDefault()
 
+    if (!formElement.checkValidity()) {
+      console.log('invalid')
+      return
+    }
+
     cityssm.postJSON(
       `${scannerUrlPrefix}/doCreateScannerRecord`,
-      formEvent.currentTarget,
+      formElement,
       (rawResponseJSON) => {
         const responseJSON = rawResponseJSON as unknown as {
           success: boolean
