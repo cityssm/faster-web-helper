@@ -17,7 +17,8 @@
   },
   "keywords": [
     "faster-web",
-    "worktech"
+    "worktech",
+    "inventory-management"
   ],
   "author": "The Corporation of the City of Sault Ste. Marie",
   "license": "MIT",
@@ -39,7 +40,7 @@
     "@fortawesome/fontawesome-free": "^6.7.1",
     "@types/nodemailer": "^6.4.17",
     "basic-ftp": "^5.0.5",
-    "better-sqlite3": "^11.6.0",
+    "better-sqlite3": "^11.7.0",
     "bulma": "^1.0.2",
     "camelcase": "^8.0.0",
     "cookie-parser": "^1.4.7",
