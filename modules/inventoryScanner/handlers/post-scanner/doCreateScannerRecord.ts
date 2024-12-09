@@ -9,6 +9,7 @@ interface DoCreateScannerRecordForm {
   repairId: string
   itemNumber: string
   quantity: string
+  quantityMultiplier: '1' | '-1'
 }
 
 export default function handler(

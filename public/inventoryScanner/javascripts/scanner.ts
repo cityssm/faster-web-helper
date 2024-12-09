@@ -292,6 +292,38 @@ declare const cityssm: cityssmGlobal
   workOrderNumberInputElement.addEventListener('keyup', refreshRepairIdSelect)
 
   /*
+   * Quantity Multiplier
+   */
+
+  const quantityMultiplierElement = formElement.querySelector('#scanner--quantityMultiplier') as HTMLInputElement
+
+  const quantityMultiplierToggleElement = formElement.querySelector('#is-toggle-quantity-multiplier') as HTMLButtonElement
+
+  const quantityElement = formElement.querySelector(
+    '#scanner--quantity'
+  ) as HTMLInputElement
+
+  const submitButtonElement = formElement.querySelector('button[type="submit"]') as HTMLButtonElement
+
+  function renderQuantityMultiplier(): void {
+    if (quantityMultiplierElement.value === '1') {
+      quantityMultiplierToggleElement.innerHTML = '<span class="icon"><i class="fa-solid fa-plus" aria-hidden="true"></i></span>'
+      submitButtonElement.textContent = 'Issue Item(s)'
+    } else {
+      quantityMultiplierToggleElement.innerHTML = '<span class="icon"><i class="fa-solid fa-minus" aria-hidden="true"></i></span>'
+      submitButtonElement.textContent = 'Return Item(s)'
+    }
+  }
+
+  quantityMultiplierToggleElement.addEventListener('click', () => {
+    quantityMultiplierElement.value = quantityMultiplierElement.value === '1' ? '-1' : '1'
+    renderQuantityMultiplier()
+  })
+
+  quantityMultiplierElement.value = '1'
+  renderQuantityMultiplier()
+
+  /*
    * Clear buttons
    */
 
@@ -326,9 +358,6 @@ declare const cityssm: cityssmGlobal
   const itemNumberElement = formElement.querySelector(
     '#scanner--itemNumber'
   ) as HTMLInputElement
-  const quantityElement = formElement.querySelector(
-    '#scanner--quantity'
-  ) as HTMLInputElement
 
   function blockInputSubmit(inputEvent: KeyboardEvent): void {
     if (inputEvent.key === 'Enter') {
@@ -359,6 +388,9 @@ declare const cityssm: cityssmGlobal
         if (responseJSON.success) {
           successMessageElement.classList.remove('is-hidden')
           globalThis.setTimeout(hideSuccessMessage, 1000)
+
+          quantityMultiplierElement.value = '1'
+          renderQuantityMultiplier()
 
           quantityElement.value = '1'
           itemNumberElement.value = ''

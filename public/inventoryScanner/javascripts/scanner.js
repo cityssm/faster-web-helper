@@ -209,6 +209,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
     refreshRepairIdSelect();
     workOrderNumberInputElement.addEventListener('keyup', refreshRepairIdSelect);
     /*
+     * Quantity Multiplier
+     */
+    const quantityMultiplierElement = formElement.querySelector('#scanner--quantityMultiplier');
+    const quantityMultiplierToggleElement = formElement.querySelector('#is-toggle-quantity-multiplier');
+    const quantityElement = formElement.querySelector('#scanner--quantity');
+    const submitButtonElement = formElement.querySelector('button[type="submit"]');
+    function renderQuantityMultiplier() {
+        if (quantityMultiplierElement.value === '1') {
+            quantityMultiplierToggleElement.innerHTML = '<span class="icon"><i class="fa-solid fa-plus" aria-hidden="true"></i></span>';
+            submitButtonElement.textContent = 'Issue Item(s)';
+        }
+        else {
+            quantityMultiplierToggleElement.innerHTML = '<span class="icon"><i class="fa-solid fa-minus" aria-hidden="true"></i></span>';
+            submitButtonElement.textContent = 'Return Item(s)';
+        }
+    }
+    quantityMultiplierToggleElement.addEventListener('click', () => {
+        quantityMultiplierElement.value = quantityMultiplierElement.value === '1' ? '-1' : '1';
+        renderQuantityMultiplier();
+    });
+    quantityMultiplierElement.value = '1';
+    renderQuantityMultiplier();
+    /*
      * Clear buttons
      */
     function clearFieldAndFocus(event) {
@@ -230,7 +253,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
      * Form submit
      */
     const itemNumberElement = formElement.querySelector('#scanner--itemNumber');
-    const quantityElement = formElement.querySelector('#scanner--quantity');
     function blockInputSubmit(inputEvent) {
         if (inputEvent.key === 'Enter') {
             inputEvent.preventDefault();
@@ -249,6 +271,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             if (responseJSON.success) {
                 successMessageElement.classList.remove('is-hidden');
                 globalThis.setTimeout(hideSuccessMessage, 1000);
+                quantityMultiplierElement.value = '1';
+                renderQuantityMultiplier();
                 quantityElement.value = '1';
                 itemNumberElement.value = '';
                 itemNumberElement.focus();

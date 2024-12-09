@@ -11,6 +11,7 @@ export interface CreateScannerRecordForm {
     itemStoreroom?: string;
     itemNumber: string;
     quantity: number | string;
+    quantityMultiplier: '1' | '-1' | 1 | -1;
     unitPrice?: number | string;
 }
 export default function createScannerRecord(scannerRecord: CreateScannerRecordForm): boolean;

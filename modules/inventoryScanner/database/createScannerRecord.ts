@@ -27,7 +27,10 @@ export interface CreateScannerRecordForm {
 
   itemStoreroom?: string
   itemNumber: string
+
   quantity: number | string
+  quantityMultiplier: '1' | '-1' | 1 | -1
+
   unitPrice?: number | string
 }
 
@@ -43,7 +46,7 @@ export default function createScannerRecord(
 
   if (itemStoreroom === undefined || unitPrice === undefined) {
     const items = getItemValidationRecordsByItemNumber(scannerRecord.itemNumber)
-    
+
     for (const item of items) {
       if (itemStoreroom === undefined) {
         itemStoreroom = item.itemStoreroom
@@ -54,6 +57,15 @@ export default function createScannerRecord(
         break
       }
     }
+  }
+
+  let quantity =
+    typeof scannerRecord.quantity === 'string'
+      ? Number.parseInt(scannerRecord.quantity)
+      : scannerRecord.quantity
+
+  if (scannerRecord.quantityMultiplier === '-1' || scannerRecord.quantityMultiplier === -1) {
+    quantity = quantity * -1
   }
 
   const userName = scannerKeyToUserName(scannerRecord.scannerKey)
@@ -86,7 +98,7 @@ export default function createScannerRecord(
       scannerRecord.repairId === '' ? undefined : scannerRecord.repairId,
       itemStoreroom,
       scannerRecord.itemNumber,
-      scannerRecord.quantity,
+      quantity,
       unitPrice,
       userName,
       rightNow.getTime(),

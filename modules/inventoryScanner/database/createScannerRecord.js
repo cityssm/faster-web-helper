@@ -21,6 +21,12 @@ export default function createScannerRecord(scannerRecord) {
             }
         }
     }
+    let quantity = typeof scannerRecord.quantity === 'string'
+        ? Number.parseInt(scannerRecord.quantity)
+        : scannerRecord.quantity;
+    if (scannerRecord.quantityMultiplier === '-1' || scannerRecord.quantityMultiplier === -1) {
+        quantity = quantity * -1;
+    }
     const userName = scannerKeyToUserName(scannerRecord.scannerKey);
     const result = database
         .prepare(`insert into InventoryScannerRecords (
@@ -38,7 +44,7 @@ export default function createScannerRecord(scannerRecord) {
         : dateStringToInteger(scannerRecord.scannerDateString), scannerRecord.scannerTimeString === undefined
         ? dateToTimeInteger(rightNow)
         : timeStringToInteger(scannerRecord.scannerTimeString), scannerRecord.workOrderNumber, scannerRecord.workOrderType ??
-        getWorkOrderTypeFromWorkOrderNumber(scannerRecord.workOrderNumber), scannerRecord.technicianId, scannerRecord.repairId === '' ? undefined : scannerRecord.repairId, itemStoreroom, scannerRecord.itemNumber, scannerRecord.quantity, unitPrice, userName, rightNow.getTime(), userName, rightNow.getTime());
+        getWorkOrderTypeFromWorkOrderNumber(scannerRecord.workOrderNumber), scannerRecord.technicianId, scannerRecord.repairId === '' ? undefined : scannerRecord.repairId, itemStoreroom, scannerRecord.itemNumber, quantity, unitPrice, userName, rightNow.getTime(), userName, rightNow.getTime());
     database.close();
     return result.changes > 0;
 }

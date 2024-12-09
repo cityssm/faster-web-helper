@@ -127,8 +127,16 @@
     
               <div class="columns is-mobile is-align-items-end">
                 <div class="column is-two-thirds">
+                  <input id="scanner--quantityMultiplier" name="quantityMultiplier" type="hidden" value="1" />
                   <label class="label" for="scanner--quantity">Quantity</label>
                   <div class="field has-addons">
+                    <div class="control">
+                      <button class="button" id="is-toggle-quantity-multiplier" type="button" title="Toggle Issue/Return">
+                        <span class="icon">
+                          <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                        </span>
+                      </button>
+                    </div>
                     <div class="control is-expanded">
                       <input class="input has-text-right" id="scanner--quantity" name="quantity" type="text" value="1" inputmode="numeric" pattern="^\d+$" maxlength="3" autocomplete="off" required />
                     </div>
@@ -143,7 +151,7 @@
                 </div>
                 <div class="column">
                   <button class="button is-fullwidth is-primary" type="submit">
-                    Save
+                    Issue Item(s)
                   </button>
                 </div>
               </div>
