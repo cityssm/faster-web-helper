@@ -1,9 +1,10 @@
-import type { InventoryScannerRecord } from '../types.js';
+import type { InventoryScannerRecord, WorkOrderType } from '../types.js';
 interface GetScannerRecordsFilters {
     scannerKey?: string;
     isSynced?: boolean;
     isMarkedForSync?: boolean;
     hasMissingValidation?: boolean;
+    workOrderType?: WorkOrderType;
 }
 interface GetScannerRecordsOptions {
     limit: number;

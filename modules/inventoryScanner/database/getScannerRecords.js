@@ -43,6 +43,10 @@ export default function getScannerRecords(filters, userOptions = {}) {
           and i.itemDescription is not null
           )`;
     }
+    if (filters.workOrderType !== undefined) {
+        sqlWhereClause += ' and s.workOrderType = ?';
+        sqlParameters.push(filters.workOrderType);
+    }
     /*
      * Build SQL
      */

@@ -5,6 +5,7 @@ import Debug from 'debug';
 import exitHook from 'exit-hook';
 import schedule from 'node-schedule';
 import { getConfigProperty } from '../../../../helpers/functions.config.js';
+import { getScheduledTaskMinutes } from '../../../../helpers/functions.task.js';
 import createOrUpdateItemValidation from '../../database/createOrUpdateItemValidation.js';
 import deleteExpiredItemValidationRecords from '../../database/deleteExpiredItemValidationRecords.js';
 import getMaxItemValidationRecordUpdateMillis from '../../database/getMaxItemValidationRecordUpdateMillis.js';
@@ -60,7 +61,7 @@ await runUpdateItemValidationFromDynamicsGpTask();
 const job = schedule.scheduleJob(taskName, {
     dayOfWeek: getConfigProperty('application.workDays'),
     hour: getConfigProperty('application.workHours'),
-    minute: 15,
+    minute: getScheduledTaskMinutes('inventoryScanner.itemValidation.dynamicsGp'),
     second: 0
 }, runUpdateItemValidationFromDynamicsGpTask);
 exitHook(() => {

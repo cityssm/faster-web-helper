@@ -5,6 +5,8 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 
 import { dateIntegerToDate } from '@cityssm/utils-datetime'
+import camelcase from 'camelcase'
+import Debug from 'debug'
 
 import { getConfigProperty } from '../../../../helpers/functions.config.js'
 import {
@@ -15,8 +17,11 @@ import { uploadFile } from '../../../../helpers/functions.sftp.js'
 import { hasFasterApi } from '../../../../helpers/helpers.faster.js'
 import { updateScannerRecordSyncFields } from '../../database/updateScannerRecordSyncFields.js'
 import type { InventoryScannerRecord } from '../../types.js'
+import { moduleName } from '../module.js'
 
 import { updateMultipleScannerRecords } from './syncHelpers.js'
+
+const debug = Debug(`faster-web-helper:${camelcase(moduleName)}:syncFaster`)
 
 function recordToExportDataLine(record: InventoryScannerRecord): string {
   // A - "RDC"
@@ -222,26 +227,30 @@ export async function syncScannerRecordsWithFaster(
       fasterApiConfig.apiPassword ?? ''
     )
 
-    await fasterApi.createIntegrationLogMessage({
-      integrationId,
-      integrationLogLevel: 'Information',
-      integrationLogMessageType: 'Summary',
-      message: 'File uploaded to FTP.',
-      transactionData: JSON.stringify(
-        {
-          ftpHost: getConfigProperty('ftp')?.host,
-          folderPath: targetFtpPath,
-          fileName: exportFileName,
-          recordCount: exportFileDataLines.length
-        },
-        undefined,
-        2
-      )
-    })
+    try {
+      await fasterApi.createIntegrationLogMessage({
+        integrationId,
+        integrationLogLevel: 'Information',
+        integrationLogMessageType: 'Summary',
+        message: 'File uploaded to FTP.',
+        transactionData: JSON.stringify(
+          {
+            ftpHost: getConfigProperty('ftp')?.host,
+            folderPath: targetFtpPath,
+            fileName: exportFileName,
+            recordCount: exportFileDataLines.length
+          },
+          undefined,
+          2
+        )
+      })
 
-    await fasterApi.executeIntegration(
-      fasterApiImport.helpers.inventoryImportUtilityIntegrationName
-    )
+      await fasterApi.executeIntegration(
+        fasterApiImport.helpers.inventoryImportUtilityIntegrationName
+      )
+    } catch {
+      debug('Error communicating with FASTER API.')
+    }
   }
 
   updateMultipleScannerRecords(records, errorRecordIds, {

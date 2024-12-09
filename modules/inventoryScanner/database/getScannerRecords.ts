@@ -4,7 +4,7 @@ import {
 } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
-import type { InventoryScannerRecord } from '../types.js'
+import type { InventoryScannerRecord, WorkOrderType } from '../types.js'
 
 import { databasePath } from './helpers.database.js'
 
@@ -13,6 +13,7 @@ interface GetScannerRecordsFilters {
   isSynced?: boolean
   isMarkedForSync?: boolean
   hasMissingValidation?: boolean
+  workOrderType?: WorkOrderType
 }
 
 interface GetScannerRecordsOptions {
@@ -70,6 +71,11 @@ export default function getScannerRecords(
           and s.unitPrice is not null
           and i.itemDescription is not null
           )`
+  }
+
+  if (filters.workOrderType !== undefined) {
+    sqlWhereClause += ' and s.workOrderType = ?'
+    sqlParameters.push(filters.workOrderType)
   }
 
   /*

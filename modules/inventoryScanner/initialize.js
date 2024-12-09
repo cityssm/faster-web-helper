@@ -38,19 +38,27 @@ export default function initializeInventoryScannerModules(options) {
     const workOrderValidationSources = getConfigProperty('modules.inventoryScanner.workOrders.validationSources');
     for (const workOrderValidationSource of workOrderValidationSources) {
         let workOrderValidationTaskPath = '';
-        if (workOrderValidationSource === 'fasterApi') {
-            if (hasFasterApi) {
-                workOrderValidationTaskPath =
-                    './modules/inventoryScanner/tasks/workOrderValidation/fasterApi.js';
+        switch (workOrderValidationSource) {
+            case 'fasterApi': {
+                if (hasFasterApi) {
+                    workOrderValidationTaskPath =
+                        './modules/inventoryScanner/tasks/workOrderValidation/fasterApi.js';
+                }
+                else {
+                    debug('Optional "@cityssm/faster-api" package is required for work order validation by FASTER API.');
+                }
+                break;
             }
-            else {
-                debug('Optional "@cityssm/faster-api" package is required for work order validation by FASTER API.');
+            case 'worktech': {
+                workOrderValidationTaskPath =
+                    './modules/inventoryScanner/tasks/workOrderValidation/worktech.js';
+                break;
             }
         }
-        else {
+        if (workOrderValidationTaskPath === '') {
             debug(`Work order validation not implemented: ${workOrderValidationSource}`);
         }
-        if (workOrderValidationTaskPath !== '') {
+        else {
             childProcesses.push(fork(workOrderValidationTaskPath));
         }
     }

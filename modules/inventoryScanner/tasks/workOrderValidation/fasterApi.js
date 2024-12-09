@@ -5,13 +5,14 @@ import Debug from 'debug';
 import exitHook from 'exit-hook';
 import schedule from 'node-schedule';
 import { getConfigProperty } from '../../../../helpers/functions.config.js';
+import { getScheduledTaskMinutes } from '../../../../helpers/functions.task.js';
 import createOrUpdateWorkOrderValidation from '../../database/createOrUpdateWorkOrderValidation.js';
 import deleteWorkOrderValidation from '../../database/deleteWorkOrderValidation.js';
 import getMaxWorkOrderValidationRecordUpdateMillis from '../../database/getMaxWorkOrderValidationRecordUpdateMillis.js';
 import { getRepairIdsToRefresh } from '../../helpers/faster.js';
 import { moduleName } from '../../helpers/module.js';
 const minimumMillisBetweenRuns = minutesToMillis(20);
-let lastRunMillis = getMaxWorkOrderValidationRecordUpdateMillis();
+let lastRunMillis = getMaxWorkOrderValidationRecordUpdateMillis('faster');
 export const taskName = 'Work Order Validation Task - FASTER API';
 const debug = Debug(`faster-web-helper:${camelcase(moduleName)}:${camelcase(taskName)}`);
 const fasterWebConfig = getConfigProperty('fasterWeb');
@@ -58,7 +59,7 @@ await runUpdateWorkOrderValidationFromFasterApiTask();
 const job = schedule.scheduleJob(taskName, {
     dayOfWeek: getConfigProperty('application.workDays'),
     hour: getConfigProperty('application.workHours'),
-    minute: [5, 35],
+    minute: getScheduledTaskMinutes('inventoryScanner.workOrderValidation.fasterApi'),
     second: 0
 }, runUpdateWorkOrderValidationFromFasterApiTask);
 exitHook(() => {

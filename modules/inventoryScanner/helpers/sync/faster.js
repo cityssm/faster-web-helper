@@ -3,12 +3,16 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { dateIntegerToDate } from '@cityssm/utils-datetime';
+import camelcase from 'camelcase';
+import Debug from 'debug';
 import { getConfigProperty } from '../../../../helpers/functions.config.js';
 import { ensureTempFolderExists, tempFolderPath } from '../../../../helpers/functions.filesystem.js';
 import { uploadFile } from '../../../../helpers/functions.sftp.js';
 import { hasFasterApi } from '../../../../helpers/helpers.faster.js';
 import { updateScannerRecordSyncFields } from '../../database/updateScannerRecordSyncFields.js';
+import { moduleName } from '../module.js';
 import { updateMultipleScannerRecords } from './syncHelpers.js';
+const debug = Debug(`faster-web-helper:${camelcase(moduleName)}:syncFaster`);
 function recordToExportDataLine(record) {
     // A - "RDC"
     const dataPieces = ['RDC'];
@@ -143,19 +147,24 @@ export async function syncScannerRecordsWithFaster(records) {
         const fasterApiImport = await import('@cityssm/faster-api');
         const fasterApiConfig = getConfigProperty('fasterWeb');
         const fasterApi = new fasterApiImport.FasterApi(fasterApiConfig.tenantOrBaseUrl, fasterApiConfig.apiUserName ?? '', fasterApiConfig.apiPassword ?? '');
-        await fasterApi.createIntegrationLogMessage({
-            integrationId,
-            integrationLogLevel: 'Information',
-            integrationLogMessageType: 'Summary',
-            message: 'File uploaded to FTP.',
-            transactionData: JSON.stringify({
-                ftpHost: getConfigProperty('ftp')?.host,
-                folderPath: targetFtpPath,
-                fileName: exportFileName,
-                recordCount: exportFileDataLines.length
-            }, undefined, 2)
-        });
-        await fasterApi.executeIntegration(fasterApiImport.helpers.inventoryImportUtilityIntegrationName);
+        try {
+            await fasterApi.createIntegrationLogMessage({
+                integrationId,
+                integrationLogLevel: 'Information',
+                integrationLogMessageType: 'Summary',
+                message: 'File uploaded to FTP.',
+                transactionData: JSON.stringify({
+                    ftpHost: getConfigProperty('ftp')?.host,
+                    folderPath: targetFtpPath,
+                    fileName: exportFileName,
+                    recordCount: exportFileDataLines.length
+                }, undefined, 2)
+            });
+            await fasterApi.executeIntegration(fasterApiImport.helpers.inventoryImportUtilityIntegrationName);
+        }
+        catch {
+            debug('Error communicating with FASTER API.');
+        }
     }
     updateMultipleScannerRecords(records, errorRecordIds, {
         isSuccessful: true,
