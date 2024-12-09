@@ -14,7 +14,10 @@
           </div>
           <div class="column">
             <h3 class="title is-4 mb-0">Inventory Scanner</h3>
-            <p>Manage scanned inventory transactions.</p>
+            <p>
+              Manage scanned inventory transactions.
+              Sync scanned transactions with FASTER Web.
+            </p>
           </div>
         </div>
       </a>
@@ -24,7 +27,7 @@
     <h2 class="title">More Links</h2>
 
     <% if (fasterUrlBuilder !== undefined) { %>
-      <a class="box" href="<%= fasterUrlBuilder.baseUrl %>">
+      <a class="box" href="<%= fasterUrlBuilder.baseUrl %>" target="_blank">
         <div class="columns">
           <div class="column is-narrow">
             <i class="fa-solid fa-link fa-3x" aria-hidden="true"></i>
@@ -37,8 +40,6 @@
     <% } %>
   </div>
 </div>
-
-
 
 <%- include('_footerA'); -%>
 <%- include('_footerB'); -%>

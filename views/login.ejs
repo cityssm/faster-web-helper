@@ -68,6 +68,36 @@
             </form>
           </div>
         </div>
+        <% if (fasterUrlBuilder !== undefined) { %>
+          <hr />
+          <h2 class="title is-4 has-text-centered">FASTER Web Links</h2>
+          <div class="columns">
+            <div class="column">
+              <a class="box" href="<%= fasterUrlBuilder.baseUrl %>" target="_blank">
+                <div class="columns is-mobile">
+                  <div class="column is-narrow">
+                    <i class="fa-solid fa-link fa-3x" aria-hidden="true"></i>
+                  </div>
+                  <div class="column">
+                    <h3 class="title is-5 mb-0">FASTER Web</h3>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="column">
+              <a class="box" href="<%= fasterUrlBuilder.technicianWorkstationUrl %>" target="_blank">
+                <div class="columns is-mobile">
+                  <div class="column is-narrow">
+                    <i class="fa-solid fa-link fa-3x" aria-hidden="true"></i>
+                  </div>
+                  <div class="column">
+                    <h3 class="title is-5 mb-0">Technician Workstation</h3>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        <% } %>
       </main>
     </div>
   </div>
