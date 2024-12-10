@@ -33,7 +33,7 @@ Creates and hosts JSON files compatible with Autocomplete userscripts.
 ## Note About FASTER API Calls
 
 Calls to the FASTER Web API are made using the `@cityssm/faster-api` package.
-Unfortunately, due to a Non-Disclosure Agreement from FASTER, that package is private,
+Unfortunately, due to FASTER's Non-Disclosure Agreement, that package is private,
 and marked as optional by this project. 😔
 
 Some of the processes the FASTER Web API is used for:

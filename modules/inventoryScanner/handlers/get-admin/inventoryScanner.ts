@@ -7,6 +7,11 @@ import getSetting from '../../database/getSetting.js'
 export default function handler(request: Request, response: Response): void {
   const pendingRecords = getScannerRecords({ isSynced: false }, { limit: -1 })
 
+  const syncErrorRecords = getScannerRecords({
+    isSynced: true,
+    isSyncedSuccessfully: false
+  })
+
   const inventory = getItemValidationRecords()
 
   const itemRequestsCount = Number.parseInt(getSetting('itemRequests.count') ?? '0')
@@ -15,6 +20,7 @@ export default function handler(request: Request, response: Response): void {
     headTitle: 'Inventory Scanner',
     inventory,
     pendingRecords,
+    syncErrorRecords,
     itemRequestsCount
   })
 }

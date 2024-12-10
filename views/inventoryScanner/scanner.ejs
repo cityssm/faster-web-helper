@@ -126,9 +126,11 @@
               </div>
     
               <div class="columns is-mobile is-align-items-end">
-                <div class="column is-two-thirds">
+                <div class="column">
                   <input id="scanner--quantityMultiplier" name="quantityMultiplier" type="hidden" value="1" />
-                  <label class="label" for="scanner--quantity">Quantity</label>
+                  <label class="label" for="scanner--quantity">
+                    Issue Quantity
+                  </label>
                   <div class="field has-addons">
                     <div class="control">
                       <button class="button" id="is-toggle-quantity-multiplier" type="button" title="Toggle Issue/Return">
@@ -168,6 +170,9 @@
             <p>
               <strong>Scanner Key</strong><br />
               <span id="about--scannerKey"></span>
+            </p><p class="mt-2">
+              <strong>FASTER Web Helper Version</strong><br />
+              <span><%= version %></span>
             </p>
           </div>
         </div>

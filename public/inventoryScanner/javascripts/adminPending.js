@@ -129,7 +129,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 modalElement.querySelector('#updatePending--recordId').value = pendingRecord.recordId.toString();
                 modalElement.querySelector('#updatePending--recordIdSpan').textContent = pendingRecord.recordId.toString();
                 modalElement.querySelector('#updatePending--scanDateTimeSpan').textContent =
-                    pendingRecord.scanDateString + ' ' + pendingRecord.scanTimeString;
+                    `${pendingRecord.scanDateString} ${pendingRecord.scanTimeString}`;
                 modalElement.querySelector('#updatePending--workOrderNumber').value = pendingRecord.workOrderNumber;
                 const repairSelectElement = modalElement.querySelector('#updatePending--repairId');
                 repairSelectElement.innerHTML = `<option value="${cityssm.escapeHTML(pendingRecord.repairId?.toString() ?? '')}">

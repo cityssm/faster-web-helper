@@ -38,7 +38,11 @@ export default async function runTempFolderCleanupTask(): Promise<void> {
     if (fileStats.mtimeMs <= maxAgeMillis) {
       debug(`Deleting temp file: ${fileName}`)
 
-      await fs.unlink(fullFilePath)
+      try {
+        await fs.unlink(fullFilePath)
+      } catch {
+        debug(`Error deleting temp file: ${fileName}`)
+      }
     }
   }
 }

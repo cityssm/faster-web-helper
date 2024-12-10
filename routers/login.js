@@ -11,7 +11,6 @@ function getSafeRedirectURL(possibleRedirectURL = '') {
     const urlToCheck = (possibleRedirectURL.startsWith(urlPrefix)
         ? possibleRedirectURL.slice(urlPrefix.length)
         : possibleRedirectURL).toLowerCase();
-    console.log(`URL TO CHECK:  ${urlToCheck}`);
     switch (urlToCheck) {
         case '/dashboard':
         case '/modules/inventoryscanner': {

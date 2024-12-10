@@ -302,6 +302,10 @@ declare const cityssm: cityssmGlobal
    * Quantity Multiplier
    */
 
+  const quantityLabelElement = formElement.querySelector(
+    'label[for="scanner--quantity"]'
+  ) as HTMLElement
+
   const quantityMultiplierElement = formElement.querySelector(
     '#scanner--quantityMultiplier'
   ) as HTMLInputElement
@@ -320,10 +324,12 @@ declare const cityssm: cityssmGlobal
 
   function renderQuantityMultiplier(): void {
     if (quantityMultiplierElement.value === '1') {
+      quantityLabelElement.textContent = 'Issue Quantity'
       quantityMultiplierToggleElement.innerHTML =
         '<span class="icon"><i class="fa-solid fa-plus" aria-hidden="true"></i></span>'
       submitButtonElement.textContent = 'Issue Item(s)'
     } else {
+      quantityLabelElement.textContent = 'Return Quantity'
       quantityMultiplierToggleElement.innerHTML =
         '<span class="icon"><i class="fa-solid fa-minus" aria-hidden="true"></i></span>'
       submitButtonElement.textContent = 'Return Item(s)'

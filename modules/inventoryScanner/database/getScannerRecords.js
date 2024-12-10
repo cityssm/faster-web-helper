@@ -23,6 +23,10 @@ export default function getScannerRecords(filters, userOptions = {}) {
             ? ' and s.recordSync_timeMillis is not null'
             : ' and s.recordSync_timeMillis is null';
     }
+    if (filters.isSyncedSuccessfully !== undefined) {
+        sqlWhereClause += ' and s.recordSync_isSuccessful = ?';
+        sqlParameters.push(filters.isSyncedSuccessfully ? 1 : 0);
+    }
     if (filters.isMarkedForSync !== undefined) {
         sqlWhereClause += filters.isMarkedForSync
             ? ' and s.recordSync_timeMillis is not null and recordSync_isSuccessful is null'

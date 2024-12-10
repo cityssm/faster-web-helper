@@ -227,7 +227,7 @@ declare const cityssm: cityssmGlobal
             '#updatePending--scanDateTimeSpan'
           ) as HTMLElement
         ).textContent =
-          pendingRecord.scanDateString + ' ' + pendingRecord.scanTimeString
+          `${pendingRecord.scanDateString} ${pendingRecord.scanTimeString}`
         ;(
           modalElement.querySelector(
             '#updatePending--workOrderNumber'

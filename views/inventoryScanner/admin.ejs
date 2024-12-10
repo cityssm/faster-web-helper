@@ -64,6 +64,9 @@
       </a>
     </li>
     <li>
+      <a href="#tab--syncErrors">Sync Errors</a>
+    </li>
+    <li>
       <a href="#tab--inventory">Inventory List</a>
     </li>
   </ul>
@@ -115,6 +118,9 @@
       <tbody id="tbody--pending"></tbody>
     </table>
   </div>
+  <div class="is-hidden" id="tab--syncErrors">
+
+  </div>
   <div class="is-hidden" id="tab--inventory">
     <div class="box">
       <div class="columns">
@@ -165,6 +171,7 @@
 
   exports.fasterWorkOrderUrl = "<%= fasterUrlBuilder.workOrderUrl('{workOrderNumber}') %>"
   exports.pendingRecords = <%- JSON.stringify(pendingRecords) %>;
+  exports.syncErrorRecords = <%- JSON.stringify(syncErrorRecords) %>;
 
   exports.inventory = <%- JSON.stringify(inventory) %>;
 

@@ -15,6 +15,7 @@ import { sessionCheckHandler } from './handlers/session.js';
 import * as configFunctions from './helpers/functions.config.js';
 import router_dashboard from './routers/dashboard.js';
 import router_login from './routers/login.js';
+import { version } from './version.js';
 const debug = Debug('faster-web-helper:app');
 /*
  * Initialize databases
@@ -84,6 +85,7 @@ app.use((request, response, next) => {
     response.locals.configFunctions = configFunctions;
     response.locals.fasterUrlBuilder = new FasterUrlBuilder(configFunctions.getConfigProperty('fasterWeb').tenantOrBaseUrl);
     response.locals.urlPrefix = configFunctions.getConfigProperty('webServer.urlPrefix');
+    response.locals.version = version;
     next();
 });
 app.get(`${urlPrefix}/`, sessionCheckHandler, (_request, response) => {

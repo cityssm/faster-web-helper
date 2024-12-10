@@ -2,6 +2,7 @@ import type { InventoryScannerRecord, WorkOrderType } from '../types.js';
 interface GetScannerRecordsFilters {
     scannerKey?: string;
     isSynced?: boolean;
+    isSyncedSuccessfully?: boolean;
     isMarkedForSync?: boolean;
     hasMissingValidation?: boolean;
     workOrderType?: WorkOrderType;
