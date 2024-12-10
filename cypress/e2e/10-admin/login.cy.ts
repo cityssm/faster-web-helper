@@ -1,11 +1,11 @@
 import 'cypress-axe'
 
-const scannerPath = '/apps/inventoryScanner'
+const loginPath = '/login'
 
 describe('Inventory Scanner', () => {
   beforeEach('Loads Page', () => {
-    cy.visit(scannerPath)
-    cy.location('pathname').should('equal', scannerPath)
+    cy.visit(loginPath)
+    cy.location('pathname').should('equal', loginPath)
   })
 
   it('Has no detectable accessibility issues', () => {
