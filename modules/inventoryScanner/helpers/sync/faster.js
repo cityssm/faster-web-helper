@@ -160,7 +160,6 @@ export async function syncScannerRecordsWithFaster(records) {
                     recordCount: exportFileDataLines.length
                 }, undefined, 2)
             });
-            await fasterApi.executeIntegration(fasterApiImport.helpers.inventoryImportUtilityIntegrationName);
         }
         catch {
             debug('Error communicating with FASTER API.');

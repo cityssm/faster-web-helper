@@ -244,10 +244,6 @@ export async function syncScannerRecordsWithFaster(
           2
         )
       })
-
-      await fasterApi.executeIntegration(
-        fasterApiImport.helpers.inventoryImportUtilityIntegrationName
-      )
     } catch {
       debug('Error communicating with FASTER API.')
     }
