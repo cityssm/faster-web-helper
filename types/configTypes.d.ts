@@ -1,4 +1,4 @@
-import type { ADWebAuthAuthenticatorConfiguration, ActiveDirectoryAuthenticatorConfiguration } from '@cityssm/authentication-helper';
+import type { ADWebAuthAuthenticatorConfiguration, ActiveDirectoryAuthenticatorConfiguration, PlainTextAuthenticatorConfiguration } from '@cityssm/authentication-helper';
 import type { mssqlTypes } from '@cityssm/mssql-multi-pool';
 import type { AccessOptions } from 'basic-ftp';
 import type { Spec } from 'node-schedule';
@@ -29,6 +29,9 @@ export interface Config {
         } | {
             type: 'adWebAuth';
             config: ADWebAuthAuthenticatorConfiguration;
+        } | {
+            type: 'plainText';
+            config: PlainTextAuthenticatorConfiguration;
         };
     };
     smtp?: SMTPTransport.Options;

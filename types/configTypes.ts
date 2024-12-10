@@ -1,6 +1,7 @@
 import type {
   ADWebAuthAuthenticatorConfiguration,
-  ActiveDirectoryAuthenticatorConfiguration
+  ActiveDirectoryAuthenticatorConfiguration,
+  PlainTextAuthenticatorConfiguration
 } from '@cityssm/authentication-helper'
 import type { mssqlTypes } from '@cityssm/mssql-multi-pool'
 import type { AccessOptions } from 'basic-ftp'
@@ -44,6 +45,10 @@ export interface Config {
       | {
           type: 'adWebAuth'
           config: ADWebAuthAuthenticatorConfiguration
+        }
+      | {
+          type: 'plainText'
+          config: PlainTextAuthenticatorConfiguration
         }
   }
 

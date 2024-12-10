@@ -3,7 +3,8 @@ import { randomUUID } from 'node:crypto'
 import {
   ADWebAuthAuthenticator,
   ActiveDirectoryAuthenticator,
-  type BaseAuthenticator
+  type BaseAuthenticator,
+  PlainTextAuthenticator
 } from '@cityssm/authentication-helper'
 import Debug from 'debug'
 
@@ -30,6 +31,11 @@ if (authenticationConfig === undefined) {
     }
     case 'adWebAuth': {
       authenticator = new ADWebAuthAuthenticator(authenticationConfig.config)
+      break
+    }
+    case 'plainText': {
+      debug(`WARNING: Using plain text authentication.`)
+      authenticator = new PlainTextAuthenticator(authenticationConfig.config)
       break
     }
     // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check

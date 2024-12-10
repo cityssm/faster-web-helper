@@ -3,7 +3,8 @@
 
 import type {
   ADWebAuthAuthenticatorConfiguration,
-  ActiveDirectoryAuthenticatorConfiguration
+  ActiveDirectoryAuthenticatorConfiguration,
+  PlainTextAuthenticatorConfiguration
 } from '@cityssm/authentication-helper'
 import { hoursToMillis } from '@cityssm/to-millis'
 import type { AccessOptions } from 'basic-ftp'
@@ -42,6 +43,10 @@ export const configDefaultValues = {
     | {
         type: 'adWebAuth'
         config: ADWebAuthAuthenticatorConfiguration
+      }
+    | {
+        type: 'plainText'
+        config: PlainTextAuthenticatorConfiguration
       }
     | undefined,
 

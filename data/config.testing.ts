@@ -7,6 +7,15 @@ export const config: Config = {
   fasterWeb: {
     tenantOrBaseUrl: 'test-faster-tenant'
   },
+  login: {
+    domain: 'testing',
+    authentication: {
+      type: 'plainText',
+      config: {
+        'testing/testing': 'testing'
+      }
+    }
+  },
   modules: {
     inventoryScanner: {
       isEnabled: true,

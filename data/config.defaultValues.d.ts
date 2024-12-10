@@ -1,4 +1,4 @@
-import type { ADWebAuthAuthenticatorConfiguration, ActiveDirectoryAuthenticatorConfiguration } from '@cityssm/authentication-helper';
+import type { ADWebAuthAuthenticatorConfiguration, ActiveDirectoryAuthenticatorConfiguration, PlainTextAuthenticatorConfiguration } from '@cityssm/authentication-helper';
 import type { AccessOptions } from 'basic-ftp';
 import type { config as MSSQLConfig } from 'mssql';
 import type { Spec } from 'node-schedule';
@@ -21,6 +21,9 @@ export declare const configDefaultValues: {
     } | {
         type: "adWebAuth";
         config: ADWebAuthAuthenticatorConfiguration;
+    } | {
+        type: "plainText";
+        config: PlainTextAuthenticatorConfiguration;
     } | undefined;
     fasterWeb: ConfigFasterWeb;
     worktech: MSSQLConfig | undefined;
