@@ -65,7 +65,7 @@
     "cypress": "^13.16.1",
     "cypress-axe": "^1.5.0",
     "eslint-config-cityssm": "^18.1.0",
-    "nodemon": "^3.1.7",
+    "nodemon": "^3.1.9",
     "prettier-config-cityssm": "^1.0.0"
   },
   "optionalDependencies": {
