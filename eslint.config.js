@@ -1,11 +1,5 @@
 import { configWebApp, cspellWords, tseslint } from 'eslint-config-cityssm';
-export const config = tseslint.config({
-    languageOptions: {
-        parserOptions: {
-            project: true
-        }
-    }
-}, ...configWebApp, {
+export const config = tseslint.config(...configWebApp, {
     rules: {
         '@cspell/spellchecker': [
             'warn',
@@ -16,6 +10,7 @@ export const config = tseslint.config({
                         'autoincrement',
                         'fasterwebcloud',
                         'fontawesome',
+                        'resave',
                         'unvalidated',
                         'worktech'
                     ]

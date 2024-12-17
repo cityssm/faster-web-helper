@@ -244,6 +244,10 @@ declare const cityssm: cityssmGlobal
     '#scanner--workOrderNumber'
   ) as HTMLInputElement
 
+  const workOrderNumberValidateIconElement = formElement.querySelector(
+    '#scanner--workOrderNumber-validateIcon'
+  ) as HTMLElement
+
   let lastSearchedWorkOrderNumber = ''
 
   const repairIdSelectElement = formElement.querySelector(
@@ -274,7 +278,25 @@ declare const cityssm: cityssmGlobal
     repairIdSelectElement.innerHTML = '<option value="">(Auto-Detect)</option>'
     repairIdSelectElement.value = ''
 
-    if (lastSearchedWorkOrderNumber === '') {
+    if (!workOrderNumberInputElement.checkValidity()) {
+      workOrderNumberValidateIconElement.replaceChildren()
+
+      if (lastSearchedWorkOrderNumber === '') {
+        workOrderNumberValidateIconElement.insertAdjacentHTML(
+          'beforeend',
+          '<i class="fa-solid fa-question-circle has-text-info" aria-hidden="true"></i>'
+        )
+
+        workOrderNumberValidateIconElement.title = 'Work Order Required'
+      } else {
+        workOrderNumberValidateIconElement.insertAdjacentHTML(
+          'beforeend',
+          '<i class="fa-solid fa-exclamation-triangle has-text-warning" aria-hidden="true"></i>'
+        )
+
+        workOrderNumberValidateIconElement.title = 'Invalid Work Order Format'
+      }
+
       renderRepairIds([])
       return
     }
@@ -287,6 +309,24 @@ declare const cityssm: cityssmGlobal
       (rawResponseJSON) => {
         const responseJSON = rawResponseJSON as unknown as {
           records: WorkOrderValidationRecord[]
+        }
+
+        workOrderNumberValidateIconElement.replaceChildren()
+
+        if (responseJSON.records.length === 0) {
+          workOrderNumberValidateIconElement.insertAdjacentHTML(
+            'beforeend',
+            '<i class="fa-solid fa-question-circle has-text-warning" aria-hidden="true"></i>'
+          )
+
+          workOrderNumberValidateIconElement.title = 'Unknown Work Order'
+        } else {
+          workOrderNumberValidateIconElement.insertAdjacentHTML(
+            'beforeend',
+            '<i class="fa-solid fa-check has-text-success" aria-hidden="true"></i>'
+          )
+
+          workOrderNumberValidateIconElement.title = 'Valid Work Order'
         }
 
         renderRepairIds(responseJSON.records)

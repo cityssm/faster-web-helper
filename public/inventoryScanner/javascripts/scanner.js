@@ -177,6 +177,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
      * Repair refresh
      */
     const workOrderNumberInputElement = formElement.querySelector('#scanner--workOrderNumber');
+    const workOrderNumberValidateIconElement = formElement.querySelector('#scanner--workOrderNumber-validateIcon');
     let lastSearchedWorkOrderNumber = '';
     const repairIdSelectElement = formElement.querySelector('#scanner--repairId');
     function renderRepairIds(records) {
@@ -198,7 +199,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
         repairIdSelectElement.replaceChildren();
         repairIdSelectElement.innerHTML = '<option value="">(Auto-Detect)</option>';
         repairIdSelectElement.value = '';
-        if (lastSearchedWorkOrderNumber === '') {
+        if (!workOrderNumberInputElement.checkValidity()) {
+            workOrderNumberValidateIconElement.replaceChildren();
+            if (lastSearchedWorkOrderNumber === '') {
+                workOrderNumberValidateIconElement.insertAdjacentHTML('beforeend', '<i class="fa-solid fa-question-circle has-text-info" aria-hidden="true"></i>');
+                workOrderNumberValidateIconElement.title = 'Work Order Required';
+            }
+            else {
+                workOrderNumberValidateIconElement.insertAdjacentHTML('beforeend', '<i class="fa-solid fa-exclamation-triangle has-text-warning" aria-hidden="true"></i>');
+                workOrderNumberValidateIconElement.title = 'Invalid Work Order Format';
+            }
             renderRepairIds([]);
             return;
         }
@@ -206,6 +216,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
             workOrderNumber: lastSearchedWorkOrderNumber
         }, (rawResponseJSON) => {
             const responseJSON = rawResponseJSON;
+            workOrderNumberValidateIconElement.replaceChildren();
+            if (responseJSON.records.length === 0) {
+                workOrderNumberValidateIconElement.insertAdjacentHTML('beforeend', '<i class="fa-solid fa-question-circle has-text-warning" aria-hidden="true"></i>');
+                workOrderNumberValidateIconElement.title = 'Unknown Work Order';
+            }
+            else {
+                workOrderNumberValidateIconElement.insertAdjacentHTML('beforeend', '<i class="fa-solid fa-check has-text-success" aria-hidden="true"></i>');
+                workOrderNumberValidateIconElement.title = 'Valid Work Order';
+            }
             renderRepairIds(responseJSON.records);
         });
     }

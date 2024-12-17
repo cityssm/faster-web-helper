@@ -29,6 +29,7 @@ export interface ConfigModuleInventoryScanner {
     items?: {
         acceptNotValidated?: boolean;
         itemNumberRegex?: RegExp;
+        placeholder?: string;
         validation?: ConfigItemValidationDynamicsGP | ConfigItemValidationFaster;
     };
     quantities?: {

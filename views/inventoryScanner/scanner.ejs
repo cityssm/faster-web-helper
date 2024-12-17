@@ -38,7 +38,7 @@
 
     <div class="columns is-vcentered is-centered">
       <div class="column is-one-third-widescreen is-half-tablet">
-        <div class="tabs" role="tablist">
+        <div class="tabs is-fullwidth" role="tablist">
           <ul role="presentation">
             <li class="is-active">
               <a href="#tab--scanner">
@@ -68,10 +68,15 @@
     
               <label class="label" for="scanner--workOrderNumber">Work Order Number</label>
               <div class="field has-addons">
-                <div class="control has-icons-left is-expanded">
-                  <input class="input" id="scanner--workOrderNumber" name="workOrderNumber" type="text" maxlength="15" pattern="<%- workOrderPattern %>" autocomplete="off" required autofocus />
+                <div class="control has-icons-left has-icons-right is-expanded">
+                  <input class="input" id="scanner--workOrderNumber" name="workOrderNumber" type="text" maxlength="15"
+                    pattern="<%- workOrderPattern %>" autocomplete="off"
+                    required autofocus />
                   <span class="icon is-small is-left">
                     <i class="fa-solid fa-clipboard" aria-hidden="true"></i>
+                  </span>
+                  <span class="icon is-small is-right" id="scanner--workOrderNumber-validateIcon" title="Work Order Required">
+                    <i class="fa-solid fa-question-circle" aria-hidden="true"></i>
                   </span>
                 </div>
                 <div class="control">
@@ -111,6 +116,7 @@
                     <% if (itemNumberPattern !== undefined) { %>
                       pattern="<%- itemNumberPattern %>"
                     <% } %>
+                    placeholder="<%= configFunctions.getConfigProperty('modules.inventoryScanner.items.placeholder') %>"
                     autocomplete="off" required />
                   <span class="icon is-small is-left">
                     <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>

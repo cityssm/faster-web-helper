@@ -42,6 +42,7 @@ export const configDefaultValues = {
     'modules.inventoryScanner.workOrders.validationSources': [],
     'modules.inventoryScanner.items.acceptNotValidated': true,
     'modules.inventoryScanner.items.itemNumberRegex': undefined,
+    'modules.inventoryScanner.items.placeholder': '',
     'modules.inventoryScanner.items.validation': undefined,
     'modules.inventoryScanner.quantities.acceptOverages': true,
     'modules.inventoryScanner.quantities.acceptNegatives': true,

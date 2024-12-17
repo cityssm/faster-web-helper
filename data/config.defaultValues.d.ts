@@ -46,6 +46,7 @@ export declare const configDefaultValues: {
     'modules.inventoryScanner.workOrders.validationSources': Array<"fasterApi" | "worktech">;
     'modules.inventoryScanner.items.acceptNotValidated': boolean;
     'modules.inventoryScanner.items.itemNumberRegex': RegExp | undefined;
+    'modules.inventoryScanner.items.placeholder': string;
     'modules.inventoryScanner.items.validation': ConfigItemValidationDynamicsGP | ConfigItemValidationFaster | undefined;
     'modules.inventoryScanner.quantities.acceptOverages': boolean;
     'modules.inventoryScanner.quantities.acceptNegatives': boolean;

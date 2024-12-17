@@ -107,6 +107,7 @@ export const configDefaultValues = {
   'modules.inventoryScanner.items.itemNumberRegex': undefined as unknown as
     | RegExp
     | undefined,
+  'modules.inventoryScanner.items.placeholder': '',  
   'modules.inventoryScanner.items.validation': undefined as unknown as
     | ConfigItemValidationDynamicsGP
     | ConfigItemValidationFaster
