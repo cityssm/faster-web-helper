@@ -465,6 +465,13 @@ declare const cityssm: cityssmGlobal
 
   renderPendingRecords()
 
+  // eslint-disable-next-line no-secrets/no-secrets
+  globalThis.addEventListener('fasterWebHelper.refreshPendingRecordsFromExport', () => {
+    console.log('event triggered')
+    pendingRecords = exports.pendingRecords
+    renderPendingRecords()
+  })
+
   document
     .querySelector('#pending--doRefresh')
     ?.addEventListener('click', refreshPendingRecords)

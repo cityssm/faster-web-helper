@@ -35,7 +35,7 @@ export default function deleteScannerRecord(
         recordDelete_timeMillis = ?
         where recordId = ?
         and recordDelete_timeMillis is null
-        and recordSync_timeMillis is null
+        and (recordSync_timeMillis is null or recordSync_isSuccessful = 0)
         ${scannerKeyWhereClause}`
     )
     .run(sqlParameters)

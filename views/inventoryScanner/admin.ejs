@@ -119,7 +119,30 @@
     </table>
   </div>
   <div class="is-hidden" id="tab--syncErrors">
-
+    <div class="box has-text-right">
+      <button class="button is-info" id="syncErrors--returnSelected" type="button">
+        Return Selected to Pending
+      </button>
+    </div>
+    <table class="table is-fullwidth is-hoverable is-striped">
+      <thead>
+        <tr>
+          <th class="has-text-centered">
+            <button class="button is-ghost" id="syncErrors--toggleAll" type="button" title="Toggle Selected">
+              <i class="fa-solid fa-check-square" aria-hidden="true"></i>
+            </button>
+          </th>
+          <th>Scan Time</th>
+          <th>Work Order / Repair</th>
+          <th>Item</th>
+          <th>Sync Error</th>
+          <th class="has-text-centered">
+            <i class="fa-solid fa-gear" title="Options"></i>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="tbody--syncErrors"></tbody>
+    </table>
   </div>
   <div class="is-hidden" id="tab--inventory">
     <div class="box">
@@ -179,6 +202,7 @@
 </script>
 <script src="<%= urlPrefix %>/inventoryScanner/javascripts/admin.js"></script>
 <script src="<%= urlPrefix %>/inventoryScanner/javascripts/adminPending.js"></script>
+<script src="<%= urlPrefix %>/inventoryScanner/javascripts/adminSyncErrors.js"></script>
 <script src="<%= urlPrefix %>/inventoryScanner/javascripts/adminInventory.js"></script>
 
 <%- include('../_footerB'); -%>
