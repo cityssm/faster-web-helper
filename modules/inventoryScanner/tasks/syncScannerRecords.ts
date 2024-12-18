@@ -29,7 +29,7 @@ async function syncScannerRecordsTask(): Promise<void> {
         break
       }
       case 'worktech': {
-        syncScannerRecordsWithWorktech(records)
+        await syncScannerRecordsWithWorktech(records)
         break
       }
     }

@@ -20,7 +20,7 @@ async function syncScannerRecordsTask() {
                 break;
             }
             case 'worktech': {
-                syncScannerRecordsWithWorktech(records);
+                await syncScannerRecordsWithWorktech(records);
                 break;
             }
         }
