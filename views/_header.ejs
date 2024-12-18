@@ -12,27 +12,32 @@
   </head>
 
   <body>
+
     <nav
-      class="navbar is-light is-mobile"
+      class="level is-mobile has-background-primary-light"
       role="navigation"
       aria-label="Main Navigation"
     >
-      <div class="navbar-brand">
-        <a class="navbar-item" href="<%= urlPrefix %>/dashboard">
-          <span class="image is-24x24">
-            <img src="<%= urlPrefix %>/images/logo.svg" alt="" />
-          </span>
-          <strong>FASTER Web Helper</strong>
-        </a>
+      <div class="level-left">
+        <div class="level-item">
+          <a class="button is-primary is-light is-hovered" href="<%= urlPrefix %>/dashboard">
+            <span class="image is-24x24 mr-2">
+              <img src="<%= urlPrefix %>/images/logo.svg" alt="" />
+            </span>
+            <strong class="has-text-black">FASTER Web Helper</strong>
+          </a>
+        </div>
       </div>
 
-      <div class="navbar-end">
-        <a class="navbar-item" href="<%= urlPrefix %>/logout">
-          <span class="icon">
-            <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
-          </span>
-          <span>Log Out <%= user.userName %></span>
-        </a>
+      <div class="level-right">
+        <div class="level-item">
+          <a class="button is-small is-primary is-light is-hovered" href="<%= urlPrefix %>/logout">
+            <span class="icon">
+              <i class="fa-solid fa-sign-out-alt" aria-hidden="true"></i>
+            </span>
+            <span>Log Out <%= user.userName %></span>
+          </a>
+        </div>
       </div>
     </nav>
 
