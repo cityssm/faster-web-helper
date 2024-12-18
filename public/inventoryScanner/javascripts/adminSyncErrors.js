@@ -4,9 +4,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
     const moduleUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/modules/inventoryScanner`;
-    const refreshPendingRecordsFromExportEventName = 
-    // eslint-disable-next-line no-secrets/no-secrets
-    'fasterWebHelper.refreshPendingRecordsFromExport';
     let syncErrorRecords = exports.syncErrorRecords;
     let selectedRecordIds = [];
     const syncErrorsTbodyElement = document.querySelector('#tbody--syncErrors');
@@ -52,7 +49,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 syncErrorRecords = responseJSON.syncErrorRecords;
                 renderSyncErrorRecords();
                 exports.pendingRecords = responseJSON.pendingRecords;
-                globalThis.dispatchEvent(new Event(refreshPendingRecordsFromExportEventName));
+                globalThis.dispatchEvent(new Event(exports.refreshPendingRecordsFromExportEventName));
             });
         }
         bulmaJS.confirm({

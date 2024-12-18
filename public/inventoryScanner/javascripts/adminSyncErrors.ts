@@ -7,6 +7,7 @@ import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 import type { InventoryScannerRecord } from '../../../modules/inventoryScanner/types.js'
 
 declare const exports: {
+  refreshPendingRecordsFromExportEventName: string
   pendingRecords: InventoryScannerRecord[]
   syncErrorRecords: InventoryScannerRecord[]
   fasterWorkOrderUrl: string
@@ -16,10 +17,6 @@ declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
 ;(() => {
   const moduleUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/modules/inventoryScanner`
-
-  const refreshPendingRecordsFromExportEventName =
-    // eslint-disable-next-line no-secrets/no-secrets
-    'fasterWebHelper.refreshPendingRecordsFromExport'
 
   let syncErrorRecords = exports.syncErrorRecords
   let selectedRecordIds: string[] = []
@@ -90,7 +87,7 @@ declare const cityssm: cityssmGlobal
 
           exports.pendingRecords = responseJSON.pendingRecords
           globalThis.dispatchEvent(
-            new Event(refreshPendingRecordsFromExportEventName)
+            new Event(exports.refreshPendingRecordsFromExportEventName)
           )
         }
       )

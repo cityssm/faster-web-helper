@@ -285,9 +285,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
     }
     renderPendingRecords();
-    // eslint-disable-next-line no-secrets/no-secrets
-    globalThis.addEventListener('fasterWebHelper.refreshPendingRecordsFromExport', () => {
-        console.log('event triggered');
+    globalThis.addEventListener(exports.refreshPendingRecordsFromExportEventName, () => {
         pendingRecords = exports.pendingRecords;
         renderPendingRecords();
     });

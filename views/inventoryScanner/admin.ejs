@@ -193,6 +193,8 @@
   cityssm.htmlModalFolder = "<%= urlPrefix %>/inventoryScanner/html/";
 
   exports.fasterWorkOrderUrl = "<%= fasterUrlBuilder.workOrderUrl('{workOrderNumber}') %>"
+  exports.refreshPendingRecordsFromExportEventName =
+    'fasterWebHelper.refreshPendingRecordsFromExport'
   exports.pendingRecords = <%- JSON.stringify(pendingRecords) %>;
   exports.syncErrorRecords = <%- JSON.stringify(syncErrorRecords) %>;
 

@@ -10,6 +10,7 @@ import type {
 } from '../../../modules/inventoryScanner/types.js'
 
 declare const exports: {
+  refreshPendingRecordsFromExportEventName: string
   pendingRecords: InventoryScannerRecord[]
   fasterWorkOrderUrl: string
 }
@@ -465,12 +466,13 @@ declare const cityssm: cityssmGlobal
 
   renderPendingRecords()
 
-  // eslint-disable-next-line no-secrets/no-secrets
-  globalThis.addEventListener('fasterWebHelper.refreshPendingRecordsFromExport', () => {
-    console.log('event triggered')
-    pendingRecords = exports.pendingRecords
-    renderPendingRecords()
-  })
+  globalThis.addEventListener(
+    exports.refreshPendingRecordsFromExportEventName,
+    () => {
+      pendingRecords = exports.pendingRecords
+      renderPendingRecords()
+    }
+  )
 
   document
     .querySelector('#pending--doRefresh')
