@@ -22,16 +22,19 @@ async function runActiveEquipmentTask() {
      * Call FASTER API
      */
     const fasterApi = new FasterApi(fasterWebConfig.tenantOrBaseUrl, fasterWebConfig.apiUserName, fasterWebConfig.apiPassword);
-    // const assets = await fasterApi.getAssetsByLastModifiedDate()
-    /*
-    for (const fasterEquipment of report.data) {
-      const worktechEquipment = await worktech.getEquipmentByEquipmentId(fasterEquipment.assetNumber)
-  
-      if (worktechEquipment === undefined) {
-        // add equipment
-      }
+    const fasterAssetsResponse = await fasterApi.getActiveAssets();
+    if (!fasterAssetsResponse.success) {
+        debug(`API Error: ${fasterAssetsResponse.error.title}`);
+        return;
     }
-    */
+    debug(`Syncing ${fasterAssetsResponse.response.results.length} asset(s)...`);
+    for (const fasterAsset of fasterAssetsResponse.response.results) {
+        const worktechEquipment = await worktech.getEquipmentByEquipmentId(fasterAsset.assetNumber);
+        if (worktechEquipment === undefined) {
+            // add equipment
+        }
+    }
+    debug(`Finished "${taskName}".`);
 }
 await runActiveEquipmentTask();
 const job = schedule.scheduleJob(taskName, {
