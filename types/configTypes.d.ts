@@ -4,6 +4,7 @@ import type { AccessOptions } from 'basic-ftp';
 import type { Spec } from 'node-schedule';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
 import type { ConfigModuleInventoryScanner } from '../modules/inventoryScanner/configTypes.js';
+import type { ConfigModuleWorktechUpdate } from '../modules/worktechUpdate/configTypes.js';
 import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from './configHelperTypes.js';
 export interface Config {
     application?: {
@@ -44,17 +45,17 @@ export interface Config {
         tempFolderCleanup?: ConfigModule<ConfigModuleTempFolderCleanup>;
     };
 }
-type ConfigModule<T> = {
-    runOnStartup?: boolean;
-} & (({
+type ConfigModule<T> = ({
     isEnabled: false;
 } & Partial<T>) | ({
     isEnabled: true;
-} & T));
+} & T);
 export interface ConfigFasterWeb {
     tenantOrBaseUrl: string;
     apiUserName?: string;
     apiPassword?: string;
+    appUserName?: string;
+    appPassword?: string;
 }
 interface ConfigModuleAutocomplete {
     reports: {
@@ -66,23 +67,6 @@ interface ConfigModuleAutocomplete {
          * W200 - Inventory Report
          */
         w200?: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
-    };
-}
-interface ConfigModuleWorktechUpdate {
-    resourceItem?: {
-        itemClass?: string;
-        itemType?: string;
-        unit?: string;
-    };
-    reports: {
-        /**
-         * W217 - Direct Charge Transactions
-         */
-        w217: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
-        /**
-         * W223 - Inventory Transaction Details Report
-         */
-        w223: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
     };
 }
 interface ConfigModuleTempFolderCleanup {

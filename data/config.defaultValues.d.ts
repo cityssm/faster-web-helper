@@ -33,7 +33,6 @@ export declare const configDefaultValues: {
     'modules.autocomplete.reports.w114': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
     'modules.autocomplete.reports.w200': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
     'modules.inventoryScanner.isEnabled': boolean;
-    'modules.inventoryScanner.runOnStartup': boolean;
     'modules.inventoryScanner.scannerIpAddressRegex': RegExp;
     'modules.inventoryScanner.fasterSync.integrationId': number | undefined;
     'modules.inventoryScanner.fasterSync.exportFileNamePrefix': string;
@@ -53,15 +52,8 @@ export declare const configDefaultValues: {
     'modules.inventoryScanner.reports.w311': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
     'modules.inventoryScanner.reports.w604': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
     'modules.worktechUpdate.isEnabled': boolean;
-    'modules.worktechUpdate.runOnStartup': boolean;
-    'modules.worktechUpdate.resourceItem.itemClass': string;
-    'modules.worktechUpdate.resourceItem.itemType': string;
-    'modules.worktechUpdate.resourceItem.unit': string;
-    'modules.worktechUpdate.reports.w114': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
-    'modules.worktechUpdate.reports.w217': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
-    'modules.worktechUpdate.reports.w223': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
+    'modules.worktechUpdate.activeEquipment.isEnabled': boolean;
     'modules.tempFolderCleanup.isEnabled': boolean;
-    'modules.tempFolderCleanup.runOnStartup': boolean;
     'modules.tempFolderCleanup.schedule': Spec;
     'modules.tempFolderCleanup.maxAgeDays': number;
 };

@@ -199,16 +199,16 @@ if (configFunctions.getConfigProperty('modules.inventoryScanner.isEnabled')) {
 
 if (configFunctions.getConfigProperty('modules.worktechUpdate.isEnabled')) {
   const initializeWorktechUpdateModule = await import(
-    './modules/worktechUpdate/initializeWorktechUpdateModule.js'
+    './modules/worktechUpdate/initialize.js'
   )
-  promises.push(initializeWorktechUpdateModule.default(options))
+  initializeWorktechUpdateModule.default(options)
 }
 
 if (configFunctions.getConfigProperty('modules.tempFolderCleanup.isEnabled')) {
   const initializeTempFolderCleanupModule = await import(
     './modules/tempFolderCleanup/initializeTempFolderCleanupModule.js'
   )
-  promises.push(initializeTempFolderCleanupModule.default(options))
+  initializeTempFolderCleanupModule.default(options)
 }
 
 await Promise.all(promises)

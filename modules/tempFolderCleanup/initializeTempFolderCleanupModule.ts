@@ -14,15 +14,10 @@ import runTempFolderCleanupTask, {
 
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`)
 
-export default async function initializeTempFolderCleanupModule(
+export default function initializeTempFolderCleanupModule(
   options?: ModuleInitializerOptions
-): Promise<void> {
+): void {
   debug(`Initializing "${moduleName}"...`)
-
-  if (getConfigProperty('modules.tempFolderCleanup.runOnStartup')) {
-    debug(`Running "${tempFolderCleanupTaskName}" on startup...`)
-    await runTempFolderCleanupTask()
-  }
 
   const tempFolderCleanupJob = schedule.scheduleJob(
     tempFolderCleanupTaskName,

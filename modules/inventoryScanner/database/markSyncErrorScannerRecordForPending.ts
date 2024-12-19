@@ -12,14 +12,13 @@ export function markSyncErrorScannerRecordForPending(
     .prepare(
       `update InventoryScannerRecords
         set recordSync_userName = null,
-        recordSync_timeMillis = null,
-        recordSync_message = null,
-        recordSync_isSuccessful = null
-
+          recordSync_timeMillis = null,
+          recordSync_message = null,
+          recordSync_isSuccessful = null
         where recordId = ?
-        and recordDelete_timeMillis is null
-        and recordSync_timeMillis is not null
-        and recordSync_isSuccessful = 0`
+          and recordDelete_timeMillis is null
+          and recordSync_timeMillis is not null
+          and recordSync_isSuccessful = 0`
     )
     .run(recordId)
 

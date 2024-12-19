@@ -75,7 +75,6 @@ export const configDefaultValues = {
    */
 
   'modules.inventoryScanner.isEnabled': false,
-  'modules.inventoryScanner.runOnStartup': true,
 
   'modules.inventoryScanner.scannerIpAddressRegex': /^$/,
 
@@ -129,30 +128,15 @@ export const configDefaultValues = {
    */
 
   'modules.worktechUpdate.isEnabled': false,
-  'modules.worktechUpdate.runOnStartup': true,
 
-  'modules.worktechUpdate.resourceItem.itemClass': 'FASTER',
-  'modules.worktechUpdate.resourceItem.itemType': 'FASTER',
-  'modules.worktechUpdate.resourceItem.unit': 'EA',
-
-  'modules.worktechUpdate.reports.w114': undefined as unknown as
-    | ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
-    | undefined,
-
-  'modules.worktechUpdate.reports.w217': undefined as unknown as
-    | ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
-    | undefined,
-
-  'modules.worktechUpdate.reports.w223': undefined as unknown as
-    | ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
-    | undefined,
+  // eslint-disable-next-line no-secrets/no-secrets
+  'modules.worktechUpdate.activeEquipment.isEnabled': false,
 
   /*
    * Temp Folder Cleanup
    */
 
   'modules.tempFolderCleanup.isEnabled': true,
-  'modules.tempFolderCleanup.runOnStartup': false,
   'modules.tempFolderCleanup.schedule': {
     dayOfWeek: 0,
     hour: 1,
