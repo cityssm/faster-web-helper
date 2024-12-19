@@ -24,8 +24,6 @@ a solution for issuing inventory using handheld barcode scanners.
 
 [**WorkTech Update**](./modules/worktechUpdate/README.md)<br />
 Synchronizes active equipment with WorkTech's equipment list.
-Synchronizes items issued on Direct Charges in FASTER Web
-with resources consumed by WorkTech work orders.
 
 [**Autocomplete**](./modules/autocomplete/README.md)<br />
 Creates and hosts JSON files compatible with Autocomplete userscripts.
