@@ -16,7 +16,6 @@ jobs:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
-      GITHUB_TOKEN: ${{ secrets.GH_API_ACCESS_TOKEN }}
 
     name: Node ${{ matrix.node }}
     steps:
@@ -31,12 +30,6 @@ jobs:
         run: |
           npm ci
           npm install -g c8 cross-env cypress@13
-
-      - name: Install Optional Dependency
-        run: |
-          npm install github:cityssm/node-faster-api#v1.3.0
-        env:
-          NPM_TOKEN: ${{ secrets.GH_API_ACCESS_TOKEN }}
 
       - name: Copy Test Config
         run: cp ./data/config.testing.js ./data/config.js
