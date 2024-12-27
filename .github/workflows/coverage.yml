@@ -36,7 +36,7 @@ jobs:
         run: |
           npm install github:cityssm/node-faster-api#v1.3.0
         env:
-          TOKEN: ${{ secrets.GH_API_ACCESS_TOKEN }}
+          NPM_TOKEN: ${{ secrets.GH_API_ACCESS_TOKEN }}
 
       - name: Copy Test Config
         run: cp ./data/config.testing.js ./data/config.js
