@@ -30,10 +30,13 @@ jobs:
       - name: Install Application
         run: |
           npm ci
-          npm install github:cityssm/node-faster-api#v1.3.0
           npm install -g c8 cross-env cypress@13
+
+      - name: Install Optional Dependency
+        run: |
+          npm install github:cityssm/node-faster-api#v1.3.0
         env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          TOKEN: ${{ secrets.GH_API_ACCESS_TOKEN }}
 
       - name: Copy Test Config
         run: cp ./data/config.testing.js ./data/config.js
