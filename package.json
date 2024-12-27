@@ -69,7 +69,7 @@
     "prettier-config-cityssm": "^1.0.0"
   },
   "optionalDependencies": {
-    "@cityssm/faster-api": "github:cityssm/node-faster-api"
+    "@cityssm/faster-api": "github:cityssm/node-faster-api#v1.3.0"
   },
   "private": true
 }
