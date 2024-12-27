@@ -17,6 +17,13 @@ export default function initializeWorktechUpdateModule(
 ): void {
   debug(`Initializing "${moduleName}"...`)
 
+  if (getConfigProperty('worktech') === undefined) {
+    debug(
+      'WorkTech configuration is not set up. Skipping module initialization.'
+    )
+    return
+  }
+
   const childProcesses: ChildProcess[] = []
 
   /*

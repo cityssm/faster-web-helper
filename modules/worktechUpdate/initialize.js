@@ -8,6 +8,10 @@ import { moduleName } from './helpers/moduleHelpers.js';
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`);
 export default function initializeWorktechUpdateModule(_options) {
     debug(`Initializing "${moduleName}"...`);
+    if (getConfigProperty('worktech') === undefined) {
+        debug('WorkTech configuration is not set up. Skipping module initialization.');
+        return;
+    }
     const childProcesses = [];
     /*
      * Active Equipment
