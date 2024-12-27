@@ -16,6 +16,7 @@ jobs:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
+      GITHUB_TOKEN: ${{ secrets.GH_API_ACCESS_TOKEN }}
 
     name: Node ${{ matrix.node }}
     steps:
@@ -31,6 +32,8 @@ jobs:
           npm ci
           npm install github:cityssm/node-faster-api#v1.3.0
           npm install -g c8 cross-env cypress@13
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 
       - name: Copy Test Config
         run: cp ./data/config.testing.js ./data/config.js
@@ -49,8 +52,6 @@ jobs:
 
       - name: Run Coverage Testing
         run: npm run coverage
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 
       - name: Code Climate (After)
         if: ${{ github.event_name != 'pull_request' && env.CC_TEST_REPORTER_ID != '' && matrix.node == 20 }}
