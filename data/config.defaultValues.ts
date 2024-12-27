@@ -106,7 +106,7 @@ export const configDefaultValues = {
   'modules.inventoryScanner.items.itemNumberRegex': undefined as unknown as
     | RegExp
     | undefined,
-  'modules.inventoryScanner.items.placeholder': '',  
+  'modules.inventoryScanner.items.placeholder': '',
   'modules.inventoryScanner.items.validation': undefined as unknown as
     | ConfigItemValidationDynamicsGP
     | ConfigItemValidationFaster
@@ -114,14 +114,6 @@ export const configDefaultValues = {
 
   'modules.inventoryScanner.quantities.acceptOverages': true,
   'modules.inventoryScanner.quantities.acceptNegatives': true,
-
-  'modules.inventoryScanner.reports.w311': undefined as unknown as
-    | ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
-    | undefined,
-
-  'modules.inventoryScanner.reports.w604': undefined as unknown as
-    | ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
-    | undefined,
 
   /*
    * Worktech Update

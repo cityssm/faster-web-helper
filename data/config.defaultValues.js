@@ -45,8 +45,6 @@ export const configDefaultValues = {
     'modules.inventoryScanner.items.validation': undefined,
     'modules.inventoryScanner.quantities.acceptOverages': true,
     'modules.inventoryScanner.quantities.acceptNegatives': true,
-    'modules.inventoryScanner.reports.w311': undefined,
-    'modules.inventoryScanner.reports.w604': undefined,
     /*
      * Worktech Update
      */

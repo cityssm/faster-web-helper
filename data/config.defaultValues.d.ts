@@ -49,8 +49,6 @@ export declare const configDefaultValues: {
     'modules.inventoryScanner.items.validation': ConfigItemValidationDynamicsGP | ConfigItemValidationFaster | undefined;
     'modules.inventoryScanner.quantities.acceptOverages': boolean;
     'modules.inventoryScanner.quantities.acceptNegatives': boolean;
-    'modules.inventoryScanner.reports.w311': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
-    'modules.inventoryScanner.reports.w604': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;
     'modules.worktechUpdate.isEnabled': boolean;
     'modules.worktechUpdate.activeEquipment.isEnabled': boolean;
     'modules.tempFolderCleanup.isEnabled': boolean;

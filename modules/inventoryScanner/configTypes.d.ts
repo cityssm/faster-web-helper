@@ -18,7 +18,6 @@ export interface ConfigModuleInventoryScanner {
         ftpPath?: string;
         defaultTechnicianId?: number;
     };
-    worktechSync?: {};
     workOrders?: {
         acceptNotValidated?: boolean;
         fasterRegex?: RegExp;
@@ -35,15 +34,5 @@ export interface ConfigModuleInventoryScanner {
     quantities?: {
         acceptOverages?: boolean;
         acceptNegatives?: boolean;
-    };
-    reports?: {
-        /**
-         * W311 - Active Work Orders by Shop
-         */
-        w311?: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
-        /**
-         * W604 - Integration Log Viewer
-         */
-        w604?: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>;
     };
 }
