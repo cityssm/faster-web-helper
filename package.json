@@ -41,7 +41,7 @@
     "@types/nodemailer": "^6.4.17",
     "basic-ftp": "^5.0.5",
     "better-sqlite3": "^11.7.0",
-    "bulma": "^1.0.2",
+    "bulma": "^1.0.3",
     "camelcase": "^8.0.0",
     "cookie-parser": "^1.4.7",
     "debug": "^4.4.0",
