@@ -16,6 +16,7 @@ jobs:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
     name: Node ${{ matrix.node }}
     steps:
@@ -30,6 +31,14 @@ jobs:
         run: |
           npm ci
           npm install -g c8 cross-env cypress@13
+
+      - name: Configure npm for GitHub Packages
+        run: |
+          npm config set //npm.pkg.github.com/:_authToken=${{ secrets.GH_TOKEN }}
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_TOKEN }}" > ~/.npmrc
+
+      - name: Install cityssm/node-faster-api
+        run: npm install github:cityssm/node-faster-api
 
       - name: Copy Test Config
         run: cp ./data/config.testing.js ./data/config.js
