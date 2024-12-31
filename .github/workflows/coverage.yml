@@ -30,15 +30,10 @@ jobs:
       - name: Install Application
         run: |
           npm ci
-          npm install -g c8 cross-env cypress@13
+          npm install https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/cityssm/node-faster-api.git
 
-      - name: Configure npm for GitHub Packages
-        run: |
-          npm config set //npm.pkg.github.com/:_authToken=${{ secrets.GH_TOKEN }}
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_TOKEN }}" > ~/.npmrc
-
-      - name: Install cityssm/node-faster-api
-        run: npm install github:cityssm/node-faster-api
+      - name: Install Global Dependencies
+        run: npm install -g c8 cross-env cypress@13
 
       - name: Copy Test Config
         run: cp ./data/config.testing.js ./data/config.js
