@@ -39,7 +39,7 @@ jobs:
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_TOKEN }}" > ~/.npmrc
 
       - name: Install cityssm/node-faster-api
-        run: npm install https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/cityssm/node-faster-api.git
+        run: npm install git+https://${{ secrets.GH_TOKEN }}:x-oauth-basic@github.com/cityssm/node-faster-api.git
 
       - name: Copy Test Config
         run: cp ./data/config.testing.js ./data/config.js
