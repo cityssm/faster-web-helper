@@ -55,6 +55,15 @@ async function initializeModuleTasks(): Promise<void> {
   }
 
   await Promise.all(promises)
+
+  asyncExitHook(
+    async () => {
+      await schedule.gracefulShutdown()
+    },
+    {
+      wait: secondsToMillis(1)
+    }
+  )
 }
 
 /**
@@ -83,7 +92,7 @@ function initializeAppWorkers(): void {
       if (pid === message.pid) {
         continue
       }
-  
+
       debug(`Relaying message to worker: ${pid}`)
       activeWorker.send(message)
     }
@@ -100,25 +109,3 @@ function initializeAppWorkers(): void {
 
 await initializeModuleTasks()
 initializeAppWorkers()
-
-if (process.env.STARTUP_TEST === 'true') {
-  const killSeconds = 10
-
-  debug(`Killing processes in ${killSeconds} seconds...`)
-
-  setTimeout(() => {
-    debug('Killing processes')
-
-    // eslint-disable-next-line unicorn/no-process-exit
-    process.exit(0)
-  }, secondsToMillis(killSeconds))
-}
-
-asyncExitHook(
-  async () => {
-    await schedule.gracefulShutdown()
-  },
-  {
-    wait: secondsToMillis(1)
-  }
-)
