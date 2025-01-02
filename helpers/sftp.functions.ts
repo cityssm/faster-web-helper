@@ -7,12 +7,12 @@ import Debug from 'debug'
 
 import type { ConfigFtpPath } from '../types/configHelperTypes.js'
 
-import { getConfigProperty } from './functions.config.js'
+import { getConfigProperty } from './config.functions.js'
 import {
   doesFileExist,
   ensureTempFolderExists,
   tempFolderPath
-} from './functions.filesystem.js'
+} from './filesystem.functions.js'
 
 const debug = Debug('faster-web-helper:functions.sftp')
 

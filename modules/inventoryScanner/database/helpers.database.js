@@ -62,6 +62,7 @@ const createStatements = [
   )`
 ];
 export function initializeInventoryScannerDatabase() {
+    debug(`Checking for ${databasePath}`);
     let success = false;
     const database = sqlite(databasePath);
     const row = database

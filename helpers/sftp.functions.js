@@ -3,8 +3,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { Client } from 'basic-ftp';
 import Debug from 'debug';
-import { getConfigProperty } from './functions.config.js';
-import { doesFileExist, ensureTempFolderExists, tempFolderPath } from './functions.filesystem.js';
+import { getConfigProperty } from './config.functions.js';
+import { doesFileExist, ensureTempFolderExists, tempFolderPath } from './filesystem.functions.js';
 const debug = Debug('faster-web-helper:functions.sftp');
 export async function downloadFilesToTemp(ftpPath) {
     await ensureTempFolderExists();

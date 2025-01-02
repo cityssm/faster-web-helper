@@ -8,9 +8,9 @@ import {
 } from '@cityssm/authentication-helper'
 import Debug from 'debug'
 
-import { getConfigProperty } from './functions.config.js'
+import { getConfigProperty } from './config.functions.js'
 
-const debug = Debug('faster-web-helper:functions.user')
+const debug = Debug('faster-web-helper:users.functions')
 
 // eslint-disable-next-line @typescript-eslint/init-declarations
 let authenticator: BaseAuthenticator | undefined

@@ -2,11 +2,11 @@ import { fork } from 'node:child_process';
 import camelCase from 'camelcase';
 import Debug from 'debug';
 import exitHook from 'exit-hook';
-import { getConfigProperty } from '../../helpers/functions.config.js';
-import { hasFasterApi } from '../../helpers/helpers.faster.js';
+import { getConfigProperty } from '../../helpers/config.functions.js';
+import { hasFasterApi } from '../../helpers/fasterWeb.helpers.js';
 import { moduleName } from './helpers/moduleHelpers.js';
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`);
-export default function initializeWorktechUpdateModule(_options) {
+export function initializeWorktechUpdateTasks() {
     debug(`Initializing "${moduleName}"...`);
     if (getConfigProperty('worktech') === undefined) {
         debug('WorkTech configuration is not set up. Skipping module initialization.');

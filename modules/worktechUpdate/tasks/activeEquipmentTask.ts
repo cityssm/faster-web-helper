@@ -1,40 +1,47 @@
 import { FasterApi } from '@cityssm/faster-api'
-import type { mssqlTypes } from '@cityssm/mssql-multi-pool'
 import { WorkTechAPI } from '@cityssm/worktech-api'
 import camelCase from 'camelcase'
 import Debug from 'debug'
 import exitHook from 'exit-hook'
 import schedule from 'node-schedule'
 
-import { getConfigProperty } from '../../../helpers/functions.config.js'
-import { getScheduledTaskMinutes } from '../../../helpers/functions.task.js'
+import { getConfigProperty } from '../../../helpers/config.functions.js'
+import { getScheduledTaskMinutes } from '../../../helpers/tasks.functions.js'
 import { moduleName } from '../helpers/moduleHelpers.js'
 
 export const taskName = 'Active Equipment Task'
 
-const debug = Debug(`faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`)
+const debug = Debug(
+  `faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`
+)
 
 const fasterWebConfig = getConfigProperty('fasterWeb')
-
-const worktech = new WorkTechAPI(getConfigProperty('worktech') as mssqlTypes.config)
+const worktechConfig = getConfigProperty('worktech')
 
 async function runActiveEquipmentTask(): Promise<void> {
-
   if (
     fasterWebConfig.apiUserName === undefined ||
     fasterWebConfig.apiPassword === undefined
   ) {
-    debug('Missing API user configuration.')
+    debug('Missing FASTER API user configuration.')
+    return
+  }
+
+  if (worktechConfig === undefined) {
+    debug('Missing Worktech configuration.')
     return
   }
 
   debug(`Running "${taskName}"...`)
 
+  const worktech = new WorkTechAPI(worktechConfig)
+
   /*
    * Call FASTER API
    */
 
-  const fasterApi = new FasterApi(fasterWebConfig.tenantOrBaseUrl,
+  const fasterApi = new FasterApi(
+    fasterWebConfig.tenantOrBaseUrl,
     fasterWebConfig.apiUserName,
     fasterWebConfig.apiPassword
   )
@@ -49,13 +56,15 @@ async function runActiveEquipmentTask(): Promise<void> {
   debug(`Syncing ${fasterAssetsResponse.response.results.length} asset(s)...`)
 
   for (const fasterAsset of fasterAssetsResponse.response.results) {
-    const worktechEquipment = await worktech.getEquipmentByEquipmentId(fasterAsset.assetNumber)
+    const worktechEquipment = await worktech.getEquipmentByEquipmentId(
+      fasterAsset.assetNumber
+    )
 
     if (worktechEquipment === undefined) {
       // add equipment
     }
   }
-  
+
   debug(`Finished "${taskName}".`)
 }
 

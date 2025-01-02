@@ -3,23 +3,16 @@ import { isLocal } from '@cityssm/is-private-network-address';
 import camelCase from 'camelcase';
 import Debug from 'debug';
 import exitHook from 'exit-hook';
-import { getConfigProperty } from '../../helpers/functions.config.js';
-import { hasFasterApi } from '../../helpers/helpers.faster.js';
+import { getConfigProperty } from '../../helpers/config.functions.js';
+import { hasFasterApi } from '../../helpers/fasterWeb.helpers.js';
 import { initializeInventoryScannerDatabase } from './database/helpers.database.js';
 import router from './handlers/router.js';
 import scannerRouter from './handlers/router.scanner.js';
 import { moduleName } from './helpers/module.js';
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`);
 const urlPrefix = getConfigProperty('webServer.urlPrefix');
-export default function initializeInventoryScannerModules(options) {
-    debug(`Initializing "${moduleName}"...`);
-    /*
-     * Ensure the local database is available.
-     */
+export function initializeInventoryScannerTasks() {
     initializeInventoryScannerDatabase();
-    /*
-     * Initialize tasks
-     */
     const childProcesses = [];
     const itemValidationConfig = getConfigProperty('modules.inventoryScanner.items.validation');
     if (itemValidationConfig !== undefined) {
@@ -67,9 +60,19 @@ export default function initializeInventoryScannerModules(options) {
         childProcesses.push(fork('./modules/inventoryScanner/tasks/outstandingItemRequests.js'));
     }
     /*
+     * Set up exit hook
+     */
+    exitHook(() => {
+        for (const validationProcess of childProcesses) {
+            validationProcess.kill();
+        }
+    });
+}
+export function initializeInventoryScannerAppHandlers(app) {
+    /*
      * Initialize router for admin interface
      */
-    options.app.use(`${urlPrefix}/modules/inventoryScanner`, (request, response, nextFunction) => {
+    app.use(`${urlPrefix}/modules/inventoryScanner`, (request, response, nextFunction) => {
         if ((request.session.user?.settings.inventoryScanner_hasAccess ??
             'false') === 'true') {
             nextFunction();
@@ -80,7 +83,7 @@ export default function initializeInventoryScannerModules(options) {
     /*
      * Initialize router for scanner
      */
-    options.app.use(`${urlPrefix}/apps/inventoryScanner`, (request, response, nextFunction) => {
+    app.use(`${urlPrefix}/apps/inventoryScanner`, (request, response, nextFunction) => {
         const requestIp = request.ip ?? '';
         const requestIpRegex = getConfigProperty('modules.inventoryScanner.scannerIpAddressRegex');
         if (isLocal(requestIp) || requestIpRegex.test(requestIp)) {
@@ -92,13 +95,4 @@ export default function initializeInventoryScannerModules(options) {
             requestIp
         });
     }, scannerRouter);
-    /*
-     * Set up exit hook
-     */
-    exitHook(() => {
-        for (const validationProcess of childProcesses) {
-            validationProcess.kill();
-        }
-    });
-    debug(`"${moduleName}" initialized.`);
 }

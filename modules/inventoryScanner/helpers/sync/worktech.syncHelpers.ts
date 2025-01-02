@@ -6,7 +6,7 @@ import {
 import camelcase from 'camelcase'
 import Debug from 'debug'
 
-import { getConfigProperty } from '../../../../helpers/functions.config.js'
+import { getConfigProperty } from '../../../../helpers/config.functions.js'
 import type { InventoryScannerRecord } from '../../types.js'
 import { moduleName } from '../module.js'
 

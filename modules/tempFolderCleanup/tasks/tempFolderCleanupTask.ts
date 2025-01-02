@@ -8,11 +8,11 @@ import { daysToMillis } from '@cityssm/to-millis'
 import camelCase from 'camelcase'
 import Debug from 'debug'
 
-import { getConfigProperty } from '../../../helpers/functions.config.js'
+import { getConfigProperty } from '../../../helpers/config.functions.js'
 import {
   ensureTempFolderExists,
   tempFolderPath
-} from '../../../helpers/functions.filesystem.js'
+} from '../../../helpers/filesystem.functions.js'
 import { moduleName } from '../helpers/moduleHelpers.js'
 
 export const taskName = 'Cleanup Database Task'

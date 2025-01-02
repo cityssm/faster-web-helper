@@ -5,22 +5,17 @@ import Debug from 'debug';
 import exitHook from 'exit-hook';
 import express from 'express';
 import schedule from 'node-schedule';
-import { getConfigProperty } from '../../helpers/functions.config.js';
+import { getConfigProperty } from '../../helpers/config.functions.js';
 import { moduleName } from './helpers/moduleHelpers.js';
 import runUpdateAssetNumbersTask, { taskName as updateAssetNumbersTaskName } from './tasks/updateAssetNumbersTask.js';
 import runUpdateItemNumbersTask, { taskName as updateItemNumbersTaskName } from './tasks/updateItemNumbersTask.js';
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`);
 const assetNumbersConfig = getConfigProperty('modules.autocomplete.reports.w114');
 const itemNumbersConfig = getConfigProperty('modules.autocomplete.reports.w200');
-export default async function initializeAutocompleteModule(options) {
-    debug(`Initializing "${moduleName}"...`);
-    /*
-     * Set up static server
-     */
-    options.app.use(`${getConfigProperty('webServer.urlPrefix')}/autocomplete`, express.static(path.join('public', 'autocomplete')));
-    /*
-     * Run startup tasks
-     */
+export function initializeAutocompleteAppHandlers(app) {
+    app.use(`${getConfigProperty('webServer.urlPrefix')}/autocomplete`, express.static(path.join('public', 'autocomplete')));
+}
+export async function initializeAutocompleteTasks() {
     if (getConfigProperty('modules.autocomplete.runOnStartup')) {
         debug(`Running "${updateItemNumbersTaskName}" on startup...`);
         if (assetNumbersConfig !== undefined) {
@@ -56,5 +51,4 @@ export default async function initializeAutocompleteModule(options) {
             updateItemNumbersJob.cancel();
         }
     });
-    debug(`"${moduleName}" initialized.`);
 }

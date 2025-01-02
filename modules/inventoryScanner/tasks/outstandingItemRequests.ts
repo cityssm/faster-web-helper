@@ -5,7 +5,7 @@ import Debug from 'debug'
 import exitHook from 'exit-hook'
 import schedule from 'node-schedule'
 
-import { getConfigProperty } from '../../../helpers/functions.config.js'
+import { getConfigProperty } from '../../../helpers/config.functions.js'
 import getSetting from '../database/getSetting.js'
 import updateSetting from '../database/updateSetting.js'
 import { moduleName } from '../helpers/module.js'

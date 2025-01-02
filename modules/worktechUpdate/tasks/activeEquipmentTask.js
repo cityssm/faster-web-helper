@@ -4,20 +4,25 @@ import camelCase from 'camelcase';
 import Debug from 'debug';
 import exitHook from 'exit-hook';
 import schedule from 'node-schedule';
-import { getConfigProperty } from '../../../helpers/functions.config.js';
-import { getScheduledTaskMinutes } from '../../../helpers/functions.task.js';
+import { getConfigProperty } from '../../../helpers/config.functions.js';
+import { getScheduledTaskMinutes } from '../../../helpers/tasks.functions.js';
 import { moduleName } from '../helpers/moduleHelpers.js';
 export const taskName = 'Active Equipment Task';
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`);
 const fasterWebConfig = getConfigProperty('fasterWeb');
-const worktech = new WorkTechAPI(getConfigProperty('worktech'));
+const worktechConfig = getConfigProperty('worktech');
 async function runActiveEquipmentTask() {
     if (fasterWebConfig.apiUserName === undefined ||
         fasterWebConfig.apiPassword === undefined) {
-        debug('Missing API user configuration.');
+        debug('Missing FASTER API user configuration.');
+        return;
+    }
+    if (worktechConfig === undefined) {
+        debug('Missing Worktech configuration.');
         return;
     }
     debug(`Running "${taskName}"...`);
+    const worktech = new WorkTechAPI(worktechConfig);
     /*
      * Call FASTER API
      */

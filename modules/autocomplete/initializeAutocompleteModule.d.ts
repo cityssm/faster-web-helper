@@ -1,2 +1,3 @@
-import type { ModuleInitializerOptions } from '../types.js';
-export default function initializeAutocompleteModule(options: ModuleInitializerOptions): Promise<void>;
+import express from 'express';
+export declare function initializeAutocompleteAppHandlers(app: express.Application): void;
+export declare function initializeAutocompleteTasks(): Promise<void>;

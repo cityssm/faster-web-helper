@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import { ADWebAuthAuthenticator, ActiveDirectoryAuthenticator, PlainTextAuthenticator } from '@cityssm/authentication-helper';
 import Debug from 'debug';
-import { getConfigProperty } from './functions.config.js';
-const debug = Debug('faster-web-helper:functions.user');
+import { getConfigProperty } from './config.functions.js';
+const debug = Debug('faster-web-helper:users.functions');
 // eslint-disable-next-line @typescript-eslint/init-declarations
 let authenticator;
 const authenticationConfig = getConfigProperty('login.authentication');

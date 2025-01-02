@@ -2,7 +2,7 @@ import { dateToString, dateToTimePeriodString } from '@cityssm/utils-datetime';
 import { WorkTechAPI } from '@cityssm/worktech-api';
 import camelcase from 'camelcase';
 import Debug from 'debug';
-import { getConfigProperty } from '../../../../helpers/functions.config.js';
+import { getConfigProperty } from '../../../../helpers/config.functions.js';
 import { moduleName } from '../module.js';
 import { updateMultipleScannerRecords } from './syncHelpers.js';
 const debug = Debug(`faster-web-helper:${camelcase(moduleName)}:syncWorktech`);

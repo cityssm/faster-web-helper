@@ -7,8 +7,7 @@ import exitHook from 'exit-hook'
 import express from 'express'
 import schedule from 'node-schedule'
 
-import { getConfigProperty } from '../../helpers/functions.config.js'
-import type { ModuleInitializerOptions } from '../types.js'
+import { getConfigProperty } from '../../helpers/config.functions.js'
 
 import { moduleName } from './helpers/moduleHelpers.js'
 import runUpdateAssetNumbersTask, {
@@ -25,24 +24,15 @@ const assetNumbersConfig = getConfigProperty(
 )
 const itemNumbersConfig = getConfigProperty('modules.autocomplete.reports.w200')
 
-export default async function initializeAutocompleteModule(
-  options: ModuleInitializerOptions
-): Promise<void> {
-  debug(`Initializing "${moduleName}"...`)
-
-  /*
-   * Set up static server
-   */
-
-  options.app.use(
+export function initializeAutocompleteAppHandlers(app: express.Application): void {
+  app.use(
     `${getConfigProperty('webServer.urlPrefix')}/autocomplete`,
     express.static(path.join('public', 'autocomplete'))
   )
+}
 
-  /*
-   * Run startup tasks
-   */
-
+export async function initializeAutocompleteTasks(
+): Promise<void> {
   if (getConfigProperty('modules.autocomplete.runOnStartup')) {
     debug(`Running "${updateItemNumbersTaskName}" on startup...`)
 
@@ -108,6 +98,4 @@ export default async function initializeAutocompleteModule(
       updateItemNumbersJob.cancel()
     }
   })
-
-  debug(`"${moduleName}" initialized.`)
 }

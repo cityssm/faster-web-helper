@@ -3,8 +3,8 @@
 import { Router } from 'express';
 import createUser from '../database/createUser.js';
 import { getUserByUserName } from '../database/getUser.js';
-import { getConfigProperty } from '../helpers/functions.config.js';
-import { authenticate } from '../helpers/functions.user.js';
+import { getConfigProperty } from '../helpers/config.functions.js';
+import { authenticate } from '../helpers/users.functions.js';
 export const router = Router();
 function getSafeRedirectURL(possibleRedirectURL = '') {
     const urlPrefix = getConfigProperty('webServer.urlPrefix');

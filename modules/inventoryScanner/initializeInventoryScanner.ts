@@ -4,10 +4,10 @@ import { isLocal } from '@cityssm/is-private-network-address'
 import camelCase from 'camelcase'
 import Debug from 'debug'
 import exitHook from 'exit-hook'
+import type express from 'express'
 
-import { getConfigProperty } from '../../helpers/functions.config.js'
-import { hasFasterApi } from '../../helpers/helpers.faster.js'
-import type { ModuleInitializerOptions } from '../types.js'
+import { getConfigProperty } from '../../helpers/config.functions.js'
+import { hasFasterApi } from '../../helpers/fasterWeb.helpers.js'
 
 import { initializeInventoryScannerDatabase } from './database/helpers.database.js'
 import router from './handlers/router.js'
@@ -18,20 +18,9 @@ const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`)
 
 const urlPrefix = getConfigProperty('webServer.urlPrefix')
 
-export default function initializeInventoryScannerModules(
-  options: ModuleInitializerOptions
-): void {
-  debug(`Initializing "${moduleName}"...`)
 
-  /*
-   * Ensure the local database is available.
-   */
-
+export function initializeInventoryScannerTasks(): void {
   initializeInventoryScannerDatabase()
-
-  /*
-   * Initialize tasks
-   */
 
   const childProcesses: ChildProcess[] = []
 
@@ -102,10 +91,24 @@ export default function initializeInventoryScannerModules(
   }
 
   /*
+   * Set up exit hook
+   */
+
+  exitHook(() => {
+    for (const validationProcess of childProcesses) {
+      validationProcess.kill()
+    }
+  })
+}
+
+export function initializeInventoryScannerAppHandlers(
+  app: express.Application
+): void {
+  /*
    * Initialize router for admin interface
    */
 
-  options.app.use(
+  app.use(
     `${urlPrefix}/modules/inventoryScanner`,
     (request, response, nextFunction) => {
       if (
@@ -125,7 +128,7 @@ export default function initializeInventoryScannerModules(
    * Initialize router for scanner
    */
 
-  options.app.use(
+  app.use(
     `${urlPrefix}/apps/inventoryScanner`,
     (request, response, nextFunction) => {
       const requestIp = request.ip ?? ''
@@ -146,16 +149,4 @@ export default function initializeInventoryScannerModules(
     },
     scannerRouter
   )
-
-  /*
-   * Set up exit hook
-   */
-
-  exitHook(() => {
-    for (const validationProcess of childProcesses) {
-      validationProcess.kill()
-    }
-  })
-
-  debug(`"${moduleName}" initialized.`)
 }

@@ -5,14 +5,17 @@ import path from 'node:path';
 import { dateIntegerToDate } from '@cityssm/utils-datetime';
 import camelcase from 'camelcase';
 import Debug from 'debug';
-import { getConfigProperty } from '../../../../helpers/functions.config.js';
-import { ensureTempFolderExists, tempFolderPath } from '../../../../helpers/functions.filesystem.js';
-import { uploadFile } from '../../../../helpers/functions.sftp.js';
-import { hasFasterApi } from '../../../../helpers/helpers.faster.js';
+import { getConfigProperty } from '../../../../helpers/config.functions.js';
+import { hasFasterApi } from '../../../../helpers/fasterWeb.helpers.js';
+import { ensureTempFolderExists, tempFolderPath } from '../../../../helpers/filesystem.functions.js';
+import { uploadFile } from '../../../../helpers/sftp.functions.js';
 import { updateScannerRecordSyncFields } from '../../database/updateScannerRecordSyncFields.js';
 import { moduleName } from '../module.js';
 import { updateMultipleScannerRecords } from './syncHelpers.js';
 const debug = Debug(`faster-web-helper:${camelcase(moduleName)}:syncFaster`);
+const exportFileNamePrefix = getConfigProperty(
+// eslint-disable-next-line no-secrets/no-secrets
+'modules.inventoryScanner.fasterSync.exportFileNamePrefix');
 function recordToExportDataLine(record) {
     // A - "RDC"
     const dataPieces = ['RDC'];
@@ -67,25 +70,32 @@ function recordToExportDataLine(record) {
 }
 function getExportFileName() {
     const rightNow = new Date();
-    const timezone = (rightNow.getTimezoneOffset() / 60) * 100;
-    const timezoneString = timezone > 0
-        ? '-' + timezone.toString().padStart(4, '0')
-        : '+' + Math.abs(timezone).toString().padStart(4, '0');
+    /*
+     * Date
+     */
     const dateString = rightNow.getFullYear().toString() +
         '-' +
         (rightNow.getMonth() + 1).toString().padStart(2, '0') +
         '-' +
-        rightNow.getDate().toString().padStart(2, '0') +
-        '_' +
-        rightNow.getHours().toString().padStart(2, '0') +
+        rightNow.getDate().toString().padStart(2, '0');
+    /*
+     * Time
+     */
+    const timeString = rightNow.getHours().toString().padStart(2, '0') +
         rightNow.getMinutes().toString().padStart(2, '0') +
-        rightNow.getSeconds().toString().padStart(2, '0') +
-        timezoneString;
-    const fileName = getConfigProperty(
-    // eslint-disable-next-line no-secrets/no-secrets
-    'modules.inventoryScanner.fasterSync.exportFileNamePrefix') +
-        dateString +
-        '.csv';
+        rightNow.getSeconds().toString().padStart(2, '0');
+    /*
+     * Timezone
+     */
+    const timezone = (rightNow.getTimezoneOffset() / 60) * 100;
+    const timezoneString = timezone > 0
+        ? `-${timezone.toString().padStart(4, '0')}`
+        : `+${Math.abs(timezone).toString().padStart(4, '0')}`;
+    /*
+     * Full date string
+     */
+    const fullDateString = dateString + '_' + timeString + timezoneString;
+    const fileName = exportFileNamePrefix + fullDateString + '.csv';
     return fileName;
 }
 export async function syncScannerRecordsWithFaster(records) {

@@ -3,11 +3,11 @@ import camelCase from 'camelcase';
 import Debug from 'debug';
 import exitHook from 'exit-hook';
 import schedule from 'node-schedule';
-import { getConfigProperty } from '../../helpers/functions.config.js';
+import { getConfigProperty } from '../../helpers/config.functions.js';
 import { moduleName } from './helpers/moduleHelpers.js';
 import runTempFolderCleanupTask, { taskName as tempFolderCleanupTaskName } from './tasks/tempFolderCleanupTask.js';
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`);
-export default function initializeTempFolderCleanupModule(options) {
+export function initializeTempFolderCleanupTask() {
     debug(`Initializing "${moduleName}"...`);
     const tempFolderCleanupJob = schedule.scheduleJob(tempFolderCleanupTaskName, getConfigProperty('modules.tempFolderCleanup.schedule'), runTempFolderCleanupTask);
     const tempFolderCleanupFirstRunDate = new Date(tempFolderCleanupJob.nextInvocation().getTime());

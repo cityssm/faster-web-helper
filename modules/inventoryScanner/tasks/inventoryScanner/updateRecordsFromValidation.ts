@@ -4,7 +4,7 @@ import Debug from 'debug'
 import exitHook from 'exit-hook'
 import schedule from 'node-schedule'
 
-import { getConfigProperty } from '../../../../helpers/functions.config.js'
+import { getConfigProperty } from '../../../../helpers/config.functions.js'
 import { getItemValidationRecordsByItemNumber } from '../../database/getItemValidationRecords.js'
 import getScannerRecords from '../../database/getScannerRecords.js'
 import getWorkOrderValidationRecords from '../../database/getWorkOrderValidationRecords.js'

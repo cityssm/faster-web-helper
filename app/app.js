@@ -1,22 +1,18 @@
-import http from 'node:http';
 import path from 'node:path';
 import FasterUrlBuilder from '@cityssm/faster-url-builder';
-import { secondsToMillis } from '@cityssm/to-millis';
 import cookieParser from 'cookie-parser';
 import Debug from 'debug';
-import { asyncExitHook } from 'exit-hook';
 import express from 'express';
 import session from 'express-session';
 import createError from 'http-errors';
-import schedule from 'node-schedule';
 import FileStore from 'session-file-store';
-import { initializeUserDatabase } from './database/helpers.userDatabase.js';
-import { sessionCheckHandler } from './handlers/session.js';
-import * as configFunctions from './helpers/functions.config.js';
-import router_dashboard from './routers/dashboard.js';
-import router_login from './routers/login.js';
-import { version } from './version.js';
-const debug = Debug('faster-web-helper:app');
+import { initializeUserDatabase } from '../database/helpers.userDatabase.js';
+import { sessionCheckHandler } from '../handlers/session.js';
+import * as configFunctions from '../helpers/config.functions.js';
+import router_dashboard from '../routers/dashboard.js';
+import router_login from '../routers/login.js';
+import { version } from '../version.js';
+const debug = Debug(`faster-web-helper:app:${process.pid}`);
 /*
  * Initialize databases
  */
@@ -24,7 +20,7 @@ initializeUserDatabase();
 /*
  * Initialize app
  */
-const app = express();
+export const app = express();
 app.set('views', path.join('views'));
 app.set('view engine', 'ejs');
 app.use((request, _response, next) => {
@@ -108,27 +104,14 @@ app.get(`${urlPrefix}/logout`, (request, response) => {
 /*
  * Initialize modules
  */
-const options = {
-    app
-};
-const promises = [];
 if (configFunctions.getConfigProperty('modules.autocomplete.isEnabled')) {
-    const initializeAutocompleteModule = await import('./modules/autocomplete/initializeAutocompleteModule.js');
-    promises.push(initializeAutocompleteModule.default(options));
+    const initializeAutocompleteModule = await import('../modules/autocomplete/initializeAutocompleteModule.js');
+    initializeAutocompleteModule.initializeAutocompleteAppHandlers(app);
 }
 if (configFunctions.getConfigProperty('modules.inventoryScanner.isEnabled')) {
-    const initializeInventoryScannerModule = await import('./modules/inventoryScanner/initialize.js');
-    initializeInventoryScannerModule.default(options);
+    const initializeInventoryScannerModule = await import('../modules/inventoryScanner/initializeInventoryScanner.js');
+    initializeInventoryScannerModule.initializeInventoryScannerAppHandlers(app);
 }
-if (configFunctions.getConfigProperty('modules.worktechUpdate.isEnabled')) {
-    const initializeWorktechUpdateModule = await import('./modules/worktechUpdate/initialize.js');
-    initializeWorktechUpdateModule.default(options);
-}
-if (configFunctions.getConfigProperty('modules.tempFolderCleanup.isEnabled')) {
-    const initializeTempFolderCleanupModule = await import('./modules/tempFolderCleanup/initializeTempFolderCleanupModule.js');
-    initializeTempFolderCleanupModule.default(options);
-}
-await Promise.all(promises);
 /*
  * Error handling
  */
@@ -145,18 +128,4 @@ app.use((error, request, response) => {
     // Render the error page
     response.status(error.status || 500);
     response.render('error');
-});
-/*
- * Initialize server
- */
-const httpPort = configFunctions.getConfigProperty('webServer.httpPort');
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
-const httpServer = http.createServer(app);
-httpServer.listen(httpPort);
-debug(`HTTP listening on ${httpPort.toString()}`);
-asyncExitHook(async () => {
-    await schedule.gracefulShutdown();
-    httpServer.close();
-}, {
-    wait: secondsToMillis(1)
 });

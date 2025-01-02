@@ -5,8 +5,8 @@ import { dateStringToDate } from '@cityssm/utils-datetime'
 import camelCase from 'camelcase'
 import Debug from 'debug'
 
-import { getConfigProperty } from '../../../helpers/functions.config.js'
-import { downloadFilesToTemp } from '../../../helpers/functions.sftp.js'
+import { getConfigProperty } from '../../../helpers/config.functions.js'
+import { downloadFilesToTemp } from '../../../helpers/sftp.functions.js'
 import type {
   ConfigFileSuffixXlsx,
   ConfigScheduledFtpReport

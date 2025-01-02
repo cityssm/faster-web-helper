@@ -3,8 +3,8 @@ import Debug from 'debug'
 
 import getScannerRecords from '../database/getScannerRecords.js'
 import { moduleName } from '../helpers/module.js'
-import { syncScannerRecordsWithFaster } from '../helpers/sync/faster.js'
-import { syncScannerRecordsWithWorktech } from '../helpers/sync/worktech.js'
+import { syncScannerRecordsWithFaster } from '../helpers/sync/fasterWeb.syncHelpers.js'
+import { syncScannerRecordsWithWorktech } from '../helpers/sync/worktech.syncHelpers.js'
 import { sortScannerRecordsByWorkOrderType } from '../helpers/workOrders.js'
 
 export const taskName = 'Sync Scanner Records'
