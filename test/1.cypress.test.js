@@ -3,7 +3,7 @@ import { exec, fork } from 'node:child_process';
 import { describe, it } from 'node:test';
 await describe('faster-web-helper', async () => {
     await it('should run Cypress tests', (context, done) => {
-        const appProcess = fork('app.js');
+        const appProcess = fork('index.js');
         let cypressCommand = 'cypress run --config-file cypress.config.ts --browser chrome';
         if ((process.env.CYPRESS_RECORD_KEY ?? '') !== '') {
             cypressCommand += ` --tag "chrome,${process.version}" --record`;

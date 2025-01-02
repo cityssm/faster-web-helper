@@ -12,6 +12,9 @@ const directoryName = path.dirname(fileURLToPath(import.meta.url));
 process.title = `Faster Web Helper (Primary)`;
 debug(`Primary pid:   ${process.pid}`);
 debug(`Primary title: ${process.title}`);
+/**
+ * Initialize module tasks
+ */
 async function initializeModuleTasks() {
     const promises = [];
     if (getConfigProperty('modules.autocomplete.isEnabled')) {
@@ -32,6 +35,9 @@ async function initializeModuleTasks() {
     }
     await Promise.all(promises);
 }
+/**
+ * Initialize app workers
+ */
 function initializeAppWorkers() {
     const processCount = Math.min(os.cpus().length, 2);
     debug(`Launching ${processCount} web app processes`);

@@ -4,7 +4,7 @@ import { describe, it } from 'node:test'
 
 await describe('faster-web-helper', async () => {
   await it('should run Cypress tests', (context, done) => {
-    const appProcess = fork('app.js')
+    const appProcess = fork('index.js')
 
     let cypressCommand =
       'cypress run --config-file cypress.config.ts --browser chrome'

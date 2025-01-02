@@ -20,6 +20,9 @@ process.title = `Faster Web Helper (Primary)`
 debug(`Primary pid:   ${process.pid}`)
 debug(`Primary title: ${process.title}`)
 
+/**
+ * Initialize module tasks
+ */
 async function initializeModuleTasks(): Promise<void> {
   const promises: Array<Promise<void>> = []
 
@@ -54,6 +57,9 @@ async function initializeModuleTasks(): Promise<void> {
   await Promise.all(promises)
 }
 
+/**
+ * Initialize app workers
+ */
 function initializeAppWorkers(): void {
   const processCount = Math.min(os.cpus().length, 2)
 
