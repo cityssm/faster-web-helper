@@ -4,7 +4,7 @@ import Debug from 'debug';
 import exitHook from 'exit-hook';
 import { getConfigProperty } from '../../helpers/config.functions.js';
 import { hasFasterApi } from '../../helpers/fasterWeb.helpers.js';
-import { moduleName } from './helpers/moduleHelpers.js';
+import { moduleName } from './helpers/module.helpers.js';
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`);
 export function initializeWorktechUpdateTasks() {
     debug(`Initializing "${moduleName}"...`);
@@ -19,7 +19,7 @@ export function initializeWorktechUpdateTasks() {
     // eslint-disable-next-line no-secrets/no-secrets
     if (getConfigProperty('modules.worktechUpdate.activeEquipment.isEnabled')) {
         if (hasFasterApi) {
-            const taskPath = './modules/worktechUpdate/tasks/activeEquipmentTask.js';
+            const taskPath = './modules/worktechUpdate/tasks/activeEquipment.task.js';
             childProcesses.push(fork(taskPath));
         }
         else {

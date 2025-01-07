@@ -3,7 +3,7 @@ import type { GPItemWithQuantity } from '@cityssm/dynamics-gp'
 import type {
   ConfigFileSuffixXlsx,
   ConfigScheduledFtpReport
-} from '../../types/configHelperTypes.js'
+} from '../../../types/configHelperTypes.js'
 
 export interface ConfigItemValidationDynamicsGP {
   source: 'dynamicsGP'

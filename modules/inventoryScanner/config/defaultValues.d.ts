@@ -1,0 +1,21 @@
+import type { ConfigItemValidationDynamicsGP, ConfigItemValidationFaster } from './types.js';
+declare const _default: {
+    'modules.inventoryScanner.isEnabled': boolean;
+    'modules.inventoryScanner.scannerIpAddressRegex': RegExp;
+    'modules.inventoryScanner.fasterSync.integrationId': number | undefined;
+    'modules.inventoryScanner.fasterSync.exportFileNamePrefix': string;
+    'modules.inventoryScanner.fasterSync.ftpPath': string;
+    'modules.inventoryScanner.fasterSync.defaultTechnicianId': number;
+    'modules.inventoryScanner.workOrders.acceptNotValidated': boolean;
+    'modules.inventoryScanner.workOrders.fasterRegex': RegExp;
+    'modules.inventoryScanner.workOrders.acceptWorkTech': boolean;
+    'modules.inventoryScanner.workOrders.workTechRegex': RegExp;
+    'modules.inventoryScanner.workOrders.validationSources': Array<"fasterApi" | "worktech">;
+    'modules.inventoryScanner.items.acceptNotValidated': boolean;
+    'modules.inventoryScanner.items.itemNumberRegex': RegExp | undefined;
+    'modules.inventoryScanner.items.placeholder': string;
+    'modules.inventoryScanner.items.validation': ConfigItemValidationDynamicsGP | ConfigItemValidationFaster | undefined;
+    'modules.inventoryScanner.quantities.acceptOverages': boolean;
+    'modules.inventoryScanner.quantities.acceptNegatives': boolean;
+};
+export default _default;

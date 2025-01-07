@@ -7,7 +7,7 @@ import schedule from 'node-schedule'
 
 import { getConfigProperty } from '../../../../helpers/config.functions.js'
 import { getScheduledTaskMinutes } from '../../../../helpers/tasks.functions.js'
-import type { ConfigItemValidationDynamicsGP } from '../../configTypes.js'
+import type { ConfigItemValidationDynamicsGP } from '../../config/types.js'
 import createOrUpdateItemValidation from '../../database/createOrUpdateItemValidation.js'
 import deleteExpiredItemValidationRecords from '../../database/deleteExpiredItemValidationRecords.js'
 import getMaxItemValidationRecordUpdateMillis from '../../database/getMaxItemValidationRecordUpdateMillis.js'

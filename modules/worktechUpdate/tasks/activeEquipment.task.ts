@@ -1,5 +1,5 @@
 import { FasterApi } from '@cityssm/faster-api'
-import { WorkTechAPI } from '@cityssm/worktech-api'
+import { UpdateEquipmentFields, WorkTechAPI } from '@cityssm/worktech-api'
 import camelCase from 'camelcase'
 import Debug from 'debug'
 import exitHook from 'exit-hook'
@@ -7,7 +7,15 @@ import schedule from 'node-schedule'
 
 import { getConfigProperty } from '../../../helpers/config.functions.js'
 import { getScheduledTaskMinutes } from '../../../helpers/tasks.functions.js'
-import { moduleName } from '../helpers/moduleHelpers.js'
+import { getFasterAssetKey } from '../helpers/fasterFields.functions.js'
+import { moduleName } from '../helpers/module.helpers.js'
+import {
+  getWorktechEquipmentClass,
+  getWorktechEquipmentDepartment,
+  getWorktechEquipmentDescription,
+  getWorktechEquipmentFieldsToUpdate,
+  getWorktechEquipmentId
+} from '../helpers/worktechMappings.functions.js'
 
 export const taskName = 'Active Equipment Task'
 
@@ -56,13 +64,55 @@ async function runActiveEquipmentTask(): Promise<void> {
   debug(`Syncing ${fasterAssetsResponse.response.results.length} asset(s)...`)
 
   for (const fasterAsset of fasterAssetsResponse.response.results) {
-    const worktechEquipment = await worktech.getEquipmentByEquipmentId(
-      fasterAsset.assetNumber
-    )
+    /*
+     * Get Worktech equipment record
+     */
 
+    const worktechEquipmentId = getWorktechEquipmentId(fasterAsset)
+
+    const worktechEquipment =
+      await worktech.getEquipmentByEquipmentId(worktechEquipmentId)
+
+    // Add equipment if it doesn't exist
     if (worktechEquipment === undefined) {
-      // add equipment
+      debug(`Adding equipment: ${worktechEquipmentId}`)
+
+      const worktechEquipmentDescription =
+        getWorktechEquipmentDescription(fasterAsset)
+
+      const worktechEquipmentClass = getWorktechEquipmentClass(fasterAsset)
+
+      const worktechEquipmentDepartment =
+        getWorktechEquipmentDepartment(fasterAsset)
+
+      const worktechEquipmentComment = getFasterAssetKey(fasterAsset)
+
+      const worktechSystemId = await worktech.addEquipment({
+        equipmentId: worktechEquipmentId,
+        equipmentClass: worktechEquipmentClass,
+        equipmentDescription: worktechEquipmentDescription,
+        equipmentBrand: fasterAsset.make,
+        equipmentModel: fasterAsset.model,
+        equipmentModelYear: fasterAsset.year,
+        departmentOwned: worktechEquipmentDepartment,
+        serialNumber: fasterAsset.vinSerial,
+        plate: fasterAsset.licence,
+        comments: worktechEquipmentComment
+      })
+
+      debug(`Added equipment: ${worktechSystemId}`)
+
+      continue
     }
+
+    // Update equipment if it exists
+
+    debug(`Updating equipment: ${worktechEquipmentId}`)
+
+    const fieldsToUpdate = getWorktechEquipmentFieldsToUpdate(
+      fasterAsset,
+      worktechEquipment
+    )
   }
 
   debug(`Finished "${taskName}".`)

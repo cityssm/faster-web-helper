@@ -1,5 +1,5 @@
 import type { GPItemWithQuantity } from '@cityssm/dynamics-gp';
-import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from '../../types/configHelperTypes.js';
+import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from '../../../types/configHelperTypes.js';
 export interface ConfigItemValidationDynamicsGP {
     source: 'dynamicsGP';
     gpLocationCodesToFasterStorerooms: Record<string, string>;
