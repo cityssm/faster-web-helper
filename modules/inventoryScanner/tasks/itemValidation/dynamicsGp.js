@@ -9,7 +9,7 @@ import { getScheduledTaskMinutes } from '../../../../helpers/tasks.functions.js'
 import createOrUpdateItemValidation from '../../database/createOrUpdateItemValidation.js';
 import deleteExpiredItemValidationRecords from '../../database/deleteExpiredItemValidationRecords.js';
 import getMaxItemValidationRecordUpdateMillis from '../../database/getMaxItemValidationRecordUpdateMillis.js';
-import { moduleName } from '../../helpers/module.js';
+import { moduleName } from '../../helpers/module.helpers.js';
 const minimumMillisBetweenRuns = minutesToMillis(50);
 let lastRunMillis = getMaxItemValidationRecordUpdateMillis();
 export const taskName = 'Inventory Validation Task - Dynamics GP';

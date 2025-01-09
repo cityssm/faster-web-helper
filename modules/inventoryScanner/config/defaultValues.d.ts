@@ -15,6 +15,9 @@ declare const _default: {
     'modules.inventoryScanner.items.itemNumberRegex': RegExp | undefined;
     'modules.inventoryScanner.items.placeholder': string;
     'modules.inventoryScanner.items.validation': ConfigItemValidationDynamicsGP | ConfigItemValidationFaster | undefined;
+    'modules.inventoryScanner.fasterItemRequests.isEnabled': boolean;
+    'modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled': boolean;
+    'modules.inventoryScanner.fasterItemRequests.ntfy.topic': undefined | string;
     'modules.inventoryScanner.quantities.acceptOverages': boolean;
     'modules.inventoryScanner.quantities.acceptNegatives': boolean;
 };

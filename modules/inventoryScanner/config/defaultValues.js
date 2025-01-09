@@ -17,6 +17,9 @@ export default {
     'modules.inventoryScanner.items.itemNumberRegex': undefined,
     'modules.inventoryScanner.items.placeholder': '',
     'modules.inventoryScanner.items.validation': undefined,
+    'modules.inventoryScanner.fasterItemRequests.isEnabled': false,
+    'modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled': false,
+    'modules.inventoryScanner.fasterItemRequests.ntfy.topic': undefined,
     'modules.inventoryScanner.quantities.acceptOverages': true,
     'modules.inventoryScanner.quantities.acceptNegatives': true
 };

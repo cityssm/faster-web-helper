@@ -34,6 +34,7 @@
     "@cityssm/has-package": "^1.0.0",
     "@cityssm/is-private-network-address": "^1.0.0",
     "@cityssm/mssql-multi-pool": "^4.1.0",
+    "@cityssm/ntfy-publish": "^1.1.0",
     "@cityssm/to-millis": "^1.0.0",
     "@cityssm/utils-datetime": "^1.3.0",
     "@cityssm/worktech-api": "^0.8.0",

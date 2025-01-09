@@ -4,15 +4,16 @@ export default function updateSetting(settingName, settingValue) {
     const database = sqlite(databasePath);
     const result = database
         .prepare(`update InventoryScannerSettings
-        set settingValue = ?,
+        set previousSettingValue = settingValue,
+        settingValue = ?,
         recordUpdate_timeMillis = ?
         where settingName = ?`)
         .run(settingValue, Date.now(), settingName);
     if (result.changes <= 0) {
         database
             .prepare(`insert into InventoryScannerSettings
-          (settingName, settingValue, recordUpdate_timeMillis)
-          values (?, ?, ?)`)
+          (settingName, previousSettingValue, settingValue, recordUpdate_timeMillis)
+          values (?, null, ?, ?)`)
             .run(settingName, settingValue, Date.now());
     }
     database.close();

@@ -1,3 +1,9 @@
+import type {
+  FasterApiResponse,
+  FasterApiResponseWithCollectionResult,
+  ItemRequestResult
+} from '@cityssm/faster-api'
+
 import getMaxWorkOrderValidationRepairId from '../database/getMaxWorkOrderValidationRecordRepairId.js'
 import getUnsyncedWorkOrderNumbersAndRepairIds from '../database/getUnsyncedWorkOrderNumbersAndRepairIds.js'
 import getWorkOrderValidationRepairIds from '../database/getWorkOrderValidationRepairIds.js'
@@ -43,4 +49,32 @@ export function getRepairIdsToRefresh(): number[] {
    */
 
   return [...repairIdSet.values()]
+}
+
+interface SummarizedItemRequests {
+  itemRequestsCount: number
+  maxItemRequestId: number
+}
+
+export function summarizeItemRequests(
+  itemRequestsResponse: FasterApiResponse<
+    FasterApiResponseWithCollectionResult<ItemRequestResult>
+  >
+): SummarizedItemRequests {
+  let itemRequestsCount = 0
+  let maxItemRequestId = 0
+
+  if (itemRequestsResponse.success) {
+    for (const itemRequest of itemRequestsResponse.response.results) {
+      itemRequestsCount += 1
+      if (itemRequest.itemRequestID > maxItemRequestId) {
+        maxItemRequestId = itemRequest.itemRequestID
+      }
+    }
+  }
+
+  return {
+    itemRequestsCount,
+    maxItemRequestId
+  }
 }

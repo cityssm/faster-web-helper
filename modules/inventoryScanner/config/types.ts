@@ -45,6 +45,14 @@ export interface ConfigModuleInventoryScanner {
     validation?: ConfigItemValidationDynamicsGP | ConfigItemValidationFaster
   }
 
+  fasterItemRequests?: {
+    isEnabled?: boolean
+    ntfy?: {
+      isEnabled?: boolean
+      topic?: string
+    }
+  }
+
   quantities?: {
     acceptOverages?: boolean
     acceptNegatives?: boolean

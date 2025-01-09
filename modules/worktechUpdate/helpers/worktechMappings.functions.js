@@ -31,3 +31,11 @@ export function getWorktechEquipmentDescription(fasterAsset) {
     }
     return getFasterAssetDescription(fasterAsset);
 }
+export function getWorktechEquipmentFieldsToUpdate(fasterAsset, worktechEquipment) {
+    const fieldsToUpdate = {};
+    const equipmentDescription = getWorktechEquipmentDescription(fasterAsset);
+    if (equipmentDescription !== worktechEquipment.equipmentDescription) {
+        fieldsToUpdate.equipmentDescription = equipmentDescription;
+    }
+    return fieldsToUpdate;
+}

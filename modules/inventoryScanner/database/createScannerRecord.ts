@@ -8,8 +8,8 @@ import {
 } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
-import { scannerKeyToUserName } from '../helpers/scanner.js'
-import { getWorkOrderTypeFromWorkOrderNumber } from '../helpers/workOrders.js'
+import { scannerKeyToUserName } from '../helpers/scanner.functions.js'
+import { getWorkOrderTypeFromWorkOrderNumber } from '../helpers/workOrders.functions.js'
 import type { WorkOrderType } from '../types.js'
 
 import { getItemValidationRecordsByItemNumber } from './getItemValidationRecords.js'

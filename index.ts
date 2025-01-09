@@ -11,7 +11,7 @@ import schedule from 'node-schedule'
 import { getConfigProperty } from './helpers/config.functions.js'
 import type { WorkerMessage } from './types/applicationTypes.js'
 
-const debug = Debug(`lot-occupancy-system:www:${process.pid}`)
+const debug = Debug(`faster-web-helper:www:${process.pid}`)
 
 const directoryName = path.dirname(fileURLToPath(import.meta.url))
 
@@ -70,7 +70,7 @@ async function initializeModuleTasks(): Promise<void> {
  * Initialize app workers
  */
 function initializeAppWorkers(): void {
-  const processCount = Math.min(os.cpus().length, 2)
+  const processCount = Math.min(os.cpus().length, 4)
 
   debug(`Launching ${processCount} web app processes`)
 
@@ -103,7 +103,9 @@ function initializeAppWorkers(): void {
     activeWorkers.delete(worker.process.pid ?? 0)
 
     debug('Starting another worker')
-    cluster.fork()
+
+    const newWorker = cluster.fork()
+    activeWorkers.set(newWorker.process.pid ?? 0, newWorker)
   })
 }
 

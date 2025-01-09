@@ -42,6 +42,10 @@ export default {
     | ConfigItemValidationFaster
     | undefined,
 
+  'modules.inventoryScanner.fasterItemRequests.isEnabled': false,
+  'modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled': false,
+  'modules.inventoryScanner.fasterItemRequests.ntfy.topic': undefined as undefined | string,
+
   'modules.inventoryScanner.quantities.acceptOverages': true,
   'modules.inventoryScanner.quantities.acceptNegatives': true
 } satisfies Record<`modules.inventoryScanner.${string}`, unknown>

@@ -8,7 +8,7 @@ import { hasFasterApi } from '../../helpers/fasterWeb.helpers.js';
 import { initializeInventoryScannerDatabase } from './database/helpers.database.js';
 import router from './handlers/router.js';
 import scannerRouter from './handlers/router.scanner.js';
-import { moduleName } from './helpers/module.js';
+import { moduleName } from './helpers/module.helpers.js';
 const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`);
 const urlPrefix = getConfigProperty('webServer.urlPrefix');
 export function initializeInventoryScannerTasks() {
@@ -56,7 +56,7 @@ export function initializeInventoryScannerTasks() {
         }
     }
     childProcesses.push(fork('./modules/inventoryScanner/tasks/inventoryScanner/updateRecordsFromValidation.js'));
-    if (hasFasterApi) {
+    if (hasFasterApi && getConfigProperty('modules.inventoryScanner.fasterItemRequests.isEnabled')) {
         childProcesses.push(fork('./modules/inventoryScanner/tasks/outstandingItemRequests.js'));
     }
     /*

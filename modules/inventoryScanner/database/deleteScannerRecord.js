@@ -1,5 +1,5 @@
 import sqlite from 'better-sqlite3';
-import { scannerKeyToUserName } from '../helpers/scanner.js';
+import { scannerKeyToUserName } from '../helpers/scanner.functions.js';
 import { databasePath } from './helpers.database.js';
 export default function deleteScannerRecord(recordId, deleteUser, scannerKey) {
     const database = sqlite(databasePath);

@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express'
 
 import getWorkOrderValidationRecords from '../../database/getWorkOrderValidationRecords.js'
-import { getWorkOrderTypeFromWorkOrderNumber } from '../../helpers/workOrders.js'
+import { getWorkOrderTypeFromWorkOrderNumber } from '../../helpers/workOrders.functions.js'
 
 interface DoGetRepairIdsForm {
   workOrderNumber: string

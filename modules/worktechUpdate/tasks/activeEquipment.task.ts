@@ -1,5 +1,5 @@
 import { FasterApi } from '@cityssm/faster-api'
-import { UpdateEquipmentFields, WorkTechAPI } from '@cityssm/worktech-api'
+import { WorkTechAPI } from '@cityssm/worktech-api'
 import camelCase from 'camelcase'
 import Debug from 'debug'
 import exitHook from 'exit-hook'
@@ -13,7 +13,6 @@ import {
   getWorktechEquipmentClass,
   getWorktechEquipmentDepartment,
   getWorktechEquipmentDescription,
-  getWorktechEquipmentFieldsToUpdate,
   getWorktechEquipmentId
 } from '../helpers/worktechMappings.functions.js'
 
@@ -109,10 +108,13 @@ async function runActiveEquipmentTask(): Promise<void> {
 
     debug(`Updating equipment: ${worktechEquipmentId}`)
 
+    // eslint-disable-next-line no-secrets/no-secrets
+    /*
     const fieldsToUpdate = getWorktechEquipmentFieldsToUpdate(
       fasterAsset,
       worktechEquipment
     )
+    */
   }
 
   debug(`Finished "${taskName}".`)

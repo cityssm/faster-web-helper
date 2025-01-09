@@ -11,6 +11,7 @@ export const config = tseslint.config(...configWebApp, {
                         'fasterwebcloud',
                         'fontawesome',
                         'licence',
+                        'ntfy',
                         'resave',
                         'unvalidated',
                         'worktech'

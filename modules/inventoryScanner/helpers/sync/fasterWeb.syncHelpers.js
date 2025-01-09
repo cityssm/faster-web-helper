@@ -10,7 +10,7 @@ import { hasFasterApi } from '../../../../helpers/fasterWeb.helpers.js';
 import { ensureTempFolderExists, tempFolderPath } from '../../../../helpers/filesystem.functions.js';
 import { uploadFile } from '../../../../helpers/sftp.functions.js';
 import { updateScannerRecordSyncFields } from '../../database/updateScannerRecordSyncFields.js';
-import { moduleName } from '../module.js';
+import { moduleName } from '../module.helpers.js';
 import { updateMultipleScannerRecords } from './syncHelpers.js';
 const debug = Debug(`faster-web-helper:${camelcase(moduleName)}:syncFaster`);
 const exportFileNamePrefix = getConfigProperty(

@@ -3,7 +3,7 @@ import { WorkTechAPI } from '@cityssm/worktech-api';
 import camelcase from 'camelcase';
 import Debug from 'debug';
 import { getConfigProperty } from '../../../../helpers/config.functions.js';
-import { moduleName } from '../module.js';
+import { moduleName } from '../module.helpers.js';
 import { updateMultipleScannerRecords } from './syncHelpers.js';
 const debug = Debug(`faster-web-helper:${camelcase(moduleName)}:syncWorktech`);
 const worktechConfig = getConfigProperty('worktech');

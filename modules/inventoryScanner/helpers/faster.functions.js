@@ -26,3 +26,19 @@ export function getRepairIdsToRefresh() {
      */
     return [...repairIdSet.values()];
 }
+export function summarizeItemRequests(itemRequestsResponse) {
+    let itemRequestsCount = 0;
+    let maxItemRequestId = 0;
+    if (itemRequestsResponse.success) {
+        for (const itemRequest of itemRequestsResponse.response.results) {
+            itemRequestsCount += 1;
+            if (itemRequest.itemRequestID > maxItemRequestId) {
+                maxItemRequestId = itemRequest.itemRequestID;
+            }
+        }
+    }
+    return {
+        itemRequestsCount,
+        maxItemRequestId
+    };
+}

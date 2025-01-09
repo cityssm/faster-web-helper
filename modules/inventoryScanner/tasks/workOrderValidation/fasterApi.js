@@ -9,8 +9,8 @@ import { getScheduledTaskMinutes } from '../../../../helpers/tasks.functions.js'
 import createOrUpdateWorkOrderValidation from '../../database/createOrUpdateWorkOrderValidation.js';
 import deleteWorkOrderValidation from '../../database/deleteWorkOrderValidation.js';
 import getMaxWorkOrderValidationRecordUpdateMillis from '../../database/getMaxWorkOrderValidationRecordUpdateMillis.js';
-import { getRepairIdsToRefresh } from '../../helpers/faster.js';
-import { moduleName } from '../../helpers/module.js';
+import { getRepairIdsToRefresh } from '../../helpers/faster.functions.js';
+import { moduleName } from '../../helpers/module.helpers.js';
 const minimumMillisBetweenRuns = minutesToMillis(20);
 let lastRunMillis = getMaxWorkOrderValidationRecordUpdateMillis('faster');
 export const taskName = 'Work Order Validation Task - FASTER API';

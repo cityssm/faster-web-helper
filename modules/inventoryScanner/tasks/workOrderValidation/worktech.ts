@@ -13,7 +13,7 @@ import { getScheduledTaskMinutes } from '../../../../helpers/tasks.functions.js'
 import createOrUpdateWorkOrderValidation from '../../database/createOrUpdateWorkOrderValidation.js'
 import getMaxWorkOrderValidationRecordUpdateMillis from '../../database/getMaxWorkOrderValidationRecordUpdateMillis.js'
 import getScannerRecords from '../../database/getScannerRecords.js'
-import { moduleName } from '../../helpers/module.js'
+import { moduleName } from '../../helpers/module.helpers.js'
 
 const minimumMillisBetweenRuns = minutesToMillis(20)
 let lastRunMillis = getMaxWorkOrderValidationRecordUpdateMillis('worktech')

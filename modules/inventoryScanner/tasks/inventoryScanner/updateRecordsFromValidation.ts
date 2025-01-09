@@ -9,7 +9,7 @@ import { getItemValidationRecordsByItemNumber } from '../../database/getItemVali
 import getScannerRecords from '../../database/getScannerRecords.js'
 import getWorkOrderValidationRecords from '../../database/getWorkOrderValidationRecords.js'
 import { updateScannerRecordField } from '../../database/updateScannerRecordField.js'
-import { moduleName } from '../../helpers/module.js'
+import { moduleName } from '../../helpers/module.helpers.js'
 
 const minimumMillisBetweenRuns = minutesToMillis(2)
 const lastRunMillis = 0

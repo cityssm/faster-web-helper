@@ -1,4 +1,6 @@
 import { FasterApi } from '@cityssm/faster-api'
+import FasterUrlBuilder from '@cityssm/faster-url-builder'
+import ntfyPublish from '@cityssm/ntfy-publish'
 import { minutesToMillis } from '@cityssm/to-millis'
 import camelcase from 'camelcase'
 import Debug from 'debug'
@@ -6,16 +8,14 @@ import exitHook from 'exit-hook'
 import schedule from 'node-schedule'
 
 import { getConfigProperty } from '../../../helpers/config.functions.js'
-import getSetting from '../database/getSetting.js'
+import { getSettingValues } from '../database/getSetting.js'
 import updateSetting from '../database/updateSetting.js'
-import { moduleName } from '../helpers/module.js'
+import { summarizeItemRequests } from '../helpers/faster.functions.js'
+import { moduleName } from '../helpers/module.helpers.js'
 
 const minimumMillisBetweenRuns = minutesToMillis(2)
 
 let lastRunMillis = 0
-let itemRequestsCount = Number.parseInt(
-  getSetting('itemRequests.count') ?? '-1'
-)
 
 export const taskName = 'Outstanding Item Requests - FASTER API'
 
@@ -24,6 +24,12 @@ const debug = Debug(
 )
 
 const fasterWebConfig = getConfigProperty('fasterWeb')
+
+const fasterUrlBuilder = new FasterUrlBuilder(fasterWebConfig.tenantOrBaseUrl)
+
+const ntfyTopic = getConfigProperty(
+  'modules.inventoryScanner.fasterItemRequests.ntfy.topic'
+)
 
 async function runOutstandingItemRequestsFromFasterApiTask(): Promise<void> {
   if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
@@ -58,13 +64,44 @@ async function runOutstandingItemRequestsFromFasterApiTask(): Promise<void> {
     return
   }
 
-  if (itemRequestsResponse.response.success !== itemRequestsCount) {
-    itemRequestsCount = itemRequestsResponse.response.success
+  const summarizedItemRequests = summarizeItemRequests(itemRequestsResponse)
 
-    updateSetting(
-      'itemRequests.count',
-      itemRequestsResponse.response.success.toString()
+  updateSetting(
+    'itemRequests.count',
+    summarizedItemRequests.itemRequestsCount.toString()
+  )
+
+  updateSetting(
+    'itemRequests.maxItemRequestId',
+    summarizedItemRequests.maxItemRequestId.toString()
+  )
+
+  if (
+    getConfigProperty(
+      'modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled'
+    ) &&
+    ntfyTopic !== undefined
+  ) {
+    const itemRequestCountValues = getSettingValues('itemRequests.count')
+    const maxItemRequestIdValues = getSettingValues(
+      'itemRequests.maxItemRequestId'
     )
+
+    if (
+      (itemRequestCountValues !== undefined &&
+        Number.parseInt(itemRequestCountValues.previousSettingValue ?? '0') <
+          Number.parseInt(itemRequestCountValues.settingValue ?? '0')) ||
+      (maxItemRequestIdValues !== undefined &&
+        Number.parseInt(maxItemRequestIdValues.previousSettingValue ?? '0') <
+          Number.parseInt(maxItemRequestIdValues.settingValue ?? '0'))
+    ) {
+      await ntfyPublish({
+        topic: ntfyTopic,
+        title: 'FASTER Web Helper',
+        message: 'New item requests have been received.',
+        clickURL: fasterUrlBuilder.inventoryItemRequestSearchUrl
+      })
+    }
   }
 
   debug(`Finished "${taskName}".`)

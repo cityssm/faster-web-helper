@@ -17,5 +17,5 @@ export function getFasterAssetDepartmentDescription(fasterAsset) {
     return fasterAsset.departmentDesc;
 }
 export function getFasterAssetKey(fasterAsset) {
-    return `${fasterAsset.assetNumber} [${fasterAsset.assetShopCode}]`;
+    return `${fasterAsset.assetNumber} [${fasterAsset.organization}]`;
 }

@@ -37,20 +37,18 @@ async function runActiveEquipmentTask() {
     debug(`Syncing ${fasterAssetsResponse.response.results.length} asset(s)...`);
     for (const fasterAsset of fasterAssetsResponse.response.results) {
         /*
-         * Get WorkTech equipment fields
+         * Get Worktech equipment record
          */
         const worktechEquipmentId = getWorktechEquipmentId(fasterAsset);
-        const worktechEquipmentDescription = getWorktechEquipmentDescription(fasterAsset);
-        const worktechEquipmentClass = getWorktechEquipmentClass(fasterAsset);
-        const worktechEquipmentDepartment = getWorktechEquipmentDepartment(fasterAsset);
-        const worktechEquipmentComment = getFasterAssetKey(fasterAsset);
-        /*
-         * Check if equipment exists
-         */
         const worktechEquipment = await worktech.getEquipmentByEquipmentId(worktechEquipmentId);
+        // Add equipment if it doesn't exist
         if (worktechEquipment === undefined) {
-            // add equipment
-            await worktech.addEquipment({
+            debug(`Adding equipment: ${worktechEquipmentId}`);
+            const worktechEquipmentDescription = getWorktechEquipmentDescription(fasterAsset);
+            const worktechEquipmentClass = getWorktechEquipmentClass(fasterAsset);
+            const worktechEquipmentDepartment = getWorktechEquipmentDepartment(fasterAsset);
+            const worktechEquipmentComment = getFasterAssetKey(fasterAsset);
+            const worktechSystemId = await worktech.addEquipment({
                 equipmentId: worktechEquipmentId,
                 equipmentClass: worktechEquipmentClass,
                 equipmentDescription: worktechEquipmentDescription,
@@ -62,7 +60,18 @@ async function runActiveEquipmentTask() {
                 plate: fasterAsset.licence,
                 comments: worktechEquipmentComment
             });
+            debug(`Added equipment: ${worktechSystemId}`);
+            continue;
         }
+        // Update equipment if it exists
+        debug(`Updating equipment: ${worktechEquipmentId}`);
+        // eslint-disable-next-line no-secrets/no-secrets
+        /*
+        const fieldsToUpdate = getWorktechEquipmentFieldsToUpdate(
+          fasterAsset,
+          worktechEquipment
+        )
+        */
     }
     debug(`Finished "${taskName}".`);
 }

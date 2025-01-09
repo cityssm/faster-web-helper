@@ -17,7 +17,7 @@ import {
 import { uploadFile } from '../../../../helpers/sftp.functions.js'
 import { updateScannerRecordSyncFields } from '../../database/updateScannerRecordSyncFields.js'
 import type { InventoryScannerRecord } from '../../types.js'
-import { moduleName } from '../module.js'
+import { moduleName } from '../module.helpers.js'
 
 import { updateMultipleScannerRecords } from './syncHelpers.js'
 

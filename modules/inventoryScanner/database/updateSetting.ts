@@ -11,7 +11,8 @@ export default function updateSetting(
   const result = database
     .prepare(
       `update InventoryScannerSettings
-        set settingValue = ?,
+        set previousSettingValue = settingValue,
+        settingValue = ?,
         recordUpdate_timeMillis = ?
         where settingName = ?`
     )
@@ -21,8 +22,8 @@ export default function updateSetting(
     database
       .prepare(
         `insert into InventoryScannerSettings
-          (settingName, settingValue, recordUpdate_timeMillis)
-          values (?, ?, ?)`
+          (settingName, previousSettingValue, settingValue, recordUpdate_timeMillis)
+          values (?, null, ?, ?)`
       )
       .run(settingName, settingValue, Date.now())
   }

@@ -4,12 +4,11 @@ import { type SettingName, databasePath } from './helpers.database.js'
 
 export default function getSetting(
   settingName: SettingName
-): string | undefined {
+): string | null | undefined {
   const database = sqlite(databasePath, {
     readonly: true
   })
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   const settingValue = database
     .prepare(
       `select settingValue
@@ -17,9 +16,34 @@ export default function getSetting(
         where settingName = ?`
     )
     .pluck()
-    .get(settingName) as string | undefined
+    .get(settingName) as string | null | undefined
 
   database.close()
 
   return settingValue
+}
+
+interface SettingValues {
+  settingValue: string | null
+  previousSettingValue: string | null
+}
+
+export function getSettingValues(
+  settingName: SettingName
+): SettingValues | undefined {
+  const database = sqlite(databasePath, {
+    readonly: true
+  })
+
+  const settingValues = database
+    .prepare(
+      `select previousSettingValue, settingValue
+        from InventoryScannerSettings
+        where settingName = ?`
+    )
+    .get(settingName) as SettingValues | undefined
+
+  database.close()
+
+  return settingValues
 }
