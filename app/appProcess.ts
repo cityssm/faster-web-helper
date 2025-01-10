@@ -58,7 +58,7 @@ function onListening(server: http.Server): void {
  * Initialize HTTP
  */
 
-process.title = `Faster Web Helper (Worker)`
+process.title = 'Faster Web Helper (Worker)'
 
 const httpPort = getConfigProperty('webServer.httpPort')
 

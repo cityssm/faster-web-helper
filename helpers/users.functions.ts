@@ -34,7 +34,7 @@ if (authenticationConfig === undefined) {
       break
     }
     case 'plainText': {
-      debug(`WARNING: Using plain text authentication.`)
+      debug('WARNING: Using plain text authentication.')
       authenticator = new PlainTextAuthenticator(authenticationConfig.config)
       break
     }

@@ -10,7 +10,7 @@ import { registerChildProcesses, relayMessageToChildProcess } from './helpers/ch
 import { getConfigProperty } from './helpers/config.functions.js';
 const debug = Debug(`faster-web-helper:www:${process.pid}`);
 const directoryName = path.dirname(fileURLToPath(import.meta.url));
-process.title = `Faster Web Helper (Primary)`;
+process.title = 'Faster Web Helper (Primary)';
 debug(`Primary pid:   ${process.pid}`);
 debug(`Primary title: ${process.title}`);
 /**
