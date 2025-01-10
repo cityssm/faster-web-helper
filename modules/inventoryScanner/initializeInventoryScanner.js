@@ -2,7 +2,6 @@ import { fork } from 'node:child_process';
 import { isLocal } from '@cityssm/is-private-network-address';
 import camelCase from 'camelcase';
 import Debug from 'debug';
-import exitHook from 'exit-hook';
 import { getConfigProperty } from '../../helpers/config.functions.js';
 import { hasFasterApi } from '../../helpers/fasterWeb.helpers.js';
 import { initializeInventoryScannerDatabase } from './database/helpers.database.js';
@@ -13,29 +12,34 @@ const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`);
 const urlPrefix = getConfigProperty('webServer.urlPrefix');
 export function initializeInventoryScannerTasks() {
     initializeInventoryScannerDatabase();
-    const childProcesses = [];
+    const childProcesses = {};
     const itemValidationConfig = getConfigProperty('modules.inventoryScanner.items.validation');
     if (itemValidationConfig !== undefined) {
         let itemValidationTaskPath = '';
+        let itemValidationTaskName = '';
         if (itemValidationConfig.source === 'dynamicsGP') {
             itemValidationTaskPath =
                 './modules/inventoryScanner/tasks/itemValidation/dynamicsGp.js';
+            itemValidationTaskName = 'inventoryScanner.itemValidation.dynamicsGp';
         }
         else {
             debug(`Item validation not implemented: ${itemValidationConfig.source}`);
         }
         if (itemValidationTaskPath !== '') {
-            childProcesses.push(fork(itemValidationTaskPath));
+            childProcesses[itemValidationTaskName] = fork(itemValidationTaskPath);
         }
     }
     const workOrderValidationSources = getConfigProperty('modules.inventoryScanner.workOrders.validationSources');
     for (const workOrderValidationSource of workOrderValidationSources) {
         let workOrderValidationTaskPath = '';
+        let workOrderValidationTaskName = '';
         switch (workOrderValidationSource) {
             case 'fasterApi': {
                 if (hasFasterApi) {
                     workOrderValidationTaskPath =
                         './modules/inventoryScanner/tasks/workOrderValidation/fasterApi.js';
+                    workOrderValidationTaskName =
+                        'inventoryScanner.workOrderValidation.fasterApi';
                 }
                 else {
                     debug('Optional "@cityssm/faster-api" package is required for work order validation by FASTER API.');
@@ -45,6 +49,8 @@ export function initializeInventoryScannerTasks() {
             case 'worktech': {
                 workOrderValidationTaskPath =
                     './modules/inventoryScanner/tasks/workOrderValidation/worktech.js';
+                workOrderValidationTaskName =
+                    'inventoryScanner.workOrderValidation.worktech';
                 break;
             }
         }
@@ -52,21 +58,15 @@ export function initializeInventoryScannerTasks() {
             debug(`Work order validation not implemented: ${workOrderValidationSource}`);
         }
         else {
-            childProcesses.push(fork(workOrderValidationTaskPath));
+            childProcesses[workOrderValidationTaskName] = fork(workOrderValidationTaskPath);
         }
     }
-    childProcesses.push(fork('./modules/inventoryScanner/tasks/inventoryScanner/updateRecordsFromValidation.js'));
-    if (hasFasterApi && getConfigProperty('modules.inventoryScanner.fasterItemRequests.isEnabled')) {
-        childProcesses.push(fork('./modules/inventoryScanner/tasks/outstandingItemRequests.js'));
+    childProcesses['inventoryScanner.updateRecordsFromValidation'] = fork('./modules/inventoryScanner/tasks/updateRecordsFromValidation.js');
+    if (hasFasterApi &&
+        getConfigProperty('modules.inventoryScanner.fasterItemRequests.isEnabled')) {
+        childProcesses['inventoryScanner.outstandingItemRequests'] = fork('./modules/inventoryScanner/tasks/outstandingItemRequests.js');
     }
-    /*
-     * Set up exit hook
-     */
-    exitHook(() => {
-        for (const validationProcess of childProcesses) {
-            validationProcess.kill();
-        }
-    });
+    return childProcesses;
 }
 export function initializeInventoryScannerAppHandlers(app) {
     /*

@@ -7,6 +7,7 @@ import schedule from 'node-schedule'
 
 import { getConfigProperty } from '../../../../helpers/config.functions.js'
 import { getScheduledTaskMinutes } from '../../../../helpers/tasks.functions.js'
+import type { TaskWorkerMessage } from '../../../../types/tasks.types.js'
 import createOrUpdateWorkOrderValidation from '../../database/createOrUpdateWorkOrderValidation.js'
 import deleteWorkOrderValidation from '../../database/deleteWorkOrderValidation.js'
 import getMaxWorkOrderValidationRecordUpdateMillis from '../../database/getMaxWorkOrderValidationRecordUpdateMillis.js'
@@ -88,7 +89,9 @@ const job = schedule.scheduleJob(
   {
     dayOfWeek: getConfigProperty('application.workDays'),
     hour: getConfigProperty('application.workHours'),
-    minute: getScheduledTaskMinutes('inventoryScanner.workOrderValidation.fasterApi'),
+    minute: getScheduledTaskMinutes(
+      'inventoryScanner.workOrderValidation.fasterApi'
+    ),
     second: 0
   },
   runUpdateWorkOrderValidationFromFasterApiTask
@@ -100,4 +103,8 @@ exitHook(() => {
   } catch {
     // ignore
   }
+})
+
+process.on('message', (message: TaskWorkerMessage) => {
+  void runUpdateWorkOrderValidationFromFasterApiTask()
 })

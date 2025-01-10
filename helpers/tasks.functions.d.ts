@@ -1,3 +1,2 @@
-type scheduledTaskName = 'inventoryScanner.itemValidation.dynamicsGp' | 'inventoryScanner.workOrderValidation.fasterApi' | 'inventoryScanner.workOrderValidation.worktech' | 'worktechUpdate.activeEquipment';
-export declare function getScheduledTaskMinutes(taskName: scheduledTaskName): number[];
-export {};
+import type { TaskName } from '../types/tasks.types.js';
+export declare function getScheduledTaskMinutes(taskName: TaskName): number[];

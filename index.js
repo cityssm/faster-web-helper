@@ -6,6 +6,7 @@ import { secondsToMillis } from '@cityssm/to-millis';
 import Debug from 'debug';
 import { asyncExitHook } from 'exit-hook';
 import schedule from 'node-schedule';
+import { registerChildProcesses, relayMessageToChildProcess } from './helpers/childProcesses.helpers.js';
 import { getConfigProperty } from './helpers/config.functions.js';
 const debug = Debug(`faster-web-helper:www:${process.pid}`);
 const directoryName = path.dirname(fileURLToPath(import.meta.url));
@@ -23,7 +24,8 @@ async function initializeModuleTasks() {
     }
     if (getConfigProperty('modules.inventoryScanner.isEnabled')) {
         const initializeInventoryScannerModule = await import('./modules/inventoryScanner/initializeInventoryScanner.js');
-        initializeInventoryScannerModule.initializeInventoryScannerTasks();
+        const childProcesses = initializeInventoryScannerModule.initializeInventoryScannerTasks();
+        registerChildProcesses(childProcesses);
     }
     if (getConfigProperty('modules.tempFolderCleanup.isEnabled')) {
         const initializeTempFolderCleanupModule = await import('./modules/tempFolderCleanup/initializeTempFolderCleanupModule.js');
@@ -56,12 +58,18 @@ function initializeAppWorkers() {
         activeWorkers.set(worker.process.pid ?? 0, worker);
     }
     cluster.on('message', (worker, message) => {
-        for (const [pid, activeWorker] of activeWorkers.entries()) {
-            if (pid === message.pid) {
-                continue;
+        debug(`Received message from worker: ${worker.process.pid}`);
+        if (message.destinationTaskName === 'app') {
+            for (const [pid, activeWorker] of activeWorkers.entries()) {
+                if (pid === worker.process.pid) {
+                    continue;
+                }
+                debug(`Relaying message to worker: ${pid}`);
+                activeWorker.send(message);
             }
-            debug(`Relaying message to worker: ${pid}`);
-            activeWorker.send(message);
+        }
+        else {
+            relayMessageToChildProcess(message);
         }
     });
     cluster.on('exit', (worker) => {

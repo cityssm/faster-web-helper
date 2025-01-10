@@ -4,12 +4,12 @@ import Debug from 'debug'
 import exitHook from 'exit-hook'
 import schedule from 'node-schedule'
 
-import { getConfigProperty } from '../../../../helpers/config.functions.js'
-import { getItemValidationRecordsByItemNumber } from '../../database/getItemValidationRecords.js'
-import getScannerRecords from '../../database/getScannerRecords.js'
-import getWorkOrderValidationRecords from '../../database/getWorkOrderValidationRecords.js'
-import { updateScannerRecordField } from '../../database/updateScannerRecordField.js'
-import { moduleName } from '../../helpers/module.helpers.js'
+import { getConfigProperty } from '../../../helpers/config.functions.js'
+import { getItemValidationRecordsByItemNumber } from '../database/getItemValidationRecords.js'
+import getScannerRecords from '../database/getScannerRecords.js'
+import getWorkOrderValidationRecords from '../database/getWorkOrderValidationRecords.js'
+import { updateScannerRecordField } from '../database/updateScannerRecordField.js'
+import { moduleName } from '../helpers/module.helpers.js'
 
 const minimumMillisBetweenRuns = minutesToMillis(2)
 const lastRunMillis = 0

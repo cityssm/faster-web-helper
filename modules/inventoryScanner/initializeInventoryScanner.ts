@@ -3,11 +3,11 @@ import { type ChildProcess, fork } from 'node:child_process'
 import { isLocal } from '@cityssm/is-private-network-address'
 import camelCase from 'camelcase'
 import Debug from 'debug'
-import exitHook from 'exit-hook'
 import type express from 'express'
 
 import { getConfigProperty } from '../../helpers/config.functions.js'
 import { hasFasterApi } from '../../helpers/fasterWeb.helpers.js'
+import type { TaskName } from '../../types/tasks.types.js'
 
 import { initializeInventoryScannerDatabase } from './database/helpers.database.js'
 import router from './handlers/router.js'
@@ -18,11 +18,12 @@ const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`)
 
 const urlPrefix = getConfigProperty('webServer.urlPrefix')
 
-
-export function initializeInventoryScannerTasks(): void {
+export function initializeInventoryScannerTasks(): Partial<
+  Record<TaskName, ChildProcess>
+> {
   initializeInventoryScannerDatabase()
 
-  const childProcesses: ChildProcess[] = []
+  const childProcesses: Partial<Record<TaskName, ChildProcess>> = {}
 
   const itemValidationConfig = getConfigProperty(
     'modules.inventoryScanner.items.validation'
@@ -30,16 +31,18 @@ export function initializeInventoryScannerTasks(): void {
 
   if (itemValidationConfig !== undefined) {
     let itemValidationTaskPath = ''
+    let itemValidationTaskName = ''
 
     if (itemValidationConfig.source === 'dynamicsGP') {
       itemValidationTaskPath =
         './modules/inventoryScanner/tasks/itemValidation/dynamicsGp.js'
+      itemValidationTaskName = 'inventoryScanner.itemValidation.dynamicsGp'
     } else {
       debug(`Item validation not implemented: ${itemValidationConfig.source}`)
     }
 
     if (itemValidationTaskPath !== '') {
-      childProcesses.push(fork(itemValidationTaskPath))
+      childProcesses[itemValidationTaskName] = fork(itemValidationTaskPath)
     }
   }
 
@@ -49,12 +52,15 @@ export function initializeInventoryScannerTasks(): void {
 
   for (const workOrderValidationSource of workOrderValidationSources) {
     let workOrderValidationTaskPath = ''
+    let workOrderValidationTaskName = ''
 
     switch (workOrderValidationSource) {
       case 'fasterApi': {
         if (hasFasterApi) {
           workOrderValidationTaskPath =
             './modules/inventoryScanner/tasks/workOrderValidation/fasterApi.js'
+          workOrderValidationTaskName =
+            'inventoryScanner.workOrderValidation.fasterApi'
         } else {
           debug(
             'Optional "@cityssm/faster-api" package is required for work order validation by FASTER API.'
@@ -65,6 +71,8 @@ export function initializeInventoryScannerTasks(): void {
       case 'worktech': {
         workOrderValidationTaskPath =
           './modules/inventoryScanner/tasks/workOrderValidation/worktech.js'
+        workOrderValidationTaskName =
+          'inventoryScanner.workOrderValidation.worktech'
         break
       }
     }
@@ -74,31 +82,26 @@ export function initializeInventoryScannerTasks(): void {
         `Work order validation not implemented: ${workOrderValidationSource}`
       )
     } else {
-      childProcesses.push(fork(workOrderValidationTaskPath))
+      childProcesses[workOrderValidationTaskName] = fork(
+        workOrderValidationTaskPath
+      )
     }
   }
 
-  childProcesses.push(
-    fork(
-      './modules/inventoryScanner/tasks/inventoryScanner/updateRecordsFromValidation.js'
-    )
+  childProcesses['inventoryScanner.updateRecordsFromValidation'] = fork(
+    './modules/inventoryScanner/tasks/updateRecordsFromValidation.js'
   )
 
-  if (hasFasterApi && getConfigProperty('modules.inventoryScanner.fasterItemRequests.isEnabled')) {
-    childProcesses.push(
-      fork('./modules/inventoryScanner/tasks/outstandingItemRequests.js')
+  if (
+    hasFasterApi &&
+    getConfigProperty('modules.inventoryScanner.fasterItemRequests.isEnabled')
+  ) {
+    childProcesses['inventoryScanner.outstandingItemRequests'] = fork(
+      './modules/inventoryScanner/tasks/outstandingItemRequests.js'
     )
   }
 
-  /*
-   * Set up exit hook
-   */
-
-  exitHook(() => {
-    for (const validationProcess of childProcesses) {
-      validationProcess.kill()
-    }
-  })
+  return childProcesses
 }
 
 export function initializeInventoryScannerAppHandlers(

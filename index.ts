@@ -8,8 +8,9 @@ import Debug from 'debug'
 import { asyncExitHook } from 'exit-hook'
 import schedule from 'node-schedule'
 
+import { registerChildProcesses, relayMessageToChildProcess } from './helpers/childProcesses.helpers.js'
 import { getConfigProperty } from './helpers/config.functions.js'
-import type { WorkerMessage } from './types/applicationTypes.js'
+import type { TaskWorkerMessage } from './types/tasks.types.js'
 
 const debug = Debug(`faster-web-helper:www:${process.pid}`)
 
@@ -37,7 +38,10 @@ async function initializeModuleTasks(): Promise<void> {
     const initializeInventoryScannerModule = await import(
       './modules/inventoryScanner/initializeInventoryScanner.js'
     )
-    initializeInventoryScannerModule.initializeInventoryScannerTasks()
+
+    const childProcesses =
+      initializeInventoryScannerModule.initializeInventoryScannerTasks()
+    registerChildProcesses(childProcesses)
   }
 
   if (getConfigProperty('modules.tempFolderCleanup.isEnabled')) {
@@ -87,14 +91,22 @@ function initializeAppWorkers(): void {
     activeWorkers.set(worker.process.pid ?? 0, worker)
   }
 
-  cluster.on('message', (worker, message: WorkerMessage) => {
-    for (const [pid, activeWorker] of activeWorkers.entries()) {
-      if (pid === message.pid) {
-        continue
-      }
+  cluster.on('message', (worker, message: TaskWorkerMessage) => {
 
-      debug(`Relaying message to worker: ${pid}`)
-      activeWorker.send(message)
+    debug(`Received message from worker: ${worker.process.pid}`)
+
+    if (message.destinationTaskName === 'app') {
+      for (const [pid, activeWorker] of activeWorkers.entries()) {
+        if (pid === worker.process.pid) {
+          continue
+        }
+
+        debug(`Relaying message to worker: ${pid}`)
+        activeWorker.send(message)
+      }
+    }
+    else {
+      relayMessageToChildProcess(message)
     }
   })
 

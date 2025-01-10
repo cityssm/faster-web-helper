@@ -1,10 +1,6 @@
-type scheduledTaskName =
-  | 'inventoryScanner.itemValidation.dynamicsGp'
-  | 'inventoryScanner.workOrderValidation.fasterApi'
-  | 'inventoryScanner.workOrderValidation.worktech'
-  | 'worktechUpdate.activeEquipment'
+import type { TaskName } from '../types/tasks.types.js'
 
-const scheduledTaskMinutes: Record<`${number}`, scheduledTaskName[]> = {
+const scheduledTaskMinutes: Record<`${number}`, TaskName[]> = {
   5: ['inventoryScanner.workOrderValidation.fasterApi'],
   10: ['inventoryScanner.workOrderValidation.worktech'],
   15: ['inventoryScanner.itemValidation.dynamicsGp'],
@@ -13,7 +9,7 @@ const scheduledTaskMinutes: Record<`${number}`, scheduledTaskName[]> = {
   55: ['worktechUpdate.activeEquipment']
 }
 
-export function getScheduledTaskMinutes(taskName: scheduledTaskName): number[] {
+export function getScheduledTaskMinutes(taskName: TaskName): number[] {
   const scheduleMinutes: number[] = []
 
   for (const [minuteString, scheduledTaskNames] of Object.entries(
