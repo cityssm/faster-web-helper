@@ -70,6 +70,6 @@ exitHook(() => {
         // ignore
     }
 });
-process.on('message', (message) => {
+process.on('message', (_message) => {
     void runUpdateWorkOrderValidationFromFasterApiTask();
 });

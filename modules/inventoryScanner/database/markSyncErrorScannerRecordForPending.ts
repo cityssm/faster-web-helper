@@ -14,13 +14,15 @@ export function markSyncErrorScannerRecordForPending(
         set recordSync_userName = null,
           recordSync_timeMillis = null,
           recordSync_message = null,
-          recordSync_isSuccessful = null
+          recordSync_isSuccessful = null,
+          recordUpdate_userName = ?,
+          recordUpdate_timeMillis = ?
         where recordId = ?
           and recordDelete_timeMillis is null
           and recordSync_timeMillis is not null
           and recordSync_isSuccessful = 0`
     )
-    .run(recordId)
+    .run(updateUser.userName, Date.now(), recordId)
 
   database.close()
 

@@ -105,6 +105,6 @@ exitHook(() => {
   }
 })
 
-process.on('message', (message: TaskWorkerMessage) => {
+process.on('message', (_message: TaskWorkerMessage) => {
   void runUpdateWorkOrderValidationFromFasterApiTask()
 })
