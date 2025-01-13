@@ -1,5 +1,5 @@
 import type { GPItemWithQuantity } from '@cityssm/dynamics-gp';
-import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from '../../../types/configHelperTypes.js';
+import type { ConfigFileSuffixXlsx, ConfigNtfyTopic, ConfigScheduledFtpReport } from '../../../types/configHelperTypes.js';
 export interface ConfigItemValidationDynamicsGP {
     source: 'dynamicsGP';
     gpLocationCodesToFasterStorerooms: Record<string, string>;
@@ -33,10 +33,7 @@ export interface ConfigModuleInventoryScanner {
     };
     fasterItemRequests?: {
         isEnabled?: boolean;
-        ntfy?: {
-            isEnabled?: boolean;
-            topic?: string;
-        };
+        ntfy?: ConfigNtfyTopic;
     };
     quantities?: {
         acceptOverages?: boolean;

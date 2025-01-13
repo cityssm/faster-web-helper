@@ -10,3 +10,7 @@ export interface ConfigScheduledFtpReport<S extends string> {
     schedule: Spec;
 }
 export type ConfigFileSuffixXlsx = `${string}.xlsx` | `${string}.XLSX`;
+export interface ConfigNtfyTopic {
+    isEnabled: boolean;
+    topic?: string;
+}

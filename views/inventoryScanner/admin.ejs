@@ -69,6 +69,15 @@
     <li>
       <a href="#tab--inventory">Inventory List</a>
     </li>
+    <% if (configFunctions.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled')) { %>
+      <li>
+        <a href="#tab--more">
+          <span class="icon is-small">
+            <i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
+          </span>
+          More</a>
+      </li>
+    <% } %>
   </ul>
 </div>
 <div class="tab-container">
@@ -185,6 +194,53 @@
     </div>
     <div id="container--inventory"></div>
   </div>
+  <% if (configFunctions.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled')) { %>
+    <div class="is-hidden" id="tab--more">
+      <div class="panel is-info">
+        <p class="panel-heading">NTFY Notifications</p>
+        <div class="panel-block is-block">
+          <div class="columns">
+            <div class="column">
+              <div class="field">
+                <label class="label" for="more--ntfyServer">
+                  NTFY Server
+                  <% if (configFunctions.ntfyServerIsDefault) { %>
+                    <span class="tag">Default</span>
+                  <% } %>
+                </label>
+                <input class="input" id="more--ntfyServer" value="<%= configFunctions.getConfigProperty('ntfy.server') %>" readonly />
+              </div>
+              <div class="field">
+                <label class="label" for="more--ntfyTopic">
+                  NTFY Topic
+                </label>
+                <input class="input" id="more--ntfyTopic" value="<%= configFunctions.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.topic') %>" readonly />
+              </div>
+            </div>
+            <div class="column is-two-thirds">
+              <div class="message is-info">
+                <div class="message-body">
+                  <div class="content">
+                    <p>
+                      The Inventory Scanner module is configured to send notifications to
+                      <a href="https://ntfy.sh/" target="_blank">the NTFY service</a>
+                      when certain actions occur.
+                    </p>
+                    <ul>
+                      <li>New item requests are made in FASTER Web.</li>
+                    </ul>
+                    <p>
+                      You can install the NTFY app on your tablet or phone to receive these notifications,
+                      or subscribe to them in your web browser.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  <% } %>
 </div>
 
 <%- include('../_footerA'); -%>

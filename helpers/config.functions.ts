@@ -1,4 +1,5 @@
 import { Configurator } from '@cityssm/configurator'
+import { DEFAULT_NTFY_SERVER } from '@cityssm/ntfy-publish'
 
 import { configDefaultValues } from '../data/config.defaultValues.js'
 import { config } from '../data/config.js'
@@ -17,3 +18,5 @@ export function getConfigProperty<K extends keyof typeof configDefaultValues>(
     fallbackValue
   ) as (typeof configDefaultValues)[K]
 }
+
+export const ntfyServerIsDefault = getConfigProperty('ntfy.server') === DEFAULT_NTFY_SERVER

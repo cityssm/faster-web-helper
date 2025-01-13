@@ -3,10 +3,12 @@
 <h1 class="title is-2">FASTER Web Helper</h1>
 
 <div class="columns">
-  <div class="column is-two-thirds">
+  <div class="column is-three-fifths">
     <h2 class="title">Available Modules</h2>
+    <% let hasModules = false; %>
 
     <% if (configFunctions.getConfigProperty('modules.inventoryScanner.isEnabled') && (user.settings['inventoryScanner_hasAccess'] ?? 'false') === 'true') { %>
+      <% hasModules = true; %>
       <a class="box" href="<%= urlPrefix %>/modules/inventoryScanner">
         <div class="columns">
           <div class="column is-narrow">
@@ -21,6 +23,15 @@
           </div>
         </div>
       </a>
+    <% } %>
+
+    <% if (!hasModules) { %>
+      <div class="message is-warning">
+        <p class="message-body">
+          <strong>No modules are available.</strong><br />
+          If you expect to see modules here, please contact your system administrator.
+        </p>
+      </div>
     <% } %>
   </div>
   <div class="column">

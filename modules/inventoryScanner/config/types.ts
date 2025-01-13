@@ -2,6 +2,7 @@ import type { GPItemWithQuantity } from '@cityssm/dynamics-gp'
 
 import type {
   ConfigFileSuffixXlsx,
+  ConfigNtfyTopic,
   ConfigScheduledFtpReport
 } from '../../../types/configHelperTypes.js'
 
@@ -47,10 +48,7 @@ export interface ConfigModuleInventoryScanner {
 
   fasterItemRequests?: {
     isEnabled?: boolean
-    ntfy?: {
-      isEnabled?: boolean
-      topic?: string
-    }
+    ntfy?: ConfigNtfyTopic
   }
 
   quantities?: {
