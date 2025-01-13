@@ -29,7 +29,7 @@ export default function handler(
 
     const workerMessage: TaskWorkerMessage = {
       destinationTaskName,
-      messageType: `workOrderValidation ${ request.body.workOrderNumber}`,
+      messageType: request.body.workOrderNumber,
       timeMillis: Date.now()
     }
 

@@ -3,7 +3,7 @@
   "version": "1.0.0-dev",
   "type": "module",
   "description": "A service to support integrations with FASTER Web.",
-  "exports": "./app.js",
+  "exports": "./index.js",
   "engines": {
     "node": ">=18.0.0"
   },
@@ -28,9 +28,10 @@
     "@cityssm/bulma-webapp-js": "^1.5.0",
     "@cityssm/configurator": "^0.1.0",
     "@cityssm/dynamics-gp": "^1.0.5",
-    "@cityssm/faster-report-exporter": "^0.3.2",
+    "@cityssm/faster-report-exporter": "^0.4.1",
     "@cityssm/faster-report-parser": "^0.3.0",
-    "@cityssm/faster-url-builder": "^1.0.0",
+    "@cityssm/faster-unofficial-api": "^0.2.0",
+    "@cityssm/faster-url-builder": "^1.0.1",
     "@cityssm/has-package": "^1.0.0",
     "@cityssm/is-private-network-address": "^1.0.0",
     "@cityssm/mssql-multi-pool": "^4.1.0",

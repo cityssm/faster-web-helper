@@ -1,6 +1,5 @@
 import { FasterApi } from '@cityssm/faster-api'
 import FasterUrlBuilder from '@cityssm/faster-url-builder'
-import ntfyPublish from '@cityssm/ntfy-publish'
 import { minutesToMillis } from '@cityssm/to-millis'
 import camelcase from 'camelcase'
 import Debug from 'debug'
@@ -8,6 +7,7 @@ import exitHook from 'exit-hook'
 import schedule from 'node-schedule'
 
 import { getConfigProperty } from '../../../helpers/config.functions.js'
+import { sendNtfyMessage } from '../../../helpers/ntfy.helpers.js'
 import { getSettingValues } from '../database/getSetting.js'
 import updateSetting from '../database/updateSetting.js'
 import { summarizeItemRequests } from '../helpers/faster.functions.js'
@@ -57,51 +57,56 @@ async function runOutstandingItemRequestsFromFasterApiTask(): Promise<void> {
   )
 
   debug('Querying the FASTER API...')
-  const itemRequestsResponse = await fasterApi.getItemRequests({})
 
-  if (!itemRequestsResponse.success) {
-    debug(`FASTER API error: ${JSON.stringify(itemRequestsResponse.error)}`)
-    return
-  }
+  try {
+    const itemRequestsResponse = await fasterApi.getItemRequests({})
 
-  const summarizedItemRequests = summarizeItemRequests(itemRequestsResponse)
+    if (!itemRequestsResponse.success) {
+      debug(`FASTER API error: ${JSON.stringify(itemRequestsResponse.error)}`)
+      return
+    }
 
-  updateSetting(
-    'itemRequests.count',
-    summarizedItemRequests.itemRequestsCount.toString()
-  )
+    const summarizedItemRequests = summarizeItemRequests(itemRequestsResponse)
 
-  updateSetting(
-    'itemRequests.maxItemRequestId',
-    summarizedItemRequests.maxItemRequestId.toString()
-  )
+    updateSetting(
+      'itemRequests.count',
+      summarizedItemRequests.itemRequestsCount.toString()
+    )
 
-  if (
-    getConfigProperty(
-      'modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled'
-    ) &&
-    ntfyTopic !== undefined
-  ) {
-    const itemRequestCountValues = getSettingValues('itemRequests.count')
-    const maxItemRequestIdValues = getSettingValues(
-      'itemRequests.maxItemRequestId'
+    updateSetting(
+      'itemRequests.maxItemRequestId',
+      summarizedItemRequests.maxItemRequestId.toString()
     )
 
     if (
-      (itemRequestCountValues !== undefined &&
-        Number.parseInt(itemRequestCountValues.previousSettingValue ?? '0') <
-          Number.parseInt(itemRequestCountValues.settingValue ?? '0')) ||
-      (maxItemRequestIdValues !== undefined &&
-        Number.parseInt(maxItemRequestIdValues.previousSettingValue ?? '0') <
-          Number.parseInt(maxItemRequestIdValues.settingValue ?? '0'))
+      getConfigProperty(
+        'modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled'
+      ) &&
+      ntfyTopic !== undefined
     ) {
-      await ntfyPublish({
-        topic: ntfyTopic,
-        title: 'FASTER Web Helper',
-        message: 'New item requests have been received.',
-        clickURL: fasterUrlBuilder.inventoryItemRequestSearchUrl
-      })
+      const itemRequestCountValues = getSettingValues('itemRequests.count')
+      const maxItemRequestIdValues = getSettingValues(
+        'itemRequests.maxItemRequestId'
+      )
+
+      if (
+        (getConfigProperty('ntfy.server') !== '' &&
+          itemRequestCountValues !== undefined &&
+          Number.parseInt(itemRequestCountValues.previousSettingValue ?? '0') <
+            Number.parseInt(itemRequestCountValues.settingValue ?? '0')) ||
+        (maxItemRequestIdValues !== undefined &&
+          Number.parseInt(maxItemRequestIdValues.previousSettingValue ?? '0') <
+            Number.parseInt(maxItemRequestIdValues.settingValue ?? '0'))
+      ) {
+        await sendNtfyMessage({
+          topic: ntfyTopic,
+          message: 'New item requests have been received.',
+          clickURL: fasterUrlBuilder.inventoryItemRequestSearchUrl
+        })
+      }
     }
+  } catch (error) {
+    debug('FASTER API error:', error)
   }
 
   debug(`Finished "${taskName}".`)

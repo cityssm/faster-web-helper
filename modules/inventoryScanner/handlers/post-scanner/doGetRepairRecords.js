@@ -9,7 +9,7 @@ export default function handler(request, response) {
             : 'inventoryScanner.workOrderValidation.fasterApi';
         const workerMessage = {
             destinationTaskName,
-            messageType: `workOrderValidation ${request.body.workOrderNumber}`,
+            messageType: request.body.workOrderNumber,
             timeMillis: Date.now()
         };
         if (process.send !== undefined) {

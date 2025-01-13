@@ -42,11 +42,12 @@ async function initializeModuleTasks() {
         wait: secondsToMillis(1)
     });
 }
+const maxAppProcesses = 4;
 /**
  * Initialize app workers
  */
 function initializeAppWorkers() {
-    const processCount = Math.min(os.cpus().length, 4);
+    const processCount = Math.min(os.cpus().length, maxAppProcesses);
     debug(`Launching ${processCount} web app processes`);
     const clusterSettings = {
         exec: `${directoryName}/app/appProcess.js`

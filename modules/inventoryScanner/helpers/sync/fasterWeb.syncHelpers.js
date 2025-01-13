@@ -2,17 +2,19 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers, unicorn/no-array-push-push */
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { FasterUnofficialAPI, integrationNames } from '@cityssm/faster-unofficial-api';
 import { dateIntegerToDate } from '@cityssm/utils-datetime';
 import camelcase from 'camelcase';
 import Debug from 'debug';
 import { getConfigProperty } from '../../../../helpers/config.functions.js';
-import { hasFasterApi } from '../../../../helpers/fasterWeb.helpers.js';
+import { hasFasterApi, hasFasterUnofficialApi } from '../../../../helpers/fasterWeb.helpers.js';
 import { ensureTempFolderExists, tempFolderPath } from '../../../../helpers/filesystem.functions.js';
 import { uploadFile } from '../../../../helpers/sftp.functions.js';
 import { updateScannerRecordSyncFields } from '../../database/updateScannerRecordSyncFields.js';
 import { moduleName } from '../module.helpers.js';
 import { updateMultipleScannerRecords } from './syncHelpers.js';
 const debug = Debug(`faster-web-helper:${camelcase(moduleName)}:syncFaster`);
+const fasterApiConfig = getConfigProperty('fasterWeb');
 const exportFileNamePrefix = getConfigProperty(
 // eslint-disable-next-line no-secrets/no-secrets
 'modules.inventoryScanner.fasterSync.exportFileNamePrefix');
@@ -155,7 +157,6 @@ export async function syncScannerRecordsWithFaster(records) {
     const integrationId = getConfigProperty('modules.inventoryScanner.fasterSync.integrationId');
     if (hasFasterApi && integrationId !== undefined) {
         const fasterApiImport = await import('@cityssm/faster-api');
-        const fasterApiConfig = getConfigProperty('fasterWeb');
         const fasterApi = new fasterApiImport.FasterApi(fasterApiConfig.tenantOrBaseUrl, fasterApiConfig.apiUserName ?? '', fasterApiConfig.apiPassword ?? '');
         try {
             await fasterApi.createIntegrationLogMessage({
@@ -173,6 +174,15 @@ export async function syncScannerRecordsWithFaster(records) {
         }
         catch {
             debug('Error communicating with FASTER API.');
+        }
+    }
+    if (hasFasterUnofficialApi) {
+        const fasterApi = new FasterUnofficialAPI(fasterApiConfig.tenantOrBaseUrl, fasterApiConfig.appUserName ?? '', fasterApiConfig.appPassword ?? '');
+        try {
+            await fasterApi.executeIntegration(integrationNames.inventoryImportUtility);
+        }
+        catch {
+            debug('Error communicating with FASTER Web.');
         }
     }
     updateMultipleScannerRecords(records, errorRecordIds, {

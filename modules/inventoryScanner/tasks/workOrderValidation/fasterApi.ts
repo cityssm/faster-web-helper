@@ -53,30 +53,35 @@ async function runUpdateWorkOrderValidationFromFasterApiTask(): Promise<void> {
   const repairIdsToRefresh = getRepairIdsToRefresh()
 
   debug(`Querying ${repairIdsToRefresh.length} repairs from the FASTER API...`)
-  const repairResponse = await fasterApi.getRepairs(repairIdsToRefresh)
 
-  if (!repairResponse.success) {
-    debug(`FASTER API error: ${JSON.stringify(repairResponse.error)}`)
-    return
-  }
+  try {
+    const repairResponse = await fasterApi.getRepairs(repairIdsToRefresh)
 
-  for (const repair of repairResponse.response.results) {
-    if (repair.documentID === 0) {
-      deleteWorkOrderValidation(repair.repairID, 'faster')
-    } else {
-      createOrUpdateWorkOrderValidation(
-        {
-          workOrderNumber: repair.documentID.toString(),
-          workOrderType: 'faster',
-          workOrderDescription: repair.groupComponentAction,
-          repairId: repair.repairID,
-          repairDescription: repair.repairDesc,
-          technicianId: undefined,
-          technicianDescription: repair.technicianName
-        },
-        timeMillis
-      )
+    if (!repairResponse.success) {
+      debug(`FASTER API error: ${JSON.stringify(repairResponse.error)}`)
+      return
     }
+
+    for (const repair of repairResponse.response.results) {
+      if (repair.documentID === 0) {
+        deleteWorkOrderValidation(repair.repairID, 'faster')
+      } else {
+        createOrUpdateWorkOrderValidation(
+          {
+            workOrderNumber: repair.documentID.toString(),
+            workOrderType: 'faster',
+            workOrderDescription: repair.groupComponentAction,
+            repairId: repair.repairID,
+            repairDescription: repair.repairDesc,
+            technicianId: undefined,
+            technicianDescription: repair.technicianName
+          },
+          timeMillis
+        )
+      }
+    }
+  } catch (error) {
+    debug(`FASTER API error: ${error}`)
   }
 
   debug(`Finished "${taskName}".`)

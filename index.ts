@@ -8,7 +8,10 @@ import Debug from 'debug'
 import { asyncExitHook } from 'exit-hook'
 import schedule from 'node-schedule'
 
-import { registerChildProcesses, relayMessageToChildProcess } from './helpers/childProcesses.helpers.js'
+import {
+  registerChildProcesses,
+  relayMessageToChildProcess
+} from './helpers/childProcesses.helpers.js'
 import { getConfigProperty } from './helpers/config.functions.js'
 import type { TaskWorkerMessage } from './types/tasks.types.js'
 
@@ -70,11 +73,13 @@ async function initializeModuleTasks(): Promise<void> {
   )
 }
 
+const maxAppProcesses = 4
+
 /**
  * Initialize app workers
  */
 function initializeAppWorkers(): void {
-  const processCount = Math.min(os.cpus().length, 4)
+  const processCount = Math.min(os.cpus().length, maxAppProcesses)
 
   debug(`Launching ${processCount} web app processes`)
 
@@ -92,7 +97,6 @@ function initializeAppWorkers(): void {
   }
 
   cluster.on('message', (worker, message: TaskWorkerMessage) => {
-
     debug(`Received message from worker: ${worker.process.pid}`)
 
     if (message.destinationTaskName === 'app') {
@@ -104,8 +108,7 @@ function initializeAppWorkers(): void {
         debug(`Relaying message to worker: ${pid}`)
         activeWorker.send(message)
       }
-    }
-    else {
+    } else {
       relayMessageToChildProcess(message)
     }
   })

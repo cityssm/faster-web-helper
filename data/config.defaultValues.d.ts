@@ -2,8 +2,8 @@ import type { ADWebAuthAuthenticatorConfiguration, ActiveDirectoryAuthenticatorC
 import type { AccessOptions } from 'basic-ftp';
 import type { config as MSSQLConfig } from 'mssql';
 import type { Spec } from 'node-schedule';
+import type { ConfigFasterWeb } from '../types/config.types.js';
 import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from '../types/configHelperTypes.js';
-import type { ConfigFasterWeb } from '../types/configTypes.js';
 export declare const configDefaultValues: {
     'modules.tempFolderCleanup.isEnabled': boolean;
     'modules.tempFolderCleanup.schedule': Spec;
@@ -53,6 +53,7 @@ export declare const configDefaultValues: {
     fasterWeb: ConfigFasterWeb;
     worktech: MSSQLConfig | undefined;
     dynamicsGP: MSSQLConfig | undefined;
+    'ntfy.server': string;
     'modules.autocomplete.isEnabled': boolean;
     'modules.autocomplete.runOnStartup': boolean;
     'modules.autocomplete.reports.w114': ConfigScheduledFtpReport<ConfigFileSuffixXlsx> | undefined;

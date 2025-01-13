@@ -36,6 +36,9 @@ export interface Config {
         };
     };
     smtp?: SMTPTransport.Options;
+    ntfy?: {
+        server: string;
+    };
     worktech?: mssqlTypes.config;
     dynamicsGP?: mssqlTypes.config;
     modules: {

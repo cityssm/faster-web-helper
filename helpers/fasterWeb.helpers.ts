@@ -9,3 +9,7 @@ export const hasFasterApi =
   fasterApiPackageExists &&
   fasterWebConfig.apiUserName !== undefined &&
   fasterWebConfig.apiPassword !== undefined
+
+export const hasFasterUnofficialApi =
+  fasterWebConfig.appUserName !== undefined &&
+  fasterWebConfig.appPassword !== undefined

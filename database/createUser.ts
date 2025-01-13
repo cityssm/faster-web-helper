@@ -46,12 +46,12 @@ export default function createUser(
       .prepare(
         `update Users
           set fasterWebUserName = ?,
-          emailAddress = ?,
-          userKeyGuid = ?,
-          recordUpdate_userName = ?,
-          recordUpdate_timeMillis = ?,
-          recordDelete_userName = null,
-          recordDelete_timeMillis = null
+            emailAddress = ?,
+            userKeyGuid = ?,
+            recordUpdate_userName = ?,
+            recordUpdate_timeMillis = ?,
+            recordDelete_userName = null,
+            recordDelete_timeMillis = null
           where userName = ?`
       )
       .run(

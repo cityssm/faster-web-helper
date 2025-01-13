@@ -17,6 +17,7 @@ export const configDefaultValues = {
     fasterWeb: { tenantOrBaseUrl: '' },
     worktech: undefined,
     dynamicsGP: undefined,
+    'ntfy.server': '',
     /*
      * Autocomplete
      */

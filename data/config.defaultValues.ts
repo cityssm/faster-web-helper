@@ -13,11 +13,11 @@ import type { Spec } from 'node-schedule'
 
 import inventoryScannerDefaultValues from '../modules/inventoryScanner/config/defaultValues.js'
 import worktechUpdateDefaultValues from '../modules/worktechUpdate/config/defaultValues.js'
+import type { ConfigFasterWeb } from '../types/config.types.js'
 import type {
   ConfigFileSuffixXlsx,
   ConfigScheduledFtpReport
 } from '../types/configHelperTypes.js'
-import type { ConfigFasterWeb } from '../types/configTypes.js'
 
 export const configDefaultValues = {
   'application.workDays': [1, 2, 3, 4, 5],
@@ -52,6 +52,8 @@ export const configDefaultValues = {
 
   worktech: undefined as unknown as MSSQLConfig | undefined,
   dynamicsGP: undefined as unknown as MSSQLConfig | undefined,
+
+  'ntfy.server': '',
 
   /*
    * Autocomplete
