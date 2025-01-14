@@ -7,7 +7,7 @@
     <h2 class="title">Available Modules</h2>
     <% let hasModules = false; %>
 
-    <% if (configFunctions.getConfigProperty('modules.inventoryScanner.isEnabled') && (user.settings['inventoryScanner_hasAccess'] ?? 'false') === 'true') { %>
+    <% if (configHelpers.getConfigProperty('modules.inventoryScanner.isEnabled') && (user.settings['inventoryScanner_hasAccess'] ?? 'false') === 'true') { %>
       <% hasModules = true; %>
       <a class="box" href="<%= urlPrefix %>/modules/inventoryScanner">
         <div class="columns">

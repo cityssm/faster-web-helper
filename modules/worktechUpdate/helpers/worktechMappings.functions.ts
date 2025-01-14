@@ -1,7 +1,7 @@
 import type { AssetResult } from '@cityssm/faster-api'
 import type { EquipmentItem, UpdateEquipmentFields } from '@cityssm/worktech-api'
 
-import { getConfigProperty } from '../../../helpers/config.functions.js'
+import { getConfigProperty } from '../../../helpers/config.helpers.js'
 
 import {
   getFasterAssetClassCode,

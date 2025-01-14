@@ -5,7 +5,8 @@ import camelCase from 'camelcase'
 import Debug from 'debug'
 import type express from 'express'
 
-import { getConfigProperty } from '../../helpers/config.functions.js'
+import { DEBUG_NAMESPACE } from '../../debug.config.js'
+import { getConfigProperty } from '../../helpers/config.helpers.js'
 import { hasFasterApi } from '../../helpers/fasterWeb.helpers.js'
 import type { TaskName } from '../../types/tasks.types.js'
 
@@ -14,7 +15,7 @@ import router from './handlers/router.js'
 import scannerRouter from './handlers/router.scanner.js'
 import { moduleName } from './helpers/module.helpers.js'
 
-const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`)
+const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}`)
 
 const urlPrefix = getConfigProperty('webServer.urlPrefix')
 

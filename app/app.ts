@@ -9,13 +9,14 @@ import createError from 'http-errors'
 import FileStore from 'session-file-store'
 
 import { initializeUserDatabase } from '../database/helpers.userDatabase.js'
+import { DEBUG_NAMESPACE } from '../debug.config.js'
 import { sessionCheckHandler } from '../handlers/session.js'
-import * as configFunctions from '../helpers/config.functions.js'
+import * as configHelpers from '../helpers/config.helpers.js'
 import router_dashboard from '../routers/dashboard.js'
 import router_login from '../routers/login.js'
 import { version } from '../version.js'
 
-const debug = Debug(`faster-web-helper:app:${process.pid}`)
+const debug = Debug(`${DEBUG_NAMESPACE}:app:${process.pid}`)
 
 /*
  * Initialize databases
@@ -51,7 +52,7 @@ app.use(cookieParser())
  * Initialize static routes
  */
 
-const urlPrefix = configFunctions.getConfigProperty('webServer.urlPrefix')
+const urlPrefix = configHelpers.getConfigProperty('webServer.urlPrefix')
 
 if (urlPrefix !== '') {
   debug(`urlPrefix = ${urlPrefix}`)
@@ -85,7 +86,7 @@ app.use(
  * SESSION MANAGEMENT
  */
 
-const sessionCookieName = configFunctions.getConfigProperty(
+const sessionCookieName = configHelpers.getConfigProperty(
   'webServer.session.cookieName'
 )
 
@@ -99,12 +100,12 @@ app.use(
       retries: 20
     }),
     name: sessionCookieName,
-    secret: configFunctions.getConfigProperty('webServer.session.secret'),
+    secret: configHelpers.getConfigProperty('webServer.session.secret'),
     resave: true,
     saveUninitialized: false,
     rolling: true,
     cookie: {
-      maxAge: configFunctions.getConfigProperty(
+      maxAge: configHelpers.getConfigProperty(
         'webServer.session.maxAgeMillis'
       ),
       sameSite: 'strict'
@@ -131,13 +132,13 @@ app.use((request, response, next) => {
 app.use((request, response, next) => {
   response.locals.user = request.session.user
 
-  response.locals.configFunctions = configFunctions
+  response.locals.configHelpers = configHelpers
 
   response.locals.fasterUrlBuilder = new FasterUrlBuilder(
-    configFunctions.getConfigProperty('fasterWeb').tenantOrBaseUrl
+    configHelpers.getConfigProperty('fasterWeb').tenantOrBaseUrl
   )
 
-  response.locals.urlPrefix = configFunctions.getConfigProperty(
+  response.locals.urlPrefix = configHelpers.getConfigProperty(
     'webServer.urlPrefix'
   )
 
@@ -172,14 +173,14 @@ app.get(`${urlPrefix}/logout`, (request, response) => {
  * Initialize modules
  */
 
-if (configFunctions.getConfigProperty('modules.autocomplete.isEnabled')) {
+if (configHelpers.getConfigProperty('modules.autocomplete.isEnabled')) {
   const initializeAutocompleteModule = await import(
     '../modules/autocomplete/initializeAutocompleteModule.js'
   )
   initializeAutocompleteModule.initializeAutocompleteAppHandlers(app)
 }
 
-if (configFunctions.getConfigProperty('modules.inventoryScanner.isEnabled')) {
+if (configHelpers.getConfigProperty('modules.inventoryScanner.isEnabled')) {
   const initializeInventoryScannerModule = await import(
     '../modules/inventoryScanner/initializeInventoryScanner.js'
   )

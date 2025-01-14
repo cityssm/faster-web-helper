@@ -6,9 +6,13 @@ import { secondsToMillis } from '@cityssm/to-millis';
 import Debug from 'debug';
 import { asyncExitHook } from 'exit-hook';
 import schedule from 'node-schedule';
+import { DEBUG_ENABLE_NAMESPACES, DEBUG_NAMESPACE } from './debug.config.js';
 import { registerChildProcesses, relayMessageToChildProcess } from './helpers/childProcesses.helpers.js';
-import { getConfigProperty } from './helpers/config.functions.js';
-const debug = Debug(`faster-web-helper:www:${process.pid}`);
+import { getConfigProperty } from './helpers/config.helpers.js';
+if (process.env.NODE_ENV === 'development') {
+    Debug.enable(DEBUG_ENABLE_NAMESPACES);
+}
+const debug = Debug(`${DEBUG_NAMESPACE}:www:${process.pid}`);
 const directoryName = path.dirname(fileURLToPath(import.meta.url));
 process.title = 'Faster Web Helper (Primary)';
 debug(`Primary pid:   ${process.pid}`);

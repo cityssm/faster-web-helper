@@ -2,12 +2,13 @@ import sqlite from 'better-sqlite3'
 import camelcase from 'camelcase'
 import Debug from 'debug'
 
+import { DEBUG_NAMESPACE } from '../../../debug.config.js'
 import { moduleName } from '../helpers/module.helpers.js'
 
 export type SettingName = 'itemRequests.count' | 'itemRequests.maxItemRequestId'
 
 const debug = Debug(
-  `faster-web-helper:${camelcase(moduleName)}:databaseHelpers`
+  `${DEBUG_NAMESPACE}:${camelcase(moduleName)}:databaseHelpers`
 )
 
 export const databasePath = 'data/inventoryScanner.db'

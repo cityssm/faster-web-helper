@@ -2,10 +2,11 @@ import { dateToString, dateToTimePeriodString } from '@cityssm/utils-datetime';
 import { WorkTechAPI } from '@cityssm/worktech-api';
 import camelcase from 'camelcase';
 import Debug from 'debug';
-import { getConfigProperty } from '../../../../helpers/config.functions.js';
+import { DEBUG_NAMESPACE } from '../../../../debug.config.js';
+import { getConfigProperty } from '../../../../helpers/config.helpers.js';
 import { moduleName } from '../module.helpers.js';
 import { updateMultipleScannerRecords } from './syncHelpers.js';
-const debug = Debug(`faster-web-helper:${camelcase(moduleName)}:syncWorktech`);
+const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:syncWorktech`);
 const worktechConfig = getConfigProperty('worktech');
 export async function syncScannerRecordsWithWorktech(records) {
     if (worktechConfig === undefined) {

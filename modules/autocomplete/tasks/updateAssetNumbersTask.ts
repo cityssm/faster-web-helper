@@ -5,18 +5,19 @@ import { dateStringToDate } from '@cityssm/utils-datetime'
 import camelCase from 'camelcase'
 import Debug from 'debug'
 
-import { getConfigProperty } from '../../../helpers/config.functions.js'
-import { downloadFilesToTemp } from '../../../helpers/sftp.functions.js'
+import { DEBUG_NAMESPACE } from '../../../debug.config.js'
+import { getConfigProperty } from '../../../helpers/config.helpers.js'
+import { downloadFilesToTemp } from '../../../helpers/sftp.helpers.js'
 import type {
   ConfigFileSuffixXlsx,
   ConfigScheduledFtpReport
-} from '../../../types/configHelperTypes.js'
+} from '../../../types/config.helperTypes.js'
 import { moduleName } from '../helpers/moduleHelpers.js'
 
 export const taskName = 'Update Asset Numbers Task'
 
 const debug = Debug(
-  `faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`
+  `${DEBUG_NAMESPACE}:${camelCase(moduleName)}:${camelCase(taskName)}`
 )
 
 const assetConfig = getConfigProperty(

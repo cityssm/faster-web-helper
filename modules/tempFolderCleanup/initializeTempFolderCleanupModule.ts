@@ -4,14 +4,15 @@ import Debug from 'debug'
 import exitHook from 'exit-hook'
 import schedule from 'node-schedule'
 
-import { getConfigProperty } from '../../helpers/config.functions.js'
+import { DEBUG_NAMESPACE } from '../../debug.config.js'
+import { getConfigProperty } from '../../helpers/config.helpers.js'
 
 import { moduleName } from './helpers/moduleHelpers.js'
 import runTempFolderCleanupTask, {
   taskName as tempFolderCleanupTaskName
 } from './tasks/tempFolderCleanupTask.js'
 
-const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`)
+const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}`)
 
 export function initializeTempFolderCleanupTask(): void {
   debug(`Initializing "${moduleName}"...`)

@@ -5,8 +5,8 @@ import { Router } from 'express'
 
 import createUser from '../database/createUser.js'
 import { getUserByUserName } from '../database/getUser.js'
-import { getConfigProperty } from '../helpers/config.functions.js'
-import { authenticate } from '../helpers/users.functions.js'
+import { getConfigProperty } from '../helpers/config.helpers.js'
+import { authenticate } from '../helpers/users.helpers.js'
 
 export const router = Router()
 

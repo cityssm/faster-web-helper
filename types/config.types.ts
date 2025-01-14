@@ -3,7 +3,7 @@ import type {
   ActiveDirectoryAuthenticatorConfiguration,
   PlainTextAuthenticatorConfiguration
 } from '@cityssm/authentication-helper'
-import type { mssqlTypes } from '@cityssm/mssql-multi-pool'
+import type { mssql } from '@cityssm/mssql-multi-pool'
 import type { AccessOptions } from 'basic-ftp'
 import type { Spec } from 'node-schedule'
 import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js'
@@ -14,7 +14,7 @@ import type { ConfigModuleWorktechUpdate } from '../modules/worktechUpdate/confi
 import type {
   ConfigFileSuffixXlsx,
   ConfigScheduledFtpReport
-} from './configHelperTypes.js'
+} from './config.helperTypes.js'
 
 export interface Config {
   application?: {
@@ -59,9 +59,9 @@ export interface Config {
     server: string
   }
 
-  worktech?: mssqlTypes.config
+  worktech?: mssql.config
 
-  dynamicsGP?: mssqlTypes.config
+  dynamicsGP?: mssql.config
 
   modules: {
     autocomplete?: ConfigModule<ConfigModuleAutocomplete>

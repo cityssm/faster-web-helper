@@ -6,11 +6,12 @@ import Debug from 'debug'
 import exitHook from 'exit-hook'
 import schedule from 'node-schedule'
 
-import { getConfigProperty } from '../../../helpers/config.functions.js'
+import { DEBUG_NAMESPACE } from '../../../debug.config.js'
+import { getConfigProperty } from '../../../helpers/config.helpers.js'
 import { sendNtfyMessage } from '../../../helpers/ntfy.helpers.js'
 import { getSettingValues } from '../database/getSetting.js'
 import updateSetting from '../database/updateSetting.js'
-import { summarizeItemRequests } from '../helpers/faster.functions.js'
+import { summarizeItemRequests } from '../helpers/faster.helpers.js'
 import { moduleName } from '../helpers/module.helpers.js'
 
 const minimumMillisBetweenRuns = minutesToMillis(2)
@@ -20,7 +21,7 @@ let lastRunMillis = 0
 export const taskName = 'Outstanding Item Requests - FASTER API'
 
 const debug = Debug(
-  `faster-web-helper:${camelcase(moduleName)}:${camelcase(taskName)}`
+  `${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`
 )
 
 const fasterWebConfig = getConfigProperty('fasterWeb')

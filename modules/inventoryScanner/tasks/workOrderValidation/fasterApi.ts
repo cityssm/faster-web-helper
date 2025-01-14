@@ -5,13 +5,14 @@ import Debug from 'debug'
 import exitHook from 'exit-hook'
 import schedule from 'node-schedule'
 
-import { getConfigProperty } from '../../../../helpers/config.functions.js'
-import { getScheduledTaskMinutes } from '../../../../helpers/tasks.functions.js'
+import { DEBUG_NAMESPACE } from '../../../../debug.config.js'
+import { getConfigProperty } from '../../../../helpers/config.helpers.js'
+import { getScheduledTaskMinutes } from '../../../../helpers/tasks.helpers.js'
 import type { TaskWorkerMessage } from '../../../../types/tasks.types.js'
 import createOrUpdateWorkOrderValidation from '../../database/createOrUpdateWorkOrderValidation.js'
 import deleteWorkOrderValidation from '../../database/deleteWorkOrderValidation.js'
 import getMaxWorkOrderValidationRecordUpdateMillis from '../../database/getMaxWorkOrderValidationRecordUpdateMillis.js'
-import { getRepairIdsToRefresh } from '../../helpers/faster.functions.js'
+import { getRepairIdsToRefresh } from '../../helpers/faster.helpers.js'
 import { moduleName } from '../../helpers/module.helpers.js'
 
 const minimumMillisBetweenRuns = minutesToMillis(20)
@@ -20,7 +21,7 @@ let lastRunMillis = getMaxWorkOrderValidationRecordUpdateMillis('faster')
 export const taskName = 'Work Order Validation Task - FASTER API'
 
 const debug = Debug(
-  `faster-web-helper:${camelcase(moduleName)}:${camelcase(taskName)}`
+  `${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`
 )
 
 const fasterWebConfig = getConfigProperty('fasterWeb')

@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3'
 
-import { scannerKeyToUserName } from '../helpers/scanner.functions.js'
+import { scannerKeyToUserName } from '../helpers/scanner.helpers.js'
 
 import { databasePath } from './helpers.database.js'
 

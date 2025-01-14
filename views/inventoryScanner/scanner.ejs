@@ -14,13 +14,13 @@
 </head>
 
 <%
-  let workOrderPattern = configFunctions.getConfigProperty('modules.inventoryScanner.workOrders.fasterRegex').source
+  let workOrderPattern = configHelpers.getConfigProperty('modules.inventoryScanner.workOrders.fasterRegex').source
 
-  if (configFunctions.getConfigProperty('modules.inventoryScanner.workOrders.acceptWorkTech')) {
-    workOrderPattern = `(?:${workOrderPattern}|${configFunctions.getConfigProperty('modules.inventoryScanner.workOrders.workTechRegex').source})`
+  if (configHelpers.getConfigProperty('modules.inventoryScanner.workOrders.acceptWorkTech')) {
+    workOrderPattern = `(?:${workOrderPattern}|${configHelpers.getConfigProperty('modules.inventoryScanner.workOrders.workTechRegex').source})`
   }
 
-  const itemNumberPattern = configFunctions.getConfigProperty('modules.inventoryScanner.items.itemNumberRegex')?.source
+  const itemNumberPattern = configHelpers.getConfigProperty('modules.inventoryScanner.items.itemNumberRegex')?.source
 %>
 
 <body>
@@ -116,7 +116,7 @@
                     <% if (itemNumberPattern !== undefined) { %>
                       pattern="<%- itemNumberPattern %>"
                     <% } %>
-                    placeholder="<%= configFunctions.getConfigProperty('modules.inventoryScanner.items.placeholder') %>"
+                    placeholder="<%= configHelpers.getConfigProperty('modules.inventoryScanner.items.placeholder') %>"
                     autocomplete="off" required />
                   <span class="icon is-small is-left">
                     <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>

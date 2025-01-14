@@ -5,8 +5,9 @@ import Debug from 'debug'
 import exitHook from 'exit-hook'
 import schedule from 'node-schedule'
 
-import { getConfigProperty } from '../../../../helpers/config.functions.js'
-import { getScheduledTaskMinutes } from '../../../../helpers/tasks.functions.js'
+import { DEBUG_NAMESPACE } from '../../../../debug.config.js'
+import { getConfigProperty } from '../../../../helpers/config.helpers.js'
+import { getScheduledTaskMinutes } from '../../../../helpers/tasks.helpers.js'
 import type { ConfigItemValidationDynamicsGP } from '../../config/types.js'
 import createOrUpdateItemValidation from '../../database/createOrUpdateItemValidation.js'
 import deleteExpiredItemValidationRecords from '../../database/deleteExpiredItemValidationRecords.js'
@@ -19,7 +20,7 @@ let lastRunMillis = getMaxItemValidationRecordUpdateMillis()
 export const taskName = 'Inventory Validation Task - Dynamics GP'
 
 const debug = Debug(
-  `faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`
+  `${DEBUG_NAMESPACE}:${camelCase(moduleName)}:${camelCase(taskName)}`
 )
 
 const itemNumberRegex = getConfigProperty(

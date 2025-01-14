@@ -3,9 +3,10 @@
 import http from 'node:http';
 import Debug from 'debug';
 import exitHook from 'exit-hook';
-import { getConfigProperty } from '../helpers/config.functions.js';
+import { DEBUG_NAMESPACE } from '../debug.config.js';
+import { getConfigProperty } from '../helpers/config.helpers.js';
 import { app } from './app.js';
-const debug = Debug(`faster-web-helper:appProcess:${process.pid}`);
+const debug = Debug(`${DEBUG_NAMESPACE}:appProcess:${process.pid}`);
 function onError(error) {
     if (error.syscall !== 'listen') {
         throw error;

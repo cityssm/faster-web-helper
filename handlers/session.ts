@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express'
 
-import { getConfigProperty } from '../helpers/config.functions.js'
+import { getConfigProperty } from '../helpers/config.helpers.js'
 
 const urlPrefix = getConfigProperty('webServer.urlPrefix')
 

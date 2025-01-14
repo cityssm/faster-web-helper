@@ -4,7 +4,7 @@ import type {
   ConfigFileSuffixXlsx,
   ConfigNtfyTopic,
   ConfigScheduledFtpReport
-} from '../../../types/configHelperTypes.js'
+} from '../../../types/config.helperTypes.js'
 
 export interface ConfigItemValidationDynamicsGP {
   source: 'dynamicsGP'

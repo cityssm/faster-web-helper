@@ -12,7 +12,8 @@ import { dateIntegerToDate } from '@cityssm/utils-datetime'
 import camelcase from 'camelcase'
 import Debug from 'debug'
 
-import { getConfigProperty } from '../../../../helpers/config.functions.js'
+import { DEBUG_NAMESPACE } from '../../../../debug.config.js'
+import { getConfigProperty } from '../../../../helpers/config.helpers.js'
 import {
   hasFasterApi,
   hasFasterUnofficialApi
@@ -20,15 +21,15 @@ import {
 import {
   ensureTempFolderExists,
   tempFolderPath
-} from '../../../../helpers/filesystem.functions.js'
-import { uploadFile } from '../../../../helpers/sftp.functions.js'
+} from '../../../../helpers/filesystem.helpers.js'
+import { uploadFile } from '../../../../helpers/sftp.helpers.js'
 import { updateScannerRecordSyncFields } from '../../database/updateScannerRecordSyncFields.js'
 import type { InventoryScannerRecord } from '../../types.js'
 import { moduleName } from '../module.helpers.js'
 
 import { updateMultipleScannerRecords } from './syncHelpers.js'
 
-const debug = Debug(`faster-web-helper:${camelcase(moduleName)}:syncFaster`)
+const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:syncFaster`)
 
 const fasterApiConfig = getConfigProperty('fasterWeb')
 

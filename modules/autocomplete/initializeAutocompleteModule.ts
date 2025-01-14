@@ -7,7 +7,8 @@ import exitHook from 'exit-hook'
 import express from 'express'
 import schedule from 'node-schedule'
 
-import { getConfigProperty } from '../../helpers/config.functions.js'
+import { DEBUG_NAMESPACE } from '../../debug.config.js'
+import { getConfigProperty } from '../../helpers/config.helpers.js'
 
 import { moduleName } from './helpers/moduleHelpers.js'
 import runUpdateAssetNumbersTask, {
@@ -17,7 +18,7 @@ import runUpdateItemNumbersTask, {
   taskName as updateItemNumbersTaskName
 } from './tasks/updateItemNumbersTask.js'
 
-const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`)
+const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}`)
 
 const assetNumbersConfig = getConfigProperty(
   'modules.autocomplete.reports.w114'

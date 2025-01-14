@@ -2,10 +2,11 @@ import { fork } from 'node:child_process';
 import camelCase from 'camelcase';
 import Debug from 'debug';
 import exitHook from 'exit-hook';
-import { getConfigProperty } from '../../helpers/config.functions.js';
+import { DEBUG_NAMESPACE } from '../../debug.config.js';
+import { getConfigProperty } from '../../helpers/config.helpers.js';
 import { hasFasterApi } from '../../helpers/fasterWeb.helpers.js';
 import { moduleName } from './helpers/module.helpers.js';
-const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`);
+const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}`);
 export function initializeWorktechUpdateTasks() {
     debug(`Initializing "${moduleName}"...`);
     if (getConfigProperty('worktech') === undefined) {

@@ -2,8 +2,8 @@ import type { ADWebAuthAuthenticatorConfiguration, ActiveDirectoryAuthenticatorC
 import type { AccessOptions } from 'basic-ftp';
 import type { config as MSSQLConfig } from 'mssql';
 import type { Spec } from 'node-schedule';
+import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from '../types/config.helperTypes.js';
 import type { ConfigFasterWeb } from '../types/config.types.js';
-import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from '../types/configHelperTypes.js';
 export declare const configDefaultValues: {
     'modules.tempFolderCleanup.isEnabled': boolean;
     'modules.tempFolderCleanup.schedule': Spec;

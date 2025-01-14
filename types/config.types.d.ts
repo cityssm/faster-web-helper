@@ -1,11 +1,11 @@
 import type { ADWebAuthAuthenticatorConfiguration, ActiveDirectoryAuthenticatorConfiguration, PlainTextAuthenticatorConfiguration } from '@cityssm/authentication-helper';
-import type { mssqlTypes } from '@cityssm/mssql-multi-pool';
+import type { mssql } from '@cityssm/mssql-multi-pool';
 import type { AccessOptions } from 'basic-ftp';
 import type { Spec } from 'node-schedule';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
 import type { ConfigModuleInventoryScanner } from '../modules/inventoryScanner/config/types.js';
 import type { ConfigModuleWorktechUpdate } from '../modules/worktechUpdate/config/types.js';
-import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from './configHelperTypes.js';
+import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from './config.helperTypes.js';
 export interface Config {
     application?: {
         workDays?: number[];
@@ -39,8 +39,8 @@ export interface Config {
     ntfy?: {
         server: string;
     };
-    worktech?: mssqlTypes.config;
-    dynamicsGP?: mssqlTypes.config;
+    worktech?: mssql.config;
+    dynamicsGP?: mssql.config;
     modules: {
         autocomplete?: ConfigModule<ConfigModuleAutocomplete>;
         inventoryScanner?: ConfigModule<ConfigModuleInventoryScanner>;

@@ -1,7 +1,9 @@
 import sqlite from 'better-sqlite3'
 import Debug from 'debug'
 
-const debug = Debug('faster-web-helper:helpers.userDatabase')
+import { DEBUG_NAMESPACE } from '../debug.config.js'
+
+const debug = Debug(`${DEBUG_NAMESPACE}:helpers.userDatabase`)
 
 export const databasePath = 'data/users.db'
 

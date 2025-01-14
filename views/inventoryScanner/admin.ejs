@@ -69,7 +69,7 @@
     <li>
       <a href="#tab--inventory">Inventory List</a>
     </li>
-    <% if (configFunctions.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled')) { %>
+    <% if (configHelpers.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled')) { %>
       <li>
         <a href="#tab--more">
           <span class="icon is-small">
@@ -194,7 +194,7 @@
     </div>
     <div id="container--inventory"></div>
   </div>
-  <% if (configFunctions.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled')) { %>
+  <% if (configHelpers.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled')) { %>
     <div class="is-hidden" id="tab--more">
       <div class="panel is-info">
         <p class="panel-heading">NTFY Notifications</p>
@@ -204,17 +204,17 @@
               <div class="field">
                 <label class="label" for="more--ntfyServer">
                   NTFY Server
-                  <% if (configFunctions.ntfyServerIsDefault) { %>
+                  <% if (configHelpers.ntfyServerIsDefault) { %>
                     <span class="tag">Default</span>
                   <% } %>
                 </label>
-                <input class="input" id="more--ntfyServer" value="<%= configFunctions.getConfigProperty('ntfy.server') %>" readonly />
+                <input class="input" id="more--ntfyServer" value="<%= configHelpers.getConfigProperty('ntfy.server') %>" readonly />
               </div>
               <div class="field">
                 <label class="label" for="more--ntfyTopic">
                   NTFY Topic
                 </label>
-                <input class="input" id="more--ntfyTopic" value="<%= configFunctions.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.topic') %>" readonly />
+                <input class="input" id="more--ntfyTopic" value="<%= configHelpers.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.topic') %>" readonly />
               </div>
             </div>
             <div class="column is-two-thirds">

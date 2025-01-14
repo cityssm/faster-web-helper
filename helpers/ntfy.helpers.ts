@@ -1,9 +1,11 @@
 import ntfyPublish, { type NtfyMessageOptions } from '@cityssm/ntfy-publish'
 import Debug from 'debug'
 
-import { getConfigProperty } from './config.functions.js'
+import { DEBUG_NAMESPACE } from '../debug.config.js'
 
-const debug = Debug('faster-web-helper:ntfy.helpers')
+import { getConfigProperty } from './config.helpers.js'
+
+const debug = Debug(`${DEBUG_NAMESPACE}:ntfy.helpers`)
 
 const ntfyServer = getConfigProperty('ntfy.server')
 const ntfyTitle = 'FASTER Web Helper'

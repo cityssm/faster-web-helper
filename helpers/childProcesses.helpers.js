@@ -1,6 +1,7 @@
 import Debug from 'debug';
 import exitHook from 'exit-hook';
-const debug = Debug('faster-web-helper:childProcesses');
+import { DEBUG_NAMESPACE } from '../debug.config.js';
+const debug = Debug(`${DEBUG_NAMESPACE}:childProcesses`);
 const registeredChildProcesses = {};
 export function registerChildProcesses(childProcesses) {
     for (const [taskName, childProcess] of Object.entries(childProcesses)) {

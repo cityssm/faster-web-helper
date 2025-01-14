@@ -2,7 +2,7 @@ import type { Request, Response } from 'express'
 
 import type { TaskWorkerMessage } from '../../../../types/tasks.types.js'
 import getWorkOrderValidationRecords from '../../database/getWorkOrderValidationRecords.js'
-import { getWorkOrderTypeFromWorkOrderNumber } from '../../helpers/workOrders.functions.js'
+import { getWorkOrderTypeFromWorkOrderNumber } from '../../helpers/workOrders.helpers.js'
 
 interface DoGetRepairIdsForm {
   workOrderNumber: string

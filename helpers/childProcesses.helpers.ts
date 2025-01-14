@@ -3,9 +3,10 @@ import type { ChildProcess } from 'node:child_process'
 import Debug from 'debug'
 import exitHook from 'exit-hook'
 
+import { DEBUG_NAMESPACE } from '../debug.config.js'
 import type { TaskName, TaskWorkerMessage } from '../types/tasks.types.js'
 
-const debug = Debug('faster-web-helper:childProcesses')
+const debug = Debug(`${DEBUG_NAMESPACE}:childProcesses`)
 
 const registeredChildProcesses: Partial<Record<TaskName, ChildProcess>> = {}
 

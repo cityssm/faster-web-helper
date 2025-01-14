@@ -2,13 +2,14 @@ import { fork } from 'node:child_process';
 import { isLocal } from '@cityssm/is-private-network-address';
 import camelCase from 'camelcase';
 import Debug from 'debug';
-import { getConfigProperty } from '../../helpers/config.functions.js';
+import { DEBUG_NAMESPACE } from '../../debug.config.js';
+import { getConfigProperty } from '../../helpers/config.helpers.js';
 import { hasFasterApi } from '../../helpers/fasterWeb.helpers.js';
 import { initializeInventoryScannerDatabase } from './database/helpers.database.js';
 import router from './handlers/router.js';
 import scannerRouter from './handlers/router.scanner.js';
 import { moduleName } from './helpers/module.helpers.js';
-const debug = Debug(`faster-web-helper:${camelCase(moduleName)}`);
+const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}`);
 const urlPrefix = getConfigProperty('webServer.urlPrefix');
 export function initializeInventoryScannerTasks() {
     initializeInventoryScannerDatabase();

@@ -3,7 +3,8 @@ import camelcase from 'camelcase';
 import Debug from 'debug';
 import exitHook from 'exit-hook';
 import schedule from 'node-schedule';
-import { getConfigProperty } from '../../../helpers/config.functions.js';
+import { DEBUG_NAMESPACE } from '../../../debug.config.js';
+import { getConfigProperty } from '../../../helpers/config.helpers.js';
 import { getItemValidationRecordsByItemNumber } from '../database/getItemValidationRecords.js';
 import getScannerRecords from '../database/getScannerRecords.js';
 import getWorkOrderValidationRecords from '../database/getWorkOrderValidationRecords.js';
@@ -13,7 +14,7 @@ const minimumMillisBetweenRuns = minutesToMillis(2);
 const lastRunMillis = 0;
 export const taskName = 'Update Records from Validation Task';
 export const taskUserName = 'validationTask';
-const debug = Debug(`faster-web-helper:${camelcase(moduleName)}:${camelcase(taskName)}`);
+const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`);
 function updateRecordsFromValidationTask() {
     if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
         debug('Skipping run.');

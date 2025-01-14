@@ -5,8 +5,9 @@ import Debug from 'debug'
 import exitHook from 'exit-hook'
 import schedule from 'node-schedule'
 
-import { getConfigProperty } from '../../../helpers/config.functions.js'
-import { getScheduledTaskMinutes } from '../../../helpers/tasks.functions.js'
+import { DEBUG_NAMESPACE } from '../../../debug.config.js'
+import { getConfigProperty } from '../../../helpers/config.helpers.js'
+import { getScheduledTaskMinutes } from '../../../helpers/tasks.helpers.js'
 import { getFasterAssetKey } from '../helpers/fasterFields.functions.js'
 import { moduleName } from '../helpers/module.helpers.js'
 import {
@@ -19,7 +20,7 @@ import {
 export const taskName = 'Active Equipment Task'
 
 const debug = Debug(
-  `faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`
+  `${DEBUG_NAMESPACE}:${camelCase(moduleName)}:${camelCase(taskName)}`
 )
 
 const fasterWebConfig = getConfigProperty('fasterWeb')

@@ -1,4 +1,4 @@
-import { getConfigProperty } from '../helpers/config.functions.js';
+import { getConfigProperty } from '../helpers/config.helpers.js';
 const urlPrefix = getConfigProperty('webServer.urlPrefix');
 const sessionCookieName = getConfigProperty('webServer.session.cookieName');
 // Redirect logged in users

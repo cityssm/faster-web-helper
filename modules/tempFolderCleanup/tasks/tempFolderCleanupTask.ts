@@ -8,17 +8,18 @@ import { daysToMillis } from '@cityssm/to-millis'
 import camelCase from 'camelcase'
 import Debug from 'debug'
 
-import { getConfigProperty } from '../../../helpers/config.functions.js'
+import { DEBUG_NAMESPACE } from '../../../debug.config.js'
+import { getConfigProperty } from '../../../helpers/config.helpers.js'
 import {
   ensureTempFolderExists,
   tempFolderPath
-} from '../../../helpers/filesystem.functions.js'
+} from '../../../helpers/filesystem.helpers.js'
 import { moduleName } from '../helpers/moduleHelpers.js'
 
 export const taskName = 'Cleanup Database Task'
 
 const debug = Debug(
-  `faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`
+  `${DEBUG_NAMESPACE}:${camelCase(moduleName)}:${camelCase(taskName)}`
 )
 
 export default async function runTempFolderCleanupTask(): Promise<void> {

@@ -1,4 +1,4 @@
-import { getConfigProperty } from '../../../helpers/config.functions.js';
+import { getConfigProperty } from '../../../helpers/config.helpers.js';
 import { getFasterAssetClassCode, getFasterAssetDepartmentDescription, getFasterAssetDescription, getFasterAssetNumber } from './fasterFields.functions.js';
 const mappingFunctions = getConfigProperty(
 // eslint-disable-next-line no-secrets/no-secrets

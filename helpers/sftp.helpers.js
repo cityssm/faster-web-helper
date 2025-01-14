@@ -3,9 +3,10 @@ import os from 'node:os';
 import path from 'node:path';
 import { Client } from 'basic-ftp';
 import Debug from 'debug';
-import { getConfigProperty } from './config.functions.js';
-import { doesFileExist, ensureTempFolderExists, tempFolderPath } from './filesystem.functions.js';
-const debug = Debug('faster-web-helper:functions.sftp');
+import { DEBUG_NAMESPACE } from '../debug.config.js';
+import { getConfigProperty } from './config.helpers.js';
+import { doesFileExist, ensureTempFolderExists, tempFolderPath } from './filesystem.helpers.js';
+const debug = Debug(`${DEBUG_NAMESPACE}:functions.sftp`);
 export async function downloadFilesToTemp(ftpPath) {
     await ensureTempFolderExists();
     const ftpClient = new Client();

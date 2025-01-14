@@ -3,11 +3,12 @@ import { parseW200ExcelReport } from '@cityssm/faster-report-parser/xlsx';
 import { dateStringToDate } from '@cityssm/utils-datetime';
 import camelCase from 'camelcase';
 import Debug from 'debug';
-import { getConfigProperty } from '../../../helpers/config.functions.js';
-import { downloadFilesToTemp } from '../../../helpers/sftp.functions.js';
+import { DEBUG_NAMESPACE } from '../../../debug.config.js';
+import { getConfigProperty } from '../../../helpers/config.helpers.js';
+import { downloadFilesToTemp } from '../../../helpers/sftp.helpers.js';
 import { moduleName } from '../helpers/moduleHelpers.js';
 export const taskName = 'Update Item Numbers Task';
-const debug = Debug(`faster-web-helper:${camelCase(moduleName)}:${camelCase(taskName)}`);
+const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}:${camelCase(taskName)}`);
 const inventoryConfig = getConfigProperty('modules.autocomplete.reports.w200');
 let maxInventoryDateMillis = 0;
 export default async function runUpdateItemNumbersTask() {

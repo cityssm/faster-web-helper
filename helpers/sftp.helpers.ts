@@ -5,16 +5,17 @@ import path from 'node:path'
 import { Client } from 'basic-ftp'
 import Debug from 'debug'
 
-import type { ConfigFtpPath } from '../types/configHelperTypes.js'
+import { DEBUG_NAMESPACE } from '../debug.config.js'
+import type { ConfigFtpPath } from '../types/config.helperTypes.js'
 
-import { getConfigProperty } from './config.functions.js'
+import { getConfigProperty } from './config.helpers.js'
 import {
   doesFileExist,
   ensureTempFolderExists,
   tempFolderPath
-} from './filesystem.functions.js'
+} from './filesystem.helpers.js'
 
-const debug = Debug('faster-web-helper:functions.sftp')
+const debug = Debug(`${DEBUG_NAMESPACE}:functions.sftp`)
 
 export async function downloadFilesToTemp<S extends string>(
   ftpPath: ConfigFtpPath<S>
