@@ -1,12 +1,14 @@
 "use strict";
 // eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
-/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+/* eslint-disable max-lines */
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
     const moduleUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/modules/inventoryScanner`;
     let pendingRecords = exports.pendingRecords;
     const pendingRecordsUnknownCountElement = document.querySelector('#pending--unknownCount');
+    const pendingRecordsErrorCountElement = document.querySelector('#pending--errorCount');
     const pendingRecordsTbodyElement = document.querySelector('#tbody--pending');
+    const syncRecordsButtonElement = document.querySelector('#pending--doSync');
     function unlockField(clickEvent) {
         clickEvent.preventDefault();
         const inputOrSelectElement = clickEvent.currentTarget
@@ -179,11 +181,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
             record.itemDescription === null ||
             record.unitPrice === null);
     }
+    function recordHasErrors(record) {
+        return record.workOrderType === 'faster' && record.quantity <= 0;
+    }
     function renderPendingRecords() {
         const rowElements = [];
         let unknownCount = 0;
+        let errorCount = 0;
         for (const [recordIndex, record] of pendingRecords.entries()) {
             const rowElement = document.createElement('tr');
+            if (recordHasErrors(record)) {
+                errorCount += 1;
+            }
             if (recordHasUnknowns(record)) {
                 unknownCount += 1;
             }
@@ -235,6 +244,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             if (record.quantity <= 0) {
                 quantityCellElement.classList.add('has-text-danger-dark');
             }
+            if (record.workOrderType === 'faster' && record.quantity <= 0) {
+                quantityCellElement.classList.add('has-background-danger-light');
+            }
             quantityCellElement.textContent = record.quantity.toString();
             rowElement.append(quantityCellElement);
             const unitPriceCellElement = document.createElement('td');
@@ -258,6 +270,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
             rowElements.push(rowElement);
         }
         pendingRecordsTbodyElement.replaceChildren(...rowElements);
+        if (errorCount === 0) {
+            pendingRecordsErrorCountElement.classList.add('is-hidden');
+            syncRecordsButtonElement.disabled = false;
+        }
+        else {
+            ;
+            pendingRecordsErrorCountElement.querySelector('span').textContent = errorCount.toString();
+            pendingRecordsErrorCountElement.classList.remove('is-hidden');
+            syncRecordsButtonElement.disabled = true;
+        }
         if (unknownCount === 0) {
             pendingRecordsUnknownCountElement.classList.add('is-hidden');
         }
@@ -305,7 +327,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             renderPendingRecords();
         });
     }
-    document.querySelector('#pending--doSync')?.addEventListener('click', () => {
+    syncRecordsButtonElement.addEventListener('click', () => {
         bulmaJS.confirm({
             title: 'Sync Scanner Records',
             message: 'Are you sure you are ready to sync all pending scanner records?',

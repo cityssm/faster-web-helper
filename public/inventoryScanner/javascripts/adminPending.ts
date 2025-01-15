@@ -1,5 +1,5 @@
 // eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
-/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+/* eslint-disable max-lines */
 
 import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
@@ -26,9 +26,17 @@ declare const cityssm: cityssmGlobal
     '#pending--unknownCount'
   ) as HTMLElement
 
+  const pendingRecordsErrorCountElement = document.querySelector(
+    '#pending--errorCount'
+  ) as HTMLElement
+
   const pendingRecordsTbodyElement = document.querySelector(
     '#tbody--pending'
   ) as HTMLTableSectionElement
+
+  const syncRecordsButtonElement = document.querySelector(
+    '#pending--doSync'
+  ) as HTMLButtonElement
 
   function unlockField(clickEvent: Event): void {
     clickEvent.preventDefault()
@@ -312,13 +320,22 @@ declare const cityssm: cityssmGlobal
     )
   }
 
+  function recordHasErrors(record: InventoryScannerRecord): boolean {
+    return record.workOrderType === 'faster' && record.quantity <= 0
+  }
+
   function renderPendingRecords(): void {
     const rowElements: HTMLTableRowElement[] = []
 
     let unknownCount = 0
+    let errorCount = 0
 
     for (const [recordIndex, record] of pendingRecords.entries()) {
       const rowElement = document.createElement('tr')
+
+      if (recordHasErrors(record)) {
+        errorCount += 1
+      }
 
       if (recordHasUnknowns(record)) {
         unknownCount += 1
@@ -387,6 +404,10 @@ declare const cityssm: cityssmGlobal
         quantityCellElement.classList.add('has-text-danger-dark')
       }
 
+      if (record.workOrderType === 'faster' && record.quantity <= 0) {
+        quantityCellElement.classList.add('has-background-danger-light')
+      }
+
       quantityCellElement.textContent = record.quantity.toString()
 
       rowElement.append(quantityCellElement)
@@ -423,6 +444,17 @@ declare const cityssm: cityssmGlobal
     }
 
     pendingRecordsTbodyElement.replaceChildren(...rowElements)
+
+    if (errorCount === 0) {
+      pendingRecordsErrorCountElement.classList.add('is-hidden')
+      syncRecordsButtonElement.disabled = false
+    } else {
+      ;(
+        pendingRecordsErrorCountElement.querySelector('span') as HTMLElement
+      ).textContent = errorCount.toString()
+      pendingRecordsErrorCountElement.classList.remove('is-hidden')
+      syncRecordsButtonElement.disabled = true
+    }
 
     if (unknownCount === 0) {
       pendingRecordsUnknownCountElement.classList.add('is-hidden')
@@ -504,7 +536,7 @@ declare const cityssm: cityssmGlobal
     )
   }
 
-  document.querySelector('#pending--doSync')?.addEventListener('click', () => {
+  syncRecordsButtonElement.addEventListener('click', () => {
     bulmaJS.confirm({
       title: 'Sync Scanner Records',
       message:
