@@ -28,8 +28,8 @@ A solution for issuing inventory using handheld barcode scanners.
 
 ```mermaid
 flowchart
-    scanner["Handheld Inventory Scanner"]
-    helper["`**FASTER Web Helper**`"]
+    scanner["Handheld Inventory Scanner (FASTER Web Helper)"]
+    helper["`**FASTER Web Helper Admin**`"]
     inventory(["Inventory System (Dynamics GP)"])
     faster["FASTER Web"]
     worktech([WorkTech])
@@ -42,8 +42,8 @@ flowchart
     helper-->|"FASTER Web Inventory transactions (SFTP -> IIU)"|faster
     helper-.->|WorkTech Inventory transactions|worktech
 
-    faster-->|Update available inventory|inventory
-    worktech-.->|Update available inventory|inventory
+    faster-->|Inventory update|inventory
+    worktech-.->|Inventory update|inventory
 ```
 
 ## Detailed Workflow
