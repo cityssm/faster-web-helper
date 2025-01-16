@@ -6,6 +6,7 @@ import schedule from 'node-schedule'
 
 import { DEBUG_NAMESPACE } from '../../../debug.config.js'
 import { getConfigProperty } from '../../../helpers/config.helpers.js'
+import type { TaskWorkerMessage } from '../../../types/tasks.types.js'
 import { getItemValidationRecordsByItemNumber } from '../database/getItemValidationRecords.js'
 import getScannerRecords from '../database/getScannerRecords.js'
 import getWorkOrderValidationRecords from '../database/getWorkOrderValidationRecords.js'
@@ -106,4 +107,9 @@ exitHook(() => {
   } catch {
     // ignore
   }
+})
+
+
+process.on('message', (_message: TaskWorkerMessage) => {
+  updateRecordsFromValidationTask()
 })

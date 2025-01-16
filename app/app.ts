@@ -182,9 +182,9 @@ if (configHelpers.getConfigProperty('modules.autocomplete.isEnabled')) {
 
 if (configHelpers.getConfigProperty('modules.inventoryScanner.isEnabled')) {
   const initializeInventoryScannerModule = await import(
-    '../modules/inventoryScanner/initializeInventoryScanner.js'
+    '../modules/inventoryScanner/handlers.initialize.js'
   )
-  initializeInventoryScannerModule.initializeInventoryScannerAppHandlers(app)
+  initializeInventoryScannerModule.default(app)
 }
 
 /*

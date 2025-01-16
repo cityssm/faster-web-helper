@@ -66,3 +66,6 @@ exitHook(() => {
         // ignore
     }
 });
+process.on('message', (_message) => {
+    updateRecordsFromValidationTask();
+});

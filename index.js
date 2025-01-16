@@ -27,8 +27,8 @@ async function initializeModuleTasks() {
         promises.push(initializeAutocompleteModule.initializeAutocompleteTasks());
     }
     if (getConfigProperty('modules.inventoryScanner.isEnabled')) {
-        const initializeInventoryScannerModule = await import('./modules/inventoryScanner/initializeInventoryScanner.js');
-        const childProcesses = initializeInventoryScannerModule.initializeInventoryScannerTasks();
+        const initializeInventoryScannerModule = await import('./modules/inventoryScanner/tasks.initialize.js');
+        const childProcesses = initializeInventoryScannerModule.default();
         registerChildProcesses(childProcesses);
     }
     if (getConfigProperty('modules.tempFolderCleanup.isEnabled')) {

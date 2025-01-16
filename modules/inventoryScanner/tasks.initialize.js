@@ -1,17 +1,13 @@
 import { fork } from 'node:child_process';
-import { isLocal } from '@cityssm/is-private-network-address';
-import camelCase from 'camelcase';
+import camelcase from 'camelcase';
 import Debug from 'debug';
 import { DEBUG_NAMESPACE } from '../../debug.config.js';
 import { getConfigProperty } from '../../helpers/config.helpers.js';
 import { hasFasterApi } from '../../helpers/fasterWeb.helpers.js';
 import { initializeInventoryScannerDatabase } from './database/helpers.database.js';
-import router from './handlers/router.js';
-import scannerRouter from './handlers/router.scanner.js';
 import { moduleName } from './helpers/module.helpers.js';
-const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}`);
-const urlPrefix = getConfigProperty('webServer.urlPrefix');
-export function initializeInventoryScannerTasks() {
+const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:tasks`);
+export default function initializeInventoryScannerTasks() {
     initializeInventoryScannerDatabase();
     const childProcesses = {};
     const itemValidationConfig = getConfigProperty('modules.inventoryScanner.items.validation');
@@ -68,32 +64,4 @@ export function initializeInventoryScannerTasks() {
         childProcesses['inventoryScanner.outstandingItemRequests'] = fork('./modules/inventoryScanner/tasks/outstandingItemRequests.js');
     }
     return childProcesses;
-}
-export function initializeInventoryScannerAppHandlers(app) {
-    /*
-     * Initialize router for admin interface
-     */
-    app.use(`${urlPrefix}/modules/inventoryScanner`, (request, response, nextFunction) => {
-        if ((request.session.user?.settings.inventoryScanner_hasAccess ??
-            'false') === 'true') {
-            nextFunction();
-            return;
-        }
-        response.redirect(`${urlPrefix}/dashboard`);
-    }, router);
-    /*
-     * Initialize router for scanner
-     */
-    app.use(`${urlPrefix}/apps/inventoryScanner`, (request, response, nextFunction) => {
-        const requestIp = request.ip ?? '';
-        const requestIpRegex = getConfigProperty('modules.inventoryScanner.scannerIpAddressRegex');
-        if (isLocal(requestIp) || requestIpRegex.test(requestIp)) {
-            nextFunction();
-            return;
-        }
-        response.json({
-            error: 403,
-            requestIp
-        });
-    }, scannerRouter);
 }

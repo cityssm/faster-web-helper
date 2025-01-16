@@ -8,6 +8,13 @@ export function registerChildProcesses(childProcesses) {
         registeredChildProcesses[taskName] = childProcess;
     }
 }
+/**
+ * Relays a message to a child process.
+ * **Note that this should not be used directly.**
+ * Instead, use `process.send` to send messages to the primary process.
+ * @param message - The message to relay to the child process.
+ * @returns `true` if the message was relayed to the child process, `false` if the child process is not registered.
+ */
 export function relayMessageToChildProcess(message) {
     if (Object.hasOwn(registeredChildProcesses, message.destinationTaskName)) {
         debug(`Relaying message to "${message.destinationTaskName}"`);

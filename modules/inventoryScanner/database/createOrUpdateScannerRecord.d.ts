@@ -14,4 +14,4 @@ export interface CreateScannerRecordForm {
     quantityMultiplier: '1' | '-1' | 1 | -1;
     unitPrice?: number | string;
 }
-export default function createScannerRecord(scannerRecord: CreateScannerRecordForm): boolean;
+export default function createOrUpdateScannerRecord(scannerRecord: CreateScannerRecordForm): boolean;

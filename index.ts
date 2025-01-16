@@ -44,11 +44,12 @@ async function initializeModuleTasks(): Promise<void> {
 
   if (getConfigProperty('modules.inventoryScanner.isEnabled')) {
     const initializeInventoryScannerModule = await import(
-      './modules/inventoryScanner/initializeInventoryScanner.js'
+      './modules/inventoryScanner/tasks.initialize.js'
     )
 
     const childProcesses =
-      initializeInventoryScannerModule.initializeInventoryScannerTasks()
+      initializeInventoryScannerModule.default()
+      
     registerChildProcesses(childProcesses)
   }
 

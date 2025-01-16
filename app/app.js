@@ -110,8 +110,8 @@ if (configHelpers.getConfigProperty('modules.autocomplete.isEnabled')) {
     initializeAutocompleteModule.initializeAutocompleteAppHandlers(app);
 }
 if (configHelpers.getConfigProperty('modules.inventoryScanner.isEnabled')) {
-    const initializeInventoryScannerModule = await import('../modules/inventoryScanner/initializeInventoryScanner.js');
-    initializeInventoryScannerModule.initializeInventoryScannerAppHandlers(app);
+    const initializeInventoryScannerModule = await import('../modules/inventoryScanner/handlers.initialize.js');
+    initializeInventoryScannerModule.default(app);
 }
 /*
  * Error handling

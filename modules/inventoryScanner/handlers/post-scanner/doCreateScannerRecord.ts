@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express'
 
-import createScannerRecord from '../../database/createScannerRecord.js'
+import createOrUpdateScannerRecord from '../../database/createOrUpdateScannerRecord.js'
 import getScannerRecords from '../../database/getScannerRecords.js'
 
 interface DoCreateScannerRecordForm {
@@ -16,7 +16,18 @@ export default function handler(
   request: Request<unknown, unknown, DoCreateScannerRecordForm>,
   response: Response
 ): void {
-  const success = createScannerRecord(request.body)
+  const success = createOrUpdateScannerRecord(request.body)
+
+  if (
+    request.body.repairId === '' &&
+    request.body.quantityMultiplier === '1' &&
+    process.send !== undefined
+  ) {
+    process.send({
+      destinationTaskName: 'inventoryScanner.updateRecordsFromValidation',
+      timeMillis: Date.now()
+    })
+  }
 
   const records = getScannerRecords({
     scannerKey: request.body.scannerKey
