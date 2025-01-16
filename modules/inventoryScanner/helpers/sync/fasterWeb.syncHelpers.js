@@ -174,7 +174,7 @@ export async function syncScannerRecordsWithFaster(records) {
             });
         }
         catch {
-            debug('Error communicating with FASTER API.');
+            debug('Error communicating with FASTER Web API.');
         }
     }
     if (hasFasterUnofficialApi) {

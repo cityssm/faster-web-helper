@@ -270,7 +270,7 @@ export async function syncScannerRecordsWithFaster(
         )
       })
     } catch {
-      debug('Error communicating with FASTER API.')
+      debug('Error communicating with FASTER Web API.')
     }
   }
 
