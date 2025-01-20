@@ -10,13 +10,13 @@ type FasterAssetMappingFunctionName =
   | 'fasterAssetToEquipmentDescription'
   | 'fasterAssetToDepartment'
 
-export type ConfigModuleWorktechUpdateMappingFunctions = Partial<
+export type ConfigModuleWorktechIntegrityMappingFunctions = Partial<
   Record<FasterAssetMappingFunctionName, FasterAssetMappingFunction>
 >
 
-export interface ConfigModuleWorktechUpdate {
-  activeEquipment?: {
+export interface ConfigModuleWorktechIntegrity {
+  equipment?: {
     isEnabled?: boolean
-    mappingFunctions?: ConfigModuleWorktechUpdateMappingFunctions
+    mappingFunctions?: ConfigModuleWorktechIntegrityMappingFunctions
   }
 }

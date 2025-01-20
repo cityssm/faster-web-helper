@@ -2,7 +2,7 @@ import { getConfigProperty } from '../../../helpers/config.helpers.js';
 import { getFasterAssetClassCode, getFasterAssetDepartmentDescription, getFasterAssetDescription, getFasterAssetNumber } from './fasterFields.functions.js';
 const mappingFunctions = getConfigProperty(
 // eslint-disable-next-line no-secrets/no-secrets
-'modules.worktechUpdate.activeEquipment.mappingFunctions');
+'modules.worktechIntegrity.equipment.mappingFunctions');
 export function getWorktechEquipmentId(fasterAsset) {
     if (mappingFunctions.fasterAssetToEquipmentId !== undefined) {
         return (mappingFunctions.fasterAssetToEquipmentId(fasterAsset) ??

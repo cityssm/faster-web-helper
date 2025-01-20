@@ -47,9 +47,8 @@ async function initializeModuleTasks(): Promise<void> {
       './modules/inventoryScanner/tasks.initialize.js'
     )
 
-    const childProcesses =
-      initializeInventoryScannerModule.default()
-      
+    const childProcesses = initializeInventoryScannerModule.default()
+
     registerChildProcesses(childProcesses)
   }
 
@@ -60,11 +59,15 @@ async function initializeModuleTasks(): Promise<void> {
     initializeTempFolderCleanupModule.initializeTempFolderCleanupTask()
   }
 
-  if (getConfigProperty('modules.worktechUpdate.isEnabled')) {
-    const initializeWorktechUpdateModule = await import(
-      './modules/worktechUpdate/initializeWorktechUpdate.js'
+  // eslint-disable-next-line no-secrets/no-secrets
+  if (getConfigProperty('modules.worktechIntegrity.isEnabled')) {
+    const initializeWorktechIntegrityModule = await import(
+      './modules/worktechIntegrity/tasks.initialize.js'
     )
-    initializeWorktechUpdateModule.initializeWorktechUpdateTasks()
+
+    const childProcesses = initializeWorktechIntegrityModule.default()
+
+    registerChildProcesses(childProcesses)
   }
 
   await Promise.all(promises)

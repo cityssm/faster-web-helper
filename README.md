@@ -22,8 +22,9 @@ _This helper service is completely unofficial and is in no way affiliated with o
 Uses the **Inventory Import Utility** integration to offer
 a solution for issuing inventory using handheld barcode scanners.
 
-[**WorkTech Update**](./modules/worktechUpdate/README.md)<br />
-Synchronizes active equipment with WorkTech's equipment list.
+[**WorkTech Integrity Checks**](./modules/worktechIntegrity/README.md)<br />
+Reports on assets in FASTER Web that have no complimentary record in WorkTech,
+and vice versa.
 
 [**Autocomplete**](./modules/autocomplete/README.md)<br />
 Creates and hosts JSON files compatible with Autocomplete userscripts.

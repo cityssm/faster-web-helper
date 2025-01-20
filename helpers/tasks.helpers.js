@@ -4,7 +4,7 @@ const scheduledTaskMinutes = {
     15: ['inventoryScanner.itemValidation.dynamicsGp'],
     35: ['inventoryScanner.workOrderValidation.fasterApi'],
     40: ['inventoryScanner.workOrderValidation.worktech'],
-    55: ['worktechUpdate.activeEquipment']
+    55: ['worktechIntegrity.equipment']
 };
 export function getScheduledTaskMinutes(taskName) {
     const scheduleMinutes = [];

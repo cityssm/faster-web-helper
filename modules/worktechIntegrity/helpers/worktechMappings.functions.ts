@@ -12,7 +12,7 @@ import {
 
 const mappingFunctions = getConfigProperty(
   // eslint-disable-next-line no-secrets/no-secrets
-  'modules.worktechUpdate.activeEquipment.mappingFunctions'
+  'modules.worktechIntegrity.equipment.mappingFunctions'
 )
 
 export function getWorktechEquipmentId(fasterAsset: AssetResult): string {

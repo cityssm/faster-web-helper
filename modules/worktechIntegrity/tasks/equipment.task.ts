@@ -26,7 +26,7 @@ const debug = Debug(
 const fasterWebConfig = getConfigProperty('fasterWeb')
 const worktechConfig = getConfigProperty('worktech')
 
-async function runActiveEquipmentTask(): Promise<void> {
+async function runEquipmentTask(): Promise<void> {
   if (
     fasterWebConfig.apiUserName === undefined ||
     fasterWebConfig.apiPassword === undefined
@@ -61,77 +61,20 @@ async function runActiveEquipmentTask(): Promise<void> {
     return
   }
 
-  debug(`Syncing ${fasterAssetsResponse.response.results.length} asset(s)...`)
-
-  for (const fasterAsset of fasterAssetsResponse.response.results) {
-    /*
-     * Get Worktech equipment record
-     */
-
-    const worktechEquipmentId = getWorktechEquipmentId(fasterAsset)
-
-    const worktechEquipment =
-      await worktech.getEquipmentByEquipmentId(worktechEquipmentId)
-
-    // Add equipment if it doesn't exist
-    if (worktechEquipment === undefined) {
-      debug(`Adding equipment: ${worktechEquipmentId}`)
-
-      const worktechEquipmentDescription =
-        getWorktechEquipmentDescription(fasterAsset)
-
-      const worktechEquipmentClass = getWorktechEquipmentClass(fasterAsset)
-
-      const worktechEquipmentDepartment =
-        getWorktechEquipmentDepartment(fasterAsset)
-
-      const worktechEquipmentComment = getFasterAssetKey(fasterAsset)
-
-      const worktechSystemId = await worktech.addEquipment({
-        equipmentId: worktechEquipmentId,
-        equipmentClass: worktechEquipmentClass,
-        equipmentDescription: worktechEquipmentDescription,
-        equipmentBrand: fasterAsset.make,
-        equipmentModel: fasterAsset.model,
-        equipmentModelYear: fasterAsset.year,
-        departmentOwned: worktechEquipmentDepartment,
-        serialNumber: fasterAsset.vinSerial,
-        plate: fasterAsset.licence,
-        comments: worktechEquipmentComment
-      })
-
-      debug(`Added equipment: ${worktechSystemId}`)
-
-      continue
-    }
-
-    // Update equipment if it exists
-
-    debug(`Updating equipment: ${worktechEquipmentId}`)
-
-    // eslint-disable-next-line no-secrets/no-secrets
-    /*
-    const fieldsToUpdate = getWorktechEquipmentFieldsToUpdate(
-      fasterAsset,
-      worktechEquipment
-    )
-    */
-  }
-
   debug(`Finished "${taskName}".`)
 }
 
-await runActiveEquipmentTask()
+await runEquipmentTask()
 
 const job = schedule.scheduleJob(
   taskName,
   {
     dayOfWeek: getConfigProperty('application.workDays'),
     hour: getConfigProperty('application.workHours'),
-    minute: getScheduledTaskMinutes('worktechUpdate.activeEquipment'),
+    minute: getScheduledTaskMinutes('worktechIntegrity.equipment'),
     second: 0
   },
-  runActiveEquipmentTask
+  runEquipmentTask
 )
 
 exitHook(() => {

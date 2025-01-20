@@ -1,9 +1,9 @@
-# WorkTech Update
+# WorkTech Integrity Checks
 
-Performs various syncing processes between Worktech and FASTER Web.
+Performs various integrity checks between WorkTech and FASTER Web.
 
-- [**Synchronizes active equipment**](#active-equipment-task) from FASTER Web with WorkTech's equipment list.
-  Useful when equipment usage is tracked in WorkTech.
+- Reports on assets in FASTER Web that have no complimentary record in WorkTech,
+  and vice versa.
 
 ## General Requirements
 
@@ -26,9 +26,9 @@ export const config: Config = {
   },
 
   modules: {
-    worktechUpdate: {
+    worktechIntegrity: {
       isEnabled: true,
-      activeEquipment: {
+      equipment: {
         isEnabled: true
       }
     }
@@ -38,6 +38,6 @@ export const config: Config = {
 export default config
 ```
 
-## Active Equipment Task
+## Equipment Integrity Task
 
-- ❓Report to be determined
+Under development

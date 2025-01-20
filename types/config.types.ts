@@ -9,7 +9,7 @@ import type { Spec } from 'node-schedule'
 import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js'
 
 import type { ConfigModuleInventoryScanner } from '../modules/inventoryScanner/config/types.js'
-import type { ConfigModuleWorktechUpdate } from '../modules/worktechUpdate/config/types.js'
+import type { ConfigModuleWorktechIntegrity } from '../modules/worktechIntegrity/config/types.js'
 
 import type {
   ConfigFileSuffixXlsx,
@@ -66,7 +66,7 @@ export interface Config {
   modules: {
     autocomplete?: ConfigModule<ConfigModuleAutocomplete>
     inventoryScanner?: ConfigModule<ConfigModuleInventoryScanner>
-    worktechUpdate?: ConfigModule<ConfigModuleWorktechUpdate>
+    worktechIntegrity?: ConfigModule<ConfigModuleWorktechIntegrity>
     tempFolderCleanup?: ConfigModule<ConfigModuleTempFolderCleanup>
   }
 }

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 import { hoursToMillis } from '@cityssm/to-millis';
 import inventoryScannerDefaultValues from '../modules/inventoryScanner/config/defaultValues.js';
-import worktechUpdateDefaultValues from '../modules/worktechUpdate/config/defaultValues.js';
+import worktechUpdateDefaultValues from '../modules/worktechIntegrity/config/defaultValues.js';
 export const configDefaultValues = {
     'application.workDays': [1, 2, 3, 4, 5],
     'application.workHours': [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],

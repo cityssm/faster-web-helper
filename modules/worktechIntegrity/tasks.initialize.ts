@@ -2,53 +2,47 @@ import { type ChildProcess, fork } from 'node:child_process'
 
 import camelCase from 'camelcase'
 import Debug from 'debug'
-import exitHook from 'exit-hook'
 
 import { DEBUG_NAMESPACE } from '../../debug.config.js'
 import { getConfigProperty } from '../../helpers/config.helpers.js'
 import { hasFasterApi } from '../../helpers/fasterWeb.helpers.js'
+import type { TaskName } from '../../types/tasks.types.js'
 
 import { moduleName } from './helpers/module.helpers.js'
 
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}`)
 
-export function initializeWorktechUpdateTasks(): void {
+export default function initializeWorktechUpdateTasks(): Partial<
+  Record<TaskName, ChildProcess>
+> {
   debug(`Initializing "${moduleName}"...`)
 
   if (getConfigProperty('worktech') === undefined) {
     debug(
       'WorkTech configuration is not set up. Skipping module initialization.'
     )
-    return
+    return {}
   }
 
-  const childProcesses: ChildProcess[] = []
+  const childProcesses: Partial<Record<TaskName, ChildProcess>> = {}
 
   /*
-   * Active Equipment
+   * Equipment
    */
 
   // eslint-disable-next-line no-secrets/no-secrets
-  if (getConfigProperty('modules.worktechUpdate.activeEquipment.isEnabled')) {
+  if (getConfigProperty('modules.worktechIntegrity.equipment.isEnabled')) {
     if (hasFasterApi) {
-      const taskPath = './modules/worktechUpdate/tasks/activeEquipment.task.js'
-      childProcesses.push(fork(taskPath))
+      const taskPath = './modules/worktechIntegrity/tasks/equipment.task.js'
+      childProcesses['worktechIntegrity.equipment'] = fork(taskPath)
     } else {
       debug(
-        'Optional "@cityssm/faster-api" package is required for active equipment syncing.'
+        'Optional "@cityssm/faster-api" package is required for equipment integrity checks.'
       )
     }
   }
 
-  /*
-   * Set up exit hook
-   */
-
-  exitHook(() => {
-    for (const childProcess of childProcesses) {
-      childProcess.kill()
-    }
-  })
-
   debug(`"${moduleName}" initialized.`)
+
+  return childProcesses
 }

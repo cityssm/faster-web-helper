@@ -16,6 +16,8 @@ const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:tasks`)
 export default function initializeInventoryScannerTasks(): Partial<
   Record<TaskName, ChildProcess>
 > {
+  debug(`Initializing "${moduleName}"...`)
+
   initializeInventoryScannerDatabase()
 
   const childProcesses: Partial<Record<TaskName, ChildProcess>> = {}
@@ -95,6 +97,8 @@ export default function initializeInventoryScannerTasks(): Partial<
       './modules/inventoryScanner/tasks/outstandingItemRequests.js'
     )
   }
+
+  debug(`"${moduleName}" initialized.`)
 
   return childProcesses
 }

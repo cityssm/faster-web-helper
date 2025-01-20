@@ -8,6 +8,7 @@ import { initializeInventoryScannerDatabase } from './database/helpers.database.
 import { moduleName } from './helpers/module.helpers.js';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:tasks`);
 export default function initializeInventoryScannerTasks() {
+    debug(`Initializing "${moduleName}"...`);
     initializeInventoryScannerDatabase();
     const childProcesses = {};
     const itemValidationConfig = getConfigProperty('modules.inventoryScanner.items.validation');
@@ -63,5 +64,6 @@ export default function initializeInventoryScannerTasks() {
         getConfigProperty('modules.inventoryScanner.fasterItemRequests.isEnabled')) {
         childProcesses['inventoryScanner.outstandingItemRequests'] = fork('./modules/inventoryScanner/tasks/outstandingItemRequests.js');
     }
+    debug(`"${moduleName}" initialized.`);
     return childProcesses;
 }

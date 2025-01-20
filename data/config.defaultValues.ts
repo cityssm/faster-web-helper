@@ -12,7 +12,7 @@ import type { config as MSSQLConfig } from 'mssql'
 import type { Spec } from 'node-schedule'
 
 import inventoryScannerDefaultValues from '../modules/inventoryScanner/config/defaultValues.js'
-import worktechUpdateDefaultValues from '../modules/worktechUpdate/config/defaultValues.js'
+import worktechUpdateDefaultValues from '../modules/worktechIntegrity/config/defaultValues.js'
 import type {
   ConfigFileSuffixXlsx,
   ConfigScheduledFtpReport
