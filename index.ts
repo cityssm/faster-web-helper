@@ -24,7 +24,7 @@ const debug = Debug(`${DEBUG_NAMESPACE}:www:${process.pid}`)
 
 const directoryName = path.dirname(fileURLToPath(import.meta.url))
 
-process.title = 'Faster Web Helper (Primary)'
+process.title = 'FASTER Web Helper (Primary)'
 
 debug(`Primary pid:   ${process.pid}`)
 debug(`Primary title: ${process.title}`)
