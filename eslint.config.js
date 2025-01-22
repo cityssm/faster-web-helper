@@ -10,7 +10,6 @@ export const config = tseslint.config(...configWebApp, {
                         'autoincrement',
                         'fasterwebcloud',
                         'fontawesome',
-                        'licence',
                         'ntfy',
                         'resave',
                         'unvalidated',

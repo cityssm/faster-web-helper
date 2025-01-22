@@ -8,6 +8,7 @@ import { getConfigProperty } from '../../helpers/config.helpers.js'
 import { hasFasterApi } from '../../helpers/fasterWeb.helpers.js'
 import type { TaskName } from '../../types/tasks.types.js'
 
+import { initializeWorktechIntegrityDatabase } from './database/helpers.database.js'
 import { moduleName } from './helpers/module.helpers.js'
 
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}`)
@@ -16,6 +17,8 @@ export default function initializeWorktechUpdateTasks(): Partial<
   Record<TaskName, ChildProcess>
 > {
   debug(`Initializing "${moduleName}"...`)
+
+  initializeWorktechIntegrityDatabase()
 
   if (getConfigProperty('worktech') === undefined) {
     debug(

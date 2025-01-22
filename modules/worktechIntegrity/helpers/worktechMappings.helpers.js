@@ -1,5 +1,5 @@
 import { getConfigProperty } from '../../../helpers/config.helpers.js';
-import { getFasterAssetClassCode, getFasterAssetDepartmentDescription, getFasterAssetDescription, getFasterAssetNumber } from './fasterFields.functions.js';
+import { getFasterAssetClassCode, getFasterAssetDepartmentDescription, getFasterAssetDescription, getFasterAssetNumber } from './fasterFields.helpers.js';
 const mappingFunctions = getConfigProperty(
 // eslint-disable-next-line no-secrets/no-secrets
 'modules.worktechIntegrity.equipment.mappingFunctions');

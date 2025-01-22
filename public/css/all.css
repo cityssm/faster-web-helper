@@ -6,3 +6,11 @@
   color: var(--bulma-input-disabled-color);
   cursor: not-allowed;
 }
+
+.table.is-rowfocused tbody:hover tr {
+  opacity: 0.5;
+}
+
+.table.is-rowfocused tbody tr:hover {
+  opacity: 1;
+}

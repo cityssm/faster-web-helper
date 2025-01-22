@@ -105,9 +105,7 @@ app.use(
     saveUninitialized: false,
     rolling: true,
     cookie: {
-      maxAge: configHelpers.getConfigProperty(
-        'webServer.session.maxAgeMillis'
-      ),
+      maxAge: configHelpers.getConfigProperty('webServer.session.maxAgeMillis'),
       sameSite: 'strict'
     }
   })
@@ -185,6 +183,14 @@ if (configHelpers.getConfigProperty('modules.inventoryScanner.isEnabled')) {
     '../modules/inventoryScanner/handlers.initialize.js'
   )
   initializeInventoryScannerModule.default(app)
+}
+
+// eslint-disable-next-line no-secrets/no-secrets
+if (configHelpers.getConfigProperty('modules.worktechIntegrity.isEnabled')) {
+  const initializeWorktechIntegrityModule = await import(
+    '../modules/worktechIntegrity/handlers.initialize.js'
+  )
+  initializeWorktechIntegrityModule.default(app)
 }
 
 /*

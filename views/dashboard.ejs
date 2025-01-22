@@ -25,6 +25,23 @@
       </a>
     <% } %>
 
+    <% if (configHelpers.getConfigProperty('modules.worktechIntegrity.isEnabled') && (user.settings['worktechIntegrity_hasAccess'] ?? 'false') === 'true') { %>
+      <% hasModules = true; %>
+      <a class="box" href="<%= urlPrefix %>/modules/worktechIntegrity">
+        <div class="columns">
+          <div class="column is-narrow">
+            <i class="fa-solid fa-shapes fa-6x" aria-hidden="true"></i>
+          </div>
+          <div class="column">
+            <h3 class="title is-4 mb-0">WorkTech Integrity</h3>
+            <p>
+              Compare WorkTech equipment records with asset records in FASTER Web.
+            </p>
+          </div>
+        </div>
+      </a>
+    <% } %>
+
     <% if (!hasModules) { %>
       <div class="message is-warning">
         <p class="message-body">

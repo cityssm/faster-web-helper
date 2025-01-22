@@ -8,7 +8,7 @@ import {
   getFasterAssetDepartmentDescription,
   getFasterAssetDescription,
   getFasterAssetNumber
-} from './fasterFields.functions.js'
+} from './fasterFields.helpers.js'
 
 const mappingFunctions = getConfigProperty(
   // eslint-disable-next-line no-secrets/no-secrets

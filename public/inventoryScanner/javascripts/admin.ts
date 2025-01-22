@@ -1,6 +1,3 @@
-// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
-/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
 declare const exports: {
