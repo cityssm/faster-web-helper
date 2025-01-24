@@ -239,7 +239,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         for (const itemTypeTabElement of itemTypeTabElements) {
             const tabIsActive = itemTypeTabElement.closest('li')?.classList.contains('is-active') ??
                 false;
-            document.querySelector(`#itemTypeTab--${itemTypeTabElement.dataset.itemType ?? ''}`).disabled = !tabIsActive;
+            document.querySelector(`#itemTypeTab--${itemTypeTabElement.dataset.itemType ?? ''} fieldset`).disabled = !tabIsActive;
             if (tabIsActive) {
                 ;
                 document.querySelector('#scanner--itemType').value = itemTypeTabElement.dataset.itemType ?? '';

@@ -128,93 +128,97 @@
               </div>
 
               <div class="tab-container mb-3">
-                <fieldset id="itemTypeTab--stock">
-                  <label class="label" for="scanner--itemNumber">Item Number</label>
-                  <div class="field has-addons">
-                    <div class="control has-icons-left is-expanded">
-                      <input class="input" id="scanner--itemNumber" name="itemNumber" type="text" maxlength="22"
-                        <% if (itemNumberPattern !== undefined) { %>
-                          pattern="<%- itemNumberPattern %>"
-                        <% } %>
-                        placeholder="<%= configHelpers.getConfigProperty('modules.inventoryScanner.items.placeholder') %>"
-                        autocomplete="off" required />
-                      <span class="icon is-small is-left">
-                        <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-                      </span>
-                    </div>
-                    <div class="control">
-                      <button class="button is-clear-button" type="button" title="Clear Item">
-                        <span class="icon">
-                          <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                <div id="itemTypeTab--stock">
+                  <fieldset>
+                    <label class="label" for="scanner--itemNumber">Item Number</label>
+                    <div class="field has-addons">
+                      <div class="control has-icons-left is-expanded">
+                        <input class="input" id="scanner--itemNumber" name="itemNumber" type="text" maxlength="22"
+                          <% if (itemNumberPattern !== undefined) { %>
+                            pattern="<%- itemNumberPattern %>"
+                          <% } %>
+                          placeholder="<%= configHelpers.getConfigProperty('modules.inventoryScanner.items.placeholder') %>"
+                          autocomplete="off" required />
+                        <span class="icon is-small is-left">
+                          <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
                         </span>
-                      </button>
-                    </div>
-                  </div>
-                </fieldset>
-                <fieldset class="is-hidden" id="itemTypeTab--nonStock" disabled>
-
-                  <label class="label" for="scanner--itemNumberSuffix">Item Reference Number</label>
-                  <div class="field has-addons">
-                    <div class="control">
-                      <div class="select">
-                        <select id="scanner--itemNumberPrefix" name="itemNumberPrefix">
-                          <option value="GP">GP</option>
-                          <option value="CC">CC</option>
-                        </select>
+                      </div>
+                      <div class="control">
+                        <button class="button is-clear-button" type="button" title="Clear Item">
+                          <span class="icon">
+                            <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                          </span>
+                        </button>
                       </div>
                     </div>
-                    <div class="control">
-                      <div class="button is-static">-</div>
-                    </div>
-                    <div class="control is-expanded">
-                      <input class="input" id="scanner--itemNumberSuffix" name="itemNumberSuffix" type="text" maxlength="19"
-                        placeholder="Reference number" autocomplete="off" required />
-                    </div>
-                    <div class="control">
-                      <button class="button is-clear-button" type="button" title="Clear Item">
-                        <span class="icon">
-                          <i class="fa-solid fa-trash" aria-hidden="true"></i>
-                        </span>
-                      </button>
-                    </div>
-                  </div>
+                  </fieldset>
+                </div>
 
-                  <label class="label" for="scanner--itemDescription">Item Description</label>
-                  <div class="field has-addons">
-                    <div class="control has-icons-left is-expanded">
-                      <input class="input" id="scanner--itemDescription" name="itemDescription" type="text" maxlength="100"
-                        placeholder="Enter a description of the item" autocomplete="off" required />
-                      <span class="icon is-small is-left">
-                        <i class="fa-solid fa-info-circle" aria-hidden="true"></i>
-                      </span>
+                <div class="is-hidden" id="itemTypeTab--nonStock">
+                  <fieldset disabled>
+                    <label class="label" for="scanner--itemNumberSuffix">Item Reference Number</label>
+                    <div class="field has-addons">
+                      <div class="control">
+                        <div class="select">
+                          <select id="scanner--itemNumberPrefix" name="itemNumberPrefix">
+                            <option value="GP">GP</option>
+                            <option value="CC">CC</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="control">
+                        <div class="button is-static">-</div>
+                      </div>
+                      <div class="control is-expanded">
+                        <input class="input" id="scanner--itemNumberSuffix" name="itemNumberSuffix" type="text" maxlength="19"
+                          placeholder="Reference number" autocomplete="off" required />
+                      </div>
+                      <div class="control">
+                        <button class="button is-clear-button" type="button" title="Clear Item">
+                          <span class="icon">
+                            <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                          </span>
+                        </button>
+                      </div>
                     </div>
-                    <div class="control">
-                      <button class="button is-clear-button" type="button" title="Clear Item">
-                        <span class="icon">
-                          <i class="fa-solid fa-trash" aria-hidden="true"></i>
-                        </span>
-                      </button>
-                    </div>
-                  </div>
 
-                  <label class="label" for="scanner--unitPrice">Unit Price</label>
-                  <div class="field has-addons">
-                    <div class="control has-icons-left is-expanded">
-                      <input class="input" id="scanner--unitPrice" name="unitPrice" type="text" inputmode="decimal" pattern="^\d+(\.\d{1,2})?$"
-                        placeholder="0.00" autocomplete="off" required />
-                      <span class="icon is-small is-left">
-                        <i class="fa-solid fa-dollar-sign" aria-hidden="true"></i>
-                      </span>
-                    </div>
-                    <div class="control">
-                      <button class="button is-clear-button" type="button" title="Clear Unit Price">
-                        <span class="icon">
-                          <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                    <label class="label" for="scanner--itemDescription">Item Description</label>
+                    <div class="field has-addons">
+                      <div class="control has-icons-left is-expanded">
+                        <input class="input" id="scanner--itemDescription" name="itemDescription" type="text" maxlength="100"
+                          placeholder="Enter a description of the item" autocomplete="off" required />
+                        <span class="icon is-small is-left">
+                          <i class="fa-solid fa-info-circle" aria-hidden="true"></i>
                         </span>
-                      </button>
+                      </div>
+                      <div class="control">
+                        <button class="button is-clear-button" type="button" title="Clear Item">
+                          <span class="icon">
+                            <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                          </span>
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                </fieldset>
+
+                    <label class="label" for="scanner--unitPrice">Unit Price</label>
+                    <div class="field has-addons">
+                      <div class="control has-icons-left is-expanded">
+                        <input class="input" id="scanner--unitPrice" name="unitPrice" type="text" inputmode="decimal" pattern="^\d+(\.\d{1,2})?$"
+                          placeholder="0.00" autocomplete="off" required />
+                        <span class="icon is-small is-left">
+                          <i class="fa-solid fa-dollar-sign" aria-hidden="true"></i>
+                        </span>
+                      </div>
+                      <div class="control">
+                        <button class="button is-clear-button" type="button" title="Clear Unit Price">
+                          <span class="icon">
+                            <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
               </div>
 
               <div class="columns is-mobile is-align-items-end">

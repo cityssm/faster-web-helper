@@ -357,7 +357,7 @@ declare const cityssm: cityssmGlobal
 
       ;(
         document.querySelector(
-          `#itemTypeTab--${itemTypeTabElement.dataset.itemType ?? ''}`
+          `#itemTypeTab--${itemTypeTabElement.dataset.itemType ?? ''} fieldset`
         ) as HTMLFieldSetElement
       ).disabled = !tabIsActive
 
