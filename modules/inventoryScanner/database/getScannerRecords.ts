@@ -94,7 +94,11 @@ export default function getScannerRecords(
       s.workOrderNumber, s.workOrderType,
       s.technicianId,
       s.repairId, w.repairDescription,
-      s.itemStoreroom, s.itemNumber, i.itemDescription,
+      s.itemStoreroom, s.itemNumber,
+      case
+        when s.itemDescription is null or s.itemDescription = '' then i.itemDescription
+        else s.itemDescription
+        end as itemDescription,
       s.quantity, s.unitPrice,
       s.recordSync_userName, s.recordSync_timeMillis, s.recordSync_isSuccessful,
       s.recordSync_syncedRecordId, s.recordSync_message
@@ -123,7 +127,6 @@ export default function getScannerRecords(
     readonly: true
   })
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   const result = database
     .function('userFunction_dateIntegerToString', dateIntegerToString)
     .function('userFunction_timeIntegerToString', timeIntegerToString)

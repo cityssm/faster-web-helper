@@ -7,6 +7,7 @@ export function updateScannerRecord(recordForm, updateUser) {
         set workOrderNumber = ?,
         repairId = ?,
         itemNumber = ?,
+        itemDescription = ?,
         quantity = ?,
         unitPrice = ?,
         recordUpdate_userName = ?,
@@ -14,7 +15,7 @@ export function updateScannerRecord(recordForm, updateUser) {
         where recordId = ?
         and recordDelete_timeMillis is null
         and recordSync_timeMillis is null`)
-        .run(recordForm.workOrderNumber, recordForm.repairId === '' ? undefined : recordForm.repairId, recordForm.itemNumber, recordForm.quantity, recordForm.unitPrice === '' ? undefined : recordForm.unitPrice, updateUser.userName, Date.now(), recordForm.recordId);
+        .run(recordForm.workOrderNumber, recordForm.repairId === '' ? undefined : recordForm.repairId, recordForm.itemNumber, recordForm.itemDescription, recordForm.quantity, recordForm.unitPrice === '' ? undefined : recordForm.unitPrice, updateUser.userName, Date.now(), recordForm.recordId);
     database.close();
     return result.changes > 0;
 }

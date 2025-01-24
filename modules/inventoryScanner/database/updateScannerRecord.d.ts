@@ -3,6 +3,7 @@ export interface UpdateScannerRecordForm {
     workOrderNumber: string;
     repairId: string;
     itemNumber: string;
+    itemDescription: string;
     quantity: string;
     unitPrice: string;
 }

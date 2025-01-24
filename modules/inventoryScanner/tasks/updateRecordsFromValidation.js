@@ -37,12 +37,17 @@ function updateRecordsFromValidationTask() {
                 }
             }
         }
-        const itemValidationRecords = record.itemStoreroom === null || record.unitPrice === null
+        const itemValidationRecords = (record.itemStoreroom ?? '') === '' ||
+            (record.itemDescription ?? '') === '' ||
+            record.unitPrice === null
             ? getItemValidationRecordsByItemNumber(record.itemNumber)
             : [];
         if (itemValidationRecords.length > 0) {
-            if (record.itemStoreroom === null) {
+            if ((record.itemStoreroom ?? '') === '') {
                 updateScannerRecordField(record.recordId, 'itemStoreroom', itemValidationRecords[0].itemStoreroom, taskUserName);
+            }
+            if ((record.itemDescription ?? '') === '') {
+                updateScannerRecordField(record.recordId, 'itemDescription', itemValidationRecords[0].itemDescription, taskUserName);
             }
             if (record.unitPrice === null) {
                 updateScannerRecordField(record.recordId, 'unitPrice', itemValidationRecords[0].unitPrice, taskUserName);

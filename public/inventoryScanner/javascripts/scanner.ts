@@ -1,6 +1,3 @@
-// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
-/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-
 import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
@@ -339,6 +336,46 @@ declare const cityssm: cityssmGlobal
   workOrderNumberInputElement.addEventListener('keyup', refreshRepairIdSelect)
 
   /*
+   * Item Type Toggle
+   */
+
+  const itemTypeTabElements = document.querySelectorAll(
+    '#scanner--itemTypeTabs a'
+  ) as NodeListOf<HTMLAnchorElement>
+
+  const itemNumberSuffixElement = formElement.querySelector('#scanner--itemNumberSuffix') as HTMLInputElement
+
+  const itemDescriptionElement = formElement.querySelector('#scanner--itemDescription') as HTMLInputElement
+
+  const unitPriceElement = formElement.querySelector('#scanner--unitPrice') as HTMLInputElement
+
+  function toggleItemTypeFieldsets(): void {
+    for (const itemTypeTabElement of itemTypeTabElements) {
+      const tabIsActive =
+        itemTypeTabElement.closest('li')?.classList.contains('is-active') ??
+        false
+
+      ;(
+        document.querySelector(
+          `#itemTypeTab--${itemTypeTabElement.dataset.itemType ?? ''}`
+        ) as HTMLFieldSetElement
+      ).disabled = !tabIsActive
+
+      if (tabIsActive) {
+        ;(
+          document.querySelector('#scanner--itemType') as HTMLInputElement
+        ).value = itemTypeTabElement.dataset.itemType ?? ''
+      }
+    }
+  }
+
+  toggleItemTypeFieldsets()
+
+  for (const itemTypeTabElement of itemTypeTabElements) {
+    itemTypeTabElement.addEventListener('click', toggleItemTypeFieldsets)
+  }
+
+  /*
    * Quantity Multiplier
    */
 
@@ -460,6 +497,13 @@ declare const cityssm: cityssmGlobal
           renderQuantityMultiplier()
 
           quantityElement.value = '1'
+
+          itemNumberSuffixElement.value = ''
+          itemDescriptionElement.value = ''
+          unitPriceElement.value = ''
+
+          itemTypeTabElements[0].click()
+
           itemNumberElement.value = ''
           itemNumberElement.focus()
 

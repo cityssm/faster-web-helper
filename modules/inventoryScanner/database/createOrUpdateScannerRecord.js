@@ -4,19 +4,30 @@ import { scannerKeyToUserName } from '../helpers/scanner.helpers.js';
 import { getWorkOrderTypeFromWorkOrderNumber } from '../helpers/workOrders.helpers.js';
 import { getItemValidationRecordsByItemNumber } from './getItemValidationRecords.js';
 import { databasePath } from './helpers.database.js';
+// eslint-disable-next-line complexity
 export default function createOrUpdateScannerRecord(scannerRecord) {
     const rightNow = new Date();
     const database = sqlite(databasePath);
+    const itemNumber = scannerRecord.itemType === 'stock'
+        ? scannerRecord.itemNumber
+        : `${scannerRecord.itemNumberPrefix}-${scannerRecord.itemNumberSuffix}`;
     let itemStoreroom = scannerRecord.itemStoreroom;
+    let itemDescription = scannerRecord.itemDescription;
     let unitPrice = scannerRecord.unitPrice;
-    if (itemStoreroom === undefined || unitPrice === undefined) {
-        const items = getItemValidationRecordsByItemNumber(scannerRecord.itemNumber);
+    if (scannerRecord.itemType === 'stock' &&
+        (itemStoreroom === undefined || unitPrice === undefined)) {
+        const items = getItemValidationRecordsByItemNumber(itemNumber);
         for (const item of items) {
             if (itemStoreroom === undefined) {
                 itemStoreroom = item.itemStoreroom;
             }
-            if (itemStoreroom === item.itemStoreroom && unitPrice === undefined) {
-                unitPrice = item.unitPrice;
+            if (itemStoreroom === item.itemStoreroom) {
+                if (itemDescription === undefined) {
+                    itemDescription = item.itemDescription;
+                }
+                if (unitPrice === undefined) {
+                    unitPrice = item.unitPrice;
+                }
                 break;
             }
         }
@@ -46,12 +57,14 @@ export default function createOrUpdateScannerRecord(scannerRecord) {
     where workOrderNumber = ?
     and workOrderType = ?
     and itemNumber = ?
+    and itemDescription = ?
     and recordSync_timeMillis is null
     and recordDelete_timeMillis is null`;
     const existingRecordParameters = [
         scannerRecord.workOrderNumber,
         workOrderType,
-        scannerRecord.itemNumber
+        itemNumber,
+        itemDescription
     ];
     if (scannerRecord.repairId !== '') {
         existingRecordSql += ' and repairId = ?';
@@ -77,12 +90,12 @@ export default function createOrUpdateScannerRecord(scannerRecord) {
           scanDate, scanTime,
           workOrderNumber, workOrderType,
           technicianId, repairId,
-          itemStoreroom, itemNumber,
+          itemStoreroom, itemNumber, itemDescription,
           quantity, unitPrice,
           recordCreate_userName, recordCreate_timeMillis,
           recordUpdate_userName, recordUpdate_timeMillis)
-          values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-            .run(scannerRecord.scannerKey, scanDate, scanTime, scannerRecord.workOrderNumber, workOrderType, scannerRecord.technicianId, scannerRecord.repairId === '' ? undefined : scannerRecord.repairId, itemStoreroom, scannerRecord.itemNumber, quantity, unitPrice, userName, rightNow.getTime(), userName, rightNow.getTime());
+          values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+            .run(scannerRecord.scannerKey, scanDate, scanTime, scannerRecord.workOrderNumber, workOrderType, scannerRecord.technicianId, scannerRecord.repairId === '' ? undefined : scannerRecord.repairId, itemStoreroom, itemNumber, itemDescription, quantity, unitPrice, userName, rightNow.getTime(), userName, rightNow.getTime());
     }
     else {
         const newQuantity = existingRecord.quantity + quantity;

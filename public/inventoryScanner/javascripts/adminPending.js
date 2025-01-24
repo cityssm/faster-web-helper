@@ -138,6 +138,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
           ${cityssm.escapeHTML(pendingRecord.repairId === null ? '(Auto-Detect)' : pendingRecord.repairDescription ?? `(Unknown Repair ID: ${pendingRecord.repairId})`)}
           </option>`;
                 modalElement.querySelector('#updatePending--itemNumber').value = pendingRecord.itemNumber;
+                modalElement.querySelector('#updatePending--itemDescription').value = pendingRecord.itemDescription ?? '';
                 modalElement.querySelector('#updatePending--quantity').value = pendingRecord.quantity.toString();
                 modalElement.querySelector('#updatePending--unitPrice').value =
                     pendingRecord.unitPrice === null

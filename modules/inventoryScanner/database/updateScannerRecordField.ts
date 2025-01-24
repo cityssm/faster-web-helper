@@ -2,7 +2,7 @@ import sqlite from 'better-sqlite3'
 
 import { databasePath } from './helpers.database.js'
 
-type ScannerRecordUpdateField = 'repairId' | 'itemStoreroom' | 'unitPrice'
+type ScannerRecordUpdateField = 'repairId' | 'itemStoreroom' | 'itemDescription' | 'unitPrice'
 
 export function updateScannerRecordField(
   recordId: number,

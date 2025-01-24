@@ -60,16 +60,27 @@ function updateRecordsFromValidationTask(): void {
     }
 
     const itemValidationRecords =
-      record.itemStoreroom === null || record.unitPrice === null
+      (record.itemStoreroom ?? '') === '' ||
+      (record.itemDescription ?? '') === '' ||
+      record.unitPrice === null
         ? getItemValidationRecordsByItemNumber(record.itemNumber)
         : []
 
     if (itemValidationRecords.length > 0) {
-      if (record.itemStoreroom === null) {
+      if ((record.itemStoreroom ?? '') === '') {
         updateScannerRecordField(
           record.recordId,
           'itemStoreroom',
           itemValidationRecords[0].itemStoreroom,
+          taskUserName
+        )
+      }
+
+      if ((record.itemDescription ?? '') === '') {
+        updateScannerRecordField(
+          record.recordId,
+          'itemDescription',
+          itemValidationRecords[0].itemDescription,
           taskUserName
         )
       }
@@ -108,7 +119,6 @@ exitHook(() => {
     // ignore
   }
 })
-
 
 process.on('message', (_message: TaskWorkerMessage) => {
   updateRecordsFromValidationTask()

@@ -51,6 +51,7 @@ const createStatements = [
 
     itemStoreroom varchar(3),
     itemNumber varchar(22) not null,
+    itemDescription varchar(40),
     quantity integer not null,
     unitPrice decimal(18, 4),
     

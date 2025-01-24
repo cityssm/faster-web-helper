@@ -257,6 +257,11 @@ declare const cityssm: cityssmGlobal
         ).value = pendingRecord.itemNumber
         ;(
           modalElement.querySelector(
+            '#updatePending--itemDescription'
+          ) as HTMLInputElement
+        ).value = pendingRecord.itemDescription ?? ''
+        ;(
+          modalElement.querySelector(
             '#updatePending--quantity'
           ) as HTMLInputElement
         ).value = pendingRecord.quantity.toString()

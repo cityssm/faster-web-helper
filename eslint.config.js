@@ -9,6 +9,7 @@ export const config = tseslint.config(...configWebApp, {
                         ...cspellWords,
                         'autoincrement',
                         'fasterwebcloud',
+                        'fieldsets',
                         'fontawesome',
                         'ntfy',
                         'resave',

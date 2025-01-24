@@ -1,6 +1,4 @@
 "use strict";
-// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
-/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
     const scannerUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/apps/inventoryScanner`;
@@ -231,6 +229,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
     refreshRepairIdSelect();
     workOrderNumberInputElement.addEventListener('keyup', refreshRepairIdSelect);
     /*
+     * Item Type Toggle
+     */
+    const itemTypeTabElements = document.querySelectorAll('#scanner--itemTypeTabs a');
+    const itemNumberSuffixElement = formElement.querySelector('#scanner--itemNumberSuffix');
+    const itemDescriptionElement = formElement.querySelector('#scanner--itemDescription');
+    const unitPriceElement = formElement.querySelector('#scanner--unitPrice');
+    function toggleItemTypeFieldsets() {
+        for (const itemTypeTabElement of itemTypeTabElements) {
+            const tabIsActive = itemTypeTabElement.closest('li')?.classList.contains('is-active') ??
+                false;
+            document.querySelector(`#itemTypeTab--${itemTypeTabElement.dataset.itemType ?? ''}`).disabled = !tabIsActive;
+            if (tabIsActive) {
+                ;
+                document.querySelector('#scanner--itemType').value = itemTypeTabElement.dataset.itemType ?? '';
+            }
+        }
+    }
+    toggleItemTypeFieldsets();
+    for (const itemTypeTabElement of itemTypeTabElements) {
+        itemTypeTabElement.addEventListener('click', toggleItemTypeFieldsets);
+    }
+    /*
      * Quantity Multiplier
      */
     const quantityLabelElement = formElement.querySelector('label[for="scanner--quantity"]');
@@ -306,6 +326,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 quantityMultiplierElement.value = '1';
                 renderQuantityMultiplier();
                 quantityElement.value = '1';
+                itemNumberSuffixElement.value = '';
+                itemDescriptionElement.value = '';
+                unitPriceElement.value = '';
+                itemTypeTabElements[0].click();
                 itemNumberElement.value = '';
                 itemNumberElement.focus();
                 renderHistory(responseJSON.records);
