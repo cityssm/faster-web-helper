@@ -35,10 +35,9 @@ async function initializeModuleTasks() {
         const initializeTempFolderCleanupModule = await import('./modules/tempFolderCleanup/initializeTempFolderCleanupModule.js');
         initializeTempFolderCleanupModule.initializeTempFolderCleanupTask();
     }
-    // eslint-disable-next-line no-secrets/no-secrets
-    if (getConfigProperty('modules.worktechIntegrity.isEnabled')) {
-        const initializeWorktechIntegrityModule = await import('./modules/worktechIntegrity/tasks.initialize.js');
-        const childProcesses = initializeWorktechIntegrityModule.default();
+    if (getConfigProperty('modules.integrityChecker.isEnabled')) {
+        const initializeIntegrityCheckerModule = await import('./modules/integrityChecker/tasks.initialize.js');
+        const childProcesses = initializeIntegrityCheckerModule.default();
         registerChildProcesses(childProcesses);
     }
     await Promise.all(promises);

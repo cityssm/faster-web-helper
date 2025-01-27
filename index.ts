@@ -59,13 +59,12 @@ async function initializeModuleTasks(): Promise<void> {
     initializeTempFolderCleanupModule.initializeTempFolderCleanupTask()
   }
 
-  // eslint-disable-next-line no-secrets/no-secrets
-  if (getConfigProperty('modules.worktechIntegrity.isEnabled')) {
-    const initializeWorktechIntegrityModule = await import(
-      './modules/worktechIntegrity/tasks.initialize.js'
+  if (getConfigProperty('modules.integrityChecker.isEnabled')) {
+    const initializeIntegrityCheckerModule = await import(
+      './modules/integrityChecker/tasks.initialize.js'
     )
 
-    const childProcesses = initializeWorktechIntegrityModule.default()
+    const childProcesses = initializeIntegrityCheckerModule.default()
 
     registerChildProcesses(childProcesses)
   }

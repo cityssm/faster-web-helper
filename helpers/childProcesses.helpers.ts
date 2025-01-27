@@ -15,6 +15,8 @@ export function registerChildProcesses(
 ): void {
   for (const [taskName, childProcess] of Object.entries(childProcesses)) {
     registeredChildProcesses[taskName] = childProcess
+
+    childProcess.on('message', relayMessageToChildProcess)
   }
 }
 

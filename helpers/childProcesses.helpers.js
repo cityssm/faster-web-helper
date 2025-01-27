@@ -6,6 +6,7 @@ const registeredChildProcesses = {};
 export function registerChildProcesses(childProcesses) {
     for (const [taskName, childProcess] of Object.entries(childProcesses)) {
         registeredChildProcesses[taskName] = childProcess;
+        childProcess.on('message', relayMessageToChildProcess);
     }
 }
 /**

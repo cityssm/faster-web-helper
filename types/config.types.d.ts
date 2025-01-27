@@ -3,8 +3,8 @@ import type { mssql } from '@cityssm/mssql-multi-pool';
 import type { AccessOptions } from 'basic-ftp';
 import type { Spec } from 'node-schedule';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
+import type { ConfigModuleIntegrityChecker } from '../modules/integrityChecker/config/types.js';
 import type { ConfigModuleInventoryScanner } from '../modules/inventoryScanner/config/types.js';
-import type { ConfigModuleWorktechIntegrity } from '../modules/worktechIntegrity/config/types.js';
 import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from './config.helperTypes.js';
 export interface Config {
     application?: {
@@ -44,7 +44,7 @@ export interface Config {
     modules: {
         autocomplete?: ConfigModule<ConfigModuleAutocomplete>;
         inventoryScanner?: ConfigModule<ConfigModuleInventoryScanner>;
-        worktechIntegrity?: ConfigModule<ConfigModuleWorktechIntegrity>;
+        integrityChecker?: ConfigModule<ConfigModuleIntegrityChecker>;
         tempFolderCleanup?: ConfigModule<ConfigModuleTempFolderCleanup>;
     };
 }

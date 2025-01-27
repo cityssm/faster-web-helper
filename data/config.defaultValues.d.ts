@@ -8,9 +8,10 @@ export declare const configDefaultValues: {
     'modules.tempFolderCleanup.isEnabled': boolean;
     'modules.tempFolderCleanup.schedule': Spec;
     'modules.tempFolderCleanup.maxAgeDays': number;
-    'modules.worktechIntegrity.isEnabled': boolean;
-    'modules.worktechIntegrity.equipment.isEnabled': boolean;
-    'modules.worktechIntegrity.equipment.mappingFunctions': import("../modules/worktechIntegrity/config/types.js").ConfigModuleWorktechIntegrityMappingFunctions;
+    'modules.integrityChecker.isEnabled': boolean;
+    'modules.integrityChecker.fasterAssets.isEnabled': boolean;
+    'modules.integrityChecker.worktechEquipment.isEnabled': boolean;
+    'modules.integrityChecker.worktechEquipment.mappingFunctions': import("../modules/integrityChecker/config/types.js").ConfigModuleIntegrityCheckerMappingFunctions;
     'modules.inventoryScanner.isEnabled': boolean;
     'modules.inventoryScanner.scannerIpAddressRegex': RegExp;
     'modules.inventoryScanner.fasterSync.integrationId': number | undefined;

@@ -114,9 +114,9 @@ if (configHelpers.getConfigProperty('modules.inventoryScanner.isEnabled')) {
     initializeInventoryScannerModule.default(app);
 }
 // eslint-disable-next-line no-secrets/no-secrets
-if (configHelpers.getConfigProperty('modules.worktechIntegrity.isEnabled')) {
-    const initializeWorktechIntegrityModule = await import('../modules/worktechIntegrity/handlers.initialize.js');
-    initializeWorktechIntegrityModule.default(app);
+if (configHelpers.getConfigProperty('modules.integrityChecker.isEnabled')) {
+    const initializeintegrityCheckerModule = await import('../modules/integrityChecker/handlers.initialize.js');
+    initializeintegrityCheckerModule.default(app);
 }
 /*
  * Error handling

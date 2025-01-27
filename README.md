@@ -22,9 +22,9 @@ _This helper service is completely unofficial and is in no way affiliated with o
 Uses the **Inventory Import Utility** integration to offer
 a solution for issuing inventory using handheld barcode scanners.
 
-[**WorkTech Integrity Checks**](./modules/worktechIntegrity/README.md)<br />
-Reports on assets in FASTER Web that have no complimentary record in WorkTech,
-and vice versa.
+[**Integrity Checks**](./modules/integrityChecker/README.md)<br />
+Reports on assets in FASTER Web that may have errors.
+Reports on assets that have no complimentary record in WorkTech, and vice versa.
 
 [**Autocomplete**](./modules/autocomplete/README.md)<br />
 Creates and hosts JSON files compatible with Autocomplete userscripts.

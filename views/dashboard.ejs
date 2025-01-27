@@ -25,21 +25,37 @@
       </a>
     <% } %>
 
-    <% if (configHelpers.getConfigProperty('modules.worktechIntegrity.isEnabled') && (user.settings['worktechIntegrity_hasAccess'] ?? 'false') === 'true') { %>
+    <% if (configHelpers.getConfigProperty('modules.integrityChecker.isEnabled') && (user.settings['integrityChecker_hasAccess'] ?? 'false') === 'true') { %>
       <% hasModules = true; %>
-      <a class="box" href="<%= urlPrefix %>/modules/worktechIntegrity">
+      <div class="box">
         <div class="columns">
           <div class="column is-narrow">
             <i class="fa-solid fa-shapes fa-6x" aria-hidden="true"></i>
           </div>
           <div class="column">
-            <h3 class="title is-4 mb-0">WorkTech Integrity</h3>
+            <h3 class="title is-4 mb-0">Integrity Checker</h3>
             <p>
-              Compare WorkTech equipment records with asset records in FASTER Web.
+              Ensure the integrity of your data.
             </p>
+
+            <div class="menu">
+              <ul class="menu-list">
+                <% if (configHelpers.getConfigProperty('modules.integrityChecker.worktechEquipment.isEnabled')) { %>
+                  <li>
+                    <a href="<%= urlPrefix %>/modules/integrityChecker/worktech">
+                      <span class="icon"><i class="fa-solid fa-play" aria-hidden="true"></i></span>
+                      <span>
+                        FASTER Web
+                        <i class="fa-solid fa-left-right" aria-hidden="true"></i>
+                        WorkTech Integrity Checks</span>
+                    </a>
+                  </li>
+                <% } %>
+              </ul>
+            </div>
           </div>
         </div>
-      </a>
+      </div>
     <% } %>
 
     <% if (!hasModules) { %>

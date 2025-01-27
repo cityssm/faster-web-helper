@@ -4,7 +4,8 @@ export type TaskName =
   | 'inventoryScanner.workOrderValidation.worktech'
   | 'inventoryScanner.outstandingItemRequests'
   | 'inventoryScanner.updateRecordsFromValidation'
-  | 'worktechIntegrity.equipment'
+  | 'integrityChecker.fasterAssets'
+  | 'integrityChecker.worktechEquipment'
   
 export interface TaskWorkerMessage {
   destinationTaskName: TaskName | 'app'

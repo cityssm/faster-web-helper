@@ -6,7 +6,8 @@ const scheduledTaskMinutes: Record<`${number}`, TaskName[]> = {
   15: ['inventoryScanner.itemValidation.dynamicsGp'],
   35: ['inventoryScanner.workOrderValidation.fasterApi'],
   40: ['inventoryScanner.workOrderValidation.worktech'],
-  55: ['worktechIntegrity.equipment']
+  50: ['integrityChecker.fasterAssets'],
+  55: ['integrityChecker.worktechEquipment']
 }
 
 export function getScheduledTaskMinutes(taskName: TaskName): number[] {
