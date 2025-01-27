@@ -14,6 +14,7 @@ export function registerChildProcesses(
   childProcesses: Partial<Record<TaskName, ChildProcess>>
 ): void {
   for (const [taskName, childProcess] of Object.entries(childProcesses)) {
+    // eslint-disable-next-line security/detect-object-injection
     registeredChildProcesses[taskName] = childProcess
 
     childProcess.on('message', relayMessageToChildProcess)

@@ -6,6 +6,7 @@ export type TaskName =
   | 'inventoryScanner.updateRecordsFromValidation'
   | 'integrityChecker.fasterAssets'
   | 'integrityChecker.worktechEquipment'
+  | 'integrityChecker.nhtsaVehicles'
   
 export interface TaskWorkerMessage {
   destinationTaskName: TaskName | 'app'

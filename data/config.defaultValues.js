@@ -1,8 +1,8 @@
 // eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 import { hoursToMillis } from '@cityssm/to-millis';
+import integrityCheckerDefaultValues from '../modules/integrityChecker/config/defaultValues.js';
 import inventoryScannerDefaultValues from '../modules/inventoryScanner/config/defaultValues.js';
-import worktechUpdateDefaultValues from '../modules/integrityChecker/config/defaultValues.js';
 export const configDefaultValues = {
     'application.workDays': [1, 2, 3, 4, 5],
     'application.workHours': [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
@@ -32,7 +32,7 @@ export const configDefaultValues = {
     /*
      * Worktech Update
      */
-    ...worktechUpdateDefaultValues,
+    ...integrityCheckerDefaultValues,
     /*
      * Temp Folder Cleanup
      */

@@ -1,9 +1,9 @@
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
-import type { AssetIntegrityRecord } from '../../../modules/integrityChecker/types.js'
+import type { WorktechEquipmentIntegrityRecord } from '../../../modules/integrityChecker/types.js'
 
 declare const exports: {
-  assetIntegrityRecords: AssetIntegrityRecord[]
+  integrityRecords: WorktechEquipmentIntegrityRecord[]
 }
 
 declare const cityssm: cityssmGlobal
@@ -19,7 +19,7 @@ declare const cityssm: cityssmGlobal
     '#tbody--integrityChecker'
   ) as HTMLTableSectionElement
 
-  // eslint-disable-next-line complexity
+  // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
   function renderAssetIntegrityRecords(): void {
     let integrityWarningCount = 0
     let integrityErrorCount = 0
@@ -32,7 +32,7 @@ declare const cityssm: cityssmGlobal
 
     const rowElements: HTMLTableRowElement[] = []
 
-    for (const record of exports.assetIntegrityRecords) {
+    for (const record of exports.integrityRecords) {
       let isRecordIncluded = true
 
       if (includeFilter !== '') {
@@ -45,6 +45,8 @@ declare const cityssm: cityssmGlobal
               (record.make?.toLowerCase().includes(includeFilterPiece) ??
                 false) ||
               (record.model?.toLowerCase().includes(includeFilterPiece) ??
+                false) ||
+              (record.vinSerial?.toLowerCase().includes(includeFilterPiece) ??
                 false)
             )
           ) {
@@ -66,7 +68,10 @@ declare const cityssm: cityssmGlobal
             record.assetNumber.toLowerCase().includes(excludeFilterPiece) ||
             (record.make?.toLowerCase().includes(excludeFilterPiece) ??
               false) ||
-            (record.model?.toLowerCase().includes(excludeFilterPiece) ?? false)
+            (record.model?.toLowerCase().includes(excludeFilterPiece) ??
+              false) ||
+            (record.vinSerial?.toLowerCase().includes(excludeFilterPiece) ??
+              false)
           ) {
             isRecordIncluded = false
             break
@@ -80,7 +85,10 @@ declare const cityssm: cityssmGlobal
 
       const trElement = document.createElement('tr')
 
-      trElement.innerHTML = `<td>${cityssm.escapeHTML(record.assetNumber)}</td>`
+      trElement.innerHTML = `<td>
+        ${cityssm.escapeHTML(record.assetNumber)}
+        [${cityssm.escapeHTML(record.organization)}]
+        </td>`
 
       /*
        * Asset Description
@@ -101,8 +109,13 @@ declare const cityssm: cityssmGlobal
       if (fasterAssetDescription === worktechEquipmentDescription) {
         trElement.insertAdjacentHTML(
           'beforeend',
-          `<td class="has-text-centered">
-            <i class="fas fa-circle-check has-text-success" title="Matching Descriptions" aria-hidden="true"></i>
+          `<td>
+            <i class="fas fa-equals" title="Matching Descriptions" aria-hidden="true"></i>
+            </td>
+            <td class="has-text-grey-light">
+              <span title="WorkTech Equipment Description">
+                ${cityssm.escapeHTML(worktechEquipmentDescription)}
+              </span>
             </td>`
         )
       } else {
@@ -123,9 +136,12 @@ declare const cityssm: cityssmGlobal
               ? 'has-background-warning-light'
               : 'has-background-danger-light'
           )}">
-            <span title="WorkTech Equipment Description">
-              ${cityssm.escapeHTML(worktechEquipmentDescription)}
-            </span>
+              <i class="fas fa-not-equal" title="Not Equal" aria-hidden="true"></i>
+            </td>
+            <td>
+              <span title="WorkTech Equipment Description">
+                ${cityssm.escapeHTML(worktechEquipmentDescription)}
+              </span>
             </td>`
         )
       }
@@ -136,7 +152,7 @@ declare const cityssm: cityssmGlobal
 
       trElement.insertAdjacentHTML(
         'beforeend',
-        `<td class="${cityssm.escapeHTML(record.vinSerialIsValid === 1 ? 'has-background-success-light' : '')}">
+        `<td>
           <span title="FASTER Web VIN/Serial">
           ${cityssm.escapeHTML(record.vinSerial ?? '')}
           </span>
@@ -146,8 +162,13 @@ declare const cityssm: cityssmGlobal
       if (record.vinSerial === record.worktechVinSerial) {
         trElement.insertAdjacentHTML(
           'beforeend',
-          `<td class="has-text-centered">
-            <i class="fas fa-circle-check has-text-success" title="Matching VIN/Serial" aria-hidden="true"></i>
+          `<td>
+            <i class="fas fa-equals" title="Matching VIN/Serial" aria-hidden="true"></i>
+            </td>
+            <td class="has-text-grey-light">
+              <span title="WorkTech VIN/Serial">
+                ${cityssm.escapeHTML(record.worktechVinSerial ?? '')}
+              </span>
             </td>`
         )
       } else {
@@ -168,9 +189,12 @@ declare const cityssm: cityssmGlobal
               ? 'has-background-warning-light'
               : 'has-background-danger-light'
           )}">
-            <span title="WorkTech VIN/Serial">
-              ${cityssm.escapeHTML(record.worktechVinSerial ?? '')}
-            </span>
+              <i class="fas fa-not-equal" title="Not Equal" aria-hidden="true"></i>
+            </td>
+            <td>
+              <span title="WorkTech VIN/Serial">
+                ${cityssm.escapeHTML(record.worktechVinSerial ?? '')}
+              </span>
             </td>`
         )
       }
@@ -182,17 +206,22 @@ declare const cityssm: cityssmGlobal
       trElement.insertAdjacentHTML(
         'beforeend',
         `<td>
-          <span title="FASTER Web License Plate">
-          ${cityssm.escapeHTML(record.license ?? '')}
-          </span>
+            <span title="FASTER Web License Plate">
+              ${cityssm.escapeHTML(record.license ?? '')}
+            </span>
           </td>`
       )
 
       if (record.license === record.worktechLicense) {
         trElement.insertAdjacentHTML(
           'beforeend',
-          `<td class="has-text-centered">
-            <i class="fas fa-circle-check has-text-success" title="Matching Licence Plate" aria-hidden="true"></i>
+          `<td>
+            <i class="fas fa-equals" title="Matching License Plate" aria-hidden="true"></i>
+            </td>
+            <td class="has-text-grey-light">
+              <span title="WorkTech License Plate">
+                ${cityssm.escapeHTML(record.worktechLicense ?? '')}
+              </span>
             </td>`
         )
       } else {
@@ -208,14 +237,17 @@ declare const cityssm: cityssmGlobal
         trElement.insertAdjacentHTML(
           'beforeend',
           `<td class="${cityssm.escapeHTML(
-            record.license?.toLowerCase() ===
-              record.worktechLicense?.toLowerCase()
-              ? 'has-background-warning-light'
-              : 'has-background-danger-light'
-          )}">
-            <span title="WorkTech License Plate">
-              ${cityssm.escapeHTML(record.worktechLicense ?? '')}
-            </span>
+              record.license?.toLowerCase() ===
+                record.worktechLicense?.toLowerCase()
+                ? 'has-background-warning-light'
+                : 'has-background-danger-light'
+            )}">
+            <i class="fas fa-not-equal" title="Not Equal" aria-hidden="true"></i>
+            </td>
+            <td>
+              <span title="WorkTech License Plate">
+                ${cityssm.escapeHTML(record.worktechLicense ?? '')}
+              </span>
             </td>`
         )
       }

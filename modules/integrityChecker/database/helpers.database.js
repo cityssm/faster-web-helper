@@ -32,6 +32,18 @@ const createStatements = [
     make varchar,
     model varchar,
     
+    recordUpdate_timeMillis integer not null)`,
+    `create table if not exists NhtsaVehicles (
+    vin varchar primary key not null,
+    suggestedVin varchar,
+
+    make varchar,
+    model varchar,
+    year integer,
+
+    errorCode varchar,
+    errorText varchar,
+
     recordUpdate_timeMillis integer not null)`
 ];
 export function initializeIntegrityCheckerDatabase() {
@@ -41,7 +53,7 @@ export function initializeIntegrityCheckerDatabase() {
     const row = database
         .prepare(`select name from sqlite_master
         where type = 'table'
-        and name = 'WorktechEquipment'`)
+        and name = 'NhtsaVehicles'`)
         .get();
     if (row === undefined) {
         debug(`Creating ${databasePath}`);

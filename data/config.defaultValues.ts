@@ -11,8 +11,8 @@ import type { AccessOptions } from 'basic-ftp'
 import type { config as MSSQLConfig } from 'mssql'
 import type { Spec } from 'node-schedule'
 
+import integrityCheckerDefaultValues from '../modules/integrityChecker/config/defaultValues.js'
 import inventoryScannerDefaultValues from '../modules/inventoryScanner/config/defaultValues.js'
-import worktechUpdateDefaultValues from '../modules/integrityChecker/config/defaultValues.js'
 import type {
   ConfigFileSuffixXlsx,
   ConfigScheduledFtpReport
@@ -80,7 +80,7 @@ export const configDefaultValues = {
    * Worktech Update
    */
 
-  ...worktechUpdateDefaultValues,
+  ...integrityCheckerDefaultValues,
 
   /*
    * Temp Folder Cleanup

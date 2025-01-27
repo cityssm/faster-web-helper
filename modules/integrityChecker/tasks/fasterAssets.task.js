@@ -68,6 +68,27 @@ async function refreshFasterAssets() {
     }
     database.close();
     /*
+     * Trigger Tasks
+     */
+    if (process.send !== undefined) {
+        if (getConfigProperty('modules.integrityChecker.nhtsaVehicles.isEnabled')) {
+            debug('Triggering NHTSA Vehicles Task.');
+            process.send({
+                destinationTaskName: 'integrityChecker.nhtsaVehicles',
+                timeMillis: rightNow
+            });
+        }
+        if (
+        // eslint-disable-next-line no-secrets/no-secrets
+        getConfigProperty('modules.integrityChecker.worktechEquipment.isEnabled')) {
+            debug('Triggering Worktech Equipment Task.');
+            process.send({
+                destinationTaskName: 'integrityChecker.worktechEquipment',
+                timeMillis: rightNow
+            });
+        }
+    }
+    /*
      * Trigger Worktech Equipment Task
      */
     if (process.send !== undefined &&

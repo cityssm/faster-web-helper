@@ -5,7 +5,8 @@ const scheduledTaskMinutes = {
     35: ['inventoryScanner.workOrderValidation.fasterApi'],
     40: ['inventoryScanner.workOrderValidation.worktech'],
     50: ['integrityChecker.fasterAssets'],
-    55: ['integrityChecker.worktechEquipment']
+    53: ['integrityChecker.worktechEquipment'],
+    54: ['integrityChecker.nhtsaVehicles']
 };
 export function getScheduledTaskMinutes(taskName) {
     const scheduleMinutes = [];

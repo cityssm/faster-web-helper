@@ -1,17 +1,11 @@
-import sqlite from 'better-sqlite3'
-
-import type { AssetIntegrityRecord } from '../types.js'
-
-import { databasePath } from './helpers.database.js'
-
-export function getAssetIntegrityRecords(): AssetIntegrityRecord[] {
-  const database = sqlite(databasePath, {
-    readonly: true
-  })
-
-  const result = database
-    .prepare(
-      `select f.assetNumber, f.organization,
+import sqlite from 'better-sqlite3';
+import { databasePath } from './helpers.database.js';
+export default function getWorktechEquipmentIntegrityRecords() {
+    const database = sqlite(databasePath, {
+        readonly: true
+    });
+    const result = database
+        .prepare(`select f.assetNumber, f.organization,
         f.vinSerial, f.vinSerialIsValid,
         f.license,
         f.year, f.make, f.model,
@@ -26,11 +20,8 @@ export function getAssetIntegrityRecords(): AssetIntegrityRecord[] {
         w.recordUpdate_timeMillis as worktechRecordUpdate_timeMillis
         from FasterAssets f
         left join WorktechEquipment w on f.assetNumber = w.equipmentId
-        order by f.assetNumber`
-    )
-    .all() as AssetIntegrityRecord[]
-
-  database.close()
-
-  return result
+        order by f.assetNumber`)
+        .all();
+    database.close();
+    return result;
 }

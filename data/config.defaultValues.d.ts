@@ -10,6 +10,7 @@ export declare const configDefaultValues: {
     'modules.tempFolderCleanup.maxAgeDays': number;
     'modules.integrityChecker.isEnabled': boolean;
     'modules.integrityChecker.fasterAssets.isEnabled': boolean;
+    'modules.integrityChecker.nhtsaVehicles.isEnabled': boolean;
     'modules.integrityChecker.worktechEquipment.isEnabled': boolean;
     'modules.integrityChecker.worktechEquipment.mappingFunctions': import("../modules/integrityChecker/config/types.js").ConfigModuleIntegrityCheckerMappingFunctions;
     'modules.inventoryScanner.isEnabled': boolean;

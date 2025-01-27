@@ -40,6 +40,15 @@
 
             <div class="menu">
               <ul class="menu-list">
+                <% if (configHelpers.getConfigProperty('modules.integrityChecker.fasterAssets.isEnabled')) { %>
+                  <li>
+                    <a href="<%= urlPrefix %>/modules/integrityChecker/faster">
+                      <span class="icon"><i class="fa-solid fa-play" aria-hidden="true"></i></span>
+                      <span>
+                        FASTER Web
+                    </a>
+                  </li>
+                <% } %>
                 <% if (configHelpers.getConfigProperty('modules.integrityChecker.worktechEquipment.isEnabled')) { %>
                   <li>
                     <a href="<%= urlPrefix %>/modules/integrityChecker/worktech">
@@ -47,7 +56,8 @@
                       <span>
                         FASTER Web
                         <i class="fa-solid fa-left-right" aria-hidden="true"></i>
-                        WorkTech Integrity Checks</span>
+                        WorkTech
+                      </span>
                     </a>
                   </li>
                 <% } %>

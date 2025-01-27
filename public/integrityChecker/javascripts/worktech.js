@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const includeFilterElement = document.querySelector('#includeFilter--integrityChecker');
     const excludeFilterElement = document.querySelector('#excludeFilter--integrityChecker');
     const integrityTbodyElement = document.querySelector('#tbody--integrityChecker');
-    // eslint-disable-next-line complexity
+    // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
     function renderAssetIntegrityRecords() {
         let integrityWarningCount = 0;
         let integrityErrorCount = 0;
@@ -13,7 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const excludeFilter = excludeFilterElement.value.trim().toLowerCase();
         const excludeFilterPieces = excludeFilter.split(' ');
         const rowElements = [];
-        for (const record of exports.assetIntegrityRecords) {
+        for (const record of exports.integrityRecords) {
             let isRecordIncluded = true;
             if (includeFilter !== '') {
                 for (const includeFilterPiece of includeFilterPieces) {
@@ -24,6 +24,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         (record.make?.toLowerCase().includes(includeFilterPiece) ??
                             false) ||
                         (record.model?.toLowerCase().includes(includeFilterPiece) ??
+                            false) ||
+                        (record.vinSerial?.toLowerCase().includes(includeFilterPiece) ??
                             false))) {
                         isRecordIncluded = false;
                         break;
@@ -41,7 +43,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     else if (record.assetNumber.toLowerCase().includes(excludeFilterPiece) ||
                         (record.make?.toLowerCase().includes(excludeFilterPiece) ??
                             false) ||
-                        (record.model?.toLowerCase().includes(excludeFilterPiece) ?? false)) {
+                        (record.model?.toLowerCase().includes(excludeFilterPiece) ??
+                            false) ||
+                        (record.vinSerial?.toLowerCase().includes(excludeFilterPiece) ??
+                            false)) {
                         isRecordIncluded = false;
                         break;
                     }
@@ -51,7 +56,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 continue;
             }
             const trElement = document.createElement('tr');
-            trElement.innerHTML = `<td>${cityssm.escapeHTML(record.assetNumber)}</td>`;
+            trElement.innerHTML = `<td>
+        ${cityssm.escapeHTML(record.assetNumber)}
+        [${cityssm.escapeHTML(record.organization)}]
+        </td>`;
             /*
              * Asset Description
              */
@@ -63,8 +71,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
           </span>
           </td>`);
             if (fasterAssetDescription === worktechEquipmentDescription) {
-                trElement.insertAdjacentHTML('beforeend', `<td class="has-text-centered">
-            <i class="fas fa-circle-check has-text-success" title="Matching Descriptions" aria-hidden="true"></i>
+                trElement.insertAdjacentHTML('beforeend', `<td>
+            <i class="fas fa-equals" title="Matching Descriptions" aria-hidden="true"></i>
+            </td>
+            <td class="has-text-grey-light">
+              <span title="WorkTech Equipment Description">
+                ${cityssm.escapeHTML(worktechEquipmentDescription)}
+              </span>
             </td>`);
             }
             else {
@@ -79,22 +92,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     worktechEquipmentDescription.toLowerCase()
                     ? 'has-background-warning-light'
                     : 'has-background-danger-light')}">
-            <span title="WorkTech Equipment Description">
-              ${cityssm.escapeHTML(worktechEquipmentDescription)}
-            </span>
+              <i class="fas fa-not-equal" title="Not Equal" aria-hidden="true"></i>
+            </td>
+            <td>
+              <span title="WorkTech Equipment Description">
+                ${cityssm.escapeHTML(worktechEquipmentDescription)}
+              </span>
             </td>`);
             }
             /*
              * VIN / Serial
              */
-            trElement.insertAdjacentHTML('beforeend', `<td class="${cityssm.escapeHTML(record.vinSerialIsValid === 1 ? 'has-background-success-light' : '')}">
+            trElement.insertAdjacentHTML('beforeend', `<td>
           <span title="FASTER Web VIN/Serial">
           ${cityssm.escapeHTML(record.vinSerial ?? '')}
           </span>
           </td>`);
             if (record.vinSerial === record.worktechVinSerial) {
-                trElement.insertAdjacentHTML('beforeend', `<td class="has-text-centered">
-            <i class="fas fa-circle-check has-text-success" title="Matching VIN/Serial" aria-hidden="true"></i>
+                trElement.insertAdjacentHTML('beforeend', `<td>
+            <i class="fas fa-equals" title="Matching VIN/Serial" aria-hidden="true"></i>
+            </td>
+            <td class="has-text-grey-light">
+              <span title="WorkTech VIN/Serial">
+                ${cityssm.escapeHTML(record.worktechVinSerial ?? '')}
+              </span>
             </td>`);
             }
             else {
@@ -109,22 +130,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     record.worktechVinSerial?.toLowerCase()
                     ? 'has-background-warning-light'
                     : 'has-background-danger-light')}">
-            <span title="WorkTech VIN/Serial">
-              ${cityssm.escapeHTML(record.worktechVinSerial ?? '')}
-            </span>
+              <i class="fas fa-not-equal" title="Not Equal" aria-hidden="true"></i>
+            </td>
+            <td>
+              <span title="WorkTech VIN/Serial">
+                ${cityssm.escapeHTML(record.worktechVinSerial ?? '')}
+              </span>
             </td>`);
             }
             /*
              * License Plate
              */
             trElement.insertAdjacentHTML('beforeend', `<td>
-          <span title="FASTER Web License Plate">
-          ${cityssm.escapeHTML(record.license ?? '')}
-          </span>
+            <span title="FASTER Web License Plate">
+              ${cityssm.escapeHTML(record.license ?? '')}
+            </span>
           </td>`);
             if (record.license === record.worktechLicense) {
-                trElement.insertAdjacentHTML('beforeend', `<td class="has-text-centered">
-            <i class="fas fa-circle-check has-text-success" title="Matching Licence Plate" aria-hidden="true"></i>
+                trElement.insertAdjacentHTML('beforeend', `<td>
+            <i class="fas fa-equals" title="Matching License Plate" aria-hidden="true"></i>
+            </td>
+            <td class="has-text-grey-light">
+              <span title="WorkTech License Plate">
+                ${cityssm.escapeHTML(record.worktechLicense ?? '')}
+              </span>
             </td>`);
             }
             else {
@@ -139,9 +168,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     record.worktechLicense?.toLowerCase()
                     ? 'has-background-warning-light'
                     : 'has-background-danger-light')}">
-            <span title="WorkTech License Plate">
-              ${cityssm.escapeHTML(record.worktechLicense ?? '')}
-            </span>
+            <i class="fas fa-not-equal" title="Not Equal" aria-hidden="true"></i>
+            </td>
+            <td>
+              <span title="WorkTech License Plate">
+                ${cityssm.escapeHTML(record.worktechLicense ?? '')}
+              </span>
             </td>`);
             }
             rowElements.push(trElement);

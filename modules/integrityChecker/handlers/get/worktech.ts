@@ -1,13 +1,14 @@
 import type { Request, Response } from 'express'
 
-import { getAssetIntegrityRecords } from '../../database/getAssetIntegrityRecords.js'
+import getWorktechEquipmentIntegrityRecords from '../../database/getWorktechEquipmentIntegrityRecords.js'
 
 export default function handler(request: Request, response: Response): void {
 
-  const assetIntegrityRecords = getAssetIntegrityRecords()
+  const integrityRecords = getWorktechEquipmentIntegrityRecords()
 
   response.render('integrityChecker/worktech', {
     headTitle: 'WorkTech Integrity',
-    assetIntegrityRecords
+    integrityRecords,
+    menu: 'worktech'
   })
 }

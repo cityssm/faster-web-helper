@@ -27,10 +27,21 @@ export default function initializeIntegrityCheckerTasks(): Partial<
    */
 
   if (hasFasterApi) {
-    const taskPath = './modules/integrityChecker/tasks/fasterAssets.task.js'
-    childProcesses['integrityChecker.fasterAssets'] = fork(taskPath)
+    if (getConfigProperty('modules.integrityChecker.fasterAssets.isEnabled')) {
+      const taskPath = './modules/integrityChecker/tasks/fasterAssets.task.js'
+      childProcesses['integrityChecker.fasterAssets'] = fork(taskPath)
+    }
   } else {
     debug('FASTER API configuration is not set up. Skipping FASTER tasks.')
+  }
+
+  /*
+   * NHTSA Vehicles
+   */
+
+  if (getConfigProperty('modules.integrityChecker.nhtsaVehicles.isEnabled')) {
+    const taskPath = './modules/integrityChecker/tasks/nhtsaVehicles.task.js'
+    childProcesses['integrityChecker.nhtsaVehicles'] = fork(taskPath)
   }
 
   /*

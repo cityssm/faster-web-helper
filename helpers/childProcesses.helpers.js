@@ -5,6 +5,7 @@ const debug = Debug(`${DEBUG_NAMESPACE}:childProcesses`);
 const registeredChildProcesses = {};
 export function registerChildProcesses(childProcesses) {
     for (const [taskName, childProcess] of Object.entries(childProcesses)) {
+        // eslint-disable-next-line security/detect-object-injection
         registeredChildProcesses[taskName] = childProcess;
         childProcess.on('message', relayMessageToChildProcess);
     }

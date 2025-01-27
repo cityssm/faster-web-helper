@@ -1,0 +1,31 @@
+<aside class="menu">
+  <p class="menu-label">
+    Integrity Checker
+  </p>
+  <ul class="menu-list">
+    <% if (configHelpers.getConfigProperty('modules.integrityChecker.fasterAssets.isEnabled')) { %>
+      <li>
+        <a
+          <% if (menu === 'faster') { %>class="is-active"<% } %>
+          href="./faster">
+          <span>
+            FASTER Web
+          </span>
+        </a>
+      </li>
+    <% } %>
+    <% if (configHelpers.getConfigProperty('modules.integrityChecker.worktechEquipment.isEnabled')) { %>
+      <li>
+        <a
+          <% if (menu === 'worktech') { %>class="is-active"<% } %>
+          href="./worktech">
+          <span>
+            FASTER Web
+            <i class="fa-solid fa-left-right" aria-hidden="true"></i>
+            WorkTech
+          </span>
+        </a>
+      </li>
+    <% } %>
+  </ul>
+</aside>

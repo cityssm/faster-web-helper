@@ -20,6 +20,7 @@ import { moduleName } from '../helpers/module.helpers.js'
 const minimumMillisBetweenRuns = minutesToMillis(45)
 
 let lastRunMillis = getMaxWorktechEquipmentUpdateMillis()
+let isRunning = false
 
 export const taskName = 'Active Worktech Equipment Task'
 
@@ -30,20 +31,24 @@ const debug = Debug(
 const worktechConfig = getConfigProperty('worktech')
 
 async function refreshWorktechEquipment(): Promise<void> {
-  if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
+  if (!isRunning && lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
     debug('Skipping run.')
     return
   }
 
+  isRunning = true
   debug(`Running "${taskName}"...`)
+
   if (worktechConfig === undefined) {
     debug('Missing Worktech configuration.')
+    isRunning = false
     return
   }
 
   const fasterAssetNumbers = getFasterAssetNumbers()
   if (fasterAssetNumbers.length === 0) {
     debug('No FASTER assets found.')
+    isRunning = false
     return
   }
 
@@ -95,6 +100,7 @@ async function refreshWorktechEquipment(): Promise<void> {
   lastRunMillis = Date.now()
 
   debug(`Finished "${taskName}".`)
+  isRunning = false
 }
 
 const job = schedule.scheduleJob(

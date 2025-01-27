@@ -1,3 +1,12 @@
+interface IntegrityRecord {
+  vinSerial?: string | null
+  license?: string | null
+  year?: number | null
+  make?: string | null
+  model?: string | null
+  recordUpdate_timeMillis: number
+}
+
 export interface IntegrityFasterAsset extends IntegrityRecord {
   assetNumber: string
   organization: string
@@ -9,16 +18,7 @@ export interface IntegrityWorktechEquipment extends IntegrityRecord {
   equipmentId: string
 }
 
-interface IntegrityRecord {
-  vinSerial?: string | null
-  license?: string | null
-  year?: number | null
-  make?: string | null
-  model?: string | null
-  recordUpdate_timeMillis: number
-}
-
-export interface AssetIntegrityRecord extends IntegrityFasterAsset {
+export interface WorktechEquipmentIntegrityRecord extends IntegrityFasterAsset {
   worktechEquipmentSystemId: number | `${number}`
   worktechEquipmentId: string
   worktechVinSerial?: string | null
@@ -27,4 +27,27 @@ export interface AssetIntegrityRecord extends IntegrityFasterAsset {
   worktechMake?: string | null
   worktechModel?: string | null
   worktechRecordUpdate_timeMillis: number
+}
+
+export interface NhtsaVehicle {
+  vin: string
+  suggestedVin: string | null
+
+  year?: number | null
+  make?: string
+  model?: string
+
+  errorCode: string
+  errorText: string
+
+  recordUpdate_timeMillis: number
+}
+
+export interface FasterAssetIntegrityRecord extends IntegrityFasterAsset {
+  nhtsaSuggestedVin?: string | null
+  nhtsaMake?: string | null
+  nhtsaModel?: string | null
+  nhtsaYear?: number | null
+  nhtsaErrorCode?: string
+  nhtsaErrorText?: string
 }
