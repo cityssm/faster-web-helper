@@ -27,23 +27,25 @@ A solution for issuing inventory using handheld barcode scanners.
 ## Process Layout
 
 ```mermaid
-flowchart
-    scanner["Handheld Inventory Scanner<br />(FASTER Web Helper)"]
-    helper["`**FASTER Web Helper<br />Admin**`"]
-    inventory(["Inventory System<br />(Dynamics GP)"])
-    faster["FASTER Web"]
-    worktech([WorkTech])
+sequenceDiagram
+    participant scanner as Handheld Scanner<br />FASTER Web Helper
+    participant helper as FASTER Web Helper<br />Admin
+    participant faster as FASTER Web
+    participant worktech as WorkTech
+    participant inventory as Inventory System<br />Dynamics GP
 
-    scanner-->|FASTER Web<br />Inventory transactions|helper
-    scanner-.->|WorkTech<br />Inventory transactions|helper
+    note over scanner,inventory: Capture stock/non-stock transactions
+    scanner->>helper: FASTER Web<br />transactions
+    scanner-->>helper: WorkTech<br />transactions
+    inventory-->>helper: Inventory list
 
-    inventory-.->|Inventory list|helper
+    note over helper,worktech: Update work order systems
+    helper->>faster: FASTER Web<br />Inventory transactions<br />(SFTP -> IIU)
+    helper-->>worktech: WorkTech<br />Inventory transactions
 
-    helper-->|"FASTER Web<br />Inventory transactions<br />(SFTP -> IIU)"|faster
-    helper-.->|WorkTech<br />Inventory transactions|worktech
-
-    faster-->|Inventory update|inventory
-    worktech-.->|Inventory update|inventory
+    note over faster,inventory: Update inventory
+    faster->>inventory: Inventory update
+    worktech-->>inventory: Inventory update
 ```
 
 ## Detailed Workflow
