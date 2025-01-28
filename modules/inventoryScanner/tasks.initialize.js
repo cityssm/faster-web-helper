@@ -24,6 +24,7 @@ export default function initializeInventoryScannerTasks() {
             debug(`Item validation not implemented: ${itemValidationConfig.source}`);
         }
         if (itemValidationTaskPath !== '') {
+            // eslint-disable-next-line security/detect-object-injection
             childProcesses[itemValidationTaskName] = fork(itemValidationTaskPath);
         }
     }
@@ -56,6 +57,7 @@ export default function initializeInventoryScannerTasks() {
             debug(`Work order validation not implemented: ${workOrderValidationSource}`);
         }
         else {
+            // eslint-disable-next-line security/detect-object-injection
             childProcesses[workOrderValidationTaskName] = fork(workOrderValidationTaskPath);
         }
     }

@@ -23,7 +23,9 @@ router
     .route('/')
     .get((request, response) => {
     const sessionCookieName = getConfigProperty('webServer.session.cookieName');
-    if (request.session.user !== undefined && request.cookies[sessionCookieName] !== undefined) {
+    if (request.session.user !== undefined &&
+        // eslint-disable-next-line security/detect-object-injection
+        request.cookies[sessionCookieName] !== undefined) {
         const redirectURL = getSafeRedirectURL((request.query.redirect ?? ''));
         response.redirect(redirectURL);
     }

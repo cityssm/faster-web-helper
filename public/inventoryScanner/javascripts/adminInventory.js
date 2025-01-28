@@ -73,7 +73,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             inventoryContainerElement.replaceChildren(tableElement);
         }
     }
-    function reloadInventory(event) {
+    function reloadInventory() {
         inventoryContainerElement.replaceChildren();
         inventoryContainerElement.innerHTML = `<div class="message is-info">
       <p class="message-body">Reloading items...</p>

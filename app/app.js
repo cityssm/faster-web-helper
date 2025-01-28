@@ -9,7 +9,7 @@ import FileStore from 'session-file-store';
 import { initializeUserDatabase } from '../database/helpers.userDatabase.js';
 import { DEBUG_NAMESPACE } from '../debug.config.js';
 import { sessionCheckHandler } from '../handlers/session.js';
-import * as configHelpers from '../helpers/config.helpers.js';
+import configHelpers from '../helpers/config.helpers.js';
 import router_dashboard from '../routers/dashboard.js';
 import router_login from '../routers/login.js';
 import { version } from '../version.js';
@@ -113,10 +113,9 @@ if (configHelpers.getConfigProperty('modules.inventoryScanner.isEnabled')) {
     const initializeInventoryScannerModule = await import('../modules/inventoryScanner/handlers.initialize.js');
     initializeInventoryScannerModule.default(app);
 }
-// eslint-disable-next-line no-secrets/no-secrets
 if (configHelpers.getConfigProperty('modules.integrityChecker.isEnabled')) {
-    const initializeintegrityCheckerModule = await import('../modules/integrityChecker/handlers.initialize.js');
-    initializeintegrityCheckerModule.default(app);
+    const initializeIntegrityCheckerModule = await import('../modules/integrityChecker/handlers.initialize.js');
+    initializeIntegrityCheckerModule.default(app);
 }
 /*
  * Error handling

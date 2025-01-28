@@ -75,13 +75,22 @@ async function updateWorkOrderValidationFromFasterApi() {
         semaphore.release();
     }
 }
+/*
+ * Run task on initialization
+ */
 await updateWorkOrderValidationFromFasterApi();
+/*
+ * Schedule task
+ */
 const job = schedule.scheduleJob(taskName, {
     dayOfWeek: getConfigProperty('application.workDays'),
     hour: getConfigProperty('application.workHours'),
     minute: getScheduledTaskMinutes('inventoryScanner.workOrderValidation.fasterApi'),
     second: 0
 }, updateWorkOrderValidationFromFasterApi);
+/*
+ * Graceful shutdown
+ */
 exitHook(() => {
     try {
         job.cancel();
@@ -90,6 +99,9 @@ exitHook(() => {
         // ignore
     }
 });
+/*
+ * Listen for messages
+ */
 process.on('message', (_message) => {
     void updateWorkOrderValidationFromFasterApi();
 });

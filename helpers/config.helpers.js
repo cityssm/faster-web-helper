@@ -7,3 +7,7 @@ export function getConfigProperty(propertyName, fallbackValue) {
     return configurator.getConfigProperty(propertyName, fallbackValue);
 }
 export const ntfyServerIsDefault = getConfigProperty('ntfy.server') === DEFAULT_NTFY_SERVER;
+export default {
+    getConfigProperty,
+    ntfyServerIsDefault
+};

@@ -45,7 +45,7 @@ async function _updateWorkOrderValidationFromFasterApi(): Promise<void> {
   debug(`Running "${taskName}"...`)
 
   const timeMillis = Date.now()
-  
+
   const fasterApi = new FasterApi(
     fasterWebConfig.tenantOrBaseUrl,
     fasterWebConfig.apiUserName,
@@ -103,7 +103,15 @@ async function updateWorkOrderValidationFromFasterApi(): Promise<void> {
   }
 }
 
+/*
+ * Run task on initialization
+ */
+
 await updateWorkOrderValidationFromFasterApi()
+
+/*
+ * Schedule task
+ */
 
 const job = schedule.scheduleJob(
   taskName,
@@ -118,6 +126,10 @@ const job = schedule.scheduleJob(
   updateWorkOrderValidationFromFasterApi
 )
 
+/*
+ * Graceful shutdown
+ */
+
 exitHook(() => {
   try {
     job.cancel()
@@ -125,6 +137,10 @@ exitHook(() => {
     // ignore
   }
 })
+
+/*
+ * Listen for messages
+ */
 
 process.on('message', (_message: TaskWorkerMessage) => {
   void updateWorkOrderValidationFromFasterApi()

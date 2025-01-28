@@ -39,6 +39,7 @@ export default function initializeInventoryScannerTasks(): Partial<
     }
 
     if (itemValidationTaskPath !== '') {
+      // eslint-disable-next-line security/detect-object-injection
       childProcesses[itemValidationTaskName] = fork(itemValidationTaskPath)
     }
   }
@@ -79,6 +80,7 @@ export default function initializeInventoryScannerTasks(): Partial<
         `Work order validation not implemented: ${workOrderValidationSource}`
       )
     } else {
+      // eslint-disable-next-line security/detect-object-injection
       childProcesses[workOrderValidationTaskName] = fork(
         workOrderValidationTaskPath
       )

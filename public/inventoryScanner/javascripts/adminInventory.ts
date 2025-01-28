@@ -128,7 +128,7 @@ declare const cityssm: cityssmGlobal
     }
   }
 
-  function reloadInventory(event: Event): void {
+  function reloadInventory(): void {
     inventoryContainerElement.replaceChildren()
 
     inventoryContainerElement.innerHTML = `<div class="message is-info">

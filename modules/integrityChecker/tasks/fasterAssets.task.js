@@ -37,7 +37,7 @@ async function refreshFasterAssets() {
     const fasterAssetsResponse = await fasterApi.getActiveAssets();
     if (!fasterAssetsResponse.success) {
         debug(`API Error: ${fasterAssetsResponse.error.title}`);
-        return undefined;
+        return;
     }
     /*
      * Update the database

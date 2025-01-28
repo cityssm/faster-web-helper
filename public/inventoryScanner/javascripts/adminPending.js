@@ -4,6 +4,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
     const moduleUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/modules/inventoryScanner`;
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+    const fiveMinutesMillis = 5 * 60_000;
     /*
      * Item Requests
      */
@@ -28,7 +30,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     renderItemRequests();
-    globalThis.setInterval(refreshItemRequests, 5 * 60_000);
+    globalThis.setInterval(refreshItemRequests, fiveMinutesMillis);
     /*
      * Pending Scanner Records
      */
@@ -152,6 +154,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const recordIndex = Number.parseInt(clickEvent.currentTarget.closest('tr')?.dataset
             .recordIndex ?? '');
         lastSearchedWorkOrderNumber = '';
+        // eslint-disable-next-line security/detect-object-injection
         const pendingRecord = pendingRecords[recordIndex];
         cityssm.openHtmlModal('scannerRecordEdit', {
             onshow(modalElement) {
@@ -194,8 +197,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 refreshRepairIdSelect(false);
                 modalElement
                     .querySelector('.is-delete-button')
-                    ?.addEventListener('click', (clickEvent) => {
-                    clickEvent.preventDefault();
+                    ?.addEventListener('click', (deleteClickEvent) => {
+                    deleteClickEvent.preventDefault();
                     deletePendingRecord(pendingRecord.recordId, closeModalFunction);
                 });
             },
@@ -343,7 +346,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     document
         .querySelector('#pending--doRefresh')
         ?.addEventListener('click', refreshPendingRecords);
-    globalThis.setInterval(autoRefreshPendingRecords, 5 * 60_000);
+    globalThis.setInterval(autoRefreshPendingRecords, fiveMinutesMillis);
     function syncScannerRecords() {
         cityssm.postJSON(`${moduleUrlPrefix}/doSyncScannerRecords`, {}, (rawResponseJSON) => {
             const responseJSON = rawResponseJSON;

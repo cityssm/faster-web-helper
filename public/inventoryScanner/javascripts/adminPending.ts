@@ -21,6 +21,9 @@ declare const cityssm: cityssmGlobal
 ;(() => {
   const moduleUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/modules/inventoryScanner`
 
+  // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+  const fiveMinutesMillis = 5 * 60_000
+
   /*
    * Item Requests
    */
@@ -58,7 +61,7 @@ declare const cityssm: cityssmGlobal
 
   renderItemRequests()
 
-  globalThis.setInterval(refreshItemRequests, 5 * 60_000)
+  globalThis.setInterval(refreshItemRequests, fiveMinutesMillis)
 
   /*
    * Pending Scanner Records
@@ -261,6 +264,7 @@ declare const cityssm: cityssmGlobal
 
     lastSearchedWorkOrderNumber = ''
 
+    // eslint-disable-next-line security/detect-object-injection
     const pendingRecord = pendingRecords[recordIndex]
 
     cityssm.openHtmlModal('scannerRecordEdit', {
@@ -349,8 +353,8 @@ declare const cityssm: cityssmGlobal
 
         modalElement
           .querySelector('.is-delete-button')
-          ?.addEventListener('click', (clickEvent) => {
-            clickEvent.preventDefault()
+          ?.addEventListener('click', (deleteClickEvent) => {
+            deleteClickEvent.preventDefault()
             deletePendingRecord(pendingRecord.recordId, closeModalFunction)
           })
       },
@@ -559,7 +563,7 @@ declare const cityssm: cityssmGlobal
     .querySelector('#pending--doRefresh')
     ?.addEventListener('click', refreshPendingRecords)
 
-  globalThis.setInterval(autoRefreshPendingRecords, 5 * 60_000)
+  globalThis.setInterval(autoRefreshPendingRecords, fiveMinutesMillis)
 
   function syncScannerRecords(): void {
     cityssm.postJSON(

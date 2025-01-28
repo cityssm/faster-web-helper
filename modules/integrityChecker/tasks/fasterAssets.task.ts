@@ -58,7 +58,7 @@ async function refreshFasterAssets(): Promise<void> {
 
   if (!fasterAssetsResponse.success) {
     debug(`API Error: ${fasterAssetsResponse.error.title}`)
-    return undefined
+    return
   }
 
   /*
