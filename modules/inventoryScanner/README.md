@@ -34,7 +34,7 @@ sequenceDiagram
     participant worktech as WorkTech
     participant inventory as Inventory System<br />Dynamics GP
 
-    note over scanner,inventory: Capture stock/non-stock transactions
+    note over scanner,helper: Capture transactions
     scanner->>helper: FASTER Web<br />transactions
     scanner-->>helper: WorkTech<br />transactions
 
