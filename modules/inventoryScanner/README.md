@@ -28,28 +28,33 @@ A solution for issuing inventory using handheld barcode scanners.
 
 ```mermaid
 sequenceDiagram
-    participant scanner as FASTER Web Helper<br />Handheld Scanner
-    participant helper as FASTER Web Helper<br />Admin
+  box FASTER Web Helper
+    participant scanner as Handheld Scanner
+    participant helper as Admin
+  end
+
+  box Third-Party Systems
     participant faster as FASTER Web
     participant worktech as WorkTech
-    participant inventory as Inventory System<br />Dynamics GP
+    participant inventory as Dynamics GP<br />(Inventory)
+  end
 
-    note over scanner,helper: Capture transactions
-    scanner->>helper: FASTER Web<br />transactions
-    scanner-->>helper: WorkTech<br />transactions
+  note over scanner,helper: Capture transactions
+  scanner->>helper: FASTER Web<br />transactions
+  scanner-->>helper: WorkTech<br />transactions
 
-    note over helper,inventory: Validate transactions
-    faster->>helper: Work order / repair list
-    worktech-->>helper: Work order list
-    inventory-->>helper: Inventory list
+  note over helper,inventory: Validate transactions
+  faster->>helper: Work order / repair list
+  worktech-->>helper: Work order list
+  inventory-->>helper: Inventory list
 
-    note over helper,worktech: Update work order systems
-    helper->>faster: FASTER Web transactions<br />(SFTP -> IIU)
-    helper-->>worktech: WorkTech<br />Inventory transactions
+  note over helper,worktech: Update work order systems
+  helper->>faster: FASTER Web transactions<br />(SFTP -> IIU)
+  helper-->>worktech: WorkTech<br />Inventory transactions
 
-    note over faster,inventory: Update inventory
-    faster->>inventory: Inventory update
-    worktech-->>inventory: Inventory update
+  note over faster,inventory: Update inventory
+  faster->>inventory: Inventory update
+  worktech-->>inventory: Inventory update
 ```
 
 ## Detailed Workflow
