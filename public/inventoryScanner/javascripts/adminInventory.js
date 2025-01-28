@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const moduleUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/modules/inventoryScanner`;
     let inventory = exports.inventory;
     const inventoryFilterElement = document.querySelector('#filter--inventory');
+    const inventoryFilterZeroQuantityElement = document.querySelector('#filter--showZeroQuantity');
     const inventoryDisplayCountElement = document.querySelector('#displayCount--inventory');
     const inventoryContainerElement = document.querySelector('#container--inventory');
     function renderInventory(event) {
@@ -30,6 +31,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             .split(' ');
         for (const item of inventory) {
             let displayItem = true;
+            if (!inventoryFilterZeroQuantityElement.checked && item.availableQuantity === 0) {
+                continue;
+            }
             for (const filterPiece of filterPieces) {
                 if (!item.itemNumber.toLowerCase().includes(filterPiece) &&
                     !item.itemDescription.toLowerCase().includes(filterPiece)) {
@@ -84,6 +88,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     renderInventory();
     inventoryFilterElement.addEventListener('keyup', renderInventory);
+    inventoryFilterZeroQuantityElement.addEventListener('change', renderInventory);
     document
         .querySelector('#reload--inventory')
         ?.addEventListener('click', reloadInventory);
