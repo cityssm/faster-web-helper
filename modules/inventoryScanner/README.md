@@ -44,7 +44,7 @@ sequenceDiagram
     inventory-->>helper: Inventory list
 
     note over helper,worktech: Update work order systems
-    helper->>faster: FASTER Web<br />Inventory transactions<br />(SFTP -> IIU)
+    helper->>faster: FASTER Web transactions<br />(SFTP -> IIU)
     helper-->>worktech: WorkTech<br />Inventory transactions
 
     note over faster,inventory: Update inventory
