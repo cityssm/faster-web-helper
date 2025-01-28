@@ -28,7 +28,7 @@ A solution for issuing inventory using handheld barcode scanners.
 
 ```mermaid
 sequenceDiagram
-    participant scanner as Handheld Scanner<br />FASTER Web Helper
+    participant scanner as FASTER Web Helper<br />Handheld Scanner
     participant helper as FASTER Web Helper<br />Admin
     participant faster as FASTER Web
     participant worktech as WorkTech
@@ -37,6 +37,10 @@ sequenceDiagram
     note over scanner,inventory: Capture stock/non-stock transactions
     scanner->>helper: FASTER Web<br />transactions
     scanner-->>helper: WorkTech<br />transactions
+
+    note over helper,inventory: Validate transactions
+    faster->>helper: Work order / repair list
+    worktech-->>helper: Work order list
     inventory-->>helper: Inventory list
 
     note over helper,worktech: Update work order systems
