@@ -4,6 +4,34 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
     const moduleUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/modules/inventoryScanner`;
+    /*
+     * Item Requests
+     */
+    const itemRequestsElement = document.querySelector('#itemRequests--column');
+    let itemRequestsCount = exports.itemRequestsCount;
+    function renderItemRequests() {
+        ;
+        (itemRequestsElement?.querySelector('span')).textContent =
+            itemRequestsCount.toString();
+        if (itemRequestsCount === 0) {
+            itemRequestsElement?.classList.add('is-hidden');
+        }
+        else {
+            itemRequestsElement?.classList.remove('is-hidden');
+        }
+    }
+    function refreshItemRequests() {
+        cityssm.postJSON(`${moduleUrlPrefix}/doGetItemRequestsCount`, {}, (rawResponseJSON) => {
+            const responseJSON = rawResponseJSON;
+            itemRequestsCount = responseJSON.itemRequestsCount;
+            renderItemRequests();
+        });
+    }
+    renderItemRequests();
+    globalThis.setInterval(refreshItemRequests, 5 * 60_000);
+    /*
+     * Pending Scanner Records
+     */
     let pendingRecords = exports.pendingRecords;
     const pendingRecordsUnknownCountElement = document.querySelector('#pending--unknownCount');
     const pendingRecordsErrorCountElement = document.querySelector('#pending--errorCount');
