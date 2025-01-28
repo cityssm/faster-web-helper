@@ -2,6 +2,7 @@
 /* eslint-disable unicorn/no-null */
 import { minutesToMillis } from '@cityssm/to-millis';
 import { WorkTechAPI } from '@cityssm/worktech-api';
+import { Sema } from 'async-sema';
 import camelcase from 'camelcase';
 import Debug from 'debug';
 import exitHook from 'exit-hook';
@@ -15,10 +16,11 @@ import getScannerRecords from '../../database/getScannerRecords.js';
 import { moduleName } from '../../helpers/module.helpers.js';
 const minimumMillisBetweenRuns = minutesToMillis(20);
 let lastRunMillis = getMaxWorkOrderValidationRecordUpdateMillis('worktech');
+const semaphore = new Sema(1);
 export const taskName = 'Work Order Validation Task - Worktech';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`);
 const worktechConfig = getConfigProperty('worktech');
-async function runUpdateWorkOrderValidationFromWorktechTask() {
+async function _updateWorkOrderValidationFromWorktech() {
     if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
         debug('Skipping run.');
         return;
@@ -29,7 +31,6 @@ async function runUpdateWorkOrderValidationFromWorktechTask() {
     }
     debug(`Running "${taskName}"...`);
     const timeMillis = Date.now();
-    lastRunMillis = timeMillis;
     const worktech = new WorkTechAPI(worktechConfig);
     const scannerRecords = getScannerRecords({
         isSynced: false,
@@ -48,15 +49,28 @@ async function runUpdateWorkOrderValidationFromWorktechTask() {
             }, timeMillis);
         }
     }
+    lastRunMillis = timeMillis;
     debug(`Finished "${taskName}".`);
 }
-await runUpdateWorkOrderValidationFromWorktechTask();
+async function updateWorkOrderValidationFromWorktech() {
+    await semaphore.acquire();
+    try {
+        await _updateWorkOrderValidationFromWorktech();
+    }
+    catch (error) {
+        debug('Error:', error);
+    }
+    finally {
+        semaphore.release();
+    }
+}
+await updateWorkOrderValidationFromWorktech();
 const job = schedule.scheduleJob(taskName, {
     dayOfWeek: getConfigProperty('application.workDays'),
     hour: getConfigProperty('application.workHours'),
     minute: getScheduledTaskMinutes('inventoryScanner.workOrderValidation.worktech'),
     second: 0
-}, runUpdateWorkOrderValidationFromWorktechTask);
+}, updateWorkOrderValidationFromWorktech);
 exitHook(() => {
     try {
         job.cancel();
@@ -64,4 +78,7 @@ exitHook(() => {
     catch {
         // ignore
     }
+});
+process.on('message', (_message) => {
+    void updateWorkOrderValidationFromWorktech();
 });

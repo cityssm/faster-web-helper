@@ -1,5 +1,6 @@
 import { FasterApi } from '@cityssm/faster-api'
 import { minutesToMillis } from '@cityssm/to-millis'
+import { Sema } from 'async-sema'
 import camelcase from 'camelcase'
 import Debug from 'debug'
 import exitHook from 'exit-hook'
@@ -17,6 +18,7 @@ import { moduleName } from '../../helpers/module.helpers.js'
 
 const minimumMillisBetweenRuns = minutesToMillis(20)
 let lastRunMillis = getMaxWorkOrderValidationRecordUpdateMillis('faster')
+const semaphore = new Sema(1)
 
 export const taskName = 'Work Order Validation Task - FASTER API'
 
@@ -26,7 +28,7 @@ const debug = Debug(
 
 const fasterWebConfig = getConfigProperty('fasterWeb')
 
-async function runUpdateWorkOrderValidationFromFasterApiTask(): Promise<void> {
+async function _updateWorkOrderValidationFromFasterApi(): Promise<void> {
   if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
     debug('Skipping run.')
     return
@@ -43,8 +45,7 @@ async function runUpdateWorkOrderValidationFromFasterApiTask(): Promise<void> {
   debug(`Running "${taskName}"...`)
 
   const timeMillis = Date.now()
-  lastRunMillis = timeMillis
-
+  
   const fasterApi = new FasterApi(
     fasterWebConfig.tenantOrBaseUrl,
     fasterWebConfig.apiUserName,
@@ -85,10 +86,24 @@ async function runUpdateWorkOrderValidationFromFasterApiTask(): Promise<void> {
     debug(`FASTER API error: ${error}`)
   }
 
+  lastRunMillis = timeMillis
+
   debug(`Finished "${taskName}".`)
 }
 
-await runUpdateWorkOrderValidationFromFasterApiTask()
+async function updateWorkOrderValidationFromFasterApi(): Promise<void> {
+  await semaphore.acquire()
+
+  try {
+    await _updateWorkOrderValidationFromFasterApi()
+  } catch (error: unknown) {
+    debug('Error:', error)
+  } finally {
+    semaphore.release()
+  }
+}
+
+await updateWorkOrderValidationFromFasterApi()
 
 const job = schedule.scheduleJob(
   taskName,
@@ -100,7 +115,7 @@ const job = schedule.scheduleJob(
     ),
     second: 0
   },
-  runUpdateWorkOrderValidationFromFasterApiTask
+  updateWorkOrderValidationFromFasterApi
 )
 
 exitHook(() => {
@@ -112,5 +127,5 @@ exitHook(() => {
 })
 
 process.on('message', (_message: TaskWorkerMessage) => {
-  void runUpdateWorkOrderValidationFromFasterApiTask()
+  void updateWorkOrderValidationFromFasterApi()
 })

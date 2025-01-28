@@ -1,5 +1,6 @@
 import { FasterApi } from '@cityssm/faster-api';
 import { minutesToMillis } from '@cityssm/to-millis';
+import { Sema } from 'async-sema';
 import camelcase from 'camelcase';
 import Debug from 'debug';
 import exitHook from 'exit-hook';
@@ -14,10 +15,11 @@ import { getRepairIdsToRefresh } from '../../helpers/faster.helpers.js';
 import { moduleName } from '../../helpers/module.helpers.js';
 const minimumMillisBetweenRuns = minutesToMillis(20);
 let lastRunMillis = getMaxWorkOrderValidationRecordUpdateMillis('faster');
+const semaphore = new Sema(1);
 export const taskName = 'Work Order Validation Task - FASTER API';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`);
 const fasterWebConfig = getConfigProperty('fasterWeb');
-async function runUpdateWorkOrderValidationFromFasterApiTask() {
+async function _updateWorkOrderValidationFromFasterApi() {
     if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
         debug('Skipping run.');
         return;
@@ -29,7 +31,6 @@ async function runUpdateWorkOrderValidationFromFasterApiTask() {
     }
     debug(`Running "${taskName}"...`);
     const timeMillis = Date.now();
-    lastRunMillis = timeMillis;
     const fasterApi = new FasterApi(fasterWebConfig.tenantOrBaseUrl, fasterWebConfig.apiUserName, fasterWebConfig.apiPassword);
     const repairIdsToRefresh = getRepairIdsToRefresh();
     debug(`Querying ${repairIdsToRefresh.length} repairs from the FASTER API...`);
@@ -59,15 +60,28 @@ async function runUpdateWorkOrderValidationFromFasterApiTask() {
     catch (error) {
         debug(`FASTER API error: ${error}`);
     }
+    lastRunMillis = timeMillis;
     debug(`Finished "${taskName}".`);
 }
-await runUpdateWorkOrderValidationFromFasterApiTask();
+async function updateWorkOrderValidationFromFasterApi() {
+    await semaphore.acquire();
+    try {
+        await _updateWorkOrderValidationFromFasterApi();
+    }
+    catch (error) {
+        debug('Error:', error);
+    }
+    finally {
+        semaphore.release();
+    }
+}
+await updateWorkOrderValidationFromFasterApi();
 const job = schedule.scheduleJob(taskName, {
     dayOfWeek: getConfigProperty('application.workDays'),
     hour: getConfigProperty('application.workHours'),
     minute: getScheduledTaskMinutes('inventoryScanner.workOrderValidation.fasterApi'),
     second: 0
-}, runUpdateWorkOrderValidationFromFasterApiTask);
+}, updateWorkOrderValidationFromFasterApi);
 exitHook(() => {
     try {
         job.cancel();
@@ -77,5 +91,5 @@ exitHook(() => {
     }
 });
 process.on('message', (_message) => {
-    void runUpdateWorkOrderValidationFromFasterApiTask();
+    void updateWorkOrderValidationFromFasterApi();
 });
