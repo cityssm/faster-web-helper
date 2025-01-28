@@ -1,5 +1,6 @@
 import { minutesToMillis } from '@cityssm/to-millis'
 import { WorkTechAPI } from '@cityssm/worktech-api'
+import { Sema } from 'async-sema'
 import sqlite from 'better-sqlite3'
 import camelCase from 'camelcase'
 import Debug from 'debug'
@@ -18,9 +19,8 @@ import { databasePath } from '../database/helpers.database.js'
 import { moduleName } from '../helpers/module.helpers.js'
 
 const minimumMillisBetweenRuns = minutesToMillis(45)
-
 let lastRunMillis = getMaxWorktechEquipmentUpdateMillis()
-let isRunning = false
+const semaphore = new Sema(1)
 
 export const taskName = 'Active Worktech Equipment Task'
 
@@ -30,25 +30,22 @@ const debug = Debug(
 
 const worktechConfig = getConfigProperty('worktech')
 
-async function refreshWorktechEquipment(): Promise<void> {
-  if (!isRunning && lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
+async function _refreshWorktechEquipment(): Promise<void> {
+  if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
     debug('Skipping run.')
     return
   }
 
-  isRunning = true
   debug(`Running "${taskName}"...`)
 
   if (worktechConfig === undefined) {
     debug('Missing Worktech configuration.')
-    isRunning = false
     return
   }
 
   const fasterAssetNumbers = getFasterAssetNumbers()
   if (fasterAssetNumbers.length === 0) {
     debug('No FASTER assets found.')
-    isRunning = false
     return
   }
 
@@ -100,7 +97,18 @@ async function refreshWorktechEquipment(): Promise<void> {
   lastRunMillis = Date.now()
 
   debug(`Finished "${taskName}".`)
-  isRunning = false
+}
+
+async function refreshWorktechEquipment(): Promise<void> {
+  await semaphore.acquire()
+
+  try {
+    await _refreshWorktechEquipment()
+  } catch (error: unknown) {
+    debug('Error:', error)
+  } finally {
+    semaphore.release()
+  }
 }
 
 const job = schedule.scheduleJob(

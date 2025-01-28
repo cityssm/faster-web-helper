@@ -15,6 +15,13 @@ export default function handler(
     request.session.user as FasterWebHelperSessionUser
   )
 
+  if (success && process.send !== undefined) {
+    process.send({
+      destinationTaskName: 'inventoryScanner.updateRecordsFromValidation',
+      timeMillis: Date.now()
+    })
+  }
+
   const pendingRecords = getScannerRecords({ isSynced: false }, { limit: -1 })
 
   response.json({ success, pendingRecords })

@@ -1,4 +1,5 @@
 import { minutesToMillis } from '@cityssm/to-millis';
+import { Sema } from 'async-sema';
 import camelcase from 'camelcase';
 import Debug from 'debug';
 import exitHook from 'exit-hook';
@@ -11,11 +12,13 @@ import getWorkOrderValidationRecords from '../database/getWorkOrderValidationRec
 import { updateScannerRecordField } from '../database/updateScannerRecordField.js';
 import { moduleName } from '../helpers/module.helpers.js';
 const minimumMillisBetweenRuns = minutesToMillis(2);
-const lastRunMillis = 0;
+let lastRunMillis = 0;
+const semaphore = new Sema(1);
 export const taskName = 'Update Records from Validation Task';
 export const taskUserName = 'validationTask';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`);
-function updateRecordsFromValidationTask() {
+// eslint-disable-next-line sonarjs/cognitive-complexity
+function _updateRecordsFromValidation() {
     if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
         debug('Skipping run.');
         return;
@@ -54,15 +57,28 @@ function updateRecordsFromValidationTask() {
             }
         }
     }
+    lastRunMillis = Date.now();
     debug(`Finished "${taskName}".`);
 }
-updateRecordsFromValidationTask();
+async function updateRecordsFromValidation() {
+    await semaphore.acquire();
+    try {
+        _updateRecordsFromValidation();
+    }
+    catch (error) {
+        debug('Error:', error);
+    }
+    finally {
+        semaphore.release();
+    }
+}
+await updateRecordsFromValidation();
 const job = schedule.scheduleJob(taskName, {
     dayOfWeek: getConfigProperty('application.workDays'),
     hour: getConfigProperty('application.workHours'),
     minute: new schedule.Range(0, 55, 5),
     second: 0
-}, updateRecordsFromValidationTask);
+}, updateRecordsFromValidation);
 exitHook(() => {
     try {
         job.cancel();
@@ -72,5 +88,5 @@ exitHook(() => {
     }
 });
 process.on('message', (_message) => {
-    updateRecordsFromValidationTask();
+    void updateRecordsFromValidation();
 });

@@ -1,4 +1,5 @@
 import { minutesToMillis } from '@cityssm/to-millis'
+import { Sema } from 'async-sema'
 import camelcase from 'camelcase'
 import Debug from 'debug'
 import exitHook from 'exit-hook'
@@ -14,7 +15,8 @@ import { updateScannerRecordField } from '../database/updateScannerRecordField.j
 import { moduleName } from '../helpers/module.helpers.js'
 
 const minimumMillisBetweenRuns = minutesToMillis(2)
-const lastRunMillis = 0
+let lastRunMillis = 0
+const semaphore = new Sema(1)
 
 export const taskName = 'Update Records from Validation Task'
 export const taskUserName = 'validationTask'
@@ -23,7 +25,8 @@ const debug = Debug(
   `${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`
 )
 
-function updateRecordsFromValidationTask(): void {
+// eslint-disable-next-line sonarjs/cognitive-complexity
+function _updateRecordsFromValidation(): void {
   if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
     debug('Skipping run.')
     return
@@ -96,10 +99,23 @@ function updateRecordsFromValidationTask(): void {
     }
   }
 
+  lastRunMillis = Date.now()
   debug(`Finished "${taskName}".`)
 }
 
-updateRecordsFromValidationTask()
+async function updateRecordsFromValidation(): Promise<void> {
+  await semaphore.acquire()
+
+  try {
+    _updateRecordsFromValidation()
+  } catch (error) {
+    debug('Error:', error)
+  } finally {
+    semaphore.release()
+  }
+}
+
+await updateRecordsFromValidation()
 
 const job = schedule.scheduleJob(
   taskName,
@@ -109,7 +125,7 @@ const job = schedule.scheduleJob(
     minute: new schedule.Range(0, 55, 5),
     second: 0
   },
-  updateRecordsFromValidationTask
+  updateRecordsFromValidation
 )
 
 exitHook(() => {
@@ -121,5 +137,5 @@ exitHook(() => {
 })
 
 process.on('message', (_message: TaskWorkerMessage) => {
-  updateRecordsFromValidationTask()
+  void updateRecordsFromValidation()
 })
