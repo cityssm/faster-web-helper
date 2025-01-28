@@ -39,41 +39,49 @@ sequenceDiagram
     participant inventory as Dynamics GP<br />(Inventory)
   end
 
-  note over scanner,helper: Capture transactions
+  note over scanner,helper: 1. Capture transactions
   scanner->>helper: FASTER Web<br />transactions
   scanner-->>helper: WorkTech<br />transactions
 
-  note over helper,inventory: Validate transactions
+  note over helper,inventory: 2. Verify and validate transactions
   faster->>helper: Work order / repair list
   worktech-->>helper: Work order list
   inventory-->>helper: Inventory list
 
-  note over helper,worktech: Update work order systems
+  note over helper,worktech: 3. Update work order systems
   helper->>faster: FASTER Web transactions<br />(SFTP -> IIU)
   helper-->>worktech: WorkTech<br />Inventory transactions
 
-  note over faster,inventory: Update inventory
+  note over faster,inventory: 4. Update inventory
   faster->>inventory: Inventory update
   worktech-->>inventory: Inventory update
 ```
 
 ## Detailed Workflow
 
-1. Store room staff use handheld scanners to create records of parts to issue to
+1. **Capture transactions.**<br />
+   Store room staff use handheld scanners to create records of parts to issue to
    FASTER Web or WorkTech work orders.
    The same interface is used for both types of work orders.
-   Records are saved to a database outside of the work order systems.
+   Records are saved to the FASTER Web Helper database, outside of the work order systems.
 
-2. Verification and validation is done with the FASTER Web Helper application.
+2. **Verify and validate transactions.**<br />
+   Verification and validation is done with the FASTER Web Helper application.
    This includes:
 
    - Using the FASTER Web API to applying missing FASTER Web repair ids.
    - Using the inventory system (Dynamics GP) to retrieve current available quantities and unit costs.
 
-3. Verified records are synced to the appropriate work order systems.
+3. **Update work order systems.**<br />
+   Verified records are synced to the appropriate work order systems.
    - FASTER Web transactions are exported to a file.
      The file is uploaded to an FTP folder.
      The folder is available to the FASTER Web Inventory Import Utility (IIU) integration.
      The FASTER Web IIU receives the file, and applies the transactions to the work orders.
    - WorkTech transactions are inserted directly into the WorkTech database
      as a Stock Batch.
+
+4. **Update inventory.**<br />
+   Work order systems update the quantities in the inventory.
+   This ensures that any inventory-related transactions occurring outside of the FASTER Web Helper
+   are properly captured (i.e. returns).
