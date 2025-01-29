@@ -1,7 +1,5 @@
 import cluster from 'node:cluster';
 import os from 'node:os';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { secondsToMillis } from '@cityssm/to-millis';
 import Debug from 'debug';
 import { asyncExitHook } from 'exit-hook';
@@ -13,7 +11,6 @@ if (process.env.NODE_ENV === 'development') {
     Debug.enable(DEBUG_ENABLE_NAMESPACES);
 }
 const debug = Debug(`${DEBUG_NAMESPACE}:www:${process.pid}`);
-const directoryName = path.dirname(fileURLToPath(import.meta.url));
 process.title = 'FASTER Web Helper (Primary)';
 debug(`Primary pid:   ${process.pid}`);
 debug(`Primary title: ${process.title}`);
@@ -55,7 +52,7 @@ function initializeAppWorkers() {
     const processCount = Math.min(os.cpus().length, maxAppProcesses);
     debug(`Launching ${processCount} web app processes`);
     const clusterSettings = {
-        exec: `${directoryName}/app/appProcess.js`
+        exec: `./app/appProcess.js`
     };
     cluster.setupPrimary(clusterSettings);
     const activeWorkers = new Map();

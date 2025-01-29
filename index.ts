@@ -1,7 +1,5 @@
 import cluster, { type Worker } from 'node:cluster'
 import os from 'node:os'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 
 import { secondsToMillis } from '@cityssm/to-millis'
 import Debug from 'debug'
@@ -21,8 +19,6 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const debug = Debug(`${DEBUG_NAMESPACE}:www:${process.pid}`)
-
-const directoryName = path.dirname(fileURLToPath(import.meta.url))
 
 process.title = 'FASTER Web Helper (Primary)'
 
@@ -92,7 +88,7 @@ function initializeAppWorkers(): void {
   debug(`Launching ${processCount} web app processes`)
 
   const clusterSettings = {
-    exec: `${directoryName}/app/appProcess.js`
+    exec: `./app/appProcess.js`
   }
 
   cluster.setupPrimary(clusterSettings)
