@@ -68,7 +68,9 @@ app.use(session({
 }));
 // Clear cookie if no corresponding session
 app.use((request, response, next) => {
-    if (request.cookies[sessionCookieName] !== undefined &&
+    if (
+    // eslint-disable-next-line security/detect-object-injection
+    request.cookies[sessionCookieName] !== undefined &&
         request.session.user === undefined) {
         response.clearCookie(sessionCookieName);
     }
@@ -92,6 +94,7 @@ app.use(`${urlPrefix}/login`, router_login);
 app.use(`${urlPrefix}/dashboard`, sessionCheckHandler, router_dashboard);
 app.get(`${urlPrefix}/logout`, (request, response) => {
     if (request.session.user !== undefined &&
+        // eslint-disable-next-line security/detect-object-injection
         request.cookies[sessionCookieName] !== undefined) {
         request.session.destroy(() => {
             response.clearCookie(sessionCookieName);
@@ -125,12 +128,12 @@ app.use((_request, _response, next) => {
     next(createError(404));
 });
 // Error handler
-app.use((error, request, response) => {
+app.use((error, request, response, _next) => {
     // Set locals, only providing error in development
     response.locals.message = error.message;
     response.locals.error =
         request.app.get('env') === 'development' ? error : {};
     // Render the error page
-    response.status(error.status || 500);
+    response.status(error.status);
     response.render('error');
 });

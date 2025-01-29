@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser'
 import Debug from 'debug'
 import express from 'express'
 import session from 'express-session'
-import createError from 'http-errors'
+import createError, { type HttpError } from 'http-errors'
 import FileStore from 'session-file-store'
 
 import { initializeUserDatabase } from '../database/helpers.userDatabase.js'
@@ -114,6 +114,7 @@ app.use(
 // Clear cookie if no corresponding session
 app.use((request, response, next) => {
   if (
+    // eslint-disable-next-line security/detect-object-injection
     request.cookies[sessionCookieName] !== undefined &&
     request.session.user === undefined
   ) {
@@ -156,6 +157,7 @@ app.use(`${urlPrefix}/dashboard`, sessionCheckHandler, router_dashboard)
 app.get(`${urlPrefix}/logout`, (request, response) => {
   if (
     request.session.user !== undefined &&
+    // eslint-disable-next-line security/detect-object-injection
     request.cookies[sessionCookieName] !== undefined
   ) {
     request.session.destroy(() => {
@@ -197,16 +199,23 @@ if (configHelpers.getConfigProperty('modules.integrityChecker.isEnabled')) {
  */
 
 // Catch 404 and forward to error handler
-app.use((_request, _response, next) => {
-  next(createError(404))
-})
+app.use(
+  (
+    _request: express.Request,
+    _response: express.Response,
+    next: express.NextFunction
+  ) => {
+    next(createError(404))
+  }
+)
 
 // Error handler
 app.use(
   (
-    error: { status: number; message: string },
+    error: HttpError,
     request: express.Request,
-    response: express.Response
+    response: express.Response,
+    _next: express.NextFunction
   ) => {
     // Set locals, only providing error in development
     response.locals.message = error.message
@@ -214,7 +223,7 @@ app.use(
       request.app.get('env') === 'development' ? error : {}
 
     // Render the error page
-    response.status(error.status || 500)
+    response.status(error.status)
     response.render('error')
   }
 )
