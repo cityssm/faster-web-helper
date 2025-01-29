@@ -1,5 +1,6 @@
 import { minutesToMillis } from '@cityssm/to-millis'
 import { DecodeVinValues } from '@shaggytools/nhtsa-api-wrapper'
+import { Sema } from 'async-sema'
 import sqlite from 'better-sqlite3'
 import camelcase from 'camelcase'
 import Debug from 'debug'
@@ -33,15 +34,15 @@ const variableKeys = {
 
 const minimumMillisBetweenRuns = minutesToMillis(20)
 
+export const taskName = 'NHTSA Vehicles Task'
 let lastRunMillis = 0
-
-export const taskName = 'NHTSA Task'
+const semaphore = new Sema(1)
 
 const debug = Debug(
   `${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`
 )
 
-async function refreshNhtsaVehicles(): Promise<void> {
+async function _refreshNhtsaVehicles(): Promise<void> {
   if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
     debug('Skipping run.')
     return
@@ -86,6 +87,16 @@ async function refreshNhtsaVehicles(): Promise<void> {
   lastRunMillis = Date.now()
 
   debug(`"${taskName}" complete.`)
+}
+
+async function refreshNhtsaVehicles(): Promise<void> {
+  await semaphore.acquire()
+
+  try {
+    await _refreshNhtsaVehicles()
+  } finally {
+    semaphore.release()
+  }
 }
 
 const job = schedule.scheduleJob(
