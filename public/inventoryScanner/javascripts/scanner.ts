@@ -133,6 +133,11 @@ declare const cityssm: cityssmGlobal
             ${cityssm.escapeHTML(record.scanTimeString)}
           </div>
           <div class="column">
+            ${
+              record.itemNumberPrefix === ''
+                ? ''
+                : `<span class="tag">${cityssm.escapeHTML(record.itemNumberPrefix)}</span> -`
+            }
             ${cityssm.escapeHTML(record.itemNumber)}
           </div>
           <div class="column is-narrow">
@@ -161,6 +166,11 @@ declare const cityssm: cityssmGlobal
               </span>
             </div>
             <div class="column">
+              ${
+                record.itemNumberPrefix === ''
+                  ? ''
+                  : `<span class="tag">${cityssm.escapeHTML(record.itemNumberPrefix)}</span> -`
+              }
               ${cityssm.escapeHTML(record.itemNumber)}
                 (${cityssm.escapeHTML(record.itemStoreroom ?? '')})<br />
               ${cityssm.escapeHTML(record.itemDescription ?? '')}<br />
@@ -344,11 +354,17 @@ declare const cityssm: cityssmGlobal
     '#scanner--itemTypeTabs a'
   ) as NodeListOf<HTMLAnchorElement>
 
-  const itemNumberSuffixElement = formElement.querySelector('#scanner--itemNumberSuffix') as HTMLInputElement
+  const itemNumberSuffixElement = formElement.querySelector(
+    '#scanner--itemNumberSuffix'
+  ) as HTMLInputElement
 
-  const itemDescriptionElement = formElement.querySelector('#scanner--itemDescription') as HTMLInputElement
+  const itemDescriptionElement = formElement.querySelector(
+    '#scanner--itemDescription'
+  ) as HTMLInputElement
 
-  const unitPriceElement = formElement.querySelector('#scanner--unitPrice') as HTMLInputElement
+  const unitPriceElement = formElement.querySelector(
+    '#scanner--unitPrice'
+  ) as HTMLInputElement
 
   function toggleItemTypeFieldsets(): void {
     for (const itemTypeTabElement of itemTypeTabElements) {
@@ -375,6 +391,64 @@ declare const cityssm: cityssmGlobal
   for (const itemTypeTabElement of itemTypeTabElements) {
     itemTypeTabElement.addEventListener('click', toggleItemTypeFieldsets)
   }
+
+  /*
+   * Item Description
+   */
+
+  const itemNumberElement = formElement.querySelector(
+    '#scanner--itemNumber'
+  ) as HTMLInputElement
+
+  let lastSearchedItemNumber = ''
+
+  const itemDescriptionSpanElement = formElement.querySelector(
+    '#scanner--itemDescriptionSpan'
+  ) as HTMLElement
+
+  const unitPriceSpanElement = formElement.querySelector(
+    '#scanner--unitPriceSpan'
+  ) as HTMLElement
+
+  function refreshItemDescription(): void {
+    const itemNumber = itemNumberElement.value
+
+    if (itemNumber === '') {
+      itemDescriptionSpanElement.textContent = '(No Item Number Entered)'
+      unitPriceSpanElement.textContent = ''
+      return
+    } else if (!itemNumberElement.checkValidity()) {
+      itemDescriptionSpanElement.textContent = '(Item Number Invalid)'
+      unitPriceSpanElement.textContent = ''
+      return
+    } else if (itemNumber === lastSearchedItemNumber) {
+      return
+    }
+
+    lastSearchedItemNumber = itemNumber
+
+    cityssm.postJSON(
+      `${scannerUrlPrefix}/doGetItemDescription`,
+      {
+        itemNumber
+      },
+      (rawResponseJSON) => {
+        const responseJSON = rawResponseJSON as unknown as {
+          itemDescription: string
+          unitPrice?: number
+        }
+
+        itemDescriptionSpanElement.textContent = responseJSON.itemDescription
+        unitPriceSpanElement.textContent =
+          responseJSON.unitPrice === undefined
+            ? ''
+            : `$${responseJSON.unitPrice.toFixed(2)}`
+      }
+    )
+  }
+
+  refreshItemDescription()
+  itemNumberElement.addEventListener('keyup', refreshItemDescription)
 
   /*
    * Quantity Multiplier
@@ -455,10 +529,6 @@ declare const cityssm: cityssmGlobal
    * Form submit
    */
 
-  const itemNumberElement = formElement.querySelector(
-    '#scanner--itemNumber'
-  ) as HTMLInputElement
-
   function blockInputSubmit(inputEvent: KeyboardEvent): void {
     if (inputEvent.key === 'Enter') {
       inputEvent.preventDefault()
@@ -506,6 +576,8 @@ declare const cityssm: cityssmGlobal
           itemTypeTabElements[0].click()
 
           itemNumberElement.value = ''
+          refreshItemDescription()
+
           itemNumberElement.focus()
 
           renderHistory(responseJSON.records)

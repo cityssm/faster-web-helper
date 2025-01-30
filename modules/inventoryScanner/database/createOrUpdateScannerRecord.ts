@@ -68,7 +68,11 @@ export default function createOrUpdateScannerRecord(
     scannerRecord.itemType === 'stock' &&
     (itemStoreroom === undefined || unitPrice === undefined)
   ) {
-    const items = getItemValidationRecordsByItemNumber(itemNumber, itemNumberPrefix, database)
+    const items = getItemValidationRecordsByItemNumber(
+      itemNumber,
+      itemNumberPrefix,
+      database
+    )
 
     for (const item of items) {
       if (itemStoreroom === undefined) {

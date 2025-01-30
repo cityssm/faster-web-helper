@@ -26,5 +26,5 @@ export function getMinimumMillisBetweenRuns(taskName) {
     const scheduledRunsPerHour = minutes.length;
     const allowedRunsPerHour = scheduledRunsPerHour * 2;
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    return minutesToMillis(Math.max(60 / allowedRunsPerHour - 5, 0));
+    return Math.floor(minutesToMillis(Math.max(60 / allowedRunsPerHour - 5, 0)));
 }

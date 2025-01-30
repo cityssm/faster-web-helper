@@ -7,7 +7,7 @@ export default function handler(request, response) {
         isSynced: true,
         isSyncedSuccessfully: false
     });
-    const inventory = getItemValidationRecords();
+    const inventory = getItemValidationRecords('');
     const itemRequestsCount = Number.parseInt(getSetting('itemRequests.count') ?? '0');
     response.render('inventoryScanner/admin', {
         headTitle: 'Inventory Scanner',

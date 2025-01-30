@@ -8,7 +8,10 @@ import schedule from 'node-schedule'
 
 import { DEBUG_NAMESPACE } from '../../../debug.config.js'
 import { getConfigProperty } from '../../../helpers/config.helpers.js'
-import { getMinimumMillisBetweenRuns, getScheduledTaskMinutes } from '../../../helpers/tasks.helpers.js'
+import {
+  getMinimumMillisBetweenRuns,
+  getScheduledTaskMinutes
+} from '../../../helpers/tasks.helpers.js'
 import type { TaskWorkerMessage } from '../../../types/tasks.types.js'
 import { createOrUpdateWorktechEquipment } from '../database/createOrUpdateWorktechEquipment.js'
 import { deleteExpiredRecords } from '../database/deleteExpiredRecords.js'

@@ -12,7 +12,7 @@ export default function handler(request: Request, response: Response): void {
     isSyncedSuccessfully: false
   })
 
-  const inventory = getItemValidationRecords()
+  const inventory = getItemValidationRecords('')
 
   const itemRequestsCount = Number.parseInt(getSetting('itemRequests.count') ?? '0')
 

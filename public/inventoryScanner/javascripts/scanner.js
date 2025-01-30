@@ -91,6 +91,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             ${cityssm.escapeHTML(record.scanTimeString)}
           </div>
           <div class="column">
+            ${record.itemNumberPrefix === ''
+                ? ''
+                : `<span class="tag">${cityssm.escapeHTML(record.itemNumberPrefix)}</span> -`}
             ${cityssm.escapeHTML(record.itemNumber)}
           </div>
           <div class="column is-narrow">
@@ -119,6 +122,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
               </span>
             </div>
             <div class="column">
+              ${record.itemNumberPrefix === ''
+                ? ''
+                : `<span class="tag">${cityssm.escapeHTML(record.itemNumberPrefix)}</span> -`}
               ${cityssm.escapeHTML(record.itemNumber)}
                 (${cityssm.escapeHTML(record.itemStoreroom ?? '')})<br />
               ${cityssm.escapeHTML(record.itemDescription ?? '')}<br />
@@ -252,6 +258,42 @@ Object.defineProperty(exports, "__esModule", { value: true });
         itemTypeTabElement.addEventListener('click', toggleItemTypeFieldsets);
     }
     /*
+     * Item Description
+     */
+    const itemNumberElement = formElement.querySelector('#scanner--itemNumber');
+    let lastSearchedItemNumber = '';
+    const itemDescriptionSpanElement = formElement.querySelector('#scanner--itemDescriptionSpan');
+    const unitPriceSpanElement = formElement.querySelector('#scanner--unitPriceSpan');
+    function refreshItemDescription() {
+        const itemNumber = itemNumberElement.value;
+        if (itemNumber === '') {
+            itemDescriptionSpanElement.textContent = '(No Item Number Entered)';
+            unitPriceSpanElement.textContent = '';
+            return;
+        }
+        else if (!itemNumberElement.checkValidity()) {
+            itemDescriptionSpanElement.textContent = '(Item Number Invalid)';
+            unitPriceSpanElement.textContent = '';
+            return;
+        }
+        else if (itemNumber === lastSearchedItemNumber) {
+            return;
+        }
+        lastSearchedItemNumber = itemNumber;
+        cityssm.postJSON(`${scannerUrlPrefix}/doGetItemDescription`, {
+            itemNumber
+        }, (rawResponseJSON) => {
+            const responseJSON = rawResponseJSON;
+            itemDescriptionSpanElement.textContent = responseJSON.itemDescription;
+            unitPriceSpanElement.textContent =
+                responseJSON.unitPrice === undefined
+                    ? ''
+                    : `$${responseJSON.unitPrice.toFixed(2)}`;
+        });
+    }
+    refreshItemDescription();
+    itemNumberElement.addEventListener('keyup', refreshItemDescription);
+    /*
      * Quantity Multiplier
      */
     const quantityLabelElement = formElement.querySelector('label[for="scanner--quantity"]');
@@ -301,7 +343,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
     /*
      * Form submit
      */
-    const itemNumberElement = formElement.querySelector('#scanner--itemNumber');
     function blockInputSubmit(inputEvent) {
         if (inputEvent.key === 'Enter') {
             inputEvent.preventDefault();
@@ -332,6 +373,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 unitPriceElement.value = '';
                 itemTypeTabElements[0].click();
                 itemNumberElement.value = '';
+                refreshItemDescription();
                 itemNumberElement.focus();
                 renderHistory(responseJSON.records);
             }

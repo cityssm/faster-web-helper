@@ -88,7 +88,7 @@ function initializeAppWorkers(): void {
   debug(`Launching ${processCount} web app processes`)
 
   const clusterSettings = {
-    exec: `./app/appProcess.js`
+    exec: './app/appProcess.js'
   }
 
   cluster.setupPrimary(clusterSettings)

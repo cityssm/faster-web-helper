@@ -52,7 +52,7 @@ function initializeAppWorkers() {
     const processCount = Math.min(os.cpus().length, maxAppProcesses);
     debug(`Launching ${processCount} web app processes`);
     const clusterSettings = {
-        exec: `./app/appProcess.js`
+        exec: './app/appProcess.js'
     };
     cluster.setupPrimary(clusterSettings);
     const activeWorkers = new Map();
