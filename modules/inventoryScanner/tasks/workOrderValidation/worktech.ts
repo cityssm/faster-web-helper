@@ -1,7 +1,6 @@
 // eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
 /* eslint-disable unicorn/no-null */
 
-import { minutesToMillis } from '@cityssm/to-millis'
 import { WorkTechAPI } from '@cityssm/worktech-api'
 import { Sema } from 'async-sema'
 import camelcase from 'camelcase'
@@ -11,14 +10,20 @@ import schedule from 'node-schedule'
 
 import { DEBUG_NAMESPACE } from '../../../../debug.config.js'
 import { getConfigProperty } from '../../../../helpers/config.helpers.js'
-import { getScheduledTaskMinutes } from '../../../../helpers/tasks.helpers.js'
+import {
+  getMinimumMillisBetweenRuns,
+  getScheduledTaskMinutes
+} from '../../../../helpers/tasks.helpers.js'
 import type { TaskWorkerMessage } from '../../../../types/tasks.types.js'
 import createOrUpdateWorkOrderValidation from '../../database/createOrUpdateWorkOrderValidation.js'
 import getMaxWorkOrderValidationRecordUpdateMillis from '../../database/getMaxWorkOrderValidationRecordUpdateMillis.js'
 import getScannerRecords from '../../database/getScannerRecords.js'
 import { moduleName } from '../../helpers/module.helpers.js'
 
-const minimumMillisBetweenRuns = minutesToMillis(20)
+const minimumMillisBetweenRuns = getMinimumMillisBetweenRuns(
+  'inventoryScanner.workOrderValidation.worktech'
+)
+
 let lastRunMillis = getMaxWorkOrderValidationRecordUpdateMillis('worktech')
 const semaphore = new Sema(1)
 

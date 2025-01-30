@@ -1,5 +1,4 @@
 import { FasterApi } from '@cityssm/faster-api'
-import { minutesToMillis } from '@cityssm/to-millis'
 import { Sema } from 'async-sema'
 import camelcase from 'camelcase'
 import Debug from 'debug'
@@ -8,7 +7,10 @@ import schedule from 'node-schedule'
 
 import { DEBUG_NAMESPACE } from '../../../../debug.config.js'
 import { getConfigProperty } from '../../../../helpers/config.helpers.js'
-import { getScheduledTaskMinutes } from '../../../../helpers/tasks.helpers.js'
+import {
+  getMinimumMillisBetweenRuns,
+  getScheduledTaskMinutes
+} from '../../../../helpers/tasks.helpers.js'
 import type { TaskWorkerMessage } from '../../../../types/tasks.types.js'
 import createOrUpdateWorkOrderValidation from '../../database/createOrUpdateWorkOrderValidation.js'
 import deleteWorkOrderValidation from '../../database/deleteWorkOrderValidation.js'
@@ -16,7 +18,9 @@ import getMaxWorkOrderValidationRecordUpdateMillis from '../../database/getMaxWo
 import { getRepairIdsToRefresh } from '../../helpers/faster.helpers.js'
 import { moduleName } from '../../helpers/module.helpers.js'
 
-const minimumMillisBetweenRuns = minutesToMillis(20)
+const minimumMillisBetweenRuns = getMinimumMillisBetweenRuns(
+  'inventoryScanner.workOrderValidation.fasterApi'
+)
 let lastRunMillis = getMaxWorkOrderValidationRecordUpdateMillis('faster')
 const semaphore = new Sema(1)
 

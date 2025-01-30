@@ -1,4 +1,3 @@
-import { minutesToMillis } from '@cityssm/to-millis';
 import { DecodeVinValues } from '@shaggytools/nhtsa-api-wrapper';
 import { Sema } from 'async-sema';
 import sqlite from 'better-sqlite3';
@@ -8,7 +7,7 @@ import exitHook from 'exit-hook';
 import schedule from 'node-schedule';
 import { DEBUG_NAMESPACE } from '../../../debug.config.js';
 import { getConfigProperty } from '../../../helpers/config.helpers.js';
-import { getScheduledTaskMinutes } from '../../../helpers/tasks.helpers.js';
+import { getMinimumMillisBetweenRuns, getScheduledTaskMinutes } from '../../../helpers/tasks.helpers.js';
 import createOrUpdateNhtsaVehicle from '../database/createOrUpdateNhtsaVehicle.js';
 import getFasterAssetVinsToCheck from '../database/getFasterAssetVinsToCheck.js';
 import { databasePath } from '../database/helpers.database.js';
@@ -21,7 +20,7 @@ const variableKeys = {
     ErrorCode: 'ErrorCode',
     ErrorText: 'ErrorText'
 };
-const minimumMillisBetweenRuns = minutesToMillis(20);
+const minimumMillisBetweenRuns = getMinimumMillisBetweenRuns('integrityChecker.nhtsaVehicles');
 export const taskName = 'NHTSA Vehicles Task';
 let lastRunMillis = 0;
 const semaphore = new Sema(1);

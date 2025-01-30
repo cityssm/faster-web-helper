@@ -1,5 +1,4 @@
 import { FasterApi } from '@cityssm/faster-api'
-import { minutesToMillis } from '@cityssm/to-millis'
 import { isValidVin } from '@shaggytools/nhtsa-api-wrapper'
 import sqlite from 'better-sqlite3'
 import camelCase from 'camelcase'
@@ -9,14 +8,19 @@ import schedule from 'node-schedule'
 
 import { DEBUG_NAMESPACE } from '../../../debug.config.js'
 import { getConfigProperty } from '../../../helpers/config.helpers.js'
-import { getScheduledTaskMinutes } from '../../../helpers/tasks.helpers.js'
+import {
+  getMinimumMillisBetweenRuns,
+  getScheduledTaskMinutes
+} from '../../../helpers/tasks.helpers.js'
 import { createOrUpdateFasterAsset } from '../database/createOrUpdateFasterAsset.js'
 import { deleteExpiredRecords } from '../database/deleteExpiredRecords.js'
 import getMaxFasterAssetUpdateMillis from '../database/getMaxFasterAssetUpdateMillis.js'
 import { databasePath } from '../database/helpers.database.js'
 import { moduleName } from '../helpers/module.helpers.js'
 
-const minimumMillisBetweenRuns = minutesToMillis(45)
+const minimumMillisBetweenRuns = getMinimumMillisBetweenRuns(
+  'integrityChecker.fasterAssets'
+)
 
 let lastRunMillis = getMaxFasterAssetUpdateMillis()
 

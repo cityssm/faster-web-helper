@@ -1,4 +1,3 @@
-import { minutesToMillis } from '@cityssm/to-millis'
 import { WorkTechAPI } from '@cityssm/worktech-api'
 import { Sema } from 'async-sema'
 import sqlite from 'better-sqlite3'
@@ -9,7 +8,7 @@ import schedule from 'node-schedule'
 
 import { DEBUG_NAMESPACE } from '../../../debug.config.js'
 import { getConfigProperty } from '../../../helpers/config.helpers.js'
-import { getScheduledTaskMinutes } from '../../../helpers/tasks.helpers.js'
+import { getMinimumMillisBetweenRuns, getScheduledTaskMinutes } from '../../../helpers/tasks.helpers.js'
 import type { TaskWorkerMessage } from '../../../types/tasks.types.js'
 import { createOrUpdateWorktechEquipment } from '../database/createOrUpdateWorktechEquipment.js'
 import { deleteExpiredRecords } from '../database/deleteExpiredRecords.js'
@@ -18,7 +17,9 @@ import getMaxWorktechEquipmentUpdateMillis from '../database/getMaxWorktechEquip
 import { databasePath } from '../database/helpers.database.js'
 import { moduleName } from '../helpers/module.helpers.js'
 
-const minimumMillisBetweenRuns = minutesToMillis(45)
+const minimumMillisBetweenRuns = getMinimumMillisBetweenRuns(
+  'integrityChecker.worktechEquipment'
+)
 let lastRunMillis = getMaxWorktechEquipmentUpdateMillis()
 const semaphore = new Sema(1)
 
