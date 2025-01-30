@@ -63,37 +63,28 @@
           </div>
         </div>
 
-        <label class="label" for="updatePending--itemNumber">Item Number</label>
-        <div class="field has-addons">
-          <div class="control has-icons-left is-expanded">
-            <input class="input" id="updatePending--itemNumber" name="itemNumber" maxlength="22" readonly required />
-            <span class="icon is-small is-left">
-              <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-            </span>
+        <div class="columns">
+          <div class="column is-one-third">
+            <strong>Item Number</strong><br />
+            <span id="updatePending--itemNumberSpan"></span>
           </div>
-          <div class="control">
-            <button class="button is-unlock-button" type="button" title="Unlock Item Field">
-              <span class="icon">
-                <i class="fa-solid fa-unlock" aria-hidden="true"></i>
-              </span>
-            </button>
-          </div>
-        </div>
-
-        <label class="label" for="updatePending--itemDescription">Item Description</label>
-        <div class="field has-addons">
-          <div class="control has-icons-left is-expanded">
-            <input class="input" id="updatePending--itemDescription" name="itemDescription" maxlength="40" readonly />
-            <span class="icon is-small is-left">
-              <i class="fa-solid fa-info-circle" aria-hidden="true"></i>
-            </span>
-          </div>
-          <div class="control">
-            <button class="button is-unlock-button" type="button" title="Unlock Description Field">
-              <span class="icon">
-                <i class="fa-solid fa-unlock" aria-hidden="true"></i>
-              </span>
-            </button>
+          <div class="column">
+            <label class="label" for="updatePending--itemDescription">Item Description</label>
+            <div class="field has-addons">
+              <div class="control has-icons-left is-expanded">
+                <input class="input" id="updatePending--itemDescription" name="itemDescription" maxlength="40" readonly />
+                <span class="icon is-small is-left">
+                  <i class="fa-solid fa-info-circle" aria-hidden="true"></i>
+                </span>
+              </div>
+              <div class="control">
+                <button class="button is-unlock-button" type="button" title="Unlock Description Field">
+                  <span class="icon">
+                    <i class="fa-solid fa-unlock" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         
@@ -117,7 +108,7 @@
             <label class="label" for="updatePending--unitPrice">Unit Price</label>
             <div class="field has-addons">
               <div class="control has-icons-left is-expanded">
-                <input class="input has-text-right" id="updatePending--unitPrice" name="unitPrice" pattern="^\d+(\.\d{0,4})?$" maxlength="19" readonly />
+                <input class="input has-text-right" id="updatePending--unitPrice" name="unitPrice" type="text" pattern="^\d+(\.\d{0,4})?$" maxlength="19" readonly />
                 <span class="icon is-small is-left">
                   <i class="fa-solid fa-dollar-sign" aria-hidden="true"></i>
                 </span>

@@ -17,7 +17,6 @@ const semaphore = new Sema(1);
 export const taskName = 'Update Records from Validation Task';
 export const taskUserName = 'validationTask';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`);
-// eslint-disable-next-line sonarjs/cognitive-complexity
 function _updateRecordsFromValidation() {
     if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
         debug('Skipping run.');
@@ -43,7 +42,7 @@ function _updateRecordsFromValidation() {
         const itemValidationRecords = (record.itemStoreroom ?? '') === '' ||
             (record.itemDescription ?? '') === '' ||
             record.unitPrice === null
-            ? getItemValidationRecordsByItemNumber(record.itemNumber)
+            ? getItemValidationRecordsByItemNumber(record.itemNumber, record.itemNumberPrefix)
             : [];
         if (itemValidationRecords.length > 0) {
             if ((record.itemStoreroom ?? '') === '') {

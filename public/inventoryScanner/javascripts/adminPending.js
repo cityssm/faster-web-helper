@@ -168,13 +168,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 repairSelectElement.innerHTML = `<option value="${cityssm.escapeHTML(pendingRecord.repairId?.toString() ?? '')}">
           ${cityssm.escapeHTML(pendingRecord.repairId === null ? '(Auto-Detect)' : pendingRecord.repairDescription ?? `(Unknown Repair ID: ${pendingRecord.repairId})`)}
           </option>`;
-                modalElement.querySelector('#updatePending--itemNumber').value = pendingRecord.itemNumber;
+                modalElement.querySelector('#updatePending--itemNumberSpan').innerHTML = `${pendingRecord.itemNumberPrefix === ''
+                    ? ''
+                    : `<span class="tag">${cityssm.escapeHTML(pendingRecord.itemNumberPrefix)}</span> -`} ${cityssm.escapeHTML(pendingRecord.itemNumber)}`;
                 modalElement.querySelector('#updatePending--itemDescription').value = pendingRecord.itemDescription ?? '';
                 modalElement.querySelector('#updatePending--quantity').value = pendingRecord.quantity.toString();
                 modalElement.querySelector('#updatePending--unitPrice').value =
                     pendingRecord.unitPrice === null
                         ? ''
-                        : pendingRecord.unitPrice.toPrecision(4);
+                        : pendingRecord.unitPrice.toFixed(2);
             },
             onshown(modalElement, closeModalFunction) {
                 bulmaJS.toggleHtmlClipped();
@@ -214,8 +216,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
             record.unitPrice === null);
     }
     function recordHasErrors(record) {
-        return record.workOrderType === 'faster' && record.quantity <= 0;
+        return ((record.workOrderType === 'faster' && record.quantity <= 0) ||
+            (record.workOrderType === 'worktech' && record.itemNumberPrefix !== ''));
     }
+    // eslint-disable-next-line complexity
     function renderPendingRecords() {
         const rowElements = [];
         let unknownCount = 0;
@@ -267,10 +271,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
           <small>Repair ID: ${cityssm.escapeHTML(record.repairId.toString())}</small>`;
             }
             rowElement.append(repairCellElement);
-            rowElement.insertAdjacentHTML('beforeend', `<td>
+            const itemNumberCellElement = document.createElement('td');
+            if (record.workOrderType === 'worktech' &&
+                record.itemNumberPrefix !== '') {
+                itemNumberCellElement.classList.add('has-background-danger-light');
+            }
+            // eslint-disable-next-line no-unsanitized/property
+            itemNumberCellElement.innerHTML = `${record.itemNumberPrefix === ''
+                ? ''
+                : `<span class="tag">${cityssm.escapeHTML(record.itemNumberPrefix)}</span> -`}
           ${cityssm.escapeHTML(record.itemNumber)}<br />
-          <small>${cityssm.escapeHTML(record.itemDescription ?? '(Unknown Item)')}</small>
-        </td>`);
+          <small>${cityssm.escapeHTML(record.itemDescription ?? '(Unknown Item)')}</small>`;
+            rowElement.append(itemNumberCellElement);
             const quantityCellElement = document.createElement('td');
             quantityCellElement.className = 'has-text-right';
             if (record.quantity <= 0) {

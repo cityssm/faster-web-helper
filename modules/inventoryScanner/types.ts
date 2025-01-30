@@ -4,6 +4,7 @@ export type WorkOrderType = 'faster' | 'worktech'
 
 export interface ItemValidationRecord {
   itemStoreroom: string
+  itemNumberPrefix: string
   itemNumber: string
   itemDescription: string
   availableQuantity: number
@@ -31,6 +32,7 @@ export interface InventoryScannerRecord {
   workOrderType: WorkOrderType,
 
   itemStoreroom: string | null
+  itemNumberPrefix: string
   itemNumber: string
   itemDescription: string | null
 

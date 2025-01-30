@@ -6,6 +6,7 @@ interface GetScannerRecordsFilters {
     isMarkedForSync?: boolean;
     hasMissingValidation?: boolean;
     workOrderType?: WorkOrderType;
+    itemNumberPrefix?: string;
 }
 interface GetScannerRecordsOptions {
     limit: number;

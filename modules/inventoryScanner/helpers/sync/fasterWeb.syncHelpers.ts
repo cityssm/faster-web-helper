@@ -94,10 +94,14 @@ function recordToExportDataLine(record: InventoryScannerRecord): string {
   dataPieces.push('IIU')
 
   // M - Item Number
-  dataPieces.push(record.itemNumber)
+  const itemNumber =
+    (record.itemNumberPrefix === '' ? '' : `${record.itemNumberPrefix}-`) +
+    record.itemNumber
+
+  dataPieces.push(itemNumber)
 
   // N - Description
-  let itemDescription = (record.itemDescription ?? record.itemNumber).slice(
+  let itemDescription = (record.itemDescription ?? itemNumber).slice(
     0,
     40
   )

@@ -48,6 +48,7 @@ async function runUpdateItemValidationFromDynamicsGpTask() {
             const itemStoreroom = taskConfig.gpLocationCodesToFasterStorerooms[item.locationCode] ?? '';
             createOrUpdateItemValidation({
                 itemStoreroom,
+                itemNumberPrefix: '',
                 itemNumber: item.itemNumber,
                 itemDescription: item.itemDescription,
                 availableQuantity: item.quantityOnHand,

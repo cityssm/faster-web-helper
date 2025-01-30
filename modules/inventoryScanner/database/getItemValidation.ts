@@ -18,7 +18,7 @@ export default function getItemValidation(
 
   const result = database
     .prepare(
-      `select itemStoreroom, itemNumber,
+      `select itemStoreroom, itemNumberPrefix, itemNumber,
         itemDescription, availableQuantity, unitPrice
         from ItemValidationRecords
         where itemStoreroom = ?

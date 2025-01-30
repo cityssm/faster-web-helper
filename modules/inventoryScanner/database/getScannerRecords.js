@@ -51,6 +51,10 @@ export default function getScannerRecords(filters, userOptions = {}) {
         sqlWhereClause += ' and s.workOrderType = ?';
         sqlParameters.push(filters.workOrderType);
     }
+    if (filters.itemNumberPrefix !== undefined) {
+        sqlWhereClause += ' and s.itemNumberPrefix = ?';
+        sqlParameters.push(filters.itemNumberPrefix);
+    }
     /*
      * Build SQL
      */
@@ -60,7 +64,7 @@ export default function getScannerRecords(filters, userOptions = {}) {
       s.workOrderNumber, s.workOrderType,
       s.technicianId,
       s.repairId, w.repairDescription,
-      s.itemStoreroom, s.itemNumber,
+      s.itemStoreroom, s.itemNumberPrefix, s.itemNumber,
       case
         when s.itemDescription is null or s.itemDescription = '' then i.itemDescription
         else s.itemDescription

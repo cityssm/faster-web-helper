@@ -298,11 +298,17 @@ declare const cityssm: cityssmGlobal
         repairSelectElement.innerHTML = `<option value="${cityssm.escapeHTML(pendingRecord.repairId?.toString() ?? '')}">
           ${cityssm.escapeHTML(pendingRecord.repairId === null ? '(Auto-Detect)' : pendingRecord.repairDescription ?? `(Unknown Repair ID: ${pendingRecord.repairId})`)}
           </option>`
+
+        // eslint-disable-next-line no-unsanitized/property
         ;(
           modalElement.querySelector(
-            '#updatePending--itemNumber'
-          ) as HTMLInputElement
-        ).value = pendingRecord.itemNumber
+            '#updatePending--itemNumberSpan'
+          ) as HTMLElement
+        ).innerHTML = `${
+          pendingRecord.itemNumberPrefix === ''
+            ? ''
+            : `<span class="tag">${cityssm.escapeHTML(pendingRecord.itemNumberPrefix)}</span> -`
+        } ${cityssm.escapeHTML(pendingRecord.itemNumber)}`
         ;(
           modalElement.querySelector(
             '#updatePending--itemDescription'
@@ -320,7 +326,7 @@ declare const cityssm: cityssmGlobal
         ).value =
           pendingRecord.unitPrice === null
             ? ''
-            : pendingRecord.unitPrice.toPrecision(4)
+            : pendingRecord.unitPrice.toFixed(2)
       },
       onshown(modalElement, closeModalFunction) {
         bulmaJS.toggleHtmlClipped()
@@ -374,9 +380,13 @@ declare const cityssm: cityssmGlobal
   }
 
   function recordHasErrors(record: InventoryScannerRecord): boolean {
-    return record.workOrderType === 'faster' && record.quantity <= 0
+    return (
+      (record.workOrderType === 'faster' && record.quantity <= 0) ||
+      (record.workOrderType === 'worktech' && record.itemNumberPrefix !== '')
+    )
   }
 
+  // eslint-disable-next-line complexity
   function renderPendingRecords(): void {
     const rowElements: HTMLTableRowElement[] = []
 
@@ -442,13 +452,25 @@ declare const cityssm: cityssmGlobal
 
       rowElement.append(repairCellElement)
 
-      rowElement.insertAdjacentHTML(
-        'beforeend',
-        `<td>
+      const itemNumberCellElement = document.createElement('td')
+
+      if (
+        record.workOrderType === 'worktech' &&
+        record.itemNumberPrefix !== ''
+      ) {
+        itemNumberCellElement.classList.add('has-background-danger-light')
+      }
+
+      // eslint-disable-next-line no-unsanitized/property
+      itemNumberCellElement.innerHTML = `${
+            record.itemNumberPrefix === ''
+              ? ''
+              : `<span class="tag">${cityssm.escapeHTML(record.itemNumberPrefix)}</span> -`
+          }
           ${cityssm.escapeHTML(record.itemNumber)}<br />
-          <small>${cityssm.escapeHTML(record.itemDescription ?? '(Unknown Item)')}</small>
-        </td>`
-      )
+          <small>${cityssm.escapeHTML(record.itemDescription ?? '(Unknown Item)')}</small>`
+
+      rowElement.append(itemNumberCellElement)
 
       const quantityCellElement = document.createElement('td')
       quantityCellElement.className = 'has-text-right'

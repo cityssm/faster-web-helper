@@ -27,6 +27,7 @@ export type CreateScannerRecordForm = {
 
   itemStoreroom?: string
 
+  itemNumberPrefix?: string
   itemDescription?: string
 
   quantity: number | string
@@ -40,7 +41,6 @@ export type CreateScannerRecordForm = {
     }
   | {
       itemType: 'nonStock'
-      itemNumberPrefix: string
       itemNumberSuffix: string
     }
 )
@@ -56,7 +56,9 @@ export default function createOrUpdateScannerRecord(
   const itemNumber =
     scannerRecord.itemType === 'stock'
       ? scannerRecord.itemNumber
-      : `${scannerRecord.itemNumberPrefix}-${scannerRecord.itemNumberSuffix}`
+      : scannerRecord.itemNumberSuffix
+
+  const itemNumberPrefix = scannerRecord.itemNumberPrefix ?? ''
 
   let itemStoreroom = scannerRecord.itemStoreroom
   let itemDescription = scannerRecord.itemDescription
@@ -66,7 +68,7 @@ export default function createOrUpdateScannerRecord(
     scannerRecord.itemType === 'stock' &&
     (itemStoreroom === undefined || unitPrice === undefined)
   ) {
-    const items = getItemValidationRecordsByItemNumber(itemNumber)
+    const items = getItemValidationRecordsByItemNumber(itemNumber, itemNumberPrefix, database)
 
     for (const item of items) {
       if (itemStoreroom === undefined) {
@@ -124,6 +126,7 @@ export default function createOrUpdateScannerRecord(
     from InventoryScannerRecords
     where workOrderNumber = ?
     and workOrderType = ?
+    and itemNumberPrefix = ?
     and itemNumber = ?
     and itemDescription = ?
     and recordSync_timeMillis is null
@@ -132,6 +135,7 @@ export default function createOrUpdateScannerRecord(
   const existingRecordParameters: Array<string | number> = [
     scannerRecord.workOrderNumber,
     workOrderType,
+    itemNumberPrefix,
     itemNumber,
     itemDescription as string
   ]
@@ -172,11 +176,11 @@ export default function createOrUpdateScannerRecord(
           scanDate, scanTime,
           workOrderNumber, workOrderType,
           technicianId, repairId,
-          itemStoreroom, itemNumber, itemDescription,
+          itemStoreroom, itemNumberPrefix, itemNumber, itemDescription,
           quantity, unitPrice,
           recordCreate_userName, recordCreate_timeMillis,
           recordUpdate_userName, recordUpdate_timeMillis)
-          values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+          values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       )
       .run(
         scannerRecord.scannerKey,
@@ -187,6 +191,7 @@ export default function createOrUpdateScannerRecord(
         scannerRecord.technicianId,
         scannerRecord.repairId === '' ? undefined : scannerRecord.repairId,
         itemStoreroom,
+        itemNumberPrefix,
         itemNumber,
         itemDescription,
         quantity,

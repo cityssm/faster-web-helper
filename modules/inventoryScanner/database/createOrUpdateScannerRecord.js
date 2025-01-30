@@ -10,13 +10,14 @@ export default function createOrUpdateScannerRecord(scannerRecord) {
     const database = sqlite(databasePath);
     const itemNumber = scannerRecord.itemType === 'stock'
         ? scannerRecord.itemNumber
-        : `${scannerRecord.itemNumberPrefix}-${scannerRecord.itemNumberSuffix}`;
+        : scannerRecord.itemNumberSuffix;
+    const itemNumberPrefix = scannerRecord.itemNumberPrefix ?? '';
     let itemStoreroom = scannerRecord.itemStoreroom;
     let itemDescription = scannerRecord.itemDescription;
     let unitPrice = scannerRecord.unitPrice;
     if (scannerRecord.itemType === 'stock' &&
         (itemStoreroom === undefined || unitPrice === undefined)) {
-        const items = getItemValidationRecordsByItemNumber(itemNumber);
+        const items = getItemValidationRecordsByItemNumber(itemNumber, itemNumberPrefix, database);
         for (const item of items) {
             if (itemStoreroom === undefined) {
                 itemStoreroom = item.itemStoreroom;
@@ -56,6 +57,7 @@ export default function createOrUpdateScannerRecord(scannerRecord) {
     from InventoryScannerRecords
     where workOrderNumber = ?
     and workOrderType = ?
+    and itemNumberPrefix = ?
     and itemNumber = ?
     and itemDescription = ?
     and recordSync_timeMillis is null
@@ -63,6 +65,7 @@ export default function createOrUpdateScannerRecord(scannerRecord) {
     const existingRecordParameters = [
         scannerRecord.workOrderNumber,
         workOrderType,
+        itemNumberPrefix,
         itemNumber,
         itemDescription
     ];
@@ -90,12 +93,12 @@ export default function createOrUpdateScannerRecord(scannerRecord) {
           scanDate, scanTime,
           workOrderNumber, workOrderType,
           technicianId, repairId,
-          itemStoreroom, itemNumber, itemDescription,
+          itemStoreroom, itemNumberPrefix, itemNumber, itemDescription,
           quantity, unitPrice,
           recordCreate_userName, recordCreate_timeMillis,
           recordUpdate_userName, recordUpdate_timeMillis)
-          values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-            .run(scannerRecord.scannerKey, scanDate, scanTime, scannerRecord.workOrderNumber, workOrderType, scannerRecord.technicianId, scannerRecord.repairId === '' ? undefined : scannerRecord.repairId, itemStoreroom, itemNumber, itemDescription, quantity, unitPrice, userName, rightNow.getTime(), userName, rightNow.getTime());
+          values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+            .run(scannerRecord.scannerKey, scanDate, scanTime, scannerRecord.workOrderNumber, workOrderType, scannerRecord.technicianId, scannerRecord.repairId === '' ? undefined : scannerRecord.repairId, itemStoreroom, itemNumberPrefix, itemNumber, itemDescription, quantity, unitPrice, userName, rightNow.getTime(), userName, rightNow.getTime());
     }
     else {
         const newQuantity = existingRecord.quantity + quantity;

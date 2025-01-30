@@ -16,6 +16,7 @@ export const databasePath = 'data/inventoryScanner.db'
 const createStatements = [
   `create table if not exists ItemValidationRecords (
     itemStoreroom varchar(3) not null,
+    itemNumberPrefix varchar(3) not null default '',
     itemNumber varchar(22) not null,
     itemDescription varchar(40) not null default '',
     availableQuantity integer not null default 0,
@@ -50,6 +51,7 @@ const createStatements = [
     repairId integer,
 
     itemStoreroom varchar(3),
+    itemNumberPrefix varchar(3) not null default '',
     itemNumber varchar(22) not null,
     itemDescription varchar(40),
     quantity integer not null,

@@ -7,10 +7,10 @@ export default function createOrUpdateItemValidation(validationRecord, timeMilli
     if (databaseRecord === undefined) {
         database
             .prepare(`insert into ItemValidationRecords (
-          itemStoreroom, itemNumber, itemDescription, availableQuantity, unitPrice,
+          itemStoreroom, itemNumberPrefix, itemNumber, itemDescription, availableQuantity, unitPrice,
           recordCreate_timeMillis, recordUpdate_timeMillis)
-          values (?, ?, ?, ?, ?, ?, ?)`)
-            .run(validationRecord.itemStoreroom, validationRecord.itemNumber, validationRecord.itemDescription, validationRecord.availableQuantity, validationRecord.unitPrice, timeMillis, timeMillis);
+          values (?, ?, ?, ?, ?, ?, ?, ?)`)
+            .run(validationRecord.itemStoreroom, validationRecord.itemNumberPrefix, validationRecord.itemNumber, validationRecord.itemDescription, validationRecord.availableQuantity, validationRecord.unitPrice, timeMillis, timeMillis);
     }
     else {
         database
@@ -21,8 +21,9 @@ export default function createOrUpdateItemValidation(validationRecord, timeMilli
           recordUpdate_timeMillis = ?,
           recordDelete_timeMillis = null
           where itemStoreroom = ?
+          and itemNumberPrefix = ?
           and itemNumber = ?`)
-            .run(validationRecord.itemDescription, validationRecord.availableQuantity, validationRecord.unitPrice, timeMillis, validationRecord.itemStoreroom, validationRecord.itemNumber);
+            .run(validationRecord.itemDescription, validationRecord.availableQuantity, validationRecord.unitPrice, timeMillis, validationRecord.itemStoreroom, validationRecord.itemNumberPrefix, validationRecord.itemNumber);
     }
     database.close();
 }

@@ -11,7 +11,7 @@ export default function getItemValidationRecords(): ItemValidationRecord[] {
 
   const result = database
     .prepare(
-      `select itemStoreroom, itemNumber,
+      `select itemStoreroom, itemNumberPrefix, itemNumber,
         itemDescription, availableQuantity, unitPrice
         from ItemValidationRecords
         where recordDelete_timeMillis is null
@@ -26,6 +26,7 @@ export default function getItemValidationRecords(): ItemValidationRecord[] {
 
 export function getItemValidationRecordsByItemNumber(
   itemNumber: string,
+  itemNumberPrefix: string,
   connectedDatabase?: sqlite.Database
 ): ItemValidationRecord[] {
   const database =
@@ -36,14 +37,15 @@ export function getItemValidationRecordsByItemNumber(
 
   const result = database
     .prepare(
-      `select itemStoreroom, itemNumber,
+      `select itemStoreroom, itemNumberPrefix, itemNumber,
         itemDescription, availableQuantity, unitPrice
         from ItemValidationRecords
         where recordDelete_timeMillis is null
         and itemNumber = ?
+        and itemNumberPrefix = ?
         order by itemStoreroom`
     )
-    .all(itemNumber) as ItemValidationRecord[]
+    .all(itemNumber, itemNumberPrefix) as ItemValidationRecord[]
 
   if (connectedDatabase === undefined) {
     database.close()

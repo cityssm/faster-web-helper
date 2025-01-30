@@ -7,7 +7,6 @@ describe('FASTER Web Helper - Error Page', () => {
     cy.visit(errorPath, {
       failOnStatusCode: false
     })
-
     cy.location('pathname').should('equal', errorPath)
   })
 

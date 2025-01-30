@@ -6,7 +6,7 @@ export default function getItemValidation(itemStoreroom, itemNumber, includeDele
             readonly: true
         });
     const result = database
-        .prepare(`select itemStoreroom, itemNumber,
+        .prepare(`select itemStoreroom, itemNumberPrefix, itemNumber,
         itemDescription, availableQuantity, unitPrice
         from ItemValidationRecords
         where itemStoreroom = ?

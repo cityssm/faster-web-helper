@@ -9,6 +9,7 @@ export type CreateScannerRecordForm = {
     technicianId?: string;
     repairId: string;
     itemStoreroom?: string;
+    itemNumberPrefix?: string;
     itemDescription?: string;
     quantity: number | string;
     quantityMultiplier: '1' | '-1' | 1 | -1;
@@ -18,7 +19,6 @@ export type CreateScannerRecordForm = {
     itemNumber: string;
 } | {
     itemType: 'nonStock';
-    itemNumberPrefix: string;
     itemNumberSuffix: string;
 });
 export default function createOrUpdateScannerRecord(scannerRecord: CreateScannerRecordForm): boolean;

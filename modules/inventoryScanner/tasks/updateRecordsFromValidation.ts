@@ -25,7 +25,6 @@ const debug = Debug(
   `${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`
 )
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
 function _updateRecordsFromValidation(): void {
   if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
     debug('Skipping run.')
@@ -66,7 +65,7 @@ function _updateRecordsFromValidation(): void {
       (record.itemStoreroom ?? '') === '' ||
       (record.itemDescription ?? '') === '' ||
       record.unitPrice === null
-        ? getItemValidationRecordsByItemNumber(record.itemNumber)
+        ? getItemValidationRecordsByItemNumber(record.itemNumber, record.itemNumberPrefix)
         : []
 
     if (itemValidationRecords.length > 0) {

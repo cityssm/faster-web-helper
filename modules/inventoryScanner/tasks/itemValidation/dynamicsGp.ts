@@ -81,6 +81,7 @@ async function runUpdateItemValidationFromDynamicsGpTask(): Promise<void> {
       createOrUpdateItemValidation(
         {
           itemStoreroom,
+          itemNumberPrefix: '',
           itemNumber: item.itemNumber,
           itemDescription: item.itemDescription,
           availableQuantity: item.quantityOnHand,

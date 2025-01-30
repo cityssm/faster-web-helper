@@ -22,12 +22,13 @@ export default function createOrUpdateItemValidation(
     database
       .prepare(
         `insert into ItemValidationRecords (
-          itemStoreroom, itemNumber, itemDescription, availableQuantity, unitPrice,
+          itemStoreroom, itemNumberPrefix, itemNumber, itemDescription, availableQuantity, unitPrice,
           recordCreate_timeMillis, recordUpdate_timeMillis)
-          values (?, ?, ?, ?, ?, ?, ?)`
+          values (?, ?, ?, ?, ?, ?, ?, ?)`
       )
       .run(
         validationRecord.itemStoreroom,
+        validationRecord.itemNumberPrefix,
         validationRecord.itemNumber,
         validationRecord.itemDescription,
         validationRecord.availableQuantity,
@@ -45,6 +46,7 @@ export default function createOrUpdateItemValidation(
           recordUpdate_timeMillis = ?,
           recordDelete_timeMillis = null
           where itemStoreroom = ?
+          and itemNumberPrefix = ?
           and itemNumber = ?`
       )
       .run(
@@ -53,6 +55,7 @@ export default function createOrUpdateItemValidation(
         validationRecord.unitPrice,
         timeMillis,
         validationRecord.itemStoreroom,
+        validationRecord.itemNumberPrefix,
         validationRecord.itemNumber
       )
   }

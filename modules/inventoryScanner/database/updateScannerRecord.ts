@@ -6,8 +6,9 @@ export interface UpdateScannerRecordForm {
   recordId: string
   workOrderNumber: string
   repairId: string
-  itemNumber: string
+
   itemDescription: string
+
   quantity: string
   unitPrice: string
 }
@@ -23,7 +24,6 @@ export function updateScannerRecord(
       `update InventoryScannerRecords
         set workOrderNumber = ?,
         repairId = ?,
-        itemNumber = ?,
         itemDescription = ?,
         quantity = ?,
         unitPrice = ?,
@@ -36,7 +36,6 @@ export function updateScannerRecord(
     .run(
       recordForm.workOrderNumber,
       recordForm.repairId === '' ? undefined : recordForm.repairId,
-      recordForm.itemNumber,
       recordForm.itemDescription,
       recordForm.quantity,
       recordForm.unitPrice === '' ? undefined : recordForm.unitPrice,

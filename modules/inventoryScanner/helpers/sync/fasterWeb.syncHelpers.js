@@ -54,9 +54,11 @@ function recordToExportDataLine(record) {
     // L - Line Abbreviation
     dataPieces.push('IIU');
     // M - Item Number
-    dataPieces.push(record.itemNumber);
+    const itemNumber = (record.itemNumberPrefix === '' ? '' : `${record.itemNumberPrefix}-`) +
+        record.itemNumber;
+    dataPieces.push(itemNumber);
     // N - Description
-    let itemDescription = (record.itemDescription ?? record.itemNumber).slice(0, 40);
+    let itemDescription = (record.itemDescription ?? itemNumber).slice(0, 40);
     if (itemDescription.includes(',')) {
         itemDescription = '"' + itemDescription.replaceAll('"', '``') + '"';
     }

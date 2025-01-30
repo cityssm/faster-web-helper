@@ -30,7 +30,7 @@ declare const cityssm: cityssmGlobal
   let scannerKey = globalThis.localStorage.getItem('scannerKey')
 
   if (scannerKey === null) {
-    // eslint-disable-next-line sonarjs/pseudo-random
+    // eslint-disable-next-line sonarjs/pseudo-random, @typescript-eslint/no-magic-numbers
     scannerKey = Math.random().toString(36).slice(2, 10)
     globalThis.localStorage.setItem('scannerKey', scannerKey)
   }

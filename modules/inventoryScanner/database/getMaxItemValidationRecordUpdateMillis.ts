@@ -2,7 +2,9 @@ import sqlite from 'better-sqlite3'
 
 import { databasePath } from './helpers.database.js'
 
-export default function getMaxItemValidationRecordUpdateMillis(): number {
+export default function getMaxItemValidationRecordUpdateMillis(
+  itemNumberPrefix = ''
+): number {
   const database = sqlite(databasePath, {
     readonly: true
   })
@@ -11,10 +13,11 @@ export default function getMaxItemValidationRecordUpdateMillis(): number {
     .prepare(
       `select max(recordUpdate_timeMillis)
         from ItemValidationRecords
-        where recordDelete_timeMillis is null`
+        where recordDelete_timeMillis is null
+        and itemNumberPrefix = ?`
     )
     .pluck()
-    .get() as number | undefined
+    .get(itemNumberPrefix) as number | undefined
 
   database.close()
 

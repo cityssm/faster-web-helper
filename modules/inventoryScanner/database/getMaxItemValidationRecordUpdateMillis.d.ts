@@ -1,1 +1,1 @@
-export default function getMaxItemValidationRecordUpdateMillis(): number;
+export default function getMaxItemValidationRecordUpdateMillis(itemNumberPrefix?: string): number;

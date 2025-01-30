@@ -5,7 +5,7 @@ export default function getItemValidationRecords() {
         readonly: true
     });
     const result = database
-        .prepare(`select itemStoreroom, itemNumber,
+        .prepare(`select itemStoreroom, itemNumberPrefix, itemNumber,
         itemDescription, availableQuantity, unitPrice
         from ItemValidationRecords
         where recordDelete_timeMillis is null
@@ -14,19 +14,20 @@ export default function getItemValidationRecords() {
     database.close();
     return result;
 }
-export function getItemValidationRecordsByItemNumber(itemNumber, connectedDatabase) {
+export function getItemValidationRecordsByItemNumber(itemNumber, itemNumberPrefix, connectedDatabase) {
     const database = connectedDatabase ??
         sqlite(databasePath, {
             readonly: true
         });
     const result = database
-        .prepare(`select itemStoreroom, itemNumber,
+        .prepare(`select itemStoreroom, itemNumberPrefix, itemNumber,
         itemDescription, availableQuantity, unitPrice
         from ItemValidationRecords
         where recordDelete_timeMillis is null
         and itemNumber = ?
+        and itemNumberPrefix = ?
         order by itemStoreroom`)
-        .all(itemNumber);
+        .all(itemNumber, itemNumberPrefix);
     if (connectedDatabase === undefined) {
         database.close();
     }
