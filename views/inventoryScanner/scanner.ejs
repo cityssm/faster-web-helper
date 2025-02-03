@@ -272,13 +272,18 @@
             </div>
           </div>
           <div class="is-hidden" id="tab--about">
-            <p>
-              <strong>Scanner Key</strong><br />
-              <span id="about--scannerKey"></span>
-            </p><p class="mt-2">
-              <strong>FASTER Web Helper Version</strong><br />
-              <span><%= version %></span>
-            </p>
+            <table class="table is-fullwidth">
+              <tbody>
+                <tr>
+                  <th>Scanner Key</th>
+                  <td class="has-text-right" id="about--scannerKey"></td>
+                </tr>
+                <tr>
+                  <th>FASTER Web Helper Version</th>
+                  <td class="has-text-right"><%= version %></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
         
