@@ -151,11 +151,11 @@
                         </button>
                       </div>
                     </div>
-                    <div class="columns is-size-7">
+                    <div class="columns is-mobile is-size-7">
                       <div class="column">
                         <span id="scanner--itemDescriptionSpan"></span>
                       </div>
-                      <div class="column is-narrow">
+                      <div class="column is-narrow has-text-right">
                         <span id="scanner--unitPriceSpan"></span>
                       </div>
                     </div>
@@ -295,7 +295,13 @@
   </script>
   <script src="<%= urlPrefix %>/lib/fa/js/all.min.js" defer></script>
 
+  <script>
+    exports.scannerHistory = [];
+    exports.renderScannerHistoryEventName =
+      'fasterWebHelper.renderScannerHistory'
+  </script>
   <script src="<%= urlPrefix %>/inventoryScanner/javascripts/scanner.js"></script>
+  <script src="<%= urlPrefix %>/inventoryScanner/javascripts/scannerHistory.js"></script>
 
 </body>
 

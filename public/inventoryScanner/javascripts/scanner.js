@@ -13,171 +13,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
     let scannerKey = globalThis.localStorage.getItem('scannerKey');
     if (scannerKey === null) {
         // eslint-disable-next-line sonarjs/pseudo-random, @typescript-eslint/no-magic-numbers
-        scannerKey = Math.random().toString(36).slice(2, 10);
+        scannerKey = Math.random().toString(36).slice(2, 10).toUpperCase();
         globalThis.localStorage.setItem('scannerKey', scannerKey);
     }
     ;
     formElement.querySelector('#scanner--scannerKey').value = scannerKey;
     document.querySelector('#about--scannerKey').textContent =
         scannerKey;
-    /*
-     * History
-     */
-    const historyContainerElement = document.querySelector('#history--container');
-    function toggleHistoryViewMore(clickEvent) {
-        clickEvent.preventDefault();
-        clickEvent.currentTarget
-            .closest('.panel-block')
-            ?.querySelector('.is-view-more-container')
-            ?.classList.toggle('is-hidden');
-    }
-    function doDeleteScannerRecord(recordId) {
-        cityssm.postJSON(`${scannerUrlPrefix}/doDeleteScannerRecord`, {
-            recordId,
-            scannerKey
-        }, (rawResponseJSON) => {
-            const responseJSON = rawResponseJSON;
-            if (responseJSON.success) {
-                renderHistory(responseJSON.records);
-            }
-            else {
-                bulmaJS.alert({
-                    title: 'Error Deleting Record',
-                    message: 'If the problem persists, try the admin interface.',
-                    contextualColorName: 'danger'
-                });
-            }
-        });
-    }
-    function confirmDeleteScannerRecord(clickEvent) {
-        clickEvent.preventDefault();
-        const buttonElement = clickEvent.currentTarget;
-        bulmaJS.confirm({
-            title: 'Delete Scanner Record',
-            message: 'Are you sure you want to delete this scanner record?',
-            contextualColorName: 'warning',
-            okButton: {
-                text: 'Yes, Delete Record',
-                callbackFunction: () => {
-                    const recordId = buttonElement.closest('.panel-block').dataset
-                        .recordId ?? '';
-                    doDeleteScannerRecord(recordId);
-                }
-            }
-        });
-    }
-    function renderHistory(scannerRecords) {
-        if (scannerRecords.length === 0) {
-            historyContainerElement.replaceChildren();
-            historyContainerElement.innerHTML = `<div class="message is-info">
-        <p class="message-body">There are no recent scans for this scanner.</p>
-        </div>`;
-            return;
-        }
-        const panelElement = document.createElement('div');
-        panelElement.className = 'panel';
-        for (const record of scannerRecords) {
-            const panelBlockElement = document.createElement('div');
-            panelBlockElement.className = 'panel-block is-block';
-            panelBlockElement.dataset.recordId = record.recordId.toString();
-            // eslint-disable-next-line no-unsanitized/property
-            panelBlockElement.innerHTML = `<div class="columns is-mobile">
-          <div class="column is-narrow">
-            <span class="icon is-small">
-              <i class="fa-solid fa-clock" title="Scan Time"></i>
-            </span>
-          </div>
-          <div class="column">
-            ${cityssm.escapeHTML(record.scanTimeString)}
-          </div>
-          <div class="column">
-            ${record.itemNumberPrefix === ''
-                ? ''
-                : `<span class="tag">${cityssm.escapeHTML(record.itemNumberPrefix)}</span> -`}
-            ${cityssm.escapeHTML(record.itemNumber)}
-          </div>
-          <div class="column is-narrow">
-            <button class="button is-view-more-button" type="button" title="View More">
-              <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
-            </button>
-          </div>
-        </div>
-        <div class="is-view-more-container is-hidden">
-          <div class="columns is-mobile">
-            <div class="column is-narrow">
-              <span class="icon is-small">
-                <i class="fa-solid fa-clipboard" title="Work Order"></i>
-              </span>
-            </div>
-            <div class="column">
-              ${cityssm.escapeHTML(record.workOrderNumber)}
-                (${cityssm.escapeHTML(record.workOrderType)})<br />
-              <span class="repairContainer"></span>
-            </div>
-          </div>
-          <div class="columns is-mobile">
-            <div class="column is-narrow">
-              <span class="icon is-small">
-                <i class="fa-solid fa-bag-shopping" title="Item"></i>
-              </span>
-            </div>
-            <div class="column">
-              ${record.itemNumberPrefix === ''
-                ? ''
-                : `<span class="tag">${cityssm.escapeHTML(record.itemNumberPrefix)}</span> -`}
-              ${cityssm.escapeHTML(record.itemNumber)}
-                (${cityssm.escapeHTML(record.itemStoreroom ?? '')})<br />
-              ${cityssm.escapeHTML(record.itemDescription ?? '')}<br />
-              ${cityssm.escapeHTML(record.quantity.toString())}
-                &times;
-                $${cityssm.escapeHTML(record.unitPrice === null ? '--.-' : record.unitPrice.toFixed(2))}
-            </div>
-          </div>
-          <div class="columns is-mobile">
-            <div class="column is-narrow">
-              <span class="icon is-small">
-                <i class="fa-solid fa-arrow-up-from-bracket" title="Sync"></i>
-              </span>
-            </div>
-            ${record.recordSync_timeMillis === null
-                ? `<div class="column">
-                    Not Yet Synced
-                    </div>
-                    <div class="column is-narrow">
-                      <button class="button is-delete-button is-danger" type="button" title="Delete Record">
-                        <i class="fa-solid fa-trash" aria-hidden="true"></i>
-                      </button>
-                    </div>`
-                : `<div class="column">
-                    Synced
-                    </div>`}
-            </div>
-          </div>
-        </div>`;
-            if (record.repairId !== null || record.repairDescription !== null) {
-                panelBlockElement.querySelector('.repairContainer')?.insertAdjacentHTML('beforeend', `${cityssm.escapeHTML(record.repairDescription ?? '')}
-            (${cityssm.escapeHTML(record.repairId === null ? '' : record.repairId.toString())})`);
-            }
-            panelBlockElement
-                .querySelector('.is-view-more-button')
-                ?.addEventListener('click', toggleHistoryViewMore);
-            panelBlockElement
-                .querySelector('.is-delete-button')
-                ?.addEventListener('click', confirmDeleteScannerRecord);
-            panelElement.append(panelBlockElement);
-        }
-        historyContainerElement.replaceChildren(panelElement);
-    }
-    function refreshHistory() {
-        cityssm.postJSON(`${scannerUrlPrefix}/doGetScannerRecords`, {
-            scannerKey
-        }, (rawResponseJSON) => {
-            const responseJSON = rawResponseJSON;
-            renderHistory(responseJSON.records);
-        });
-    }
-    // Ensure the scanner is initialized before retrieving the history
-    globalThis.setTimeout(refreshHistory, 500);
     /*
      * Repair refresh
      */
@@ -375,7 +217,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 itemNumberElement.value = '';
                 refreshItemDescription();
                 itemNumberElement.focus();
-                renderHistory(responseJSON.records);
+                exports.scannerHistory = responseJSON.records;
+                globalThis.dispatchEvent(new Event(exports.renderScannerHistoryEventName));
             }
             else {
                 bulmaJS.alert({
