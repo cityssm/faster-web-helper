@@ -88,7 +88,7 @@ export default function initializeInventoryScannerTasks(): Partial<
   }
 
   childProcesses['inventoryScanner.updateRecordsFromValidation'] = fork(
-    './modules/inventoryScanner/tasks/updateRecordsFromValidation.js'
+    './modules/inventoryScanner/tasks/updateRecordsFromValidation.task.js'
   )
 
   if (
@@ -96,7 +96,7 @@ export default function initializeInventoryScannerTasks(): Partial<
     getConfigProperty('modules.inventoryScanner.fasterItemRequests.isEnabled')
   ) {
     childProcesses['inventoryScanner.outstandingItemRequests'] = fork(
-      './modules/inventoryScanner/tasks/outstandingItemRequests.js'
+      './modules/inventoryScanner/tasks/outstandingItemRequests.task.js'
     )
   }
 

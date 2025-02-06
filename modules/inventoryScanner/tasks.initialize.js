@@ -61,10 +61,10 @@ export default function initializeInventoryScannerTasks() {
             childProcesses[workOrderValidationTaskName] = fork(workOrderValidationTaskPath);
         }
     }
-    childProcesses['inventoryScanner.updateRecordsFromValidation'] = fork('./modules/inventoryScanner/tasks/updateRecordsFromValidation.js');
+    childProcesses['inventoryScanner.updateRecordsFromValidation'] = fork('./modules/inventoryScanner/tasks/updateRecordsFromValidation.task.js');
     if (hasFasterApi &&
         getConfigProperty('modules.inventoryScanner.fasterItemRequests.isEnabled')) {
-        childProcesses['inventoryScanner.outstandingItemRequests'] = fork('./modules/inventoryScanner/tasks/outstandingItemRequests.js');
+        childProcesses['inventoryScanner.outstandingItemRequests'] = fork('./modules/inventoryScanner/tasks/outstandingItemRequests.task.js');
     }
     debug(`"${moduleName}" initialized.`);
     return childProcesses;

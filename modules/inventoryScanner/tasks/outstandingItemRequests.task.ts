@@ -1,10 +1,9 @@
 import { FasterApi } from '@cityssm/faster-api'
 import FasterUrlBuilder from '@cityssm/faster-url-builder'
+import { ScheduledTask, nodeSchedule } from '@cityssm/scheduled-task'
 import { minutesToMillis } from '@cityssm/to-millis'
 import camelcase from 'camelcase'
 import Debug from 'debug'
-import exitHook from 'exit-hook'
-import schedule from 'node-schedule'
 
 import { DEBUG_NAMESPACE } from '../../../debug.config.js'
 import { getConfigProperty } from '../../../helpers/config.helpers.js'
@@ -13,10 +12,6 @@ import { getSettingValues } from '../database/getSetting.js'
 import updateSetting from '../database/updateSetting.js'
 import { summarizeItemRequests } from '../helpers/faster.helpers.js'
 import { moduleName } from '../helpers/module.helpers.js'
-
-const minimumMillisBetweenRuns = minutesToMillis(2)
-
-let lastRunMillis = 0
 
 export const taskName = 'Outstanding Item Requests - FASTER API'
 
@@ -32,12 +27,7 @@ const ntfyTopic = getConfigProperty(
   'modules.inventoryScanner.fasterItemRequests.ntfy.topic'
 )
 
-async function runOutstandingItemRequestsFromFasterApiTask(): Promise<void> {
-  if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
-    debug('Skipping run.')
-    return
-  }
-
+async function refreshOutstandingItemRequestsFromFasterApi(): Promise<void> {
   if (
     fasterWebConfig.apiUserName === undefined ||
     fasterWebConfig.apiPassword === undefined
@@ -45,11 +35,6 @@ async function runOutstandingItemRequestsFromFasterApiTask(): Promise<void> {
     debug('Missing API user configuration.')
     return
   }
-
-  debug(`Running "${taskName}"...`)
-
-  const timeMillis = Date.now()
-  lastRunMillis = timeMillis
 
   const fasterApi = new FasterApi(
     fasterWebConfig.tenantOrBaseUrl,
@@ -109,27 +94,25 @@ async function runOutstandingItemRequestsFromFasterApiTask(): Promise<void> {
   } catch (error) {
     debug('FASTER API error:', error)
   }
-
-  debug(`Finished "${taskName}".`)
 }
 
-await runOutstandingItemRequestsFromFasterApiTask()
-
-const job = schedule.scheduleJob(
+const scheduledTask = new ScheduledTask(
   taskName,
+  refreshOutstandingItemRequestsFromFasterApi,
   {
-    dayOfWeek: getConfigProperty('application.workDays'),
-    hour: getConfigProperty('application.workHours'),
-    minute: new schedule.Range(2, 60, 5),
-    second: 0
-  },
-  runOutstandingItemRequestsFromFasterApiTask
+    schedule: {
+      dayOfWeek: getConfigProperty('application.workDays'),
+      hour: getConfigProperty('application.workHours'),
+      minute: new nodeSchedule.Range(2, 60, 5),
+      second: 0
+    },
+    minimumIntervalMillis: minutesToMillis(2),
+    startTask: true
+  }
 )
 
-exitHook(() => {
-  try {
-    job.cancel()
-  } catch {
-    // ignore
-  }
-})
+/*
+ * Run the task on initialization.
+ */
+
+void scheduledTask.runTask()

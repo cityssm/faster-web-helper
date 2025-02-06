@@ -1,12 +1,10 @@
 // eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
 /* eslint-disable unicorn/no-null */
 
+import { ScheduledTask } from '@cityssm/scheduled-task'
 import { WorkTechAPI } from '@cityssm/worktech-api'
-import { Sema } from 'async-sema'
 import camelcase from 'camelcase'
 import Debug from 'debug'
-import exitHook from 'exit-hook'
-import schedule from 'node-schedule'
 
 import { DEBUG_NAMESPACE } from '../../../../debug.config.js'
 import { getConfigProperty } from '../../../../helpers/config.helpers.js'
@@ -20,13 +18,6 @@ import getMaxWorkOrderValidationRecordUpdateMillis from '../../database/getMaxWo
 import getScannerRecords from '../../database/getScannerRecords.js'
 import { moduleName } from '../../helpers/module.helpers.js'
 
-const minimumMillisBetweenRuns = getMinimumMillisBetweenRuns(
-  'inventoryScanner.workOrderValidation.worktech'
-)
-
-let lastRunMillis = getMaxWorkOrderValidationRecordUpdateMillis('worktech')
-const semaphore = new Sema(1)
-
 export const taskName = 'Work Order Validation Task - Worktech'
 
 const debug = Debug(
@@ -35,18 +26,11 @@ const debug = Debug(
 
 const worktechConfig = getConfigProperty('worktech')
 
-async function _updateWorkOrderValidationFromWorktech(): Promise<void> {
-  if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
-    debug('Skipping run.')
-    return
-  }
-
+async function updateWorkOrderValidationFromWorktech(): Promise<void> {
   if (worktechConfig === undefined) {
     debug('Missing Worktech configuration.')
     return
   }
-
-  debug(`Running "${taskName}"...`)
 
   const timeMillis = Date.now()
 
@@ -76,47 +60,38 @@ async function _updateWorkOrderValidationFromWorktech(): Promise<void> {
       )
     }
   }
-
-  lastRunMillis = timeMillis
-
-  debug(`Finished "${taskName}".`)
 }
 
-async function updateWorkOrderValidationFromWorktech(): Promise<void> {
-  await semaphore.acquire()
-
-  try {
-    await _updateWorkOrderValidationFromWorktech()
-  } catch (error: unknown) {
-    debug('Error:', error)
-  } finally {
-    semaphore.release()
-  }
-}
-
-await updateWorkOrderValidationFromWorktech()
-
-const job = schedule.scheduleJob(
+const scheduledTask = new ScheduledTask(
   taskName,
+  updateWorkOrderValidationFromWorktech,
   {
-    dayOfWeek: getConfigProperty('application.workDays'),
-    hour: getConfigProperty('application.workHours'),
-    minute: getScheduledTaskMinutes(
+    schedule: {
+      dayOfWeek: getConfigProperty('application.workDays'),
+      hour: getConfigProperty('application.workHours'),
+      minute: getScheduledTaskMinutes(
+        'inventoryScanner.workOrderValidation.worktech'
+      ),
+      second: 0
+    },
+    lastRunMillis: getMaxWorkOrderValidationRecordUpdateMillis('worktech'),
+    minimumIntervalMillis: getMinimumMillisBetweenRuns(
       'inventoryScanner.workOrderValidation.worktech'
     ),
-    second: 0
-  },
-  updateWorkOrderValidationFromWorktech
+    startTask: true
+  }
 )
 
-exitHook(() => {
-  try {
-    job.cancel()
-  } catch {
-    // ignore
-  }
-})
+/*
+ * Listen for messages
+ */
 
 process.on('message', (_message: TaskWorkerMessage) => {
-  void updateWorkOrderValidationFromWorktech()
+  void scheduledTask.runTask()
 })
+
+/*
+ * Run the task on initialization
+ */
+
+void scheduledTask.runTask()

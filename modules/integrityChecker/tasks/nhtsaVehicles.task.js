@@ -1,10 +1,8 @@
+import { ScheduledTask } from '@cityssm/scheduled-task';
 import { DecodeVinValues } from '@shaggytools/nhtsa-api-wrapper';
-import { Sema } from 'async-sema';
 import sqlite from 'better-sqlite3';
 import camelcase from 'camelcase';
 import Debug from 'debug';
-import exitHook from 'exit-hook';
-import schedule from 'node-schedule';
 import { DEBUG_NAMESPACE } from '../../../debug.config.js';
 import { getConfigProperty } from '../../../helpers/config.helpers.js';
 import { getMinimumMillisBetweenRuns, getScheduledTaskMinutes } from '../../../helpers/tasks.helpers.js';
@@ -20,17 +18,9 @@ const variableKeys = {
     ErrorCode: 'ErrorCode',
     ErrorText: 'ErrorText'
 };
-const minimumMillisBetweenRuns = getMinimumMillisBetweenRuns('integrityChecker.nhtsaVehicles');
 export const taskName = 'NHTSA Vehicles Task';
-let lastRunMillis = 0;
-const semaphore = new Sema(1);
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`);
-async function _refreshNhtsaVehicles() {
-    if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
-        debug('Skipping run.');
-        return;
-    }
-    debug(`Running "${taskName}"...`);
+async function refreshNhtsaVehicles() {
     const vinNumbersToCheck = getFasterAssetVinsToCheck();
     const database = vinNumbersToCheck.length > 0 ? sqlite(databasePath) : undefined;
     for (const vinNumberToCheck of vinNumbersToCheck) {
@@ -54,33 +44,18 @@ async function _refreshNhtsaVehicles() {
     if (database !== undefined) {
         database.close();
     }
-    lastRunMillis = Date.now();
-    debug(`"${taskName}" complete.`);
 }
-async function refreshNhtsaVehicles() {
-    await semaphore.acquire();
-    try {
-        await _refreshNhtsaVehicles();
-    }
-    finally {
-        semaphore.release();
-    }
-}
-const job = schedule.scheduleJob(taskName, {
-    dayOfWeek: getConfigProperty('application.workDays'),
-    hour: getConfigProperty('application.workHours'),
-    minute: getScheduledTaskMinutes('integrityChecker.nhtsaVehicles'),
-    second: 0
-}, refreshNhtsaVehicles);
-exitHook(() => {
-    try {
-        job.cancel();
-    }
-    catch {
-        // ignore
-    }
+const scheduledTask = new ScheduledTask(taskName, refreshNhtsaVehicles, {
+    schedule: {
+        dayOfWeek: getConfigProperty('application.workDays'),
+        hour: getConfigProperty('application.workHours'),
+        minute: getScheduledTaskMinutes('integrityChecker.nhtsaVehicles'),
+        second: 0
+    },
+    minimumIntervalMillis: getMinimumMillisBetweenRuns('integrityChecker.nhtsaVehicles'),
+    startTask: true
 });
 process.on('message', (_message) => {
     debug('Received message.');
-    void refreshNhtsaVehicles();
+    void scheduledTask.runTask();
 });

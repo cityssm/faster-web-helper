@@ -1,10 +1,8 @@
+import { ScheduledTask } from '@cityssm/scheduled-task';
 import { WorkTechAPI } from '@cityssm/worktech-api';
-import { Sema } from 'async-sema';
 import sqlite from 'better-sqlite3';
 import camelCase from 'camelcase';
 import Debug from 'debug';
-import exitHook from 'exit-hook';
-import schedule from 'node-schedule';
 import { DEBUG_NAMESPACE } from '../../../debug.config.js';
 import { getConfigProperty } from '../../../helpers/config.helpers.js';
 import { getMinimumMillisBetweenRuns, getScheduledTaskMinutes } from '../../../helpers/tasks.helpers.js';
@@ -14,18 +12,10 @@ import getFasterAssetNumbers from '../database/getFasterAssetNumbers.js';
 import getMaxWorktechEquipmentUpdateMillis from '../database/getMaxWorktechEquipmentUpdateMillis.js';
 import { databasePath } from '../database/helpers.database.js';
 import { moduleName } from '../helpers/module.helpers.js';
-const minimumMillisBetweenRuns = getMinimumMillisBetweenRuns('integrityChecker.worktechEquipment');
-let lastRunMillis = getMaxWorktechEquipmentUpdateMillis();
-const semaphore = new Sema(1);
 export const taskName = 'Active Worktech Equipment Task';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}:${camelCase(taskName)}`);
 const worktechConfig = getConfigProperty('worktech');
-async function _refreshWorktechEquipment() {
-    if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
-        debug('Skipping run.');
-        return;
-    }
-    debug(`Running "${taskName}"...`);
+async function refreshWorktechEquipment() {
     if (worktechConfig === undefined) {
         debug('Missing Worktech configuration.');
         return;
@@ -62,36 +52,19 @@ async function _refreshWorktechEquipment() {
         debug(`Deleted ${deleteCount} expired Worktech equipment records.`);
     }
     database.close();
-    lastRunMillis = Date.now();
-    debug(`Finished "${taskName}".`);
 }
-async function refreshWorktechEquipment() {
-    await semaphore.acquire();
-    try {
-        await _refreshWorktechEquipment();
-    }
-    catch (error) {
-        debug('Error:', error);
-    }
-    finally {
-        semaphore.release();
-    }
-}
-const job = schedule.scheduleJob(taskName, {
-    dayOfWeek: getConfigProperty('application.workDays'),
-    hour: getConfigProperty('application.workHours'),
-    minute: getScheduledTaskMinutes('integrityChecker.worktechEquipment'),
-    second: 0
-}, refreshWorktechEquipment);
-exitHook(() => {
-    try {
-        job.cancel();
-    }
-    catch {
-        // ignore
-    }
+const scheduledTask = new ScheduledTask(taskName, refreshWorktechEquipment, {
+    schedule: {
+        dayOfWeek: getConfigProperty('application.workDays'),
+        hour: getConfigProperty('application.workHours'),
+        minute: getScheduledTaskMinutes('integrityChecker.worktechEquipment'),
+        second: 0
+    },
+    lastRunMillis: getMaxWorktechEquipmentUpdateMillis(),
+    minimumIntervalMillis: getMinimumMillisBetweenRuns('integrityChecker.worktechEquipment'),
+    startTask: true
 });
 process.on('message', (_message) => {
     debug('Received message.');
-    void refreshWorktechEquipment();
+    void scheduledTask.runTask();
 });

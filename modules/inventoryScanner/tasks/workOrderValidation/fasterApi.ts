@@ -1,9 +1,7 @@
 import { FasterApi } from '@cityssm/faster-api'
-import { Sema } from 'async-sema'
+import { ScheduledTask } from '@cityssm/scheduled-task'
 import camelcase from 'camelcase'
 import Debug from 'debug'
-import exitHook from 'exit-hook'
-import schedule from 'node-schedule'
 
 import { DEBUG_NAMESPACE } from '../../../../debug.config.js'
 import { getConfigProperty } from '../../../../helpers/config.helpers.js'
@@ -11,18 +9,11 @@ import {
   getMinimumMillisBetweenRuns,
   getScheduledTaskMinutes
 } from '../../../../helpers/tasks.helpers.js'
-import type { TaskWorkerMessage } from '../../../../types/tasks.types.js'
 import createOrUpdateWorkOrderValidation from '../../database/createOrUpdateWorkOrderValidation.js'
 import deleteWorkOrderValidation from '../../database/deleteWorkOrderValidation.js'
 import getMaxWorkOrderValidationRecordUpdateMillis from '../../database/getMaxWorkOrderValidationRecordUpdateMillis.js'
 import { getRepairIdsToRefresh } from '../../helpers/faster.helpers.js'
 import { moduleName } from '../../helpers/module.helpers.js'
-
-const minimumMillisBetweenRuns = getMinimumMillisBetweenRuns(
-  'inventoryScanner.workOrderValidation.fasterApi'
-)
-let lastRunMillis = getMaxWorkOrderValidationRecordUpdateMillis('faster')
-const semaphore = new Sema(1)
 
 export const taskName = 'Work Order Validation Task - FASTER API'
 
@@ -32,12 +23,7 @@ const debug = Debug(
 
 const fasterWebConfig = getConfigProperty('fasterWeb')
 
-async function _updateWorkOrderValidationFromFasterApi(): Promise<void> {
-  if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
-    debug('Skipping run.')
-    return
-  }
-
+async function updateWorkOrderValidationFromFasterApi(): Promise<void> {
   if (
     fasterWebConfig.apiUserName === undefined ||
     fasterWebConfig.apiPassword === undefined
@@ -45,8 +31,6 @@ async function _updateWorkOrderValidationFromFasterApi(): Promise<void> {
     debug('Missing API user configuration.')
     return
   }
-
-  debug(`Running "${taskName}"...`)
 
   const timeMillis = Date.now()
 
@@ -89,63 +73,39 @@ async function _updateWorkOrderValidationFromFasterApi(): Promise<void> {
   } catch (error) {
     debug(`FASTER API error: ${error}`)
   }
-
-  lastRunMillis = timeMillis
-
-  debug(`Finished "${taskName}".`)
 }
 
-async function updateWorkOrderValidationFromFasterApi(): Promise<void> {
-  await semaphore.acquire()
-
-  try {
-    await _updateWorkOrderValidationFromFasterApi()
-  } catch (error: unknown) {
-    debug('Error:', error)
-  } finally {
-    semaphore.release()
-  }
-}
-
-/*
- * Run task on initialization
- */
-
-await updateWorkOrderValidationFromFasterApi()
-
-/*
- * Schedule task
- */
-
-const job = schedule.scheduleJob(
+const scheduledTask = new ScheduledTask(
   taskName,
+  updateWorkOrderValidationFromFasterApi,
   {
-    dayOfWeek: getConfigProperty('application.workDays'),
-    hour: getConfigProperty('application.workHours'),
-    minute: getScheduledTaskMinutes(
+    schedule: {
+      dayOfWeek: getConfigProperty('application.workDays'),
+      hour: getConfigProperty('application.workHours'),
+      minute: getScheduledTaskMinutes(
+        'inventoryScanner.workOrderValidation.fasterApi'
+      ),
+      second: 0
+    },
+    lastRunMillis: getMaxWorkOrderValidationRecordUpdateMillis('faster'),
+    minimumIntervalMillis: getMinimumMillisBetweenRuns(
       'inventoryScanner.workOrderValidation.fasterApi'
     ),
-    second: 0
-  },
-  updateWorkOrderValidationFromFasterApi
-)
-
-/*
- * Graceful shutdown
- */
-
-exitHook(() => {
-  try {
-    job.cancel()
-  } catch {
-    // ignore
+    startTask: true
   }
-})
+)
 
 /*
  * Listen for messages
  */
 
-process.on('message', (_message: TaskWorkerMessage) => {
-  void updateWorkOrderValidationFromFasterApi()
+process.on('message', (_message: unknown) => {
+  debug('Received message.')
+  void scheduledTask.runTask()
 })
+
+/*
+ * Run the task on initialization
+ */
+
+void scheduledTask.runTask()

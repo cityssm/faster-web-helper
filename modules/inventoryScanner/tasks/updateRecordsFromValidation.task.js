@@ -1,28 +1,14 @@
+import { ScheduledTask } from '@cityssm/scheduled-task';
 import { minutesToMillis } from '@cityssm/to-millis';
-import { Sema } from 'async-sema';
-import camelcase from 'camelcase';
-import Debug from 'debug';
-import exitHook from 'exit-hook';
 import schedule from 'node-schedule';
-import { DEBUG_NAMESPACE } from '../../../debug.config.js';
 import { getConfigProperty } from '../../../helpers/config.helpers.js';
 import { getItemValidationRecordsByItemNumber } from '../database/getItemValidationRecords.js';
 import getScannerRecords from '../database/getScannerRecords.js';
 import getWorkOrderValidationRecords from '../database/getWorkOrderValidationRecords.js';
 import { updateScannerRecordField } from '../database/updateScannerRecordField.js';
-import { moduleName } from '../helpers/module.helpers.js';
-const minimumMillisBetweenRuns = minutesToMillis(2);
-let lastRunMillis = 0;
-const semaphore = new Sema(1);
 export const taskName = 'Update Records from Validation Task';
 export const taskUserName = 'validationTask';
-const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`);
-function _updateRecordsFromValidation() {
-    if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
-        debug('Skipping run.');
-        return;
-    }
-    debug(`Running "${taskName}"...`);
+function updateRecordsFromValidation() {
     const unvalidatedRecords = getScannerRecords({
         isSynced: false,
         hasMissingValidation: true
@@ -56,36 +42,18 @@ function _updateRecordsFromValidation() {
             }
         }
     }
-    lastRunMillis = Date.now();
-    debug(`Finished "${taskName}".`);
 }
-async function updateRecordsFromValidation() {
-    await semaphore.acquire();
-    try {
-        _updateRecordsFromValidation();
-    }
-    catch (error) {
-        debug('Error:', error);
-    }
-    finally {
-        semaphore.release();
-    }
-}
-await updateRecordsFromValidation();
-const job = schedule.scheduleJob(taskName, {
-    dayOfWeek: getConfigProperty('application.workDays'),
-    hour: getConfigProperty('application.workHours'),
-    minute: new schedule.Range(0, 55, 5),
-    second: 0
-}, updateRecordsFromValidation);
-exitHook(() => {
-    try {
-        job.cancel();
-    }
-    catch {
-        // ignore
-    }
+const scheduledTask = new ScheduledTask(taskName, updateRecordsFromValidation, {
+    schedule: {
+        dayOfWeek: getConfigProperty('application.workDays'),
+        hour: getConfigProperty('application.workHours'),
+        minute: new schedule.Range(0, 55, 5),
+        second: 0
+    },
+    minimumIntervalMillis: minutesToMillis(2),
+    runTask: true,
+    startTask: true
 });
 process.on('message', (_message) => {
-    void updateRecordsFromValidation();
+    void scheduledTask.runTask();
 });
