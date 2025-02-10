@@ -59,7 +59,6 @@ const scheduledTask = new ScheduledTask(taskName, updateWorkOrderValidationFromF
     },
     lastRunMillis: getMaxWorkOrderValidationRecordUpdateMillis('faster'),
     minimumIntervalMillis: getMinimumMillisBetweenRuns('inventoryScanner.workOrderValidation.fasterApi'),
-    runTask: true,
     startTask: true
 });
 /*
@@ -69,3 +68,7 @@ process.on('message', (_message) => {
     debug('Received message.');
     void scheduledTask.runTask();
 });
+/*
+ * Run the task on initialization
+ */
+void scheduledTask.runTask();

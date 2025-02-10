@@ -19,6 +19,9 @@ const fasterApiConfig = getConfigProperty('fasterWeb');
 const exportFileNamePrefix = getConfigProperty(
 // eslint-disable-next-line no-secrets/no-secrets
 'modules.inventoryScanner.fasterSync.exportFileNamePrefix');
+export function formatRecordIdAsInvoiceNumber(recordId) {
+    return recordId.toString().padStart(14, 'X');
+}
 function recordToExportDataLine(record) {
     // A - "RDC"
     const dataPieces = ['RDC'];
@@ -30,7 +33,7 @@ function recordToExportDataLine(record) {
     dataPieces.push(record.technicianId ??
         getConfigProperty('modules.inventoryScanner.fasterSync.defaultTechnicianId').toString());
     // E - Invoice Number
-    dataPieces.push(record.recordId.toString().padStart(14, 'X'));
+    dataPieces.push(formatRecordIdAsInvoiceNumber(record.recordId));
     // F - Invoice Date
     const scanDate = dateIntegerToDate(record.scanDate);
     const fasterInvoiceDate = (scanDate.getMonth() + 1).toString().padStart(2, '0') +

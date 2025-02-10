@@ -56,7 +56,6 @@ async function refreshOutstandingItemRequestsFromFasterApi() {
         debug('FASTER API error:', error);
     }
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const scheduledTask = new ScheduledTask(taskName, refreshOutstandingItemRequestsFromFasterApi, {
     schedule: {
         dayOfWeek: getConfigProperty('application.workDays'),
@@ -65,6 +64,9 @@ const scheduledTask = new ScheduledTask(taskName, refreshOutstandingItemRequests
         second: 0
     },
     minimumIntervalMillis: minutesToMillis(2),
-    runTask: true,
     startTask: true
 });
+/*
+ * Run the task on initialization.
+ */
+void scheduledTask.runTask();

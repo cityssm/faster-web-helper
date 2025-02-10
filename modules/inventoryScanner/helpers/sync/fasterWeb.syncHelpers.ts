@@ -38,6 +38,10 @@ const exportFileNamePrefix = getConfigProperty(
   'modules.inventoryScanner.fasterSync.exportFileNamePrefix'
 )
 
+export function formatRecordIdAsInvoiceNumber(recordId: number): string {
+  return recordId.toString().padStart(14, 'X')
+}
+
 function recordToExportDataLine(record: InventoryScannerRecord): string {
   // A - "RDC"
   const dataPieces = ['RDC']
@@ -57,7 +61,7 @@ function recordToExportDataLine(record: InventoryScannerRecord): string {
   )
 
   // E - Invoice Number
-  dataPieces.push(record.recordId.toString().padStart(14, 'X'))
+  dataPieces.push(formatRecordIdAsInvoiceNumber(record.recordId))
 
   // F - Invoice Date
   const scanDate = dateIntegerToDate(record.scanDate) as Date

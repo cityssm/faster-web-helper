@@ -4,7 +4,7 @@ import { databasePath } from './helpers.database.js';
 const defaultOptions = {
     limit: -1
 };
-export default function getScannerRecords(filters, userOptions = {}) {
+export default function getScannerRecords(filters, userOptions = {}, connectedDatabase) {
     const options = {
         ...defaultOptions,
         ...userOptions
@@ -31,6 +31,10 @@ export default function getScannerRecords(filters, userOptions = {}) {
         sqlWhereClause += filters.isMarkedForSync
             ? ' and s.recordSync_timeMillis is not null and recordSync_isSuccessful is null'
             : ' and (s.recordSync_timeMillis is null or s.recordSync_isSuccessful is not null)';
+    }
+    if (filters.syncedRecordId !== undefined) {
+        sqlWhereClause += ' and s.recordSync_syncedRecordId = ?';
+        sqlParameters.push(filters.syncedRecordId);
     }
     if (filters.hasMissingValidation !== undefined) {
         sqlWhereClause += filters.hasMissingValidation
@@ -90,14 +94,17 @@ export default function getScannerRecords(filters, userOptions = {}) {
     /*
      * Do Query
      */
-    const database = sqlite(databasePath, {
-        readonly: true
-    });
+    const database = connectedDatabase ??
+        sqlite(databasePath, {
+            readonly: true
+        });
     const result = database
         .function('userFunction_dateIntegerToString', dateIntegerToString)
         .function('userFunction_timeIntegerToString', timeIntegerToString)
         .prepare(sql)
         .all(sqlParameters);
-    database.close();
+    if (connectedDatabase === undefined) {
+        database.close();
+    }
     return result;
 }

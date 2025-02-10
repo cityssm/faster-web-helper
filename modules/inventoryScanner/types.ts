@@ -50,3 +50,20 @@ export interface InventoryScannerRecord {
   recordSync_syncedRecordId: string | null
   recordSync_message: string | null
 }
+
+export interface InventoryScannerSyncErrorLogRecord {
+  recordId: number
+  workOrderType: WorkOrderType
+
+  logId: string
+  
+  logDate: number
+  logDateString: DateString
+  logTime: number
+  logTimeString: TimeString
+
+  logMessage: string
+
+  scannerSyncedRecordId: string | null
+  scannerRecordId: number | null
+}

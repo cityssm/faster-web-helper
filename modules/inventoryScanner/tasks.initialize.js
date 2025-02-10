@@ -11,6 +11,9 @@ export default function initializeInventoryScannerTasks() {
     debug(`Initializing "${moduleName}"...`);
     initializeInventoryScannerDatabase();
     const childProcesses = {};
+    /*
+     * Item Validation
+     */
     const itemValidationConfig = getConfigProperty('modules.inventoryScanner.items.validation');
     if (itemValidationConfig !== undefined) {
         let itemValidationTaskPath = '';
@@ -28,6 +31,9 @@ export default function initializeInventoryScannerTasks() {
             childProcesses[itemValidationTaskName] = fork(itemValidationTaskPath);
         }
     }
+    /*
+     * Work Order Validation
+     */
     const workOrderValidationSources = getConfigProperty('modules.inventoryScanner.workOrders.validationSources');
     for (const workOrderValidationSource of workOrderValidationSources) {
         let workOrderValidationTaskPath = '';
@@ -62,10 +68,14 @@ export default function initializeInventoryScannerTasks() {
         }
     }
     childProcesses['inventoryScanner.updateRecordsFromValidation'] = fork('./modules/inventoryScanner/tasks/updateRecordsFromValidation.task.js');
+    /*
+     * FASTER Tasks
+     */
     if (hasFasterApi &&
         getConfigProperty('modules.inventoryScanner.fasterItemRequests.isEnabled')) {
         childProcesses['inventoryScanner.outstandingItemRequests'] = fork('./modules/inventoryScanner/tasks/outstandingItemRequests.task.js');
     }
+    childProcesses['inventoryScanner.downloadFasterMessageLog'] = fork('./modules/inventoryScanner/tasks/downloadFasterMessageLog.task.js');
     debug(`"${moduleName}" initialized.`);
     return childProcesses;
 }

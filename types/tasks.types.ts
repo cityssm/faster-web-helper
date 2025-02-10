@@ -4,6 +4,7 @@ export type TaskName =
   | 'inventoryScanner.workOrderValidation.worktech'
   | 'inventoryScanner.outstandingItemRequests'
   | 'inventoryScanner.updateRecordsFromValidation'
+  | 'inventoryScanner.downloadFasterMessageLog'
   | 'integrityChecker.fasterAssets'
   | 'integrityChecker.worktechEquipment'
   | 'integrityChecker.nhtsaVehicles'

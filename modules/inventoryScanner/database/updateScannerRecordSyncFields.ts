@@ -10,9 +10,10 @@ export interface UpdateScannerRecordSyncFieldsForm {
 }
 
 export function updateScannerRecordSyncFields(
-  recordForm: UpdateScannerRecordSyncFieldsForm
+  recordForm: UpdateScannerRecordSyncFieldsForm,
+  connectedDatabase?: sqlite.Database
 ): boolean {
-  const database = sqlite(databasePath)
+  const database = connectedDatabase ?? sqlite(databasePath)
 
   const result = database
     .prepare(
@@ -22,7 +23,7 @@ export function updateScannerRecordSyncFields(
         recordSync_message = ?
         where recordId = ?
         and recordDelete_timeMillis is null
-        and recordSync_timeMillis is not null`
+        ${recordForm.isSuccessful ? ' and recordSync_timeMillis is not null' : ''}`
     )
     .run(
       recordForm.isSuccessful ? 1 : 0,
@@ -31,7 +32,9 @@ export function updateScannerRecordSyncFields(
       recordForm.recordId
     )
 
-  database.close()
+  if (connectedDatabase === undefined) {
+    database.close()
+  }
 
   return result.changes > 0
 }

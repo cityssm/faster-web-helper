@@ -1,13 +1,13 @@
 import { minutesToMillis } from '@cityssm/to-millis';
 const scheduledTaskMinutes = {
+    5: ['inventoryScanner.workOrderValidation.fasterApi'],
+    10: ['inventoryScanner.workOrderValidation.worktech'],
+    15: ['inventoryScanner.itemValidation.dynamicsGp'],
+    35: ['inventoryScanner.workOrderValidation.fasterApi'],
+    40: ['inventoryScanner.workOrderValidation.worktech'],
     50: ['integrityChecker.fasterAssets'],
     53: ['integrityChecker.worktechEquipment'],
-    54: ['integrityChecker.nhtsaVehicles'],
-    15: ['inventoryScanner.itemValidation.dynamicsGp'],
-    5: ['inventoryScanner.workOrderValidation.fasterApi'],
-    35: ['inventoryScanner.workOrderValidation.fasterApi'],
-    10: ['inventoryScanner.workOrderValidation.worktech'],
-    40: ['inventoryScanner.workOrderValidation.worktech']
+    54: ['integrityChecker.nhtsaVehicles']
 };
 export function getScheduledTaskMinutes(taskName) {
     const scheduleMinutes = [];

@@ -48,9 +48,15 @@ const scheduledTask = new ScheduledTask(taskName, updateWorkOrderValidationFromW
     },
     lastRunMillis: getMaxWorkOrderValidationRecordUpdateMillis('worktech'),
     minimumIntervalMillis: getMinimumMillisBetweenRuns('inventoryScanner.workOrderValidation.worktech'),
-    runTask: true,
     startTask: true
 });
+/*
+ * Listen for messages
+ */
 process.on('message', (_message) => {
     void scheduledTask.runTask();
 });
+/*
+ * Run the task on initialization
+ */
+void scheduledTask.runTask();

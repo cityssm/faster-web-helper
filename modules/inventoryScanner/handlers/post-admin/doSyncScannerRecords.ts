@@ -10,7 +10,7 @@ export default function handler(request: Request, response: Response): void {
     request.session.user as FasterWebHelperSessionUser
   )
 
-  fork('./modules/inventoryScanner/tasks/syncScannerRecords.js')
+  fork('./modules/inventoryScanner/tasks/onDemand/syncScannerRecords.onDemand.js')
 
   const pendingRecords = getScannerRecords({ isSynced: false }, { limit: -1 })
 

@@ -15,6 +15,7 @@ export function markSyncErrorScannerRecordForPending(
           recordSync_timeMillis = null,
           recordSync_message = null,
           recordSync_isSuccessful = null,
+          recordSync_syncedRecordId = null,
           recordUpdate_userName = ?,
           recordUpdate_timeMillis = ?
         where recordId = ?

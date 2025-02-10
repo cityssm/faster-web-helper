@@ -51,9 +51,15 @@ const scheduledTask = new ScheduledTask(taskName, updateRecordsFromValidation, {
         second: 0
     },
     minimumIntervalMillis: minutesToMillis(2),
-    runTask: true,
     startTask: true
 });
+/*
+ * Listen for messages
+ */
 process.on('message', (_message) => {
     void scheduledTask.runTask();
 });
+/*
+ * Run the task on initialization
+ */
+void scheduledTask.runTask();

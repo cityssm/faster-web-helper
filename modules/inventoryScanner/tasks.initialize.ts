@@ -22,6 +22,10 @@ export default function initializeInventoryScannerTasks(): Partial<
 
   const childProcesses: Partial<Record<TaskName, ChildProcess>> = {}
 
+  /*
+   * Item Validation
+   */
+
   const itemValidationConfig = getConfigProperty(
     'modules.inventoryScanner.items.validation'
   )
@@ -43,6 +47,10 @@ export default function initializeInventoryScannerTasks(): Partial<
       childProcesses[itemValidationTaskName] = fork(itemValidationTaskPath)
     }
   }
+
+  /*
+   * Work Order Validation
+   */
 
   const workOrderValidationSources = getConfigProperty(
     'modules.inventoryScanner.workOrders.validationSources'
@@ -91,6 +99,10 @@ export default function initializeInventoryScannerTasks(): Partial<
     './modules/inventoryScanner/tasks/updateRecordsFromValidation.task.js'
   )
 
+  /*
+   * FASTER Tasks
+   */
+
   if (
     hasFasterApi &&
     getConfigProperty('modules.inventoryScanner.fasterItemRequests.isEnabled')
@@ -99,6 +111,10 @@ export default function initializeInventoryScannerTasks(): Partial<
       './modules/inventoryScanner/tasks/outstandingItemRequests.task.js'
     )
   }
+
+  childProcesses['inventoryScanner.downloadFasterMessageLog'] = fork(
+    './modules/inventoryScanner/tasks/downloadFasterMessageLog.task.js'
+  )
 
   debug(`"${moduleName}" initialized.`)
 

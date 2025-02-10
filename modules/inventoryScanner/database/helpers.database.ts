@@ -70,6 +70,25 @@ const createStatements = [
     recordDelete_userName varchar(20),
     recordDelete_timeMillis integer)`,
 
+  `create table if not exists InventoryScannerSyncErrorLog (
+    recordId integer primary key autoincrement,
+    workOrderType varchar(10) not null default 'faster',
+
+    logId varchar(10) not null,
+    logDate integer not null,
+    logTime integer not null,
+    logMessage varchar(500) not null,
+
+    scannerSyncedRecordId varchar(50),
+    scannerRecordId integer,
+    
+    recordCreate_userName varchar(20) not null default '',
+    recordCreate_timeMillis integer not null,
+    recordDelete_userName varchar(20),
+    recordDelete_timeMillis integer,
+    
+    unique (workOrderType, logId))`,
+
   `create table if not exists InventoryScannerSettings (
     settingName varchar(100) not null primary key,
     settingValue varchar(500),

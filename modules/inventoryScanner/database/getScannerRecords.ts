@@ -10,9 +10,12 @@ import { databasePath } from './helpers.database.js'
 
 interface GetScannerRecordsFilters {
   scannerKey?: string
+
   isSynced?: boolean
   isSyncedSuccessfully?: boolean
   isMarkedForSync?: boolean
+  syncedRecordId?: string
+
   hasMissingValidation?: boolean
   workOrderType?: WorkOrderType
   itemNumberPrefix?: string
@@ -28,7 +31,8 @@ const defaultOptions: GetScannerRecordsOptions = {
 
 export default function getScannerRecords(
   filters: GetScannerRecordsFilters,
-  userOptions: Partial<GetScannerRecordsOptions> = {}
+  userOptions: Partial<GetScannerRecordsOptions> = {},
+  connectedDatabase?: sqlite.Database
 ): InventoryScannerRecord[] {
   const options = {
     ...defaultOptions,
@@ -62,6 +66,11 @@ export default function getScannerRecords(
     sqlWhereClause += filters.isMarkedForSync
       ? ' and s.recordSync_timeMillis is not null and recordSync_isSuccessful is null'
       : ' and (s.recordSync_timeMillis is null or s.recordSync_isSuccessful is not null)'
+  }
+
+  if (filters.syncedRecordId !== undefined) {
+    sqlWhereClause += ' and s.recordSync_syncedRecordId = ?'
+    sqlParameters.push(filters.syncedRecordId)
   }
 
   if (filters.hasMissingValidation !== undefined) {
@@ -129,9 +138,11 @@ export default function getScannerRecords(
    * Do Query
    */
 
-  const database = sqlite(databasePath, {
-    readonly: true
-  })
+  const database =
+    connectedDatabase ??
+    sqlite(databasePath, {
+      readonly: true
+    })
 
   const result = database
     .function('userFunction_dateIntegerToString', dateIntegerToString)
@@ -139,7 +150,9 @@ export default function getScannerRecords(
     .prepare(sql)
     .all(sqlParameters) as InventoryScannerRecord[]
 
-  database.close()
+  if (connectedDatabase === undefined) {
+    database.close()
+  }
 
   return result
 }

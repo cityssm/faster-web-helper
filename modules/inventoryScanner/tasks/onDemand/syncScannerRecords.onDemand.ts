@@ -1,12 +1,13 @@
 import camelcase from 'camelcase'
 import Debug from 'debug'
 
-import { DEBUG_NAMESPACE } from '../../../debug.config.js'
-import getScannerRecords from '../database/getScannerRecords.js'
-import { moduleName } from '../helpers/module.helpers.js'
-import { syncScannerRecordsWithFaster } from '../helpers/sync/fasterWeb.syncHelpers.js'
-import { syncScannerRecordsWithWorktech } from '../helpers/sync/worktech.syncHelpers.js'
-import { sortScannerRecordsByWorkOrderType } from '../helpers/workOrders.helpers.js'
+import { DEBUG_NAMESPACE } from '../../../../debug.config.js'
+import type { TaskWorkerMessage } from '../../../../types/tasks.types.js'
+import getScannerRecords from '../../database/getScannerRecords.js'
+import { moduleName } from '../../helpers/module.helpers.js'
+import { syncScannerRecordsWithFaster } from '../../helpers/sync/fasterWeb.syncHelpers.js'
+import { syncScannerRecordsWithWorktech } from '../../helpers/sync/worktech.syncHelpers.js'
+import { sortScannerRecordsByWorkOrderType } from '../../helpers/workOrders.helpers.js'
 
 export const taskName = 'Sync Scanner Records'
 
@@ -27,6 +28,12 @@ async function syncScannerRecordsTask(): Promise<void> {
     switch (workOrderType) {
       case 'faster': {
         await syncScannerRecordsWithFaster(records)
+
+        process.send?.({
+          destinationTaskName: 'inventoryScanner.downloadFasterMessageLog',
+          timeMillis: Date.now()
+        } satisfies TaskWorkerMessage)
+
         break
       }
       case 'worktech': {
