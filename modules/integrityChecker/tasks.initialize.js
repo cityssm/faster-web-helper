@@ -17,7 +17,7 @@ export default function initializeIntegrityCheckerTasks() {
     if (hasFasterApi) {
         if (getConfigProperty('modules.integrityChecker.fasterAssets.isEnabled')) {
             const taskPath = './modules/integrityChecker/tasks/fasterAssets.task.js';
-            childProcesses['integrityChecker.fasterAssets'] = fork(taskPath);
+            childProcesses.integrityChecker_fasterAssets = fork(taskPath);
         }
     }
     else {
@@ -28,7 +28,7 @@ export default function initializeIntegrityCheckerTasks() {
      */
     if (getConfigProperty('modules.integrityChecker.nhtsaVehicles.isEnabled')) {
         const taskPath = './modules/integrityChecker/tasks/nhtsaVehicles.task.js';
-        childProcesses['integrityChecker.nhtsaVehicles'] = fork(taskPath);
+        childProcesses.integrityChecker_nhtsaVehicles = fork(taskPath);
     }
     /*
      * Worktech Equipment
@@ -41,7 +41,7 @@ export default function initializeIntegrityCheckerTasks() {
         // eslint-disable-next-line no-secrets/no-secrets
         getConfigProperty('modules.integrityChecker.worktechEquipment.isEnabled')) {
             const taskPath = './modules/integrityChecker/tasks/worktechEquipment.task.js';
-            childProcesses['integrityChecker.worktechEquipment'] = fork(taskPath);
+            childProcesses.integrityChecker_worktechEquipment = fork(taskPath);
         }
     }
     debug(`"${moduleName}" initialized.`);

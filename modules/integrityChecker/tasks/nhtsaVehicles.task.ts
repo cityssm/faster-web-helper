@@ -77,11 +77,11 @@ const scheduledTask = new ScheduledTask(taskName, refreshNhtsaVehicles, {
   schedule: {
     dayOfWeek: getConfigProperty('application.workDays'),
     hour: getConfigProperty('application.workHours'),
-    minute: getScheduledTaskMinutes('integrityChecker.nhtsaVehicles'),
+    minute: getScheduledTaskMinutes('integrityChecker_nhtsaVehicles'),
     second: 0
   },
   minimumIntervalMillis: getMinimumMillisBetweenRuns(
-    'integrityChecker.nhtsaVehicles'
+    'integrityChecker_nhtsaVehicles'
   ),
   startTask: true
 })

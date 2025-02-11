@@ -1,10 +1,9 @@
 import { FasterApi } from '@cityssm/faster-api';
+import { ScheduledTask } from '@cityssm/scheduled-task';
 import { isValidVin } from '@shaggytools/nhtsa-api-wrapper';
 import sqlite from 'better-sqlite3';
 import camelCase from 'camelcase';
 import Debug from 'debug';
-import exitHook from 'exit-hook';
-import schedule from 'node-schedule';
 import { DEBUG_NAMESPACE } from '../../../debug.config.js';
 import { getConfigProperty } from '../../../helpers/config.helpers.js';
 import { getMinimumMillisBetweenRuns, getScheduledTaskMinutes } from '../../../helpers/tasks.helpers.js';
@@ -13,22 +12,15 @@ import { deleteExpiredRecords } from '../database/deleteExpiredRecords.js';
 import getMaxFasterAssetUpdateMillis from '../database/getMaxFasterAssetUpdateMillis.js';
 import { databasePath } from '../database/helpers.database.js';
 import { moduleName } from '../helpers/module.helpers.js';
-const minimumMillisBetweenRuns = getMinimumMillisBetweenRuns('integrityChecker.fasterAssets');
-let lastRunMillis = getMaxFasterAssetUpdateMillis();
 export const taskName = 'Active FASTER Assets Task';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}:${camelCase(taskName)}`);
 const fasterWebConfig = getConfigProperty('fasterWeb');
 async function refreshFasterAssets() {
-    if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
-        debug('Skipping run.');
-        return;
-    }
     if (fasterWebConfig.apiUserName === undefined ||
         fasterWebConfig.apiPassword === undefined) {
         debug('Missing FASTER API user configuration.');
         return;
     }
-    debug(`Running "${taskName}"...`);
     /*
      * Call FASTER API
      */
@@ -73,7 +65,7 @@ async function refreshFasterAssets() {
         if (getConfigProperty('modules.integrityChecker.nhtsaVehicles.isEnabled')) {
             debug('Triggering NHTSA Vehicles Task.');
             process.send({
-                destinationTaskName: 'integrityChecker.nhtsaVehicles',
+                destinationTaskName: 'integrityChecker_nhtsaVehicles',
                 timeMillis: rightNow
             });
         }
@@ -82,7 +74,7 @@ async function refreshFasterAssets() {
         getConfigProperty('modules.integrityChecker.worktechEquipment.isEnabled')) {
             debug('Triggering Worktech Equipment Task.');
             process.send({
-                destinationTaskName: 'integrityChecker.worktechEquipment',
+                destinationTaskName: 'integrityChecker_worktechEquipment',
                 timeMillis: rightNow
             });
         }
@@ -95,28 +87,23 @@ async function refreshFasterAssets() {
         getConfigProperty('modules.integrityChecker.worktechEquipment.isEnabled')) {
         debug('Triggering Worktech Equipment Task.');
         process.send({
-            destinationTaskName: 'integrityChecker.worktechEquipment',
+            destinationTaskName: 'integrityChecker_worktechEquipment',
             timeMillis: rightNow
         });
     }
-    /*
-     * Finish
-     */
-    lastRunMillis = Date.now();
-    debug(`Finished "${taskName}".`);
 }
-await refreshFasterAssets();
-const job = schedule.scheduleJob(taskName, {
-    dayOfWeek: getConfigProperty('application.workDays'),
-    hour: getConfigProperty('application.workHours'),
-    minute: getScheduledTaskMinutes('integrityChecker.fasterAssets'),
-    second: 0
-}, refreshFasterAssets);
-exitHook(() => {
-    try {
-        job.cancel();
-    }
-    catch {
-        // ignore
-    }
+const scheduledTask = new ScheduledTask(taskName, refreshFasterAssets, {
+    schedule: {
+        dayOfWeek: getConfigProperty('application.workDays'),
+        hour: getConfigProperty('application.workHours'),
+        minute: getScheduledTaskMinutes('integrityChecker_fasterAssets'),
+        second: 0
+    },
+    lastRunMillis: getMaxFasterAssetUpdateMillis(),
+    minimumIntervalMillis: getMinimumMillisBetweenRuns('integrityChecker_fasterAssets'),
+    startTask: true
 });
+/*
+ * Run the task on initialization
+ */
+void scheduledTask.runTask();

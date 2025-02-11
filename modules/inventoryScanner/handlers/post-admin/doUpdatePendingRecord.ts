@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express'
 
+import type { TaskWorkerMessage } from '../../../../types/tasks.types.js'
 import getScannerRecords from '../../database/getScannerRecords.js'
 import {
   type UpdateScannerRecordForm,
@@ -17,9 +18,10 @@ export default function handler(
 
   if (success && process.send !== undefined) {
     process.send({
-      destinationTaskName: 'inventoryScanner.updateRecordsFromValidation',
+      // eslint-disable-next-line no-secrets/no-secrets
+      destinationTaskName: 'inventoryScanner_updateRecordsFromValidation',
       timeMillis: Date.now()
-    })
+    } satisfies TaskWorkerMessage)
   }
 
   const pendingRecords = getScannerRecords({ isSynced: false }, { limit: -1 })

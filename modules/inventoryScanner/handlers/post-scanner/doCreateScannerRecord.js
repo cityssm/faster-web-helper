@@ -6,7 +6,8 @@ export default function handler(request, response) {
         request.body.quantityMultiplier === '1' &&
         process.send !== undefined) {
         process.send({
-            destinationTaskName: 'inventoryScanner.updateRecordsFromValidation',
+            // eslint-disable-next-line no-secrets/no-secrets
+            destinationTaskName: 'inventoryScanner_updateRecordsFromValidation',
             timeMillis: Date.now()
         });
     }

@@ -4,7 +4,8 @@ export default function handler(request, response) {
     const success = updateScannerRecord(request.body, request.session.user);
     if (success && process.send !== undefined) {
         process.send({
-            destinationTaskName: 'inventoryScanner.updateRecordsFromValidation',
+            // eslint-disable-next-line no-secrets/no-secrets
+            destinationTaskName: 'inventoryScanner_updateRecordsFromValidation',
             timeMillis: Date.now()
         });
     }

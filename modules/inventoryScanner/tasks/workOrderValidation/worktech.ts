@@ -70,13 +70,13 @@ const scheduledTask = new ScheduledTask(
       dayOfWeek: getConfigProperty('application.workDays'),
       hour: getConfigProperty('application.workHours'),
       minute: getScheduledTaskMinutes(
-        'inventoryScanner.workOrderValidation.worktech'
+        'inventoryScanner_workOrderValidation_worktech'
       ),
       second: 0
     },
     lastRunMillis: getMaxWorkOrderValidationRecordUpdateMillis('worktech'),
     minimumIntervalMillis: getMinimumMillisBetweenRuns(
-      'inventoryScanner.workOrderValidation.worktech'
+      'inventoryScanner_workOrderValidation_worktech'
     ),
     startTask: true
   }

@@ -75,6 +75,9 @@ async function updateWorkOrderValidationFromFasterApi(): Promise<void> {
   }
 }
 
+// eslint-disable-next-line no-secrets/no-secrets
+const programTaskName = 'inventoryScanner_workOrderValidation_fasterApi'
+
 const scheduledTask = new ScheduledTask(
   taskName,
   updateWorkOrderValidationFromFasterApi,
@@ -82,15 +85,11 @@ const scheduledTask = new ScheduledTask(
     schedule: {
       dayOfWeek: getConfigProperty('application.workDays'),
       hour: getConfigProperty('application.workHours'),
-      minute: getScheduledTaskMinutes(
-        'inventoryScanner.workOrderValidation.fasterApi'
-      ),
+      minute: getScheduledTaskMinutes(programTaskName),
       second: 0
     },
     lastRunMillis: getMaxWorkOrderValidationRecordUpdateMillis('faster'),
-    minimumIntervalMillis: getMinimumMillisBetweenRuns(
-      'inventoryScanner.workOrderValidation.fasterApi'
-    ),
+    minimumIntervalMillis: getMinimumMillisBetweenRuns(programTaskName),
     startTask: true
   }
 )

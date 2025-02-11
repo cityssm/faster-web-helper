@@ -29,7 +29,7 @@ export default function initializeIntegrityCheckerTasks(): Partial<
   if (hasFasterApi) {
     if (getConfigProperty('modules.integrityChecker.fasterAssets.isEnabled')) {
       const taskPath = './modules/integrityChecker/tasks/fasterAssets.task.js'
-      childProcesses['integrityChecker.fasterAssets'] = fork(taskPath)
+      childProcesses.integrityChecker_fasterAssets = fork(taskPath)
     }
   } else {
     debug('FASTER API configuration is not set up. Skipping FASTER tasks.')
@@ -41,7 +41,7 @@ export default function initializeIntegrityCheckerTasks(): Partial<
 
   if (getConfigProperty('modules.integrityChecker.nhtsaVehicles.isEnabled')) {
     const taskPath = './modules/integrityChecker/tasks/nhtsaVehicles.task.js'
-    childProcesses['integrityChecker.nhtsaVehicles'] = fork(taskPath)
+    childProcesses.integrityChecker_nhtsaVehicles = fork(taskPath)
   }
 
   /*
@@ -57,7 +57,7 @@ export default function initializeIntegrityCheckerTasks(): Partial<
     ) {
       const taskPath =
         './modules/integrityChecker/tasks/worktechEquipment.task.js'
-      childProcesses['integrityChecker.worktechEquipment'] = fork(taskPath)
+      childProcesses.integrityChecker_worktechEquipment = fork(taskPath)
     }
   }
 

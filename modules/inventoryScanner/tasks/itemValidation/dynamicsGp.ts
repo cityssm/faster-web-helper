@@ -1,8 +1,7 @@
 import { DynamicsGP } from '@cityssm/dynamics-gp'
+import { ScheduledTask } from '@cityssm/scheduled-task'
 import camelCase from 'camelcase'
 import Debug from 'debug'
-import exitHook from 'exit-hook'
-import schedule from 'node-schedule'
 
 import { DEBUG_NAMESPACE } from '../../../../debug.config.js'
 import { getConfigProperty } from '../../../../helpers/config.helpers.js'
@@ -15,12 +14,6 @@ import createOrUpdateItemValidation from '../../database/createOrUpdateItemValid
 import deleteExpiredItemValidationRecords from '../../database/deleteExpiredItemValidationRecords.js'
 import getMaxItemValidationRecordUpdateMillis from '../../database/getMaxItemValidationRecordUpdateMillis.js'
 import { moduleName } from '../../helpers/module.helpers.js'
-
-const minimumMillisBetweenRuns = getMinimumMillisBetweenRuns(
-  'inventoryScanner.itemValidation.dynamicsGp'
-)
-
-let lastRunMillis = getMaxItemValidationRecordUpdateMillis('')
 
 export const taskName = 'Inventory Validation Task - Dynamics GP'
 
@@ -38,21 +31,13 @@ const taskConfig = getConfigProperty(
 
 const dynamicsGpDatabaseConfig = getConfigProperty('dynamicsGP')
 
-async function runUpdateItemValidationFromDynamicsGpTask(): Promise<void> {
-  if (lastRunMillis + minimumMillisBetweenRuns > Date.now()) {
-    debug('Skipping run.')
-    return
-  }
-
+async function runUpdateItemValidationFromDynamicsGp(): Promise<void> {
   if (dynamicsGpDatabaseConfig === undefined) {
     debug('Missing configuration.')
     return
   }
 
-  debug(`Running "${taskName}"...`)
-
   const timeMillis = Date.now()
-  lastRunMillis = timeMillis
 
   const gpDatabase = new DynamicsGP(dynamicsGpDatabaseConfig)
 
@@ -102,25 +87,24 @@ async function runUpdateItemValidationFromDynamicsGpTask(): Promise<void> {
   debug(`Finished "${taskName}".`)
 }
 
-await runUpdateItemValidationFromDynamicsGpTask()
-
-const job = schedule.scheduleJob(
+const scheduledTask = new ScheduledTask(
   taskName,
+  runUpdateItemValidationFromDynamicsGp,
   {
-    dayOfWeek: getConfigProperty('application.workDays'),
-    hour: getConfigProperty('application.workHours'),
-    minute: getScheduledTaskMinutes(
-      'inventoryScanner.itemValidation.dynamicsGp'
+    schedule: {
+      dayOfWeek: getConfigProperty('application.workDays'),
+      hour: getConfigProperty('application.workHours'),
+      minute: getScheduledTaskMinutes(
+        'inventoryScanner_itemValidation_dynamicsGp'
+      ),
+      second: 0
+    },
+    lastRunMillis: getMaxItemValidationRecordUpdateMillis(''),
+    minimumIntervalMillis: getMinimumMillisBetweenRuns(
+      'inventoryScanner_itemValidation_dynamicsGp'
     ),
-    second: 0
-  },
-  runUpdateItemValidationFromDynamicsGpTask
+    startTask: true
+  }
 )
 
-exitHook(() => {
-  try {
-    job.cancel()
-  } catch {
-    // ignore
-  }
-})
+await scheduledTask.runTask()

@@ -21,7 +21,8 @@ export default function initializeInventoryScannerTasks() {
         if (itemValidationConfig.source === 'dynamicsGP') {
             itemValidationTaskPath =
                 './modules/inventoryScanner/tasks/itemValidation/dynamicsGp.js';
-            itemValidationTaskName = 'inventoryScanner.itemValidation.dynamicsGp';
+            itemValidationTaskName =
+                'inventoryScanner_itemValidation_dynamicsGp';
         }
         else {
             debug(`Item validation not implemented: ${itemValidationConfig.source}`);
@@ -44,7 +45,8 @@ export default function initializeInventoryScannerTasks() {
                     workOrderValidationTaskPath =
                         './modules/inventoryScanner/tasks/workOrderValidation/fasterApi.js';
                     workOrderValidationTaskName =
-                        'inventoryScanner.workOrderValidation.fasterApi';
+                        // eslint-disable-next-line no-secrets/no-secrets
+                        'inventoryScanner_workOrderValidation_fasterApi';
                 }
                 else {
                     debug('Optional "@cityssm/faster-api" package is required for work order validation by FASTER API.');
@@ -55,7 +57,7 @@ export default function initializeInventoryScannerTasks() {
                 workOrderValidationTaskPath =
                     './modules/inventoryScanner/tasks/workOrderValidation/worktech.js';
                 workOrderValidationTaskName =
-                    'inventoryScanner.workOrderValidation.worktech';
+                    'inventoryScanner_workOrderValidation_worktech';
                 break;
             }
         }
@@ -67,15 +69,15 @@ export default function initializeInventoryScannerTasks() {
             childProcesses[workOrderValidationTaskName] = fork(workOrderValidationTaskPath);
         }
     }
-    childProcesses['inventoryScanner.updateRecordsFromValidation'] = fork('./modules/inventoryScanner/tasks/updateRecordsFromValidation.task.js');
+    childProcesses.inventoryScanner_updateRecordsFromValidation = fork('./modules/inventoryScanner/tasks/updateRecordsFromValidation.task.js');
     /*
      * FASTER Tasks
      */
     if (hasFasterApi &&
         getConfigProperty('modules.inventoryScanner.fasterItemRequests.isEnabled')) {
-        childProcesses['inventoryScanner.outstandingItemRequests'] = fork('./modules/inventoryScanner/tasks/outstandingItemRequests.task.js');
+        childProcesses.inventoryScanner_outstandingItemRequests = fork('./modules/inventoryScanner/tasks/outstandingItemRequests.task.js');
     }
-    childProcesses['inventoryScanner.downloadFasterMessageLog'] = fork('./modules/inventoryScanner/tasks/downloadFasterMessageLog.task.js');
+    childProcesses.inventoryScanner_downloadFasterMessageLog = fork('./modules/inventoryScanner/tasks/downloadFasterMessageLog.task.js');
     debug(`"${moduleName}" initialized.`);
     return childProcesses;
 }

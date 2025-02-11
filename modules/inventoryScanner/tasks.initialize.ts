@@ -37,7 +37,8 @@ export default function initializeInventoryScannerTasks(): Partial<
     if (itemValidationConfig.source === 'dynamicsGP') {
       itemValidationTaskPath =
         './modules/inventoryScanner/tasks/itemValidation/dynamicsGp.js'
-      itemValidationTaskName = 'inventoryScanner.itemValidation.dynamicsGp'
+      itemValidationTaskName =
+        'inventoryScanner_itemValidation_dynamicsGp' satisfies TaskName
     } else {
       debug(`Item validation not implemented: ${itemValidationConfig.source}`)
     }
@@ -66,7 +67,8 @@ export default function initializeInventoryScannerTasks(): Partial<
           workOrderValidationTaskPath =
             './modules/inventoryScanner/tasks/workOrderValidation/fasterApi.js'
           workOrderValidationTaskName =
-            'inventoryScanner.workOrderValidation.fasterApi'
+            // eslint-disable-next-line no-secrets/no-secrets
+            'inventoryScanner_workOrderValidation_fasterApi' satisfies TaskName
         } else {
           debug(
             'Optional "@cityssm/faster-api" package is required for work order validation by FASTER API.'
@@ -78,7 +80,7 @@ export default function initializeInventoryScannerTasks(): Partial<
         workOrderValidationTaskPath =
           './modules/inventoryScanner/tasks/workOrderValidation/worktech.js'
         workOrderValidationTaskName =
-          'inventoryScanner.workOrderValidation.worktech'
+          'inventoryScanner_workOrderValidation_worktech' satisfies TaskName
         break
       }
     }
@@ -95,7 +97,7 @@ export default function initializeInventoryScannerTasks(): Partial<
     }
   }
 
-  childProcesses['inventoryScanner.updateRecordsFromValidation'] = fork(
+  childProcesses.inventoryScanner_updateRecordsFromValidation = fork(
     './modules/inventoryScanner/tasks/updateRecordsFromValidation.task.js'
   )
 
@@ -107,12 +109,12 @@ export default function initializeInventoryScannerTasks(): Partial<
     hasFasterApi &&
     getConfigProperty('modules.inventoryScanner.fasterItemRequests.isEnabled')
   ) {
-    childProcesses['inventoryScanner.outstandingItemRequests'] = fork(
+    childProcesses.inventoryScanner_outstandingItemRequests = fork(
       './modules/inventoryScanner/tasks/outstandingItemRequests.task.js'
     )
   }
 
-  childProcesses['inventoryScanner.downloadFasterMessageLog'] = fork(
+  childProcesses.inventoryScanner_downloadFasterMessageLog = fork(
     './modules/inventoryScanner/tasks/downloadFasterMessageLog.task.js'
   )
 

@@ -43,11 +43,11 @@ const scheduledTask = new ScheduledTask(taskName, updateWorkOrderValidationFromW
     schedule: {
         dayOfWeek: getConfigProperty('application.workDays'),
         hour: getConfigProperty('application.workHours'),
-        minute: getScheduledTaskMinutes('inventoryScanner.workOrderValidation.worktech'),
+        minute: getScheduledTaskMinutes('inventoryScanner_workOrderValidation_worktech'),
         second: 0
     },
     lastRunMillis: getMaxWorkOrderValidationRecordUpdateMillis('worktech'),
-    minimumIntervalMillis: getMinimumMillisBetweenRuns('inventoryScanner.workOrderValidation.worktech'),
+    minimumIntervalMillis: getMinimumMillisBetweenRuns('inventoryScanner_workOrderValidation_worktech'),
     startTask: true
 });
 /*

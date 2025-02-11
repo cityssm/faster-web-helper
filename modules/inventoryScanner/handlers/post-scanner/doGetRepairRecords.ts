@@ -24,8 +24,8 @@ export default function handler(
   if (records.length === 0) {
     const destinationTaskName =
       workOrderType === 'worktech'
-        ? 'inventoryScanner.workOrderValidation.worktech'
-        : 'inventoryScanner.workOrderValidation.fasterApi'
+        ? 'inventoryScanner_workOrderValidation_worktech'
+        : 'inventoryScanner_workOrderValidation_fasterApi' // eslint-disable-line no-secrets/no-secrets
 
     const workerMessage: TaskWorkerMessage = {
       destinationTaskName,

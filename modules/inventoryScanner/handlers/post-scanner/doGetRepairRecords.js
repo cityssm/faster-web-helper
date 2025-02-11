@@ -5,8 +5,8 @@ export default function handler(request, response) {
     const records = getWorkOrderValidationRecords(request.body.workOrderNumber, workOrderType);
     if (records.length === 0) {
         const destinationTaskName = workOrderType === 'worktech'
-            ? 'inventoryScanner.workOrderValidation.worktech'
-            : 'inventoryScanner.workOrderValidation.fasterApi';
+            ? 'inventoryScanner_workOrderValidation_worktech'
+            : 'inventoryScanner_workOrderValidation_fasterApi'; // eslint-disable-line no-secrets/no-secrets
         const workerMessage = {
             destinationTaskName,
             messageType: request.body.workOrderNumber,

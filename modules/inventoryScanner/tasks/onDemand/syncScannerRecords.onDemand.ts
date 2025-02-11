@@ -30,7 +30,8 @@ async function syncScannerRecordsTask(): Promise<void> {
         await syncScannerRecordsWithFaster(records)
 
         process.send?.({
-          destinationTaskName: 'inventoryScanner.downloadFasterMessageLog',
+          // eslint-disable-next-line no-secrets/no-secrets
+          destinationTaskName: 'inventoryScanner_downloadFasterMessageLog',
           timeMillis: Date.now()
         } satisfies TaskWorkerMessage)
 

@@ -87,12 +87,12 @@ const scheduledTask = new ScheduledTask(taskName, refreshWorktechEquipment, {
   schedule: {
     dayOfWeek: getConfigProperty('application.workDays'),
     hour: getConfigProperty('application.workHours'),
-    minute: getScheduledTaskMinutes('integrityChecker.worktechEquipment'),
+    minute: getScheduledTaskMinutes('integrityChecker_worktechEquipment'),
     second: 0
   },
   lastRunMillis: getMaxWorktechEquipmentUpdateMillis(),
   minimumIntervalMillis: getMinimumMillisBetweenRuns(
-    'integrityChecker.worktechEquipment'
+    'integrityChecker_worktechEquipment'
   ),
   startTask: true
 })

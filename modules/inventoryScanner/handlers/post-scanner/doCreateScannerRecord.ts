@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express'
 
+import type { TaskWorkerMessage } from '../../../../types/tasks.types.js'
 import createOrUpdateScannerRecord from '../../database/createOrUpdateScannerRecord.js'
 import getScannerRecords from '../../database/getScannerRecords.js'
 
@@ -9,7 +10,7 @@ type DoCreateScannerRecordForm = {
   repairId: string
   quantity: string
   quantityMultiplier: '1' | '-1'
-}  & (
+} & (
   | {
       itemType: 'stock'
       itemNumber: string
@@ -35,9 +36,10 @@ export default function handler(
     process.send !== undefined
   ) {
     process.send({
-      destinationTaskName: 'inventoryScanner.updateRecordsFromValidation',
+      // eslint-disable-next-line no-secrets/no-secrets
+      destinationTaskName: 'inventoryScanner_updateRecordsFromValidation',
       timeMillis: Date.now()
-    })
+    } satisfies TaskWorkerMessage)
   }
 
   const records = getScannerRecords({
