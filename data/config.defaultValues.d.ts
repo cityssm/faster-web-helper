@@ -1,12 +1,12 @@
 import type { ADWebAuthAuthenticatorConfiguration, ActiveDirectoryAuthenticatorConfiguration, PlainTextAuthenticatorConfiguration } from '@cityssm/authentication-helper';
+import type { nodeSchedule } from '@cityssm/scheduled-task';
 import type { AccessOptions } from 'basic-ftp';
 import type { config as MSSQLConfig } from 'mssql';
-import type { Spec } from 'node-schedule';
 import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from '../types/config.helperTypes.js';
 import type { ConfigFasterWeb } from '../types/config.types.js';
 export declare const configDefaultValues: {
     'modules.tempFolderCleanup.isEnabled': boolean;
-    'modules.tempFolderCleanup.schedule': Spec;
+    'modules.tempFolderCleanup.schedule': nodeSchedule.Spec;
     'modules.tempFolderCleanup.maxAgeDays': number;
     'modules.integrityChecker.isEnabled': boolean;
     'modules.integrityChecker.fasterAssets.isEnabled': boolean;

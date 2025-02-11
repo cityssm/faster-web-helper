@@ -1,4 +1,4 @@
-import type { Spec } from 'node-schedule'
+import type { nodeSchedule } from "@cityssm/scheduled-task"
 
 export interface ConfigFtpPath<S extends string> {
   directory: string
@@ -9,7 +9,7 @@ export interface ConfigFtpPath<S extends string> {
 
 export interface ConfigScheduledFtpReport<S extends string> {
   ftpPath: ConfigFtpPath<S>
-  schedule: Spec
+  schedule: nodeSchedule.Spec
 }
 
 export type ConfigFileSuffixXlsx = `${string}.xlsx` | `${string}.XLSX`

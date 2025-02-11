@@ -1,6 +1,5 @@
-import { ScheduledTask } from '@cityssm/scheduled-task'
+import { ScheduledTask, nodeSchedule } from '@cityssm/scheduled-task'
 import { minutesToMillis } from '@cityssm/to-millis'
-import schedule from 'node-schedule'
 
 import { getConfigProperty } from '../../../helpers/config.helpers.js'
 import { getItemValidationRecordsByItemNumber } from '../database/getItemValidationRecords.js'
@@ -85,7 +84,7 @@ const scheduledTask = new ScheduledTask(taskName, updateRecordsFromValidation, {
   schedule: {
     dayOfWeek: getConfigProperty('application.workDays'),
     hour: getConfigProperty('application.workHours'),
-    minute: new schedule.Range(0, 55, 5),
+    minute: new nodeSchedule.Range(0, 55, 5),
     second: 0
   },
   minimumIntervalMillis: minutesToMillis(2),

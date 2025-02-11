@@ -1,10 +1,10 @@
 import cluster, { type Worker } from 'node:cluster'
 import os from 'node:os'
 
-import { secondsToMillis } from '@cityssm/to-millis'
+import { nodeSchedule } from '@cityssm/scheduled-task'
+import { millisecondsInOneSecond } from '@cityssm/to-millis'
 import Debug from 'debug'
 import { asyncExitHook } from 'exit-hook'
-import schedule from 'node-schedule'
 
 import { DEBUG_ENABLE_NAMESPACES, DEBUG_NAMESPACE } from './debug.config.js'
 import {
@@ -69,10 +69,10 @@ async function initializeModuleTasks(): Promise<void> {
 
   asyncExitHook(
     async () => {
-      await schedule.gracefulShutdown()
+      await nodeSchedule.gracefulShutdown()
     },
     {
-      wait: secondsToMillis(1)
+      wait: millisecondsInOneSecond
     }
   )
 }

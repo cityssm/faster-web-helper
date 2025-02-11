@@ -1,8 +1,8 @@
+import { nodeSchedule } from '@cityssm/scheduled-task'
 import { dateToString, dateToTimePeriodString } from '@cityssm/utils-datetime'
 import camelCase from 'camelcase'
 import Debug from 'debug'
 import exitHook from 'exit-hook'
-import schedule from 'node-schedule'
 
 import { DEBUG_NAMESPACE } from '../../debug.config.js'
 import { getConfigProperty } from '../../helpers/config.helpers.js'
@@ -17,7 +17,7 @@ const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}`)
 export function initializeTempFolderCleanupTask(): void {
   debug(`Initializing "${moduleName}"...`)
 
-  const tempFolderCleanupJob = schedule.scheduleJob(
+  const tempFolderCleanupJob = nodeSchedule.scheduleJob(
     tempFolderCleanupTaskName,
     getConfigProperty('modules.tempFolderCleanup.schedule'),
     runTempFolderCleanupTask

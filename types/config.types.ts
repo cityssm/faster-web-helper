@@ -4,8 +4,8 @@ import type {
   PlainTextAuthenticatorConfiguration
 } from '@cityssm/authentication-helper'
 import type { mssql } from '@cityssm/mssql-multi-pool'
+import type { nodeSchedule } from '@cityssm/scheduled-task'
 import type { AccessOptions } from 'basic-ftp'
-import type { Spec } from 'node-schedule'
 import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js'
 
 import type { ConfigModuleIntegrityChecker } from '../modules/integrityChecker/config/types.js'
@@ -102,6 +102,6 @@ interface ConfigModuleAutocomplete {
 }
 
 interface ConfigModuleTempFolderCleanup {
-  schedule?: Spec
+  schedule?: nodeSchedule.Spec
   maxAgeDays?: number
 }

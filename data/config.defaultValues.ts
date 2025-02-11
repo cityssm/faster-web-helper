@@ -6,10 +6,10 @@ import type {
   ActiveDirectoryAuthenticatorConfiguration,
   PlainTextAuthenticatorConfiguration
 } from '@cityssm/authentication-helper'
+import type { nodeSchedule } from '@cityssm/scheduled-task'
 import { hoursToMillis } from '@cityssm/to-millis'
 import type { AccessOptions } from 'basic-ftp'
 import type { config as MSSQLConfig } from 'mssql'
-import type { Spec } from 'node-schedule'
 
 import integrityCheckerDefaultValues from '../modules/integrityChecker/config/defaultValues.js'
 import inventoryScannerDefaultValues from '../modules/inventoryScanner/config/defaultValues.js'
@@ -92,6 +92,6 @@ export const configDefaultValues = {
     hour: 1,
     minute: 0,
     second: 0
-  } as unknown as Spec,
+  } as unknown as nodeSchedule.Spec,
   'modules.tempFolderCleanup.maxAgeDays': 35
 }

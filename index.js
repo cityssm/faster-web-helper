@@ -1,9 +1,9 @@
 import cluster from 'node:cluster';
 import os from 'node:os';
-import { secondsToMillis } from '@cityssm/to-millis';
+import { nodeSchedule } from '@cityssm/scheduled-task';
+import { millisecondsInOneSecond } from '@cityssm/to-millis';
 import Debug from 'debug';
 import { asyncExitHook } from 'exit-hook';
-import schedule from 'node-schedule';
 import { DEBUG_ENABLE_NAMESPACES, DEBUG_NAMESPACE } from './debug.config.js';
 import { registerChildProcesses, relayMessageToChildProcess } from './helpers/childProcesses.helpers.js';
 import { getConfigProperty } from './helpers/config.helpers.js';
@@ -39,9 +39,9 @@ async function initializeModuleTasks() {
     }
     await Promise.all(promises);
     asyncExitHook(async () => {
-        await schedule.gracefulShutdown();
+        await nodeSchedule.gracefulShutdown();
     }, {
-        wait: secondsToMillis(1)
+        wait: millisecondsInOneSecond
     });
 }
 const maxAppProcesses = 4;
