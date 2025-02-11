@@ -9,7 +9,7 @@ import createOrUpdateItemValidation from '../../database/createOrUpdateItemValid
 import deleteExpiredItemValidationRecords from '../../database/deleteExpiredItemValidationRecords.js';
 import getMaxItemValidationRecordUpdateMillis from '../../database/getMaxItemValidationRecordUpdateMillis.js';
 import { moduleName } from '../../helpers/module.helpers.js';
-export const taskName = 'Inventory Validation Task - Dynamics GP';
+export const taskName = 'Inventory Validation - Dynamics GP';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}:${camelCase(taskName)}`);
 const itemNumberRegex = getConfigProperty('modules.inventoryScanner.items.itemNumberRegex');
 const taskConfig = getConfigProperty('modules.inventoryScanner.items.validation');

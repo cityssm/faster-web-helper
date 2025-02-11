@@ -18,7 +18,7 @@ import getMaxFasterAssetUpdateMillis from '../database/getMaxFasterAssetUpdateMi
 import { databasePath } from '../database/helpers.database.js'
 import { moduleName } from '../helpers/module.helpers.js'
 
-export const taskName = 'Active FASTER Assets Task'
+export const taskName = 'Integrity Checker - Active FASTER Assets'
 
 const debug = Debug(
   `${DEBUG_NAMESPACE}:${camelCase(moduleName)}:${camelCase(taskName)}`

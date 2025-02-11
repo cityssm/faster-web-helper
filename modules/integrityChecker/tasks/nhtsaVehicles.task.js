@@ -18,7 +18,7 @@ const variableKeys = {
     ErrorCode: 'ErrorCode',
     ErrorText: 'ErrorText'
 };
-export const taskName = 'NHTSA Vehicles Task';
+export const taskName = 'Integrity Checker - NHTSA Vehicles';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`);
 async function refreshNhtsaVehicles() {
     const vinNumbersToCheck = getFasterAssetVinsToCheck();

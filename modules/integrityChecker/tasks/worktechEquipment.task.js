@@ -12,7 +12,7 @@ import getFasterAssetNumbers from '../database/getFasterAssetNumbers.js';
 import getMaxWorktechEquipmentUpdateMillis from '../database/getMaxWorktechEquipmentUpdateMillis.js';
 import { databasePath } from '../database/helpers.database.js';
 import { moduleName } from '../helpers/module.helpers.js';
-export const taskName = 'Active Worktech Equipment Task';
+export const taskName = 'Integrity Checker - Active Worktech Equipment';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}:${camelCase(taskName)}`);
 const worktechConfig = getConfigProperty('worktech');
 async function refreshWorktechEquipment() {

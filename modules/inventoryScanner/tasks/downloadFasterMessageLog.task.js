@@ -13,7 +13,7 @@ import getScannerRecords from '../database/getScannerRecords.js';
 import { databasePath } from '../database/helpers.database.js';
 import { updateScannerRecordSyncFields } from '../database/updateScannerRecordSyncFields.js';
 import { moduleName } from '../helpers/module.helpers.js';
-export const taskName = 'Download FASTER Message Log Task';
+export const taskName = 'Download FASTER Message Log';
 export const taskUser = 'faster.w603';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`);
 const fasterWebConfig = getConfigProperty('fasterWeb');
@@ -134,7 +134,3 @@ const scheduledTask = new ScheduledTask(taskName, downloadFasterMessageLog, {
 process.on('message', (_message) => {
     void scheduledTask.runTask();
 });
-/*
- * Run the task on initialization
- */
-void scheduledTask.runTask();

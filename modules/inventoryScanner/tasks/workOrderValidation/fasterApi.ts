@@ -15,7 +15,7 @@ import getMaxWorkOrderValidationRecordUpdateMillis from '../../database/getMaxWo
 import { getRepairIdsToRefresh } from '../../helpers/faster.helpers.js'
 import { moduleName } from '../../helpers/module.helpers.js'
 
-export const taskName = 'Work Order Validation Task - FASTER API'
+export const taskName = 'Work Order Validation - FASTER API'
 
 const debug = Debug(
   `${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`

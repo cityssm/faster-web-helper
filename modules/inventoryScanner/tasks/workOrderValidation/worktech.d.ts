@@ -1,1 +1,1 @@
-export declare const taskName = "Work Order Validation Task - Worktech";
+export declare const taskName = "Work Order Validation - Worktech";

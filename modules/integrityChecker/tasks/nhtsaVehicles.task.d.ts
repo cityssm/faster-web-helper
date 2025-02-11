@@ -1,1 +1,1 @@
-export declare const taskName = "NHTSA Vehicles Task";
+export declare const taskName = "Integrity Checker - NHTSA Vehicles";

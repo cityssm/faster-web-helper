@@ -6,7 +6,7 @@ import { getItemValidationRecordsByItemNumber } from '../database/getItemValidat
 import getScannerRecords from '../database/getScannerRecords.js';
 import getWorkOrderValidationRecords from '../database/getWorkOrderValidationRecords.js';
 import { updateScannerRecordField } from '../database/updateScannerRecordField.js';
-export const taskName = 'Update Records from Validation Task';
+export const taskName = 'Update Records from Validation';
 export const taskUserName = 'validationTask';
 function updateRecordsFromValidation() {
     const unvalidatedRecords = getScannerRecords({

@@ -31,7 +31,7 @@ const variableKeys = {
   ErrorText: 'ErrorText'
 }
 
-export const taskName = 'NHTSA Vehicles Task'
+export const taskName = 'Integrity Checker - NHTSA Vehicles'
 
 const debug = Debug(
   `${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`

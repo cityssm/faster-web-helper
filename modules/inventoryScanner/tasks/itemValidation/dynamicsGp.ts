@@ -15,7 +15,7 @@ import deleteExpiredItemValidationRecords from '../../database/deleteExpiredItem
 import getMaxItemValidationRecordUpdateMillis from '../../database/getMaxItemValidationRecordUpdateMillis.js'
 import { moduleName } from '../../helpers/module.helpers.js'
 
-export const taskName = 'Inventory Validation Task - Dynamics GP'
+export const taskName = 'Inventory Validation - Dynamics GP'
 
 const debug = Debug(
   `${DEBUG_NAMESPACE}:${camelCase(moduleName)}:${camelCase(taskName)}`

@@ -1,1 +1,1 @@
-export declare const taskName = "Active FASTER Assets Task";
+export declare const taskName = "Integrity Checker - Active FASTER Assets";

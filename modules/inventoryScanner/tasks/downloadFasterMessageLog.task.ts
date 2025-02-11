@@ -16,7 +16,7 @@ import { updateScannerRecordSyncFields } from '../database/updateScannerRecordSy
 import { moduleName } from '../helpers/module.helpers.js'
 import type { InventoryScannerRecord } from '../types.js'
 
-export const taskName = 'Download FASTER Message Log Task'
+export const taskName = 'Download FASTER Message Log'
 export const taskUser = 'faster.w603'
 
 const debug = Debug(
@@ -186,9 +186,3 @@ const scheduledTask = new ScheduledTask(taskName, downloadFasterMessageLog, {
 process.on('message', (_message: unknown) => {
   void scheduledTask.runTask()
 })
-
-/*
- * Run the task on initialization
- */
-
-void scheduledTask.runTask()

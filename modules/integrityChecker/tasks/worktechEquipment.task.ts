@@ -17,7 +17,7 @@ import getMaxWorktechEquipmentUpdateMillis from '../database/getMaxWorktechEquip
 import { databasePath } from '../database/helpers.database.js'
 import { moduleName } from '../helpers/module.helpers.js'
 
-export const taskName = 'Active Worktech Equipment Task'
+export const taskName = 'Integrity Checker - Active Worktech Equipment'
 
 const debug = Debug(
   `${DEBUG_NAMESPACE}:${camelCase(moduleName)}:${camelCase(taskName)}`

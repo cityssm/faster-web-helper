@@ -18,7 +18,7 @@ import getMaxWorkOrderValidationRecordUpdateMillis from '../../database/getMaxWo
 import getScannerRecords from '../../database/getScannerRecords.js'
 import { moduleName } from '../../helpers/module.helpers.js'
 
-export const taskName = 'Work Order Validation Task - Worktech'
+export const taskName = 'Work Order Validation - Worktech'
 
 const debug = Debug(
   `${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`

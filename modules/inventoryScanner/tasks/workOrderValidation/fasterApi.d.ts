@@ -1,1 +1,1 @@
-export declare const taskName = "Work Order Validation Task - FASTER API";
+export declare const taskName = "Work Order Validation - FASTER API";

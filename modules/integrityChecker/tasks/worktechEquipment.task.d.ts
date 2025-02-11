@@ -1,1 +1,1 @@
-export declare const taskName = "Active Worktech Equipment Task";
+export declare const taskName = "Integrity Checker - Active Worktech Equipment";
