@@ -69,6 +69,9 @@ declare const cityssm: cityssmGlobal
 
   let pendingRecords = exports.pendingRecords
 
+  let unknownCount = 0
+  let errorCount = 0
+
   const pendingRecordsUnknownCountElement = document.querySelector(
     '#pending--unknownCount'
   ) as HTMLElement
@@ -381,7 +384,8 @@ declare const cityssm: cityssmGlobal
 
   function recordHasErrors(record: InventoryScannerRecord): boolean {
     return (
-      (record.workOrderType === 'faster' && record.quantity <= 0) ||
+      (record.workOrderType === 'faster' &&
+        (record.repairId === null || record.quantity <= 0)) ||
       (record.workOrderType === 'worktech' && record.itemNumberPrefix !== '')
     )
   }
@@ -390,8 +394,8 @@ declare const cityssm: cityssmGlobal
   function renderPendingRecords(): void {
     const rowElements: HTMLTableRowElement[] = []
 
-    let unknownCount = 0
-    let errorCount = 0
+    unknownCount = 0
+    errorCount = 0
 
     for (const [recordIndex, record] of pendingRecords.entries()) {
       const rowElement = document.createElement('tr')
@@ -433,7 +437,7 @@ declare const cityssm: cityssmGlobal
         record.workOrderType === 'faster' &&
         record.repairDescription === null
       ) {
-        repairCellElement.classList.add('has-background-warning-light')
+        repairCellElement.classList.add('has-background-danger-light')
       }
 
       if (record.repairId === null) {
@@ -459,18 +463,24 @@ declare const cityssm: cityssmGlobal
         record.itemNumberPrefix !== ''
       ) {
         itemNumberCellElement.classList.add('has-background-danger-light')
+      } else if ((record.itemDescription ?? '') === '') {
+        itemNumberCellElement.classList.add('has-background-warning-light')
       }
 
       // eslint-disable-next-line no-unsanitized/property
       itemNumberCellElement.innerHTML = `${
-            record.itemNumberPrefix === ''
-              ? ''
-              : `<span class="tag">${cityssm.escapeHTML(record.itemNumberPrefix)}</span> -`
-          }
+        record.itemNumberPrefix === ''
+          ? ''
+          : `<span class="tag">${cityssm.escapeHTML(record.itemNumberPrefix)}</span> -`
+      }
           ${cityssm.escapeHTML(record.itemNumber)}<br />
           <small>${cityssm.escapeHTML(record.itemDescription ?? '(Unknown Item)')}</small>`
 
       rowElement.append(itemNumberCellElement)
+
+      /*
+       * Quantity
+       */
 
       const quantityCellElement = document.createElement('td')
       quantityCellElement.className = 'has-text-right'
@@ -487,7 +497,12 @@ declare const cityssm: cityssmGlobal
 
       rowElement.append(quantityCellElement)
 
+      /*
+       * Unit Price
+       */
+
       const unitPriceCellElement = document.createElement('td')
+      unitPriceCellElement.className = 'has-text-right'
 
       if (record.unitPrice === null) {
         unitPriceCellElement.classList.add(
@@ -496,11 +511,14 @@ declare const cityssm: cityssmGlobal
         )
         unitPriceCellElement.textContent = '(Unknown Price)'
       } else {
-        unitPriceCellElement.classList.add('has-text-right')
         unitPriceCellElement.textContent = `$${record.unitPrice.toFixed(2)}`
       }
 
       rowElement.append(unitPriceCellElement)
+
+      /*
+       * Options
+       */
 
       rowElement.insertAdjacentHTML(
         'beforeend',
@@ -612,10 +630,30 @@ declare const cityssm: cityssmGlobal
   }
 
   syncRecordsButtonElement.addEventListener('click', () => {
+    if (errorCount > 0) {
+      bulmaJS.alert({
+        title: 'Cannot Sync Records',
+        message:
+          'There are records with errors which must be resolved before syncing.',
+        contextualColorName: 'danger'
+      })
+      return
+    }
+
+    let messageHtml =
+      'Are you sure you are ready to sync all pending scanner records?'
+
+    if (unknownCount > 0) {
+      messageHtml += `<br /><br />
+      <strong>There are ${unknownCount} record(s) with potential issues</strong>
+      which may impact the success of the syncing process.`
+    }
+
     bulmaJS.confirm({
       title: 'Sync Scanner Records',
-      message:
-        'Are you sure you are ready to sync all pending scanner records?',
+      message: messageHtml,
+
+      messageIsHtml: true,
       contextualColorName: 'warning',
       okButton: {
         text: 'Yes, Sync Pending Scanner Records',
