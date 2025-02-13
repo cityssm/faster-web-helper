@@ -1,12 +1,12 @@
 import { Router } from 'express'
 
-import handler_faster from './get/faster.js'
-import handler_worktech from './get/worktech.js'
+import handler_assetsFaster from './get/assetsFaster.js'
+import handler_assetsWorktech from './get/assetsWorktech.js'
 
 export const router = Router()
 
-router.get('/faster', handler_faster)
+router.get('/assetsFaster', handler_assetsFaster)
 
-router.get('/worktech', handler_worktech)
+router.get('/assetsWorktech', handler_assetsWorktech)
 
 export default router

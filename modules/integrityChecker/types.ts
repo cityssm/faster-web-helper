@@ -51,3 +51,34 @@ export interface FasterAssetIntegrityRecord extends IntegrityFasterAsset {
   nhtsaErrorCode?: string
   nhtsaErrorText?: string
 }
+
+export interface IntegrityFasterInventoryItem {
+  itemNumber: string
+  storeroom: string
+
+  itemName: string
+
+  binLocation: string
+
+  averageTrueCost: number
+  quantityInStock: number
+
+  recordUpdate_timeMillis: number
+}
+
+export interface IntegrityDynamicsGpInventoryItem {
+  itemNumber: string
+  locationCode: string
+  fasterStoreroom: string
+
+  itemDescription: string
+  itemShortName: string
+  itemType: string
+
+  binNumber: string
+
+  currentCost: number
+  quantityOnHand: number
+
+  recordUpdate_timeMillis: number
+}

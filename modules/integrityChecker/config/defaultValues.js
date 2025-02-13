@@ -5,5 +5,9 @@ export default {
     'modules.integrityChecker.fasterAssets.isEnabled': true,
     'modules.integrityChecker.nhtsaVehicles.isEnabled': true,
     'modules.integrityChecker.worktechEquipment.isEnabled': false,
-    'modules.integrityChecker.worktechEquipment.mappingFunctions': {}
+    'modules.integrityChecker.worktechEquipment.mappingFunctions': {},
+    'modules.integrityChecker.fasterInventory.isEnabled': true,
+    'modules.integrityChecker.fasterInventory.validation.source': '',
+    'modules.integrityChecker.fasterInventory.validation.gpLocationCodesToFasterStorerooms': {},
+    'modules.integrityChecker.fasterInventory.validation.gpItemFilter': undefined
 };

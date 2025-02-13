@@ -1,3 +1,4 @@
+import { minutesToMillis } from '@cityssm/to-millis'
 import sqlite from 'better-sqlite3'
 import camelcase from 'camelcase'
 import Debug from 'debug'
@@ -10,6 +11,8 @@ const debug = Debug(
 )
 
 export const databasePath = 'data/integrityChecker.db'
+
+export const timeoutMillis = minutesToMillis(15)
 
 const createStatements = [
   `create table if not exists FasterAssets (
@@ -52,7 +55,40 @@ const createStatements = [
     errorCode varchar,
     errorText varchar,
 
-    recordUpdate_timeMillis integer not null)`
+    recordUpdate_timeMillis integer not null)`,
+
+  `create table if not exists FasterInventoryItems (
+    itemNumber varchar not null,
+    storeroom varchar not null,
+
+    itemName varchar not null,
+
+    binLocation varchar not null,
+
+    averageTrueCost decimal(18, 4) not null,
+    quantityInStock integer not null,
+
+    recordUpdate_timeMillis integer not null,
+    
+    primary key (itemNumber, storeroom))`,
+
+  `create table if not exists DynamicsGpInventoryItems (
+    itemNumber varchar not null,
+    locationCode varchar not null,
+    fasterStoreroom varchar not null,
+
+    itemDescription varchar not null,
+    itemShortName varchar not null,
+    itemType varchar not null,
+
+    binNumber varchar not null,
+
+    currentCost decimal(18, 4) not null,
+    quantityOnHand integer not null,
+
+    recordUpdate_timeMillis integer not null,
+    
+    primary key (itemNumber, locationCode))`
 ]
 
 export function initializeIntegrityCheckerDatabase(): boolean {
@@ -66,7 +102,7 @@ export function initializeIntegrityCheckerDatabase(): boolean {
     .prepare(
       `select name from sqlite_master
         where type = 'table'
-        and name = 'NhtsaVehicles'`
+        and name = 'DynamicsGpInventoryItems'`
     )
     .get()
 

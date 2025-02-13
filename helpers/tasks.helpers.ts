@@ -7,9 +7,15 @@ import type { TaskName } from '../types/tasks.types.js'
 
 const scheduledTaskMinutes: Record<`${number}`, TaskName[]> = {
   5: ['inventoryScanner_workOrderValidation_fasterApi'],
-  10: ['inventoryScanner_workOrderValidation_worktech'],
+  10: [
+    'inventoryScanner_workOrderValidation_worktech',
+    'integrityChecker_fasterInventory'
+  ],
   15: ['inventoryScanner_itemValidation_dynamicsGp'],
-  35: ['inventoryScanner_workOrderValidation_fasterApi'],
+  35: [
+    'inventoryScanner_workOrderValidation_fasterApi',
+    'integrityChecker_dynamicsGpInventory'
+  ],
   40: ['inventoryScanner_workOrderValidation_worktech'],
   50: ['integrityChecker_fasterAssets'],
   53: ['integrityChecker_worktechEquipment'],

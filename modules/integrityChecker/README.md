@@ -1,10 +1,18 @@
 # Integrity Checker
 
+🧑‍💻 **Under development**
+
 Performs various integrity checks on data in FASTER Web.
+
+## Asset Checks
 
 - Reports on assets with invalid VIN numbers.
 - Reports on assets in FASTER Web that have no complimentary record in WorkTech,
   and vice versa.
+
+## Item Checks
+
+**Under development**
 
 ## General Requirements
 

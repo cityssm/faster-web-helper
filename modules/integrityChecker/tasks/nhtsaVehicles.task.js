@@ -8,7 +8,7 @@ import { getConfigProperty } from '../../../helpers/config.helpers.js';
 import { getMinimumMillisBetweenRuns, getScheduledTaskMinutes } from '../../../helpers/tasks.helpers.js';
 import createOrUpdateNhtsaVehicle from '../database/createOrUpdateNhtsaVehicle.js';
 import getFasterAssetVinsToCheck from '../database/getFasterAssetVinsToCheck.js';
-import { databasePath } from '../database/helpers.database.js';
+import { databasePath, timeoutMillis } from '../database/helpers.database.js';
 import { moduleName } from '../helpers/module.helpers.js';
 const variableKeys = {
     SuggestedVIN: 'SuggestedVIN',
@@ -22,7 +22,11 @@ export const taskName = 'Integrity Checker - NHTSA Vehicles';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`);
 async function refreshNhtsaVehicles() {
     const vinNumbersToCheck = getFasterAssetVinsToCheck();
-    const database = vinNumbersToCheck.length > 0 ? sqlite(databasePath) : undefined;
+    const database = vinNumbersToCheck.length > 0
+        ? sqlite(databasePath, {
+            timeout: timeoutMillis
+        })
+        : undefined;
     for (const vinNumberToCheck of vinNumbersToCheck) {
         const decodedVin = (await DecodeVinValues(vinNumberToCheck.vinSerial, {
             modelYear: vinNumberToCheck.year

@@ -11,6 +11,7 @@ export type TaskName =
   | 'integrityChecker_fasterAssets'
   | 'integrityChecker_worktechEquipment'
   | 'integrityChecker_nhtsaVehicles'
+  | 'integrityChecker_fasterInventory'
 
 export interface TaskWorkerMessage {
   destinationTaskName: TaskName | 'app'

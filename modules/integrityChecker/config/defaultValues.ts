@@ -1,7 +1,11 @@
 // eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
 /* eslint-disable no-secrets/no-secrets */
 
+import type { GPItemWithQuantity } from '@cityssm/dynamics-gp'
+
 import type { ConfigModuleIntegrityCheckerMappingFunctions } from './types.js'
+
+type GpItemFilterFunction = (item: GPItemWithQuantity) => boolean
 
 export default {
   'modules.integrityChecker.isEnabled': false,
@@ -13,5 +17,15 @@ export default {
   'modules.integrityChecker.worktechEquipment.isEnabled': false,
 
   'modules.integrityChecker.worktechEquipment.mappingFunctions':
-    {} as unknown as ConfigModuleIntegrityCheckerMappingFunctions
+    {} as unknown as ConfigModuleIntegrityCheckerMappingFunctions,
+
+  'modules.integrityChecker.fasterInventory.isEnabled': true,
+
+  'modules.integrityChecker.fasterInventory.validation.source': '',
+
+  'modules.integrityChecker.fasterInventory.validation.gpLocationCodesToFasterStorerooms':
+    {} as unknown as Record<string, string>,
+
+  'modules.integrityChecker.fasterInventory.validation.gpItemFilter':
+    undefined as unknown as GpItemFilterFunction | undefined
 } satisfies Record<`modules.integrityChecker.${string}`, unknown>

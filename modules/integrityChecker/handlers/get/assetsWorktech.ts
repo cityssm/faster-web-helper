@@ -6,7 +6,7 @@ export default function handler(request: Request, response: Response): void {
 
   const integrityRecords = getWorktechEquipmentIntegrityRecords()
 
-  response.render('integrityChecker/worktech', {
+  response.render('integrityChecker/assetsWorktech', {
     headTitle: 'WorkTech Integrity',
     integrityRecords,
     menu: 'worktech'

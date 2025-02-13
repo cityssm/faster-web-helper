@@ -10,7 +10,7 @@ import { createOrUpdateWorktechEquipment } from '../database/createOrUpdateWorkt
 import { deleteExpiredRecords } from '../database/deleteExpiredRecords.js';
 import getFasterAssetNumbers from '../database/getFasterAssetNumbers.js';
 import getMaxWorktechEquipmentUpdateMillis from '../database/getMaxWorktechEquipmentUpdateMillis.js';
-import { databasePath } from '../database/helpers.database.js';
+import { databasePath, timeoutMillis } from '../database/helpers.database.js';
 import { moduleName } from '../helpers/module.helpers.js';
 export const taskName = 'Integrity Checker - Active Worktech Equipment';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}:${camelCase(taskName)}`);
@@ -25,7 +25,9 @@ async function refreshWorktechEquipment() {
         debug('No FASTER assets found.');
         return;
     }
-    const database = sqlite(databasePath);
+    const database = sqlite(databasePath, {
+        timeout: timeoutMillis
+    });
     const rightNow = Date.now();
     const worktech = new WorkTechAPI(worktechConfig);
     for (const assetNumber of fasterAssetNumbers) {

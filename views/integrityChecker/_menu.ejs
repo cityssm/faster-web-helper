@@ -1,13 +1,13 @@
 <aside class="menu">
   <p class="menu-label">
-    Integrity Checker
+    Assets
   </p>
   <ul class="menu-list">
     <% if (configHelpers.getConfigProperty('modules.integrityChecker.fasterAssets.isEnabled')) { %>
       <li>
         <a
           <% if (menu === 'faster') { %>class="is-active"<% } %>
-          href="./faster">
+          href="./assetsFaster">
           <span>
             FASTER Web
           </span>
@@ -18,7 +18,7 @@
       <li>
         <a
           <% if (menu === 'worktech') { %>class="is-active"<% } %>
-          href="./worktech">
+          href="./assetsWorktech">
           <span>
             FASTER Web
             <i class="fa-solid fa-left-right" aria-hidden="true"></i>

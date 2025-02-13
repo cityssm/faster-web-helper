@@ -1,3 +1,6 @@
+// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
+/* eslint-disable no-secrets/no-secrets */
+
 import { type ChildProcess, fork } from 'node:child_process'
 
 import camelCase from 'camelcase'
@@ -5,7 +8,10 @@ import Debug from 'debug'
 
 import { DEBUG_NAMESPACE } from '../../debug.config.js'
 import { getConfigProperty } from '../../helpers/config.helpers.js'
-import { hasFasterApi } from '../../helpers/fasterWeb.helpers.js'
+import {
+  hasFasterApi,
+  hasFasterUnofficialApi
+} from '../../helpers/fasterWeb.helpers.js'
 import type { TaskName } from '../../types/tasks.types.js'
 
 import { initializeIntegrityCheckerDatabase } from './database/helpers.database.js'
@@ -48,17 +54,25 @@ export default function initializeIntegrityCheckerTasks(): Partial<
    * Worktech Equipment
    */
 
-  if (getConfigProperty('worktech') === undefined) {
-    debug('WorkTech configuration is not set up. Skipping Worktech tasks.')
-  } else {
-    if (
-      // eslint-disable-next-line no-secrets/no-secrets
-      getConfigProperty('modules.integrityChecker.worktechEquipment.isEnabled')
-    ) {
-      const taskPath =
-        './modules/integrityChecker/tasks/worktechEquipment.task.js'
-      childProcesses.integrityChecker_worktechEquipment = fork(taskPath)
-    }
+  if (
+    getConfigProperty('worktech') !== undefined &&
+    getConfigProperty('modules.integrityChecker.worktechEquipment.isEnabled')
+  ) {
+    const taskPath =
+      './modules/integrityChecker/tasks/worktechEquipment.task.js'
+    childProcesses.integrityChecker_worktechEquipment = fork(taskPath)
+  }
+
+  /*
+   * Faster Inventory
+   */
+
+  if (
+    hasFasterUnofficialApi &&
+    getConfigProperty('modules.integrityChecker.fasterInventory.isEnabled')
+  ) {
+    const taskPath = './modules/integrityChecker/tasks/fasterInventory.task.js'
+    childProcesses.integrityChecker_fasterInventory = fork(taskPath)
   }
 
   debug(`"${moduleName}" initialized.`)

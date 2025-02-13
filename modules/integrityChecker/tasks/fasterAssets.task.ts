@@ -15,7 +15,7 @@ import type { TaskWorkerMessage } from '../../../types/tasks.types.js'
 import { createOrUpdateFasterAsset } from '../database/createOrUpdateFasterAsset.js'
 import { deleteExpiredRecords } from '../database/deleteExpiredRecords.js'
 import getMaxFasterAssetUpdateMillis from '../database/getMaxFasterAssetUpdateMillis.js'
-import { databasePath } from '../database/helpers.database.js'
+import { databasePath, timeoutMillis } from '../database/helpers.database.js'
 import { moduleName } from '../helpers/module.helpers.js'
 
 export const taskName = 'Integrity Checker - Active FASTER Assets'
@@ -60,7 +60,9 @@ async function refreshFasterAssets(): Promise<void> {
     `Updating ${fasterAssetsResponse.response.results.length} FASTER asset records...`
   )
 
-  const database = sqlite(databasePath)
+  const database = sqlite(databasePath, {
+    timeout: timeoutMillis
+  })
   const rightNow = Date.now()
 
   for (const fasterAsset of fasterAssetsResponse.response.results) {
@@ -117,22 +119,6 @@ async function refreshFasterAssets(): Promise<void> {
         timeMillis: rightNow
       } satisfies TaskWorkerMessage)
     }
-  }
-
-  /*
-   * Trigger Worktech Equipment Task
-   */
-
-  if (
-    process.send !== undefined &&
-    // eslint-disable-next-line no-secrets/no-secrets
-    getConfigProperty('modules.integrityChecker.worktechEquipment.isEnabled')
-  ) {
-    debug('Triggering Worktech Equipment Task.')
-    process.send({
-      destinationTaskName: 'integrityChecker_worktechEquipment',
-      timeMillis: rightNow
-    } satisfies TaskWorkerMessage)
   }
 }
 

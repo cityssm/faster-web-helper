@@ -12,7 +12,7 @@ import {
 } from '../../../helpers/tasks.helpers.js'
 import createOrUpdateNhtsaVehicle from '../database/createOrUpdateNhtsaVehicle.js'
 import getFasterAssetVinsToCheck from '../database/getFasterAssetVinsToCheck.js'
-import { databasePath } from '../database/helpers.database.js'
+import { databasePath, timeoutMillis } from '../database/helpers.database.js'
 import { moduleName } from '../helpers/module.helpers.js'
 
 interface DecodeVinValuesResponse {
@@ -41,7 +41,11 @@ async function refreshNhtsaVehicles(): Promise<void> {
   const vinNumbersToCheck = getFasterAssetVinsToCheck()
 
   const database =
-    vinNumbersToCheck.length > 0 ? sqlite(databasePath) : undefined
+    vinNumbersToCheck.length > 0
+      ? sqlite(databasePath, {
+          timeout: timeoutMillis
+        })
+      : undefined
 
   for (const vinNumberToCheck of vinNumbersToCheck) {
     const decodedVin = (await DecodeVinValues(vinNumberToCheck.vinSerial, {

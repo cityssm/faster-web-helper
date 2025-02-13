@@ -5,7 +5,7 @@ import getFasterAssetIntegrityRecords from '../../database/getFasterAssetIntegri
 export default function handler(request: Request, response: Response): void {
   const integrityRecords = getFasterAssetIntegrityRecords()
 
-  response.render('integrityChecker/faster', {
+  response.render('integrityChecker/assetsFaster', {
     headTitle: 'FASTER Web Integrity',
     integrityRecords,
     menu: 'faster'

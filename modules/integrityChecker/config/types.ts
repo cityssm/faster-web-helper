@@ -1,3 +1,4 @@
+import type { GPItemWithQuantity } from '@cityssm/dynamics-gp'
 import type { AssetResult } from '@cityssm/faster-api'
 
 export type FasterAssetMappingFunction = (
@@ -14,6 +15,13 @@ export type ConfigModuleIntegrityCheckerMappingFunctions = Partial<
   Record<FasterAssetMappingFunctionName, FasterAssetMappingFunction>
 >
 
+export interface ConfigItemValidationDynamicsGP {
+  source: 'dynamicsGP'
+  gpLocationCodesToFasterStorerooms: Record<string, string>
+  gpItemFilter?: (item: GPItemWithQuantity) => boolean
+}
+
+
 export interface ConfigModuleIntegrityChecker {
   fasterAssets?: {
     isEnabled?: boolean
@@ -22,4 +30,14 @@ export interface ConfigModuleIntegrityChecker {
     isEnabled?: boolean
     mappingFunctions?: ConfigModuleIntegrityCheckerMappingFunctions
   }
+
+  nhtsaVehicles?: {
+    isEnabled?: boolean
+  }
+
+  fasterInventory?: {
+    isEnabled?: boolean
+    validation?: ConfigItemValidationDynamicsGP
+  }
+
 }

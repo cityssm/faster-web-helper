@@ -13,6 +13,10 @@ export declare const configDefaultValues: {
     'modules.integrityChecker.nhtsaVehicles.isEnabled': boolean;
     'modules.integrityChecker.worktechEquipment.isEnabled': boolean;
     'modules.integrityChecker.worktechEquipment.mappingFunctions': import("../modules/integrityChecker/config/types.js").ConfigModuleIntegrityCheckerMappingFunctions;
+    'modules.integrityChecker.fasterInventory.isEnabled': boolean;
+    'modules.integrityChecker.fasterInventory.validation.source': string;
+    'modules.integrityChecker.fasterInventory.validation.gpLocationCodesToFasterStorerooms': Record<string, string>;
+    'modules.integrityChecker.fasterInventory.validation.gpItemFilter': ((item: import("@cityssm/dynamics-gp").GPItemWithQuantity) => boolean) | undefined;
     'modules.inventoryScanner.isEnabled': boolean;
     'modules.inventoryScanner.scannerIpAddressRegex': RegExp;
     'modules.inventoryScanner.fasterSync.integrationId': number | undefined;
