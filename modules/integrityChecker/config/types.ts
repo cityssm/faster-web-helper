@@ -15,12 +15,24 @@ export type ConfigModuleIntegrityCheckerMappingFunctions = Partial<
   Record<FasterAssetMappingFunctionName, FasterAssetMappingFunction>
 >
 
-export interface ConfigItemValidationDynamicsGP {
-  source: 'dynamicsGP'
-  gpLocationCodesToFasterStorerooms: Record<string, string>
-  gpItemFilter?: (item: GPItemWithQuantity) => boolean
+export interface ConfigIntegrityCheckerItemValidationDynamicsGPCreateInvoiceDefaults {
+  vendorId: string
+  shipToLocationId: string
+  partTypeId: string
+  paymentTypeId: string
+  purchaseOrderId: string
+  purchaseOrderAccountId: string
+  taxCodeId: string
+  partCategory: string
 }
 
+export interface ConfigIntegrityCheckerItemValidationDynamicsGP {
+  source: 'dynamicsGp'
+  gpLocationCodesToFasterStorerooms: Record<string, string>
+  gpItemFilter?: (item: GPItemWithQuantity) => boolean
+  updateFaster?: boolean
+  createInvoiceDefaults?: ConfigIntegrityCheckerItemValidationDynamicsGPCreateInvoiceDefaults
+}
 
 export interface ConfigModuleIntegrityChecker {
   fasterAssets?: {
@@ -37,7 +49,7 @@ export interface ConfigModuleIntegrityChecker {
 
   fasterInventory?: {
     isEnabled?: boolean
-    validation?: ConfigItemValidationDynamicsGP
+    storerooms?: string[]
+    validation?: ConfigIntegrityCheckerItemValidationDynamicsGP
   }
-
 }

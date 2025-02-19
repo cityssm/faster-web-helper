@@ -24,6 +24,10 @@ const debug = Debug(
 
 const fasterWebConfig = getConfigProperty('fasterWeb')
 
+const storeroomFilter = getConfigProperty(
+  'modules.integrityChecker.fasterInventory.storerooms'
+)
+
 async function refreshFasterInventory(): Promise<void> {
   if (
     fasterWebConfig.appUserName === undefined ||
@@ -50,7 +54,7 @@ async function refreshFasterInventory(): Promise<void> {
    */
 
   debug(
-    `Updating ${fasterInventoryResponse.length} FASTER inventory records...`
+    `Updating cached ${fasterInventoryResponse.length} FASTER storerooms...`
   )
 
   const database = sqlite(databasePath, {
@@ -59,6 +63,18 @@ async function refreshFasterInventory(): Promise<void> {
   const rightNowMillis = Date.now()
 
   for (const storeroom of fasterInventoryResponse) {
+    if (
+      storeroomFilter.length > 0 &&
+      !storeroomFilter.includes(storeroom.storeroom)
+    ) {
+      debug(`Skipping storeroom "${storeroom.storeroom}"...`)
+      continue
+    }
+
+    debug(
+      `Updating cached ${storeroom.items.length} FASTER items for storeroom "${storeroom.storeroom}"...`
+    )
+
     for (const item of storeroom.items) {
       createOrUpdateFasterInventoryItem(
         {
@@ -85,6 +101,8 @@ async function refreshFasterInventory(): Promise<void> {
     database
   )
 
+  database.close()
+
   if (deleteCount > 0) {
     debug(`Deleted ${deleteCount} expired items.`)
   }
@@ -101,12 +119,18 @@ async function refreshFasterInventory(): Promise<void> {
     const dynamicsGpValidation = await import(
       '../helpers/inventoryValidation/dynamicsGp.js'
     )
-    await dynamicsGpValidation.refreshDynamicsGpInventory(database)
+    await dynamicsGpValidation.refreshDynamicsGpInventory()
+
+    if (
+      getConfigProperty(
+        'modules.integrityChecker.fasterInventory.validation.updateFaster'
+      )
+    ) {
+      await dynamicsGpValidation.updateInventoryInFaster()
+    }
   } else if (validationSource !== '') {
     debug(`Unknown validation source: ${validationSource}`)
   }
-
-  database.close()
 }
 
 const scheduledTask = new ScheduledTask(taskName, refreshFasterInventory, {

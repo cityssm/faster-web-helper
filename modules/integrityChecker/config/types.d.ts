@@ -3,10 +3,22 @@ import type { AssetResult } from '@cityssm/faster-api';
 export type FasterAssetMappingFunction = (fasterAsset: AssetResult) => string | undefined;
 type FasterAssetMappingFunctionName = 'fasterAssetToEquipmentId' | 'fasterAssetToEquipmentClass' | 'fasterAssetToEquipmentDescription' | 'fasterAssetToDepartment';
 export type ConfigModuleIntegrityCheckerMappingFunctions = Partial<Record<FasterAssetMappingFunctionName, FasterAssetMappingFunction>>;
-export interface ConfigItemValidationDynamicsGP {
-    source: 'dynamicsGP';
+export interface ConfigIntegrityCheckerItemValidationDynamicsGPCreateInvoiceDefaults {
+    vendorId: string;
+    shipToLocationId: string;
+    partTypeId: string;
+    paymentTypeId: string;
+    purchaseOrderId: string;
+    purchaseOrderAccountId: string;
+    taxCodeId: string;
+    partCategory: string;
+}
+export interface ConfigIntegrityCheckerItemValidationDynamicsGP {
+    source: 'dynamicsGp';
     gpLocationCodesToFasterStorerooms: Record<string, string>;
     gpItemFilter?: (item: GPItemWithQuantity) => boolean;
+    updateFaster?: boolean;
+    createInvoiceDefaults?: ConfigIntegrityCheckerItemValidationDynamicsGPCreateInvoiceDefaults;
 }
 export interface ConfigModuleIntegrityChecker {
     fasterAssets?: {
@@ -21,7 +33,8 @@ export interface ConfigModuleIntegrityChecker {
     };
     fasterInventory?: {
         isEnabled?: boolean;
-        validation?: ConfigItemValidationDynamicsGP;
+        storerooms?: string[];
+        validation?: ConfigIntegrityCheckerItemValidationDynamicsGP;
     };
 }
 export {};

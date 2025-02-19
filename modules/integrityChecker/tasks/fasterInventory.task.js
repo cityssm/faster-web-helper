@@ -14,6 +14,7 @@ import { moduleName } from '../helpers/module.helpers.js';
 export const taskName = 'Integrity Checker - FASTER Inventory';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}:${camelCase(taskName)}`);
 const fasterWebConfig = getConfigProperty('fasterWeb');
+const storeroomFilter = getConfigProperty('modules.integrityChecker.fasterInventory.storerooms');
 async function refreshFasterInventory() {
     if (fasterWebConfig.appUserName === undefined ||
         fasterWebConfig.appPassword === undefined) {
@@ -28,12 +29,18 @@ async function refreshFasterInventory() {
     /*
      * Update the database
      */
-    debug(`Updating ${fasterInventoryResponse.length} FASTER inventory records...`);
+    debug(`Updating cached ${fasterInventoryResponse.length} FASTER storerooms...`);
     const database = sqlite(databasePath, {
         timeout: timeoutMillis
     });
     const rightNowMillis = Date.now();
     for (const storeroom of fasterInventoryResponse) {
+        if (storeroomFilter.length > 0 &&
+            !storeroomFilter.includes(storeroom.storeroom)) {
+            debug(`Skipping storeroom "${storeroom.storeroom}"...`);
+            continue;
+        }
+        debug(`Updating cached ${storeroom.items.length} FASTER items for storeroom "${storeroom.storeroom}"...`);
         for (const item of storeroom.items) {
             createOrUpdateFasterInventoryItem({
                 itemNumber: item.itemNumber,
@@ -50,6 +57,7 @@ async function refreshFasterInventory() {
      * Delete expired assets
      */
     const deleteCount = deleteExpiredRecords('FasterInventoryItems', rightNowMillis, database);
+    database.close();
     if (deleteCount > 0) {
         debug(`Deleted ${deleteCount} expired items.`);
     }
@@ -59,12 +67,14 @@ async function refreshFasterInventory() {
     const validationSource = getConfigProperty('modules.integrityChecker.fasterInventory.validation.source');
     if (validationSource === 'dynamicsGp') {
         const dynamicsGpValidation = await import('../helpers/inventoryValidation/dynamicsGp.js');
-        await dynamicsGpValidation.refreshDynamicsGpInventory(database);
+        await dynamicsGpValidation.refreshDynamicsGpInventory();
+        if (getConfigProperty('modules.integrityChecker.fasterInventory.validation.updateFaster')) {
+            await dynamicsGpValidation.updateInventoryInFaster();
+        }
     }
     else if (validationSource !== '') {
         debug(`Unknown validation source: ${validationSource}`);
     }
-    database.close();
 }
 const scheduledTask = new ScheduledTask(taskName, refreshFasterInventory, {
     schedule: {

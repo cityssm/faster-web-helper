@@ -1,2 +1,2 @@
-import type sqlite from 'better-sqlite3';
-export declare function refreshDynamicsGpInventory(database: sqlite.Database): Promise<void>;
+export declare function refreshDynamicsGpInventory(): Promise<boolean>;
+export declare function updateInventoryInFaster(): Promise<void>;
