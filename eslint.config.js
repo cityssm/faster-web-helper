@@ -1,3 +1,4 @@
+import eslintConstants from '@cityssm/faster-constants/other/eslint';
 import { configWebApp, cspellWords, tseslint } from 'eslint-config-cityssm';
 export const config = tseslint.config(...configWebApp, {
     rules: {
@@ -7,8 +8,8 @@ export const config = tseslint.config(...configWebApp, {
                 cspell: {
                     words: [
                         ...cspellWords,
+                        ...eslintConstants.cspellWords,
                         'autoincrement',
-                        'fasterwebcloud',
                         'fieldsets',
                         'fontawesome',
                         'nhtsa',
