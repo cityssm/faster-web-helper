@@ -1,6 +1,3 @@
-// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
-/* eslint-disable no-secrets/no-secrets */
-
 import { type ChildProcess, fork } from 'node:child_process'
 
 import camelCase from 'camelcase'
@@ -34,7 +31,7 @@ export default function initializeIntegrityCheckerTasks(): Partial<
 
   if (hasFasterApi) {
     if (getConfigProperty('modules.integrityChecker.fasterAssets.isEnabled')) {
-      const taskPath = './modules/integrityChecker/tasks/fasterAssets.task.js'
+      const taskPath = './modules/integrityChecker/tasks/assets/fasterAssets.task.js'
       childProcesses.integrityChecker_fasterAssets = fork(taskPath)
     }
   } else {
@@ -46,7 +43,7 @@ export default function initializeIntegrityCheckerTasks(): Partial<
    */
 
   if (getConfigProperty('modules.integrityChecker.nhtsaVehicles.isEnabled')) {
-    const taskPath = './modules/integrityChecker/tasks/nhtsaVehicles.task.js'
+    const taskPath = './modules/integrityChecker/tasks/assets/nhtsaVehicles.task.js'
     childProcesses.integrityChecker_nhtsaVehicles = fork(taskPath)
   }
 
@@ -59,7 +56,7 @@ export default function initializeIntegrityCheckerTasks(): Partial<
     getConfigProperty('modules.integrityChecker.worktechEquipment.isEnabled')
   ) {
     const taskPath =
-      './modules/integrityChecker/tasks/worktechEquipment.task.js'
+      './modules/integrityChecker/tasks/assets/worktechEquipment.task.js'
     childProcesses.integrityChecker_worktechEquipment = fork(taskPath)
   }
 
@@ -69,9 +66,9 @@ export default function initializeIntegrityCheckerTasks(): Partial<
 
   if (
     hasFasterUnofficialApi &&
-    getConfigProperty('modules.integrityChecker.fasterInventory.isEnabled')
+    getConfigProperty('modules.integrityChecker.fasterItems.isEnabled')
   ) {
-    const taskPath = './modules/integrityChecker/tasks/fasterInventory.task.js'
+    const taskPath = './modules/integrityChecker/tasks/items/fasterItems.task.js'
     childProcesses.integrityChecker_fasterInventory = fork(taskPath)
   }
 

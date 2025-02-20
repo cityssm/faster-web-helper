@@ -47,7 +47,7 @@ export interface ConfigModuleIntegrityChecker {
     isEnabled?: boolean
   }
 
-  fasterInventory?: {
+  fasterItems?: {
     isEnabled?: boolean
     storerooms?: string[]
     validation?: ConfigIntegrityCheckerItemValidationDynamicsGP

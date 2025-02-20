@@ -1,5 +1,3 @@
-// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
-/* eslint-disable no-secrets/no-secrets */
 import { fork } from 'node:child_process';
 import camelCase from 'camelcase';
 import Debug from 'debug';
@@ -18,7 +16,7 @@ export default function initializeIntegrityCheckerTasks() {
      */
     if (hasFasterApi) {
         if (getConfigProperty('modules.integrityChecker.fasterAssets.isEnabled')) {
-            const taskPath = './modules/integrityChecker/tasks/fasterAssets.task.js';
+            const taskPath = './modules/integrityChecker/tasks/assets/fasterAssets.task.js';
             childProcesses.integrityChecker_fasterAssets = fork(taskPath);
         }
     }
@@ -29,7 +27,7 @@ export default function initializeIntegrityCheckerTasks() {
      * NHTSA Vehicles
      */
     if (getConfigProperty('modules.integrityChecker.nhtsaVehicles.isEnabled')) {
-        const taskPath = './modules/integrityChecker/tasks/nhtsaVehicles.task.js';
+        const taskPath = './modules/integrityChecker/tasks/assets/nhtsaVehicles.task.js';
         childProcesses.integrityChecker_nhtsaVehicles = fork(taskPath);
     }
     /*
@@ -37,15 +35,15 @@ export default function initializeIntegrityCheckerTasks() {
      */
     if (getConfigProperty('worktech') !== undefined &&
         getConfigProperty('modules.integrityChecker.worktechEquipment.isEnabled')) {
-        const taskPath = './modules/integrityChecker/tasks/worktechEquipment.task.js';
+        const taskPath = './modules/integrityChecker/tasks/assets/worktechEquipment.task.js';
         childProcesses.integrityChecker_worktechEquipment = fork(taskPath);
     }
     /*
      * Faster Inventory
      */
     if (hasFasterUnofficialApi &&
-        getConfigProperty('modules.integrityChecker.fasterInventory.isEnabled')) {
-        const taskPath = './modules/integrityChecker/tasks/fasterInventory.task.js';
+        getConfigProperty('modules.integrityChecker.fasterItems.isEnabled')) {
+        const taskPath = './modules/integrityChecker/tasks/items/fasterItems.task.js';
         childProcesses.integrityChecker_fasterInventory = fork(taskPath);
     }
     debug(`"${moduleName}" initialized.`);

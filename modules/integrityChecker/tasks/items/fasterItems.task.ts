@@ -4,19 +4,19 @@ import sqlite from 'better-sqlite3'
 import camelCase from 'camelcase'
 import Debug from 'debug'
 
-import { DEBUG_NAMESPACE } from '../../../debug.config.js'
-import { getConfigProperty } from '../../../helpers/config.helpers.js'
+import { DEBUG_NAMESPACE } from '../../../../debug.config.js'
+import { getConfigProperty } from '../../../../helpers/config.helpers.js'
 import {
   getMinimumMillisBetweenRuns,
   getScheduledTaskMinutes
-} from '../../../helpers/tasks.helpers.js'
-import { createOrUpdateFasterInventoryItem } from '../database/createOrUpdateFasterInventoryItem.js'
-import { deleteExpiredRecords } from '../database/deleteExpiredRecords.js'
-import getMaxFasterInventoryItemUpdateMillis from '../database/getMaxFasterInventoryItemUpdateMillis.js'
-import { databasePath, timeoutMillis } from '../database/helpers.database.js'
-import { moduleName } from '../helpers/module.helpers.js'
+} from '../../../../helpers/tasks.helpers.js'
+import { createOrUpdateFasterInventoryItem } from '../../database/createOrUpdateFasterInventoryItem.js'
+import { deleteExpiredRecords } from '../../database/deleteExpiredRecords.js'
+import getMaxFasterInventoryItemUpdateMillis from '../../database/getMaxFasterInventoryItemUpdateMillis.js'
+import { databasePath, timeoutMillis } from '../../database/helpers.database.js'
+import { moduleName } from '../../helpers/module.helpers.js'
 
-export const taskName = 'Integrity Checker - FASTER Inventory'
+export const taskName = 'Integrity Checker - FASTER Inventory Items'
 
 const debug = Debug(
   `${DEBUG_NAMESPACE}:${camelCase(moduleName)}:${camelCase(taskName)}`
@@ -25,7 +25,7 @@ const debug = Debug(
 const fasterWebConfig = getConfigProperty('fasterWeb')
 
 const storeroomFilter = getConfigProperty(
-  'modules.integrityChecker.fasterInventory.storerooms'
+  'modules.integrityChecker.fasterItems.storerooms'
 )
 
 async function refreshFasterInventory(): Promise<void> {
@@ -112,18 +112,18 @@ async function refreshFasterInventory(): Promise<void> {
    */
 
   const validationSource = getConfigProperty(
-    'modules.integrityChecker.fasterInventory.validation.source'
+    'modules.integrityChecker.fasterItems.validation.source'
   )
 
   if (validationSource === 'dynamicsGp') {
     const dynamicsGpValidation = await import(
-      '../helpers/inventoryValidation/dynamicsGp.js'
+      '../../helpers/fasterItems/dynamicsGp.validation.js'
     )
     await dynamicsGpValidation.refreshDynamicsGpInventory()
 
     if (
       getConfigProperty(
-        'modules.integrityChecker.fasterInventory.validation.updateFaster'
+        'modules.integrityChecker.fasterItems.validation.updateFaster'
       )
     ) {
       await dynamicsGpValidation.updateInventoryInFaster()

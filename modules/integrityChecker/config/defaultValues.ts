@@ -1,6 +1,3 @@
-// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
-/* eslint-disable no-secrets/no-secrets */
-
 import type { GPItemWithQuantity } from '@cityssm/dynamics-gp'
 
 import type {
@@ -22,21 +19,21 @@ export default {
   'modules.integrityChecker.worktechEquipment.mappingFunctions':
     {} as unknown as ConfigModuleIntegrityCheckerMappingFunctions,
 
-  'modules.integrityChecker.fasterInventory.isEnabled': true,
+  'modules.integrityChecker.fasterItems.isEnabled': true,
 
-  'modules.integrityChecker.fasterInventory.storerooms': [] as string[],
+  'modules.integrityChecker.fasterItems.storerooms': [] as string[],
 
-  'modules.integrityChecker.fasterInventory.validation.source': '',
+  'modules.integrityChecker.fasterItems.validation.source': '',
 
-  'modules.integrityChecker.fasterInventory.validation.gpLocationCodesToFasterStorerooms':
+  'modules.integrityChecker.fasterItems.validation.gpLocationCodesToFasterStorerooms':
     {} as unknown as Record<string, string>,
 
-  'modules.integrityChecker.fasterInventory.validation.gpItemFilter':
+  'modules.integrityChecker.fasterItems.validation.gpItemFilter':
     undefined as unknown as GpItemFilterFunction | undefined,
 
-  'modules.integrityChecker.fasterInventory.validation.updateFaster': false,
+  'modules.integrityChecker.fasterItems.validation.updateFaster': false,
 
-  'modules.integrityChecker.fasterInventory.validation.createInvoiceDefaults':
+  'modules.integrityChecker.fasterItems.validation.createInvoiceDefaults':
     undefined as unknown as
       | ConfigIntegrityCheckerItemValidationDynamicsGPCreateInvoiceDefaults
       | undefined

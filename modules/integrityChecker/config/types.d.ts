@@ -31,7 +31,7 @@ export interface ConfigModuleIntegrityChecker {
     nhtsaVehicles?: {
         isEnabled?: boolean;
     };
-    fasterInventory?: {
+    fasterItems?: {
         isEnabled?: boolean;
         storerooms?: string[];
         validation?: ConfigIntegrityCheckerItemValidationDynamicsGP;

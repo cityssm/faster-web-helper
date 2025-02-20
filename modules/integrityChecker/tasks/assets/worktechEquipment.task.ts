@@ -4,18 +4,18 @@ import sqlite from 'better-sqlite3'
 import camelCase from 'camelcase'
 import Debug from 'debug'
 
-import { DEBUG_NAMESPACE } from '../../../debug.config.js'
-import { getConfigProperty } from '../../../helpers/config.helpers.js'
+import { DEBUG_NAMESPACE } from '../../../../debug.config.js'
+import { getConfigProperty } from '../../../../helpers/config.helpers.js'
 import {
   getMinimumMillisBetweenRuns,
   getScheduledTaskMinutes
-} from '../../../helpers/tasks.helpers.js'
-import { createOrUpdateWorktechEquipment } from '../database/createOrUpdateWorktechEquipment.js'
-import { deleteExpiredRecords } from '../database/deleteExpiredRecords.js'
-import getFasterAssetNumbers from '../database/getFasterAssetNumbers.js'
-import getMaxWorktechEquipmentUpdateMillis from '../database/getMaxWorktechEquipmentUpdateMillis.js'
-import { databasePath, timeoutMillis } from '../database/helpers.database.js'
-import { moduleName } from '../helpers/module.helpers.js'
+} from '../../../../helpers/tasks.helpers.js'
+import { createOrUpdateWorktechEquipment } from '../../database/createOrUpdateWorktechEquipment.js'
+import { deleteExpiredRecords } from '../../database/deleteExpiredRecords.js'
+import getFasterAssetNumbers from '../../database/getFasterAssetNumbers.js'
+import getMaxWorktechEquipmentUpdateMillis from '../../database/getMaxWorktechEquipmentUpdateMillis.js'
+import { databasePath, timeoutMillis } from '../../database/helpers.database.js'
+import { moduleName } from '../../helpers/module.helpers.js'
 
 export const taskName = 'Integrity Checker - Active Worktech Equipment'
 

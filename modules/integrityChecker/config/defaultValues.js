@@ -1,16 +1,14 @@
-// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
-/* eslint-disable no-secrets/no-secrets */
 export default {
     'modules.integrityChecker.isEnabled': false,
     'modules.integrityChecker.fasterAssets.isEnabled': true,
     'modules.integrityChecker.nhtsaVehicles.isEnabled': true,
     'modules.integrityChecker.worktechEquipment.isEnabled': false,
     'modules.integrityChecker.worktechEquipment.mappingFunctions': {},
-    'modules.integrityChecker.fasterInventory.isEnabled': true,
-    'modules.integrityChecker.fasterInventory.storerooms': [],
-    'modules.integrityChecker.fasterInventory.validation.source': '',
-    'modules.integrityChecker.fasterInventory.validation.gpLocationCodesToFasterStorerooms': {},
-    'modules.integrityChecker.fasterInventory.validation.gpItemFilter': undefined,
-    'modules.integrityChecker.fasterInventory.validation.updateFaster': false,
-    'modules.integrityChecker.fasterInventory.validation.createInvoiceDefaults': undefined
+    'modules.integrityChecker.fasterItems.isEnabled': true,
+    'modules.integrityChecker.fasterItems.storerooms': [],
+    'modules.integrityChecker.fasterItems.validation.source': '',
+    'modules.integrityChecker.fasterItems.validation.gpLocationCodesToFasterStorerooms': {},
+    'modules.integrityChecker.fasterItems.validation.gpItemFilter': undefined,
+    'modules.integrityChecker.fasterItems.validation.updateFaster': false,
+    'modules.integrityChecker.fasterItems.validation.createInvoiceDefaults': undefined
 };

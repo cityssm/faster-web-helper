@@ -1,5 +1,3 @@
-// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
-/* eslint-disable no-secrets/no-secrets */
 import { DynamicsGP } from '@cityssm/dynamics-gp';
 import { FasterApi } from '@cityssm/faster-api';
 import fasterInventoryItemConstants from '@cityssm/faster-constants/inventory/items';
@@ -14,12 +12,12 @@ import { createOrUpdateDynamicsGpInventoryItem } from '../../database/createOrUp
 import { deleteExpiredRecords } from '../../database/deleteExpiredRecords.js';
 import getDynamicsGpInventoryItemsToUpdateInFaster from '../../database/getDynamicsGpInventoryItemsToUpdateInFaster.js';
 import { databasePath, timeoutMillis } from '../../database/helpers.database.js';
-import { moduleName } from '../../helpers/module.helpers.js';
+import { moduleName } from '../module.helpers.js';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}:inventoryValidation:dynamicsGp`);
 const fasterWebConfig = getConfigProperty('fasterWeb');
 const dynamicsGPConfig = getConfigProperty('dynamicsGP');
-const gpLocationCodesToFasterStorerooms = getConfigProperty('modules.integrityChecker.fasterInventory.validation.gpLocationCodesToFasterStorerooms');
-const gpItemFilter = getConfigProperty('modules.integrityChecker.fasterInventory.validation.gpItemFilter');
+const gpLocationCodesToFasterStorerooms = getConfigProperty('modules.integrityChecker.fasterItems.validation.gpLocationCodesToFasterStorerooms');
+const gpItemFilter = getConfigProperty('modules.integrityChecker.fasterItems.validation.gpItemFilter');
 export async function refreshDynamicsGpInventory() {
     if (dynamicsGPConfig === undefined) {
         debug('Missing Dynamics GP configuration.');
@@ -67,7 +65,7 @@ export async function refreshDynamicsGpInventory() {
     return true;
 }
 const notFoundInDynamicsGpBinLocation = 'NOT FOUND';
-const createInvoiceDefaults = getConfigProperty('modules.integrityChecker.fasterInventory.validation.createInvoiceDefaults');
+const createInvoiceDefaults = getConfigProperty('modules.integrityChecker.fasterItems.validation.createInvoiceDefaults');
 // eslint-disable-next-line complexity
 export async function updateInventoryInFaster() {
     /*
@@ -141,12 +139,17 @@ export async function updateInventoryInFaster() {
         else if (record.fasterItemName !== gpItemNameTruncated ||
             record.fasterBinLocation !== record.gpBinLocation) {
             debug(`Update FASTER item "${record.itemNumber} [${record.storeroom}]"...`);
-            await fasterUnofficialAPI.updateInventoryItem(record.itemNumber, record.storeroom, {
-                itemName: gpItemNameTruncated,
-                itemDescription: record.gpItemName,
-                binLocation: record.gpBinLocation ?? '',
-                alternateLocation: record.gpAlternateLocation ?? ''
-            });
+            try {
+                await fasterUnofficialAPI.updateInventoryItem(record.itemNumber, record.storeroom, {
+                    itemName: gpItemNameTruncated,
+                    itemDescription: record.gpItemName,
+                    binLocation: record.gpBinLocation ?? '',
+                    alternateLocation: record.gpAlternateLocation ?? ''
+                });
+            }
+            catch {
+                debug(`Error updating FASTER item "${record.itemNumber} [${record.storeroom}]".`);
+            }
         }
     }
 }

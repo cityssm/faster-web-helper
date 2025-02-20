@@ -1,5 +1,8 @@
 import type { AssetResult } from '@cityssm/faster-api'
-import type { EquipmentItem, UpdateEquipmentFields } from '@cityssm/worktech-api'
+import type {
+  EquipmentItem,
+  UpdateEquipmentFields
+} from '@cityssm/worktech-api'
 
 import { getConfigProperty } from '../../../helpers/config.helpers.js'
 
@@ -11,7 +14,6 @@ import {
 } from './fasterFields.helpers.js'
 
 const mappingFunctions = getConfigProperty(
-  // eslint-disable-next-line no-secrets/no-secrets
   'modules.integrityChecker.worktechEquipment.mappingFunctions'
 )
 
@@ -63,8 +65,10 @@ export function getWorktechEquipmentDescription(
   return getFasterAssetDescription(fasterAsset)
 }
 
-export function getWorktechEquipmentFieldsToUpdate(fasterAsset: AssetResult, worktechEquipment: EquipmentItem): Partial<UpdateEquipmentFields> {
-
+export function getWorktechEquipmentFieldsToUpdate(
+  fasterAsset: AssetResult,
+  worktechEquipment: EquipmentItem
+): Partial<UpdateEquipmentFields> {
   const fieldsToUpdate: Partial<UpdateEquipmentFields> = {}
 
   const equipmentDescription = getWorktechEquipmentDescription(fasterAsset)
@@ -72,8 +76,5 @@ export function getWorktechEquipmentFieldsToUpdate(fasterAsset: AssetResult, wor
     fieldsToUpdate.equipmentDescription = equipmentDescription
   }
 
-  
-
   return fieldsToUpdate
-
 }

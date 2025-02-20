@@ -26,7 +26,9 @@ export const config = tseslint.config(...configWebApp, {
     '@typescript-eslint/no-unsafe-argument': 'off',
     '@typescript-eslint/no-unsafe-call': 'off',
     '@typescript-eslint/no-unsafe-member-access': 'off',
-    '@typescript-eslint/no-unsafe-type-assertion': 'off'
+    '@typescript-eslint/no-unsafe-type-assertion': 'off',
+
+    'no-secrets/no-secrets': ['error', { ignoreContent: '^modules.' }]
   }
 })
 
