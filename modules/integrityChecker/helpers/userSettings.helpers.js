@@ -1,3 +1,3 @@
-export const inventoryScannerUserSettings = [
+export const integrityCheckerUserSettings = [
     'integrityChecker_hasAccess'
 ];

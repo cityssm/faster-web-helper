@@ -1,5 +1,5 @@
 import { DynamicsGP } from '@cityssm/dynamics-gp'
-import { FasterApi, type FasterApiDateTimeOffset } from '@cityssm/faster-api'
+import { type FasterApiDateTimeOffset, FasterApi } from '@cityssm/faster-api'
 import fasterInventoryItemConstants from '@cityssm/faster-constants/inventory/items'
 import { FasterUnofficialAPI } from '@cityssm/faster-unofficial-api'
 import sqlite from 'better-sqlite3'
@@ -181,18 +181,23 @@ export async function updateInventoryInFaster(): Promise<void> {
         unitPrice: record.gpCurrentCost ?? 0,
         shipping: 0,
         taxCost: 0,
+
         partNumber: record.itemNumber,
         partName: gpItemNameTruncated,
         partDesc: record.gpItemName ?? record.itemNumber,
+
         storeroom: record.storeroom,
+
         purchaseOrderDescription: '',
         purchaseOrderCardType: '',
         purchaseOrderCardLast4: '',
         purchaseOrderCardCardholderName: '',
+
         warrantyLength: 0,
         warrantyLengthUnit: 'Year',
         warrantyCycle: '',
         warrantyCycleCode: '',
+
         otherChargeTypeId: '',
         otherChargeUnitPrice: 0,
         otherChargeTaxCost: 0
@@ -228,8 +233,9 @@ export async function updateInventoryInFaster(): Promise<void> {
           {
             itemName: gpItemNameTruncated,
             itemDescription: record.gpItemName,
-            binLocation: record.gpBinLocation ?? '',
-            alternateLocation: record.gpAlternateLocation ?? ''
+
+            alternateLocation: record.gpAlternateLocation ?? '',
+            binLocation: record.gpBinLocation ?? ''
           }
         )
       } catch {

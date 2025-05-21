@@ -1,6 +1,6 @@
 import type {
-  ADWebAuthAuthenticatorConfiguration,
   ActiveDirectoryAuthenticatorConfiguration,
+  ADWebAuthAuthenticatorConfiguration,
   PlainTextAuthenticatorConfiguration
 } from '@cityssm/authentication-helper'
 import type { mssql } from '@cityssm/mssql-multi-pool'

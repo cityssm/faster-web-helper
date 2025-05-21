@@ -1,4 +1,4 @@
-import type { GPItemWithQuantity } from '@cityssm/dynamics-gp'
+import type { GetVendorsFilters, GPItemWithQuantity } from '@cityssm/dynamics-gp'
 
 import type {
   ConfigIntegrityCheckerItemValidationDynamicsGPCreateInvoiceDefaults,
@@ -36,5 +36,14 @@ export default {
   'modules.integrityChecker.fasterItems.validation.createInvoiceDefaults':
     undefined as unknown as
       | ConfigIntegrityCheckerItemValidationDynamicsGPCreateInvoiceDefaults
-      | undefined
+      | undefined,
+
+  'modules.integrityChecker.fasterVendors.isEnabled': false,
+
+  'modules.integrityChecker.fasterVendors.update.source': '',
+
+  'modules.integrityChecker.fasterVendors.update.gpFilters':
+    {} satisfies Partial<GetVendorsFilters> | undefined,
+
+  'modules.integrityChecker.fasterVendors.update.vendorCodesToIgnore': [] as string[]
 } satisfies Record<`modules.integrityChecker.${string}`, unknown>

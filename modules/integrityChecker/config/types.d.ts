@@ -1,7 +1,7 @@
-import type { GPItemWithQuantity } from '@cityssm/dynamics-gp';
+import type { GetVendorsFilters, GPItemWithQuantity } from '@cityssm/dynamics-gp';
 import type { AssetResult } from '@cityssm/faster-api';
 export type FasterAssetMappingFunction = (fasterAsset: AssetResult) => string | undefined;
-type FasterAssetMappingFunctionName = 'fasterAssetToEquipmentId' | 'fasterAssetToEquipmentClass' | 'fasterAssetToEquipmentDescription' | 'fasterAssetToDepartment';
+type FasterAssetMappingFunctionName = 'fasterAssetToDepartment' | 'fasterAssetToEquipmentClass' | 'fasterAssetToEquipmentDescription' | 'fasterAssetToEquipmentId';
 export type ConfigModuleIntegrityCheckerMappingFunctions = Partial<Record<FasterAssetMappingFunctionName, FasterAssetMappingFunction>>;
 export interface ConfigIntegrityCheckerItemValidationDynamicsGPCreateInvoiceDefaults {
     vendorId: string;
@@ -20,6 +20,11 @@ export interface ConfigIntegrityCheckerItemValidationDynamicsGP {
     updateFaster?: boolean;
     createInvoiceDefaults?: ConfigIntegrityCheckerItemValidationDynamicsGPCreateInvoiceDefaults;
 }
+export interface ConfigIntegrityCheckerVendorUpdateDynamicsGP {
+    source: 'dynamicsGp';
+    gpFilters?: Partial<GetVendorsFilters>;
+    vendorCodesToIgnore?: string[];
+}
 export interface ConfigModuleIntegrityChecker {
     fasterAssets?: {
         isEnabled?: boolean;
@@ -35,6 +40,11 @@ export interface ConfigModuleIntegrityChecker {
         isEnabled?: boolean;
         storerooms?: string[];
         validation?: ConfigIntegrityCheckerItemValidationDynamicsGP;
+    };
+    fasterVendors?: {
+        isEnabled?: boolean;
+        update?: ConfigIntegrityCheckerVendorUpdateDynamicsGP;
+        vendorCodesToIgnore?: string[];
     };
 }
 export {};

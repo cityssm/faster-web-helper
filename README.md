@@ -25,6 +25,7 @@ a solution for issuing inventory using handheld barcode scanners.
 [**Integrity Checks**](./modules/integrityChecker/README.md)<br />
 Reports on assets in FASTER Web that may have errors.
 Reports on assets that have no complimentary record in WorkTech, and vice versa.
+Updates FASTER inventory and vendor records from external systems.
 
 [**Autocomplete**](./modules/autocomplete/README.md)<br />
 Creates and hosts JSON files compatible with Autocomplete userscripts.
@@ -39,6 +40,7 @@ Some of the processes the FASTER Web API is used for:
 
 - **Inventory Scanner** - Retrieving repair-related information.
 - **Inventory Scanner** - Adding upload information to integration logs.
+- **Integrity Checks** - Synchronizing vendor lists.
 
 If you want access and can prove you have access to the FASTER Web APIs,
 read-only or collaborator access can be granted.

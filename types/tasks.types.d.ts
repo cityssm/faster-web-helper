@@ -1,6 +1,6 @@
-export type TaskName = 'inventoryScanner_itemValidation_dynamicsGp' | 'inventoryScanner_workOrderValidation_fasterApi' | 'inventoryScanner_workOrderValidation_worktech' | 'inventoryScanner_outstandingItemRequests' | 'inventoryScanner_updateRecordsFromValidation' | 'inventoryScanner_downloadFasterMessageLog' | 'integrityChecker_fasterAssets' | 'integrityChecker_worktechEquipment' | 'integrityChecker_nhtsaVehicles' | 'integrityChecker_fasterInventory';
+export type TaskName = 'integrityChecker_fasterAssets' | 'integrityChecker_fasterInventory' | 'integrityChecker_fasterVendors' | 'integrityChecker_nhtsaVehicles' | 'integrityChecker_worktechEquipment' | 'inventoryScanner_downloadFasterMessageLog' | 'inventoryScanner_itemValidation_dynamicsGp' | 'inventoryScanner_outstandingItemRequests' | 'inventoryScanner_updateRecordsFromValidation' | 'inventoryScanner_workOrderValidation_fasterApi' | 'inventoryScanner_workOrderValidation_worktech';
 export interface TaskWorkerMessage {
-    destinationTaskName: TaskName | 'app';
+    destinationTaskName: 'app' | TaskName;
     messageType?: string;
     timeMillis: number;
 }

@@ -19,7 +19,8 @@ const scheduledTaskMinutes: Record<`${number}`, TaskName[]> = {
   40: ['inventoryScanner_workOrderValidation_worktech'],
   50: ['integrityChecker_fasterAssets'],
   53: ['integrityChecker_worktechEquipment'],
-  54: ['integrityChecker_nhtsaVehicles']
+  54: ['integrityChecker_nhtsaVehicles'],
+  55: ['integrityChecker_fasterVendors']
 }
 
 export function getScheduledTaskMinutes(taskName: TaskName): number[] {

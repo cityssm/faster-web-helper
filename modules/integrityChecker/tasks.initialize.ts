@@ -72,6 +72,15 @@ export default function initializeIntegrityCheckerTasks(): Partial<
     childProcesses.integrityChecker_fasterInventory = fork(taskPath)
   }
 
+  /*
+   * Faster Vendors
+   */
+
+  if (hasFasterApi && getConfigProperty('modules.integrityChecker.fasterVendors.isEnabled')) {
+    const taskPath = './modules/integrityChecker/tasks/vendors/fasterVendors.task.js'
+    childProcesses.integrityChecker_fasterVendors = fork(taskPath)
+  }
+
   debug(`"${moduleName}" initialized.`)
 
   return childProcesses

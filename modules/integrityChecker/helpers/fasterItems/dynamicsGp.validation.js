@@ -143,8 +143,8 @@ export async function updateInventoryInFaster() {
                 await fasterUnofficialAPI.updateInventoryItem(record.itemNumber, record.storeroom, {
                     itemName: gpItemNameTruncated,
                     itemDescription: record.gpItemName,
-                    binLocation: record.gpBinLocation ?? '',
-                    alternateLocation: record.gpAlternateLocation ?? ''
+                    alternateLocation: record.gpAlternateLocation ?? '',
+                    binLocation: record.gpBinLocation ?? ''
                 });
             }
             catch {

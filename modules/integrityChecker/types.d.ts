@@ -12,11 +12,11 @@ export interface IntegrityFasterAsset extends IntegrityRecord {
     vinSerialIsValid: 0 | 1;
 }
 export interface IntegrityWorktechEquipment extends IntegrityRecord {
-    equipmentSystemId: number | `${number}`;
+    equipmentSystemId: `${number}` | number;
     equipmentId: string;
 }
 export interface WorktechEquipmentIntegrityRecord extends IntegrityFasterAsset {
-    worktechEquipmentSystemId: number | `${number}`;
+    worktechEquipmentSystemId: `${number}` | number;
     worktechEquipmentId: string;
     worktechVinSerial?: string | null;
     worktechLicense?: string | null;

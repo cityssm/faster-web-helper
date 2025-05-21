@@ -1,1 +1,1 @@
-export declare const inventoryScannerUserSettings: "integrityChecker_hasAccess"[];
+export declare const integrityCheckerUserSettings: "integrityChecker_hasAccess"[];

@@ -1,5 +1,5 @@
 // eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
-/* eslint-disable @typescript-eslint/no-magic-numbers, unicorn/no-array-push-push */
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { FasterUnofficialAPI, integrationNames } from '@cityssm/faster-unofficial-api';
@@ -16,9 +16,7 @@ import { moduleName } from '../module.helpers.js';
 import { updateMultipleScannerRecords } from './syncHelpers.js';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:syncFaster`);
 const fasterApiConfig = getConfigProperty('fasterWeb');
-const exportFileNamePrefix = getConfigProperty(
-// eslint-disable-next-line no-secrets/no-secrets
-'modules.inventoryScanner.fasterSync.exportFileNamePrefix');
+const exportFileNamePrefix = getConfigProperty('modules.inventoryScanner.fasterSync.exportFileNamePrefix');
 export function formatRecordIdAsInvoiceNumber(recordId) {
     return recordId.toString().padStart(14, 'X');
 }
@@ -63,7 +61,7 @@ function recordToExportDataLine(record) {
     // N - Description
     let itemDescription = (record.itemDescription ?? itemNumber).slice(0, 40);
     if (itemDescription.includes(',')) {
-        itemDescription = '"' + itemDescription.replaceAll('"', '``') + '"';
+        itemDescription = '"' + itemDescription.replaceAll('"', "''") + '"';
     }
     dataPieces.push(itemDescription);
     // O - Ignored

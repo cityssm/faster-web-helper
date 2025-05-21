@@ -1,5 +1,5 @@
 // eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
-/* eslint-disable @typescript-eslint/no-magic-numbers, unicorn/no-array-push-push */
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 
 import fs from 'node:fs/promises'
 import path from 'node:path'
@@ -34,7 +34,6 @@ const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:syncFaster`)
 const fasterApiConfig = getConfigProperty('fasterWeb')
 
 const exportFileNamePrefix = getConfigProperty(
-  // eslint-disable-next-line no-secrets/no-secrets
   'modules.inventoryScanner.fasterSync.exportFileNamePrefix'
 )
 
@@ -105,13 +104,10 @@ function recordToExportDataLine(record: InventoryScannerRecord): string {
   dataPieces.push(itemNumber)
 
   // N - Description
-  let itemDescription = (record.itemDescription ?? itemNumber).slice(
-    0,
-    40
-  )
+  let itemDescription = (record.itemDescription ?? itemNumber).slice(0, 40)
 
   if (itemDescription.includes(',')) {
-    itemDescription = '"' + itemDescription.replaceAll('"', '``') + '"'
+    itemDescription = '"' + itemDescription.replaceAll('"', "''") + '"'
   }
 
   dataPieces.push(itemDescription)

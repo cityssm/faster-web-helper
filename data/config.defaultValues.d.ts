@@ -1,4 +1,4 @@
-import type { ADWebAuthAuthenticatorConfiguration, ActiveDirectoryAuthenticatorConfiguration, PlainTextAuthenticatorConfiguration } from '@cityssm/authentication-helper';
+import type { ActiveDirectoryAuthenticatorConfiguration, ADWebAuthAuthenticatorConfiguration, PlainTextAuthenticatorConfiguration } from '@cityssm/authentication-helper';
 import type { nodeSchedule } from '@cityssm/scheduled-task';
 import type { AccessOptions } from 'basic-ftp';
 import type { config as MSSQLConfig } from 'mssql';
@@ -6,8 +6,8 @@ import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from '../types/co
 import type { ConfigFasterWeb } from '../types/config.types.js';
 export declare const configDefaultValues: {
     'modules.tempFolderCleanup.isEnabled': boolean;
-    'modules.tempFolderCleanup.schedule': nodeSchedule.Spec;
     'modules.tempFolderCleanup.maxAgeDays': number;
+    'modules.tempFolderCleanup.schedule': nodeSchedule.Spec;
     'modules.integrityChecker.isEnabled': boolean;
     'modules.integrityChecker.fasterAssets.isEnabled': boolean;
     'modules.integrityChecker.nhtsaVehicles.isEnabled': boolean;
@@ -20,6 +20,10 @@ export declare const configDefaultValues: {
     'modules.integrityChecker.fasterItems.validation.gpItemFilter': ((item: import("@cityssm/dynamics-gp").GPItemWithQuantity) => boolean) | undefined;
     'modules.integrityChecker.fasterItems.validation.updateFaster': boolean;
     'modules.integrityChecker.fasterItems.validation.createInvoiceDefaults': import("../modules/integrityChecker/config/types.js").ConfigIntegrityCheckerItemValidationDynamicsGPCreateInvoiceDefaults | undefined;
+    'modules.integrityChecker.fasterVendors.isEnabled': boolean;
+    'modules.integrityChecker.fasterVendors.update.source': string;
+    'modules.integrityChecker.fasterVendors.update.gpFilters': {};
+    'modules.integrityChecker.fasterVendors.update.vendorCodesToIgnore': string[];
     'modules.inventoryScanner.isEnabled': boolean;
     'modules.inventoryScanner.scannerIpAddressRegex': RegExp;
     'modules.inventoryScanner.fasterSync.integrationId': number | undefined;

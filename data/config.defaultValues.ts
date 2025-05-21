@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
 import type {
-  ADWebAuthAuthenticatorConfiguration,
   ActiveDirectoryAuthenticatorConfiguration,
+  ADWebAuthAuthenticatorConfiguration,
   PlainTextAuthenticatorConfiguration
 } from '@cityssm/authentication-helper'
 import type { nodeSchedule } from '@cityssm/scheduled-task'
@@ -87,11 +87,11 @@ export const configDefaultValues = {
    */
 
   'modules.tempFolderCleanup.isEnabled': true,
+  'modules.tempFolderCleanup.maxAgeDays': 35,
   'modules.tempFolderCleanup.schedule': {
     dayOfWeek: 0,
     hour: 1,
     minute: 0,
     second: 0
   } as unknown as nodeSchedule.Spec,
-  'modules.tempFolderCleanup.maxAgeDays': 35
 }

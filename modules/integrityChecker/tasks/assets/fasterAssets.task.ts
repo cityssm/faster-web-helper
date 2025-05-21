@@ -110,7 +110,6 @@ async function refreshFasterAssets(): Promise<void> {
     }
 
     if (
-      // eslint-disable-next-line no-secrets/no-secrets
       getConfigProperty('modules.integrityChecker.worktechEquipment.isEnabled')
     ) {
       debug('Triggering Worktech Equipment Task.')

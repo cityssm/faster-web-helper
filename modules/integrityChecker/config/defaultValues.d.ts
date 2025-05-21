@@ -14,5 +14,9 @@ declare const _default: {
     'modules.integrityChecker.fasterItems.validation.gpItemFilter': GpItemFilterFunction | undefined;
     'modules.integrityChecker.fasterItems.validation.updateFaster': boolean;
     'modules.integrityChecker.fasterItems.validation.createInvoiceDefaults': ConfigIntegrityCheckerItemValidationDynamicsGPCreateInvoiceDefaults | undefined;
+    'modules.integrityChecker.fasterVendors.isEnabled': boolean;
+    'modules.integrityChecker.fasterVendors.update.source': string;
+    'modules.integrityChecker.fasterVendors.update.gpFilters': {};
+    'modules.integrityChecker.fasterVendors.update.vendorCodesToIgnore': string[];
 };
 export default _default;

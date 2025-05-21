@@ -1,4 +1,4 @@
-import type { ADWebAuthAuthenticatorConfiguration, ActiveDirectoryAuthenticatorConfiguration, PlainTextAuthenticatorConfiguration } from '@cityssm/authentication-helper';
+import type { ActiveDirectoryAuthenticatorConfiguration, ADWebAuthAuthenticatorConfiguration, PlainTextAuthenticatorConfiguration } from '@cityssm/authentication-helper';
 import type { mssql } from '@cityssm/mssql-multi-pool';
 import type { nodeSchedule } from '@cityssm/scheduled-task';
 import type { AccessOptions } from 'basic-ftp';

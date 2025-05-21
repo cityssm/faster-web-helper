@@ -71,9 +71,7 @@ async function refreshFasterAssets() {
                 timeMillis: rightNow
             });
         }
-        if (
-        // eslint-disable-next-line no-secrets/no-secrets
-        getConfigProperty('modules.integrityChecker.worktechEquipment.isEnabled')) {
+        if (getConfigProperty('modules.integrityChecker.worktechEquipment.isEnabled')) {
             debug('Triggering Worktech Equipment Task.');
             process.send({
                 destinationTaskName: 'integrityChecker_worktechEquipment',

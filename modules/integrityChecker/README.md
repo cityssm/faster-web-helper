@@ -2,7 +2,7 @@
 
 🧑‍💻 **Under development**
 
-Performs various integrity checks on data in FASTER Web.
+Performs various integrity checks and synchronizations of data in FASTER Web.
 
 ## Asset Checks
 
@@ -12,7 +12,11 @@ Performs various integrity checks on data in FASTER Web.
 
 ## Item Checks
 
-**Under development**
+- Synchronizes basic inventory item details from Dynamics GP with FASTER inventory.
+
+## Vendor Checks
+
+- Synchronizes vendors from Dynamics GP with the FASTER vendor list.
 
 ## General Requirements
 

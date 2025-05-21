@@ -1,4 +1,4 @@
-import type { GPItemWithQuantity } from '@cityssm/dynamics-gp'
+import type { GetVendorsFilters, GPItemWithQuantity } from '@cityssm/dynamics-gp'
 import type { AssetResult } from '@cityssm/faster-api'
 
 export type FasterAssetMappingFunction = (
@@ -6,10 +6,10 @@ export type FasterAssetMappingFunction = (
 ) => string | undefined
 
 type FasterAssetMappingFunctionName =
-  | 'fasterAssetToEquipmentId'
+  | 'fasterAssetToDepartment'
   | 'fasterAssetToEquipmentClass'
   | 'fasterAssetToEquipmentDescription'
-  | 'fasterAssetToDepartment'
+  | 'fasterAssetToEquipmentId'
 
 export type ConfigModuleIntegrityCheckerMappingFunctions = Partial<
   Record<FasterAssetMappingFunctionName, FasterAssetMappingFunction>
@@ -34,6 +34,12 @@ export interface ConfigIntegrityCheckerItemValidationDynamicsGP {
   createInvoiceDefaults?: ConfigIntegrityCheckerItemValidationDynamicsGPCreateInvoiceDefaults
 }
 
+export interface ConfigIntegrityCheckerVendorUpdateDynamicsGP {
+  source: 'dynamicsGp'
+  gpFilters?: Partial<GetVendorsFilters>
+  vendorCodesToIgnore?: string[]
+}
+
 export interface ConfigModuleIntegrityChecker {
   fasterAssets?: {
     isEnabled?: boolean
@@ -51,5 +57,11 @@ export interface ConfigModuleIntegrityChecker {
     isEnabled?: boolean
     storerooms?: string[]
     validation?: ConfigIntegrityCheckerItemValidationDynamicsGP
+  }
+
+  fasterVendors?: {
+    isEnabled?: boolean
+    update?: ConfigIntegrityCheckerVendorUpdateDynamicsGP
+    vendorCodesToIgnore?: string[]
   }
 }

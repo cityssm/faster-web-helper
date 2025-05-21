@@ -1,4 +1,5 @@
 /* eslint-disable unicorn/filename-case, @eslint-community/eslint-comments/disable-enable-pair */
+/* eslint-disable no-console */
 
 import { Service } from 'node-windows'
 
