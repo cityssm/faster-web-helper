@@ -32,26 +32,28 @@ export const configDefaultValues = {
   'webServer.session.secret': 'cityssm/faster-web-helper',
   'webServer.session.maxAgeMillis': hoursToMillis(12),
 
-  'login.domain': '',
   'login.authentication': undefined as
     | {
-        type: 'activeDirectory'
         config: ActiveDirectoryAuthenticatorConfiguration
+        type: 'activeDirectory'
       }
     | {
-        type: 'adWebAuth'
         config: ADWebAuthAuthenticatorConfiguration
+        type: 'adWebAuth'
       }
     | {
-        type: 'plainText'
         config: PlainTextAuthenticatorConfiguration
+        type: 'plainText'
       }
     | undefined,
+  'login.domain': '',
 
   fasterWeb: { tenantOrBaseUrl: '' } as unknown as ConfigFasterWeb,
 
-  worktech: undefined as unknown as MSSQLConfig | undefined,
   dynamicsGP: undefined as unknown as MSSQLConfig | undefined,
+  worktech: undefined as unknown as MSSQLConfig | undefined,
+
+  'sectorFlow.apiKey': '',
 
   'ntfy.server': '',
 
@@ -93,5 +95,5 @@ export const configDefaultValues = {
     hour: 1,
     minute: 0,
     second: 0
-  } as unknown as nodeSchedule.Spec,
+  } as unknown as nodeSchedule.Spec
 }

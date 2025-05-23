@@ -1,6 +1,7 @@
-import type { GPItemWithQuantity } from '@cityssm/dynamics-gp';
+import type { GPItemWithQuantity, GPVendor } from '@cityssm/dynamics-gp';
 import type { ConfigIntegrityCheckerItemValidationDynamicsGPCreateInvoiceDefaults, ConfigModuleIntegrityCheckerMappingFunctions } from './types.js';
 type GpItemFilterFunction = (item: GPItemWithQuantity) => boolean;
+type GpVendorFilterFunction = (vendor: GPVendor) => Promise<boolean>;
 declare const _default: {
     'modules.integrityChecker.isEnabled': boolean;
     'modules.integrityChecker.fasterAssets.isEnabled': boolean;
@@ -17,6 +18,7 @@ declare const _default: {
     'modules.integrityChecker.fasterVendors.isEnabled': boolean;
     'modules.integrityChecker.fasterVendors.update.source': string;
     'modules.integrityChecker.fasterVendors.update.gpFilters': {};
+    'modules.integrityChecker.fasterVendors.update.gpVendorFilter': GpVendorFilterFunction | undefined;
     'modules.integrityChecker.fasterVendors.update.vendorCodesToIgnore': string[];
 };
 export default _default;

@@ -1,4 +1,8 @@
-import type { GetVendorsFilters, GPItemWithQuantity } from '@cityssm/dynamics-gp'
+import type {
+  GetVendorsFilters,
+  GPItemWithQuantity,
+  GPVendor
+} from '@cityssm/dynamics-gp'
 
 import type {
   ConfigIntegrityCheckerItemValidationDynamicsGPCreateInvoiceDefaults,
@@ -6,6 +10,8 @@ import type {
 } from './types.js'
 
 type GpItemFilterFunction = (item: GPItemWithQuantity) => boolean
+
+type GpVendorFilterFunction = (vendor: GPVendor) => Promise<boolean>
 
 export default {
   'modules.integrityChecker.isEnabled': false,
@@ -42,8 +48,13 @@ export default {
 
   'modules.integrityChecker.fasterVendors.update.source': '',
 
-  'modules.integrityChecker.fasterVendors.update.gpFilters':
-    {} satisfies Partial<GetVendorsFilters> | undefined,
+  'modules.integrityChecker.fasterVendors.update.gpFilters': {} satisfies
+    | Partial<GetVendorsFilters>
+    | undefined,
 
-  'modules.integrityChecker.fasterVendors.update.vendorCodesToIgnore': [] as string[]
+  'modules.integrityChecker.fasterVendors.update.gpVendorFilter':
+    undefined as unknown as GpVendorFilterFunction | undefined,
+
+  'modules.integrityChecker.fasterVendors.update.vendorCodesToIgnore':
+    [] as string[]
 } satisfies Record<`modules.integrityChecker.${string}`, unknown>

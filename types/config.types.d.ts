@@ -2,7 +2,6 @@ import type { ActiveDirectoryAuthenticatorConfiguration, ADWebAuthAuthenticatorC
 import type { mssql } from '@cityssm/mssql-multi-pool';
 import type { nodeSchedule } from '@cityssm/scheduled-task';
 import type { AccessOptions } from 'basic-ftp';
-import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
 import type { ConfigModuleIntegrityChecker } from '../modules/integrityChecker/config/types.js';
 import type { ConfigModuleInventoryScanner } from '../modules/inventoryScanner/config/types.js';
 import type { ConfigFileSuffixXlsx, ConfigScheduledFtpReport } from './config.helperTypes.js';
@@ -23,24 +22,26 @@ export interface Config {
         };
     };
     login?: {
-        domain: string;
         authentication: {
-            type: 'activeDirectory';
             config: ActiveDirectoryAuthenticatorConfiguration;
+            type: 'activeDirectory';
         } | {
-            type: 'adWebAuth';
             config: ADWebAuthAuthenticatorConfiguration;
+            type: 'adWebAuth';
         } | {
-            type: 'plainText';
             config: PlainTextAuthenticatorConfiguration;
+            type: 'plainText';
         };
+        domain: string;
     };
-    smtp?: SMTPTransport.Options;
     ntfy?: {
         server: string;
     };
     worktech?: mssql.config;
     dynamicsGP?: mssql.config;
+    sectorFlow?: {
+        apiKey: string;
+    };
     modules: {
         autocomplete?: ConfigModule<ConfigModuleAutocomplete>;
         inventoryScanner?: ConfigModule<ConfigModuleInventoryScanner>;
@@ -48,17 +49,17 @@ export interface Config {
         tempFolderCleanup?: ConfigModule<ConfigModuleTempFolderCleanup>;
     };
 }
-type ConfigModule<T> = ({
+type ConfigModule<T> = (Partial<T> & {
     isEnabled: false;
-} & Partial<T>) | ({
+}) | (T & {
     isEnabled: true;
-} & T);
+});
 export interface ConfigFasterWeb {
     tenantOrBaseUrl: string;
-    apiUserName?: string;
     apiPassword?: string;
-    appUserName?: string;
+    apiUserName?: string;
     appPassword?: string;
+    appUserName?: string;
 }
 interface ConfigModuleAutocomplete {
     reports: {
@@ -73,7 +74,7 @@ interface ConfigModuleAutocomplete {
     };
 }
 interface ConfigModuleTempFolderCleanup {
-    schedule?: nodeSchedule.Spec;
     maxAgeDays?: number;
+    schedule?: nodeSchedule.Spec;
 }
 export {};

@@ -17,8 +17,8 @@ declare const _default: {
     'modules.inventoryScanner.items.validation': ConfigItemValidationDynamicsGP | ConfigItemValidationFaster | undefined;
     'modules.inventoryScanner.fasterItemRequests.isEnabled': boolean;
     'modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled': boolean;
-    'modules.inventoryScanner.fasterItemRequests.ntfy.topic': undefined | string;
-    'modules.inventoryScanner.quantities.acceptOverages': boolean;
+    'modules.inventoryScanner.fasterItemRequests.ntfy.topic': string | undefined;
     'modules.inventoryScanner.quantities.acceptNegatives': boolean;
+    'modules.inventoryScanner.quantities.acceptOverages': boolean;
 };
 export default _default;

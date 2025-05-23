@@ -1,27 +1,25 @@
 {
   "name": "@cityssm/faster-web-helper",
   "version": "1.0.0-dev",
-  "type": "module",
+  "private": true,
   "description": "A service to support integrations with FASTER Web.",
-  "exports": "./index.js",
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "scripts": {
-    "start": "node ./index.js",
-    "dev": "cross-env NODE_ENV=development nodemon ./index.js",
-    "cy:open": "cypress open --config-file cypress.config.ts",
-    "cy:run": "cypress run --config-file cypress.config.ts",
-    "test": "cross-env NODE_ENV=development node --test",
-    "coverage": "cross-env NODE_ENV=development c8 --reporter=lcov --reporter=text --reporter=text-summary node --test"
-  },
   "keywords": [
     "faster-web",
     "worktech",
     "inventory-management"
   ],
-  "author": "The Corporation of the City of Sault Ste. Marie",
   "license": "MIT",
+  "author": "The Corporation of the City of Sault Ste. Marie",
+  "type": "module",
+  "exports": "./index.js",
+  "scripts": {
+    "coverage": "cross-env NODE_ENV=development c8 --reporter=lcov --reporter=text --reporter=text-summary node --test",
+    "cy:open": "cypress open --config-file cypress.config.ts",
+    "cy:run": "cypress run --config-file cypress.config.ts",
+    "dev": "cross-env NODE_ENV=development nodemon ./index.js",
+    "start": "node ./index.js",
+    "test": "cross-env NODE_ENV=development node --test"
+  },
   "dependencies": {
     "@cityssm/authentication-helper": "^0.1.0",
     "@cityssm/bulma-js": "^1.0.0-rc",
@@ -55,7 +53,6 @@
     "exit-hook": "^4.0.0",
     "express": "^5.1.0",
     "express-session": "^1.18.1",
-    "nodemailer": "^7.0.3",
     "session-file-store": "^1.5.0"
   },
   "devDependencies": {
@@ -64,19 +61,21 @@
     "@types/debug": "^4.1.12",
     "@types/express": "^5.0.2",
     "@types/express-session": "^1.18.1",
-    "@types/node": "^22.15.19",
+    "@types/node": "^22.15.21",
     "@types/node-schedule": "^2.1.7",
     "@types/node-windows": "^0.1.6",
-    "@types/nodemailer": "^6.4.17",
     "@types/session-file-store": "^1.2.5",
-    "cypress": "^14.3.3",
+    "cypress": "^14.4.0",
     "cypress-axe": "^1.6.0",
-    "eslint-config-cityssm": "^23.0.1",
+    "eslint-config-cityssm": "^24.0.0",
     "nodemon": "^3.1.10",
     "prettier-config-cityssm": "^1.0.0"
   },
   "optionalDependencies": {
-    "@cityssm/faster-api": "github:cityssm/node-faster-api#v1.4.3"
+    "@cityssm/faster-api": "github:cityssm/node-faster-api#v1.4.3",
+    "@cityssm/sectorflow": "^0.6.0"
   },
-  "private": true
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }

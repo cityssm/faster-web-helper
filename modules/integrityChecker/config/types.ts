@@ -1,4 +1,4 @@
-import type { GetVendorsFilters, GPItemWithQuantity } from '@cityssm/dynamics-gp'
+import type { GetVendorsFilters, GPItemWithQuantity, GPVendor } from '@cityssm/dynamics-gp'
 import type { AssetResult } from '@cityssm/faster-api'
 
 export type FasterAssetMappingFunction = (
@@ -36,7 +36,14 @@ export interface ConfigIntegrityCheckerItemValidationDynamicsGP {
 
 export interface ConfigIntegrityCheckerVendorUpdateDynamicsGP {
   source: 'dynamicsGp'
+
+  /** Filters passed to `@cityssm/dynamics-gp`, used at the time of the query */
   gpFilters?: Partial<GetVendorsFilters>
+
+  /** Filters run after the query, before the sync */
+  gpVendorFilter?: (vendor: GPVendor) => boolean
+
+  /** FASTER vendor codes to ignore */
   vendorCodesToIgnore?: string[]
 }
 
@@ -62,6 +69,5 @@ export interface ConfigModuleIntegrityChecker {
   fasterVendors?: {
     isEnabled?: boolean
     update?: ConfigIntegrityCheckerVendorUpdateDynamicsGP
-    vendorCodesToIgnore?: string[]
   }
 }

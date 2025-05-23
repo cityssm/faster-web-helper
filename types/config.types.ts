@@ -6,7 +6,6 @@ import type {
 import type { mssql } from '@cityssm/mssql-multi-pool'
 import type { nodeSchedule } from '@cityssm/scheduled-task'
 import type { AccessOptions } from 'basic-ftp'
-import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js'
 
 import type { ConfigModuleIntegrityChecker } from '../modules/integrityChecker/config/types.js'
 import type { ConfigModuleInventoryScanner } from '../modules/inventoryScanner/config/types.js'
@@ -37,23 +36,21 @@ export interface Config {
   }
 
   login?: {
-    domain: string
     authentication:
       | {
-          type: 'activeDirectory'
           config: ActiveDirectoryAuthenticatorConfiguration
+          type: 'activeDirectory'
         }
       | {
-          type: 'adWebAuth'
           config: ADWebAuthAuthenticatorConfiguration
+          type: 'adWebAuth'
         }
       | {
-          type: 'plainText'
           config: PlainTextAuthenticatorConfiguration
+          type: 'plainText'
         }
+    domain: string
   }
-
-  smtp?: SMTPTransport.Options
 
   ntfy?: {
     server: string
@@ -62,6 +59,10 @@ export interface Config {
   worktech?: mssql.config
 
   dynamicsGP?: mssql.config
+
+  sectorFlow?: {
+    apiKey: string
+  }
 
   modules: {
     autocomplete?: ConfigModule<ConfigModuleAutocomplete>
@@ -72,19 +73,21 @@ export interface Config {
 }
 
 type ConfigModule<T> =
-  | ({
+  | (Partial<T> & {
       isEnabled: false
-    } & Partial<T>)
-  | ({
+    })
+  | (T & {
       isEnabled: true
-    } & T)
+    })
 
 export interface ConfigFasterWeb {
   tenantOrBaseUrl: string
-  apiUserName?: string
+
   apiPassword?: string
-  appUserName?: string
+  apiUserName?: string
+
   appPassword?: string
+  appUserName?: string
 }
 
 interface ConfigModuleAutocomplete {
@@ -102,6 +105,6 @@ interface ConfigModuleAutocomplete {
 }
 
 interface ConfigModuleTempFolderCleanup {
-  schedule?: nodeSchedule.Spec
   maxAgeDays?: number
+  schedule?: nodeSchedule.Spec
 }

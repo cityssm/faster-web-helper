@@ -10,12 +10,18 @@ import { moduleName } from '../module.helpers.js';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}:inventoryValidation:dynamicsGp`);
 const fasterWebConfig = getConfigProperty('fasterWeb');
 const dynamicsGpConfig = getConfigProperty('dynamicsGP');
+// eslint-disable-next-line complexity
 export async function updateVendorsInFaster(fasterVendors) {
     /*
-     * Build a map of vendor codes to vendors
+     * Build a map of active vendor codes to vendors
      */
+    const vendorCodesToIgnore = getConfigProperty('modules.integrityChecker.fasterVendors.update.vendorCodesToIgnore');
     const vendorCodeToVendor = new Map();
     for (const vendor of fasterVendors) {
+        if (vendorCodesToIgnore.includes(vendor.vendorCode) ||
+            vendor.vendorStatus === 'Obsolete') {
+            continue;
+        }
         vendorCodeToVendor.set(vendor.vendorCode, vendor);
     }
     /*
@@ -31,7 +37,6 @@ export async function updateVendorsInFaster(fasterVendors) {
     /*
      * Create / Update the vendors in FASTER that are in GP
      */
-    const vendorCodesToIgnore = getConfigProperty('modules.integrityChecker.fasterVendors.update.vendorCodesToIgnore');
     const fasterApi = new FasterApi(fasterWebConfig.tenantOrBaseUrl, fasterWebConfig.apiUserName ?? '', fasterWebConfig.apiPassword ?? '');
     let syncQueue = [];
     const maxQueueSize = 500;
@@ -39,8 +44,20 @@ export async function updateVendorsInFaster(fasterVendors) {
         if (vendorCodesToIgnore.includes(gpVendor.vendorId)) {
             continue;
         }
+        if (getConfigProperty('modules.integrityChecker.fasterVendors.update.gpVendorFilter')) {
+            const vendorFilter = getConfigProperty('modules.integrityChecker.fasterVendors.update.gpVendorFilter');
+            if (typeof vendorFilter === 'function') {
+                if (!(await vendorFilter(gpVendor))) {
+                    continue;
+                }
+            }
+            else {
+                debug('Invalid gpVendorFilter function. Skipping vendor filter check.');
+            }
+        }
         const fasterVendor = vendorCodeToVendor.get(gpVendor.vendorId);
         const { city, country, province } = normalizeCityProvinceCountry(gpVendor.city, gpVendor.state, gpVendor.country);
+        debug(`Syncing vendor ${gpVendor.vendorId} (${gpVendor.vendorName})...`);
         syncQueue.push({
             vendorID: (fasterVendor?.vendorID ?? '').toString(),
             vendorCode: gpVendor.vendorId.slice(0, fasterVendorConstants.vendorCode.maxLength),
@@ -75,9 +92,12 @@ export async function updateVendorsInFaster(fasterVendors) {
     /*
      * Inactivate any vendors in FASTER that are not in GP
      */
-    debug(`Inactivating ${vendorCodeToVendor.size} vendors in FASTER that are not in GP...`);
+    if (vendorCodeToVendor.size > 0) {
+        debug(`Inactivating ${vendorCodeToVendor.size} vendors in FASTER...`);
+    }
     for (const vendor of vendorCodeToVendor.values()) {
-        if (vendorCodesToIgnore.includes(vendor.vendorCode)) {
+        if (vendorCodesToIgnore.includes(vendor.vendorCode) ||
+            vendor.vendorStatus === 'Obsolete') {
             continue;
         }
         syncQueue.push({
@@ -95,9 +115,7 @@ export async function updateVendorsInFaster(fasterVendors) {
             vendorPhone: vendor.vendorPhone,
             federalTaxID: vendor.federalTaxID,
             vendorWebsite: vendor.vendorWebsite,
-            vendorCategoryList: vendor.vendorCategory
-                .split(',')
-                .filter((category) => ['Asset', 'Fuel', 'Inventory', 'Sublet'].includes(category))
+            vendorCategoryList: []
         });
         if (syncQueue.length >= maxQueueSize) {
             await fasterApi.syncVendors(syncQueue);

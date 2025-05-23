@@ -12,11 +12,12 @@ export const configDefaultValues = {
     'webServer.session.cookieName': 'faster-web-helper-user-sid',
     'webServer.session.secret': 'cityssm/faster-web-helper',
     'webServer.session.maxAgeMillis': hoursToMillis(12),
-    'login.domain': '',
     'login.authentication': undefined,
+    'login.domain': '',
     fasterWeb: { tenantOrBaseUrl: '' },
-    worktech: undefined,
     dynamicsGP: undefined,
+    worktech: undefined,
+    'sectorFlow.apiKey': '',
     'ntfy.server': '',
     /*
      * Autocomplete
@@ -43,5 +44,5 @@ export const configDefaultValues = {
         hour: 1,
         minute: 0,
         second: 0
-    },
+    }
 };

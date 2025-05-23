@@ -23,6 +23,7 @@ export declare const configDefaultValues: {
     'modules.integrityChecker.fasterVendors.isEnabled': boolean;
     'modules.integrityChecker.fasterVendors.update.source': string;
     'modules.integrityChecker.fasterVendors.update.gpFilters': {};
+    'modules.integrityChecker.fasterVendors.update.gpVendorFilter': ((vendor: import("@cityssm/dynamics-gp").GPVendor) => Promise<boolean>) | undefined;
     'modules.integrityChecker.fasterVendors.update.vendorCodesToIgnore': string[];
     'modules.inventoryScanner.isEnabled': boolean;
     'modules.inventoryScanner.scannerIpAddressRegex': RegExp;
@@ -41,9 +42,9 @@ export declare const configDefaultValues: {
     'modules.inventoryScanner.items.validation': import("../modules/inventoryScanner/config/types.js").ConfigItemValidationDynamicsGP | import("../modules/inventoryScanner/config/types.js").ConfigItemValidationFaster | undefined;
     'modules.inventoryScanner.fasterItemRequests.isEnabled': boolean;
     'modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled': boolean;
-    'modules.inventoryScanner.fasterItemRequests.ntfy.topic': undefined | string;
-    'modules.inventoryScanner.quantities.acceptOverages': boolean;
+    'modules.inventoryScanner.fasterItemRequests.ntfy.topic': string | undefined;
     'modules.inventoryScanner.quantities.acceptNegatives': boolean;
+    'modules.inventoryScanner.quantities.acceptOverages': boolean;
     'application.workDays': number[];
     'application.workHours': number[];
     ftp: AccessOptions | undefined;
@@ -52,20 +53,21 @@ export declare const configDefaultValues: {
     'webServer.session.cookieName': string;
     'webServer.session.secret': string;
     'webServer.session.maxAgeMillis': number;
-    'login.domain': string;
     'login.authentication': {
-        type: "activeDirectory";
         config: ActiveDirectoryAuthenticatorConfiguration;
+        type: "activeDirectory";
     } | {
-        type: "adWebAuth";
         config: ADWebAuthAuthenticatorConfiguration;
+        type: "adWebAuth";
     } | {
-        type: "plainText";
         config: PlainTextAuthenticatorConfiguration;
+        type: "plainText";
     } | undefined;
+    'login.domain': string;
     fasterWeb: ConfigFasterWeb;
-    worktech: MSSQLConfig | undefined;
     dynamicsGP: MSSQLConfig | undefined;
+    worktech: MSSQLConfig | undefined;
+    'sectorFlow.apiKey': string;
     'ntfy.server': string;
     'modules.autocomplete.isEnabled': boolean;
     'modules.autocomplete.runOnStartup': boolean;
