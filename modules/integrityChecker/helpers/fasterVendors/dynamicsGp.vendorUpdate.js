@@ -45,7 +45,7 @@ export async function updateVendorsInFaster(fasterVendors) {
         if (vendorCodesToIgnore.includes(gpVendor.vendorId)) {
             continue;
         }
-        if (getConfigProperty('modules.integrityChecker.fasterVendors.update.gpVendorFilter')) {
+        if (getConfigProperty('modules.integrityChecker.fasterVendors.update.gpVendorFilter') !== undefined) {
             const vendorFilter = getConfigProperty('modules.integrityChecker.fasterVendors.update.gpVendorFilter');
             if (typeof vendorFilter === 'function') {
                 if (!(await vendorFilter(gpVendor))) {

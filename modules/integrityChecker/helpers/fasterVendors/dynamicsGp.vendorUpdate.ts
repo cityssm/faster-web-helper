@@ -85,7 +85,7 @@ export async function updateVendorsInFaster(
     if (
       getConfigProperty(
         'modules.integrityChecker.fasterVendors.update.gpVendorFilter'
-      )
+      ) !== undefined
     ) {
       const vendorFilter = getConfigProperty(
         'modules.integrityChecker.fasterVendors.update.gpVendorFilter'

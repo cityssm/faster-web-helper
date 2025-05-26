@@ -1,9 +1,11 @@
+import { vendorCategories } from '@cityssm/faster-constants/vendors/vendors.js'
+
 export function splitVendorCategoryString(
   vendorCategory = ''
-): Array<'Asset' | 'Fuel' | 'Inventory' | 'Sublet'> {
+): Array<(typeof vendorCategories)[number]> {
   return vendorCategory
     .split(',')
     .filter((category) =>
-      ['Asset', 'Fuel', 'Inventory', 'Sublet'].includes(category)
-    ) as Array<'Asset' | 'Fuel' | 'Inventory' | 'Sublet'>
+      (vendorCategories as unknown as string[]).includes(category)
+    ) as Array<(typeof vendorCategories)[number]>
 }

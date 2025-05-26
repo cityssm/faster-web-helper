@@ -1,5 +1,6 @@
+import { vendorCategories } from '@cityssm/faster-constants/vendors/vendors.js';
 export function splitVendorCategoryString(vendorCategory = '') {
     return vendorCategory
         .split(',')
-        .filter((category) => ['Asset', 'Fuel', 'Inventory', 'Sublet'].includes(category));
+        .filter((category) => vendorCategories.includes(category));
 }

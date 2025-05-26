@@ -1,5 +1,5 @@
 // eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
-/* eslint-disable @typescript-eslint/no-magic-numbers */
+/* eslint-disable @typescript-eslint/no-magic-numbers, unicorn/prefer-single-call */
 
 import fs from 'node:fs/promises'
 import path from 'node:path'
@@ -165,7 +165,7 @@ function getExportFileName(): string {
    * Full date string
    */
 
-  const fullDateString = dateString + '_' + timeString + timezoneString
+  const fullDateString = `${dateString}_${timeString}${timezoneString}`
 
   const fileName = exportFileNamePrefix + fullDateString + '.csv'
 

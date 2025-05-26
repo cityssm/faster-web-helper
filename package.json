@@ -26,7 +26,7 @@
     "@cityssm/bulma-webapp-js": "^1.5.0",
     "@cityssm/configurator": "^0.1.0",
     "@cityssm/dynamics-gp": "^1.2.0",
-    "@cityssm/faster-constants": "^0.3.0",
+    "@cityssm/faster-constants": "^0.3.1",
     "@cityssm/faster-report-exporter": "^0.6.1",
     "@cityssm/faster-report-parser": "^0.5.0",
     "@cityssm/faster-unofficial-api": "^0.6.0",
@@ -72,7 +72,7 @@
     "prettier-config-cityssm": "^1.0.0"
   },
   "optionalDependencies": {
-    "@cityssm/faster-api": "github:cityssm/node-faster-api#v1.4.3",
+    "@cityssm/faster-api": "github:cityssm/node-faster-api#v1.4.4",
     "@cityssm/sectorflow": "^0.6.0"
   },
   "engines": {

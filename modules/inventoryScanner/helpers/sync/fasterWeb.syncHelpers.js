@@ -1,5 +1,5 @@
 // eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
-/* eslint-disable @typescript-eslint/no-magic-numbers */
+/* eslint-disable @typescript-eslint/no-magic-numbers, unicorn/prefer-single-call */
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { FasterUnofficialAPI, integrationNames } from '@cityssm/faster-unofficial-api';
@@ -100,7 +100,7 @@ function getExportFileName() {
     /*
      * Full date string
      */
-    const fullDateString = dateString + '_' + timeString + timezoneString;
+    const fullDateString = `${dateString}_${timeString}${timezoneString}`;
     const fileName = exportFileNamePrefix + fullDateString + '.csv';
     return fileName;
 }

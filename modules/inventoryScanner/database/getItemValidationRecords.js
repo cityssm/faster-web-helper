@@ -13,7 +13,7 @@ export default function getItemValidationRecords(itemNumberPrefix) {
         sql += ' and itemNumberPrefix = ?';
         sqlParameters.push(itemNumberPrefix);
     }
-    sql += ` order by itemStoreroom, itemNumber`;
+    sql += ' order by itemStoreroom, itemNumber';
     const result = database
         .prepare(sql)
         .all(sqlParameters);

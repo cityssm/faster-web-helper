@@ -23,7 +23,7 @@ export default function getItemValidationRecords(
     sqlParameters.push(itemNumberPrefix)
   }
 
-  sql += ` order by itemStoreroom, itemNumber`
+  sql += ' order by itemStoreroom, itemNumber'
 
   const result = database
     .prepare(sql)
