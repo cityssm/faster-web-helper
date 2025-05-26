@@ -38,13 +38,13 @@ async function refreshFasterVendors() {
     }
 }
 const scheduledTask = new ScheduledTask(taskName, refreshFasterVendors, {
+    minimumIntervalMillis: getMinimumMillisBetweenRuns('integrityChecker_fasterVendors'),
     schedule: {
         dayOfWeek: getConfigProperty('application.workDays'),
         hour: getConfigProperty('application.workHours'),
         minute: getScheduledTaskMinutes('integrityChecker_fasterVendors'),
         second: 0
     },
-    minimumIntervalMillis: getMinimumMillisBetweenRuns('integrityChecker_fasterVendors'),
     startTask: true
 });
 /*

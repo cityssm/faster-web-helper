@@ -11,6 +11,7 @@ import Debug from 'debug'
 import { DEBUG_NAMESPACE } from '../../../../debug.config.js'
 import { normalizeCityProvinceCountry } from '../../../../helpers/address.helpers.js'
 import { getConfigProperty } from '../../../../helpers/config.helpers.js'
+import { splitVendorCategoryString } from '../fasterVendors.helpers.js'
 import { moduleName } from '../module.helpers.js'
 
 const debug = Debug(
@@ -147,7 +148,10 @@ export async function updateVendorsInFaster(
       federalTaxID: '',
       vendorWebsite: '',
 
-      vendorCategoryList: ['Asset', 'Inventory', 'Sublet']
+      vendorCategoryList:
+        fasterVendor === undefined
+          ? ['Asset', 'Inventory', 'Sublet']
+          : splitVendorCategoryString(fasterVendor.vendorCategory)
     })
 
     vendorCodeToVendor.delete(gpVendor.vendorId)
