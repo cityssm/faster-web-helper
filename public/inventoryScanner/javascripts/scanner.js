@@ -222,9 +222,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             else {
                 bulmaJS.alert({
+                    contextualColorName: 'danger',
                     title: 'Error Recording Scan',
-                    message: 'Please try again.',
-                    contextualColorName: 'danger'
+                    message: 'Please try again.'
                 });
             }
         });

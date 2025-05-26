@@ -112,7 +112,7 @@ declare const cityssm: cityssmGlobal
   function renderRepairIds(records: WorkOrderValidationRecord[]): void {
     const repairIdSelectElement = document.querySelector(
       '#updatePending--repairId'
-    ) as HTMLSelectElement | null
+    )
 
     if (repairIdSelectElement === null) {
       return
@@ -137,13 +137,11 @@ declare const cityssm: cityssmGlobal
   let lastSearchedWorkOrderNumber = ''
 
   function refreshRepairIdSelect(clearOptions = true): void {
-    const workOrderNumberElement = document.querySelector(
-      '#updatePending--workOrderNumber'
-    ) as HTMLInputElement | null
+    const workOrderNumberElement: HTMLInputElement | null =
+      document.querySelector('#updatePending--workOrderNumber')
 
-    const repairIdSelectElement = document.querySelector(
-      '#updatePending--repairId'
-    ) as HTMLSelectElement | null
+    const repairIdSelectElement: HTMLSelectElement | null =
+      document.querySelector('#updatePending--repairId')
 
     if (
       workOrderNumberElement === null ||
@@ -206,9 +204,10 @@ declare const cityssm: cityssmGlobal
           renderPendingRecords()
         } else {
           bulmaJS.alert({
+            contextualColorName: 'danger',
             title: 'Error Updating Record',
-            message: 'Please try again.',
-            contextualColorName: 'danger'
+
+            message: 'Please try again.'
           })
         }
       }
@@ -247,12 +246,14 @@ declare const cityssm: cityssmGlobal
     }
 
     bulmaJS.confirm({
-      title: 'Delete Pending Record',
-      message: 'Are you sure you want to delete this pending scanner record?',
       contextualColorName: 'warning',
+      title: 'Delete Pending Record',
+
+      message: 'Are you sure you want to delete this pending scanner record?',
+
       okButton: {
-        text: 'Yes, Delete Record',
-        callbackFunction: doDelete
+        callbackFunction: doDelete,
+        text: 'Yes, Delete Record'
       }
     })
   }

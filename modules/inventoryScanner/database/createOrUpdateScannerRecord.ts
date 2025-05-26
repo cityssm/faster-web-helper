@@ -17,13 +17,15 @@ import { databasePath } from './helpers.database.js'
 
 export type CreateScannerRecordForm = {
   scannerKey: string
+
   scannerDateString?: DateString
   scannerTimeString?: TimeString
 
   workOrderNumber: string
   workOrderType?: WorkOrderType
-  technicianId?: string
+
   repairId: string
+  technicianId?: string
 
   itemStoreroom?: string
 
@@ -31,17 +33,17 @@ export type CreateScannerRecordForm = {
   itemDescription?: string
 
   quantity: number | string
-  quantityMultiplier: '1' | '-1' | 1 | -1
+  quantityMultiplier: -1 | '-1' | '1' | 1
 
   unitPrice?: number | string
 } & (
   | {
-      itemType: 'stock'
-      itemNumber: string
-    }
-  | {
       itemType: 'nonStock'
       itemNumberSuffix: string
+    }
+  | {
+      itemType: 'stock'
+      itemNumber: string
     }
 )
 
@@ -75,18 +77,12 @@ export default function createOrUpdateScannerRecord(
     )
 
     for (const item of items) {
-      if (itemStoreroom === undefined) {
-        itemStoreroom = item.itemStoreroom
-      }
+      itemStoreroom ??= item.itemStoreroom
 
       if (itemStoreroom === item.itemStoreroom) {
-        if (itemDescription === undefined) {
-          itemDescription = item.itemDescription
-        }
+        itemDescription ??= item.itemDescription
 
-        if (unitPrice === undefined) {
-          unitPrice = item.unitPrice
-        }
+        unitPrice ??= item.unitPrice
 
         break
       }
@@ -136,7 +132,7 @@ export default function createOrUpdateScannerRecord(
     and recordSync_timeMillis is null
     and recordDelete_timeMillis is null`
 
-  const existingRecordParameters: Array<string | number> = [
+  const existingRecordParameters: Array<number | string> = [
     scannerRecord.workOrderNumber,
     workOrderType,
     itemNumberPrefix,

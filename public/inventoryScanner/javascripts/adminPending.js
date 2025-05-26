@@ -114,9 +114,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             else {
                 bulmaJS.alert({
+                    contextualColorName: 'danger',
                     title: 'Error Updating Record',
-                    message: 'Please try again.',
-                    contextualColorName: 'danger'
+                    message: 'Please try again.'
                 });
             }
         });
@@ -142,12 +142,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         }
         bulmaJS.confirm({
+            contextualColorName: 'warning',
             title: 'Delete Pending Record',
             message: 'Are you sure you want to delete this pending scanner record?',
-            contextualColorName: 'warning',
             okButton: {
-                text: 'Yes, Delete Record',
-                callbackFunction: doDelete
+                callbackFunction: doDelete,
+                text: 'Yes, Delete Record'
             }
         });
     }

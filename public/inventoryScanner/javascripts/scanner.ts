@@ -46,8 +46,6 @@ declare const cityssm: cityssmGlobal
   ;(document.querySelector('#about--scannerKey') as HTMLElement).textContent =
     scannerKey
 
-
-
   /*
    * Repair refresh
    */
@@ -154,9 +152,8 @@ declare const cityssm: cityssmGlobal
    * Item Type Toggle
    */
 
-  const itemTypeTabElements = document.querySelectorAll(
-    '#scanner--itemTypeTabs a'
-  ) as NodeListOf<HTMLAnchorElement>
+  const itemTypeTabElements: NodeListOf<HTMLAnchorElement> =
+    document.querySelectorAll('#scanner--itemTypeTabs a')
 
   const itemNumberSuffixElement = formElement.querySelector(
     '#scanner--itemNumberSuffix'
@@ -385,13 +382,15 @@ declare const cityssm: cityssmGlobal
           itemNumberElement.focus()
 
           exports.scannerHistory = responseJSON.records
-          globalThis.dispatchEvent(new Event(exports.renderScannerHistoryEventName))
-          
+          globalThis.dispatchEvent(
+            new Event(exports.renderScannerHistoryEventName)
+          )
         } else {
           bulmaJS.alert({
+            contextualColorName: 'danger',
             title: 'Error Recording Scan',
-            message: 'Please try again.',
-            contextualColorName: 'danger'
+
+            message: 'Please try again.'
           })
         }
       }

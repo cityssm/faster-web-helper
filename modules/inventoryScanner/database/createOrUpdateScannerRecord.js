@@ -19,16 +19,10 @@ export default function createOrUpdateScannerRecord(scannerRecord) {
         (itemStoreroom === undefined || unitPrice === undefined)) {
         const items = getItemValidationRecordsByItemNumber(itemNumber, itemNumberPrefix, database);
         for (const item of items) {
-            if (itemStoreroom === undefined) {
-                itemStoreroom = item.itemStoreroom;
-            }
+            itemStoreroom ??= item.itemStoreroom;
             if (itemStoreroom === item.itemStoreroom) {
-                if (itemDescription === undefined) {
-                    itemDescription = item.itemDescription;
-                }
-                if (unitPrice === undefined) {
-                    unitPrice = item.unitPrice;
-                }
+                itemDescription ??= item.itemDescription;
+                unitPrice ??= item.unitPrice;
                 break;
             }
         }

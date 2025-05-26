@@ -6,19 +6,19 @@ export type CreateScannerRecordForm = {
     scannerTimeString?: TimeString;
     workOrderNumber: string;
     workOrderType?: WorkOrderType;
-    technicianId?: string;
     repairId: string;
+    technicianId?: string;
     itemStoreroom?: string;
     itemNumberPrefix?: string;
     itemDescription?: string;
     quantity: number | string;
-    quantityMultiplier: '1' | '-1' | 1 | -1;
+    quantityMultiplier: -1 | '-1' | '1' | 1;
     unitPrice?: number | string;
 } & ({
-    itemType: 'stock';
-    itemNumber: string;
-} | {
     itemType: 'nonStock';
     itemNumberSuffix: string;
+} | {
+    itemType: 'stock';
+    itemNumber: string;
 });
 export default function createOrUpdateScannerRecord(scannerRecord: CreateScannerRecordForm): boolean;
