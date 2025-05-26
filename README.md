@@ -7,7 +7,7 @@
 🚧 **Under Active Development** 🚧
 
 [![DeepSource](https://app.deepsource.com/gh/cityssm/faster-web-helper.svg/?label=active+issues&show_trend=true&token=u_wO1FIhQ1v-pNxtKl8dZxM4)](https://app.deepsource.com/gh/cityssm/faster-web-helper/)
-[![Maintainability](https://api.codeclimate.com/v1/badges/f30a366c800b38bd9eb7/maintainability)](https://codeclimate.com/github/cityssm/faster-web-helper/maintainability)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=cityssm_faster-web-helper&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=cityssm_faster-web-helper)
 
 A service to support integrations with the
 [FASTER Web Fleet Management System](https://fasterasset.com/products/fleet-management-software/).
