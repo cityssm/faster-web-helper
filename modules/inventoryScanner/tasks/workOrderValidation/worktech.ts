@@ -94,4 +94,4 @@ process.on('message', (_message: TaskWorkerMessage) => {
  * Run the task on initialization
  */
 
-void scheduledTask.runTask()
+await scheduledTask.runTask()

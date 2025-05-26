@@ -94,4 +94,4 @@ const scheduledTask = new ScheduledTask(taskName, refreshFasterAssets, {
 /*
  * Run the task on initialization
  */
-void scheduledTask.runTask();
+await scheduledTask.runTask();

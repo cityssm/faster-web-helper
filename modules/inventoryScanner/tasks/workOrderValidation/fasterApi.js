@@ -73,4 +73,4 @@ process.on('message', (_message) => {
 /*
  * Run the task on initialization
  */
-void scheduledTask.runTask();
+await scheduledTask.runTask();

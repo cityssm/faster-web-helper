@@ -50,4 +50,4 @@ const scheduledTask = new ScheduledTask(taskName, refreshFasterVendors, {
 /*
  * Run the task on initialization
  */
-void scheduledTask.runTask();
+await scheduledTask.runTask();

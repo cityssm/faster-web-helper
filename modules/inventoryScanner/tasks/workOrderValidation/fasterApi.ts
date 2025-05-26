@@ -107,4 +107,4 @@ process.on('message', (_message: unknown) => {
  * Run the task on initialization
  */
 
-void scheduledTask.runTask()
+await scheduledTask.runTask()

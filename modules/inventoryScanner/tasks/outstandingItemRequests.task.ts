@@ -1,6 +1,6 @@
 import { FasterApi } from '@cityssm/faster-api'
 import FasterUrlBuilder from '@cityssm/faster-url-builder'
-import { ScheduledTask, nodeSchedule } from '@cityssm/scheduled-task'
+import { nodeSchedule, ScheduledTask } from '@cityssm/scheduled-task'
 import { minutesToMillis } from '@cityssm/to-millis'
 import camelcase from 'camelcase'
 import Debug from 'debug'
@@ -115,4 +115,4 @@ const scheduledTask = new ScheduledTask(
  * Run the task on initialization.
  */
 
-void scheduledTask.runTask()
+await scheduledTask.runTask()
