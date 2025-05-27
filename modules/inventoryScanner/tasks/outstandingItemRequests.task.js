@@ -25,7 +25,9 @@ async function refreshOutstandingItemRequestsFromFasterApi() {
     const fasterApi = new FasterApi(fasterWebConfig.tenantOrBaseUrl, fasterWebConfig.apiUserName, fasterWebConfig.apiPassword);
     debug('Querying the FASTER API...');
     try {
-        const itemRequestsResponse = await fasterApi.getItemRequests({});
+        const itemRequestsResponse = await fasterApi.getItemRequests({
+            status: 'Requested'
+        });
         if (!itemRequestsResponse.success) {
             debug(`FASTER API error: ${JSON.stringify(itemRequestsResponse.error)}`);
             return;

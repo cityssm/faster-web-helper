@@ -45,7 +45,9 @@ async function refreshOutstandingItemRequestsFromFasterApi(): Promise<void> {
   debug('Querying the FASTER API...')
 
   try {
-    const itemRequestsResponse = await fasterApi.getItemRequests({})
+    const itemRequestsResponse = await fasterApi.getItemRequests({
+      status: 'Requested'
+    })
 
     if (!itemRequestsResponse.success) {
       debug(`FASTER API error: ${JSON.stringify(itemRequestsResponse.error)}`)
