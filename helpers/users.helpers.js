@@ -1,10 +1,9 @@
 import { randomUUID } from 'node:crypto';
-import { ADWebAuthAuthenticator, ActiveDirectoryAuthenticator, PlainTextAuthenticator } from '@cityssm/authentication-helper';
+import { ActiveDirectoryAuthenticator, ADWebAuthAuthenticator, PlainTextAuthenticator } from '@cityssm/authentication-helper';
 import Debug from 'debug';
 import { DEBUG_NAMESPACE } from '../debug.config.js';
 import { getConfigProperty } from './config.helpers.js';
 const debug = Debug(`${DEBUG_NAMESPACE}:users.functions`);
-// eslint-disable-next-line @typescript-eslint/init-declarations
 let authenticator;
 const authenticationConfig = getConfigProperty('login.authentication');
 const domain = getConfigProperty('login.domain');

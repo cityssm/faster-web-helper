@@ -24,7 +24,7 @@ export function initializeTempFolderCleanupTask(): void {
   )
 
   const tempFolderCleanupFirstRunDate = new Date(
-    tempFolderCleanupJob.nextInvocation().getTime()
+    tempFolderCleanupJob.nextInvocation()
   )
 
   debug(
