@@ -8,15 +8,12 @@ import { normalizeCityProvinceCountry } from '../../../../helpers/address.helper
 import { getConfigProperty } from '../../../../helpers/config.helpers.js';
 import { splitVendorCategoryString } from '../fasterVendors.helpers.js';
 import { moduleName } from '../module.helpers.js';
-const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}:inventoryValidation:dynamicsGp`);
+const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}:vendorValidation:dynamicsGp`);
 const fasterWebConfig = getConfigProperty('fasterWeb');
 const dynamicsGpConfig = getConfigProperty('dynamicsGP');
-// eslint-disable-next-line complexity
-export async function updateVendorsInFaster(fasterVendors) {
-    /*
-     * Build a map of active vendor codes to vendors
-     */
-    const vendorCodesToIgnore = getConfigProperty('modules.integrityChecker.fasterVendors.update.vendorCodesToIgnore');
+const vendorCodesToIgnore = getConfigProperty('modules.integrityChecker.fasterVendors.update.vendorCodesToIgnore');
+const gpVendorFilterFunction = getConfigProperty('modules.integrityChecker.fasterVendors.update.gpVendorFilter');
+function buildFasterVendorMap(fasterVendors) {
     const vendorCodeToVendor = new Map();
     for (const vendor of fasterVendors) {
         if (vendorCodesToIgnore.includes(vendor.vendorCode) ||
@@ -25,6 +22,13 @@ export async function updateVendorsInFaster(fasterVendors) {
         }
         vendorCodeToVendor.set(vendor.vendorCode, vendor);
     }
+    return vendorCodeToVendor;
+}
+export async function updateVendorsInFaster(fasterVendors) {
+    /*
+     * Build a map of active vendor codes to vendors
+     */
+    const vendorCodeToVendor = buildFasterVendorMap(fasterVendors);
     /*
      * Get vendors from Dynamics GP
      */
@@ -45,16 +49,11 @@ export async function updateVendorsInFaster(fasterVendors) {
         if (vendorCodesToIgnore.includes(gpVendor.vendorId)) {
             continue;
         }
-        if (getConfigProperty('modules.integrityChecker.fasterVendors.update.gpVendorFilter') !== undefined) {
-            const vendorFilter = getConfigProperty('modules.integrityChecker.fasterVendors.update.gpVendorFilter');
-            if (typeof vendorFilter === 'function') {
-                if (!(await vendorFilter(gpVendor))) {
-                    continue;
-                }
-            }
-            else {
-                debug('Invalid gpVendorFilter function. Skipping vendor filter check.');
-            }
+        // Check if the vendor should be filtered out
+        if (gpVendorFilterFunction !== undefined &&
+            typeof gpVendorFilterFunction === 'function' &&
+            !(await gpVendorFilterFunction(gpVendor))) {
+            continue;
         }
         const fasterVendor = vendorCodeToVendor.get(gpVendor.vendorId);
         const { city, country, province } = normalizeCityProvinceCountry(gpVendor.city, gpVendor.state, gpVendor.country);
@@ -125,7 +124,5 @@ export async function updateVendorsInFaster(fasterVendors) {
             syncQueue = [];
         }
     }
-    if (syncQueue.length > 0) {
-        await fasterApi.syncVendors(syncQueue);
-    }
+    await fasterApi.syncVendors(syncQueue);
 }

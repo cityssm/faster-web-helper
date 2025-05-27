@@ -72,7 +72,7 @@
     "prettier-config-cityssm": "^1.0.0"
   },
   "optionalDependencies": {
-    "@cityssm/faster-api": "github:cityssm/node-faster-api#v1.4.4",
+    "@cityssm/faster-api": "github:cityssm/node-faster-api#v1.4.5",
     "@cityssm/sectorflow": "^0.6.0"
   },
   "engines": {

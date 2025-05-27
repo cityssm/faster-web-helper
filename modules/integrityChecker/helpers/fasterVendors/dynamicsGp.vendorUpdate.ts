@@ -15,27 +15,25 @@ import { splitVendorCategoryString } from '../fasterVendors.helpers.js'
 import { moduleName } from '../module.helpers.js'
 
 const debug = Debug(
-  `${DEBUG_NAMESPACE}:${camelCase(moduleName)}:inventoryValidation:dynamicsGp`
+  `${DEBUG_NAMESPACE}:${camelCase(moduleName)}:vendorValidation:dynamicsGp`
 )
 
 const fasterWebConfig = getConfigProperty('fasterWeb')
 
 const dynamicsGpConfig = getConfigProperty('dynamicsGP')
 
-// eslint-disable-next-line complexity
-export async function updateVendorsInFaster(
+const vendorCodesToIgnore = getConfigProperty(
+  'modules.integrityChecker.fasterVendors.update.vendorCodesToIgnore'
+)
+
+const gpVendorFilterFunction = getConfigProperty(
+  'modules.integrityChecker.fasterVendors.update.gpVendorFilter'
+)
+
+function buildFasterVendorMap(
   fasterVendors: VendorResult[]
-): Promise<void> {
-  /*
-   * Build a map of active vendor codes to vendors
-   */
-
-  const vendorCodesToIgnore = getConfigProperty(
-    'modules.integrityChecker.fasterVendors.update.vendorCodesToIgnore'
-  )
-
+): Map<string, VendorResult> {
   const vendorCodeToVendor = new Map<string, VendorResult>()
-
   for (const vendor of fasterVendors) {
     if (
       vendorCodesToIgnore.includes(vendor.vendorCode) ||
@@ -43,9 +41,19 @@ export async function updateVendorsInFaster(
     ) {
       continue
     }
-
     vendorCodeToVendor.set(vendor.vendorCode, vendor)
   }
+  return vendorCodeToVendor
+}
+
+export async function updateVendorsInFaster(
+  fasterVendors: VendorResult[]
+): Promise<void> {
+  /*
+   * Build a map of active vendor codes to vendors
+   */
+
+  const vendorCodeToVendor = buildFasterVendorMap(fasterVendors)
 
   /*
    * Get vendors from Dynamics GP
@@ -82,22 +90,13 @@ export async function updateVendorsInFaster(
       continue
     }
 
+    // Check if the vendor should be filtered out
     if (
-      getConfigProperty(
-        'modules.integrityChecker.fasterVendors.update.gpVendorFilter'
-      ) !== undefined
+      gpVendorFilterFunction !== undefined &&
+      typeof gpVendorFilterFunction === 'function' &&
+      !(await gpVendorFilterFunction(gpVendor))
     ) {
-      const vendorFilter = getConfigProperty(
-        'modules.integrityChecker.fasterVendors.update.gpVendorFilter'
-      )
-
-      if (typeof vendorFilter === 'function') {
-        if (!(await vendorFilter(gpVendor))) {
-          continue
-        }
-      } else {
-        debug('Invalid gpVendorFilter function. Skipping vendor filter check.')
-      }
+      continue
     }
 
     const fasterVendor = vendorCodeToVendor.get(gpVendor.vendorId)
@@ -207,7 +206,5 @@ export async function updateVendorsInFaster(
     }
   }
 
-  if (syncQueue.length > 0) {
-    await fasterApi.syncVendors(syncQueue)
-  }
+  await fasterApi.syncVendors(syncQueue)
 }
