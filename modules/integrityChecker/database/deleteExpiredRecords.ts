@@ -1,10 +1,10 @@
 import type sqlite from 'better-sqlite3'
 
 type RecordTable =
-  | 'FasterAssets'
-  | 'WorktechEquipment'
-  | 'FasterInventoryItems'
   | 'DynamicsGpInventoryItems'
+  | 'FasterAssets'
+  | 'FasterInventoryItems'
+  | 'WorktechEquipment'
 
 export function deleteExpiredRecords(
   recordTable: RecordTable,

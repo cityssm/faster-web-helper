@@ -56,12 +56,16 @@ async function refreshWorktechEquipment(): Promise<void> {
     createOrUpdateWorktechEquipment(
       {
         equipmentSystemId: worktechEquipment.equipmentSystemId,
+
         equipmentId: worktechEquipment.equipmentId,
         vinSerial: worktechEquipment.serialNumber,
+
         license: worktechEquipment.plate,
-        year: worktechEquipment.equipmentModelYear,
+
         make: worktechEquipment.equipmentBrand,
         model: worktechEquipment.equipmentModel,
+        year: worktechEquipment.equipmentModelYear,
+
         recordUpdate_timeMillis: rightNow
       },
       database

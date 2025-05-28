@@ -15,18 +15,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const rowElements = [];
         for (const record of exports.integrityRecords) {
             let isRecordIncluded = true;
+            const recordSearchString = [
+                record.assetNumber.toLowerCase(),
+                record.make?.toLowerCase() ?? '',
+                record.model?.toLowerCase() ?? '',
+                record.vinSerial?.toLowerCase() ?? ''
+            ].join(' ');
             if (includeFilter !== '') {
                 for (const includeFilterPiece of includeFilterPieces) {
-                    if (includeFilterPiece === '') {
-                        continue;
-                    }
-                    else if (!(record.assetNumber.toLowerCase().includes(includeFilterPiece) ||
-                        (record.make?.toLowerCase().includes(includeFilterPiece) ??
-                            false) ||
-                        (record.model?.toLowerCase().includes(includeFilterPiece) ??
-                            false) ||
-                        (record.vinSerial?.toLowerCase().includes(includeFilterPiece) ??
-                            false))) {
+                    if (!recordSearchString.includes(includeFilterPiece)) {
                         isRecordIncluded = false;
                         break;
                     }
@@ -37,16 +34,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             if (excludeFilter !== '') {
                 for (const excludeFilterPiece of excludeFilterPieces) {
-                    if (excludeFilterPiece === '') {
-                        continue;
-                    }
-                    else if (record.assetNumber.toLowerCase().includes(excludeFilterPiece) ||
-                        (record.make?.toLowerCase().includes(excludeFilterPiece) ??
-                            false) ||
-                        (record.model?.toLowerCase().includes(excludeFilterPiece) ??
-                            false) ||
-                        (record.vinSerial?.toLowerCase().includes(excludeFilterPiece) ??
-                            false)) {
+                    if (recordSearchString.includes(excludeFilterPiece)) {
                         isRecordIncluded = false;
                         break;
                     }
@@ -96,6 +84,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 trElement.insertAdjacentHTML('beforeend', `<td class="is-vcentered">
             <i class="fas fa-not-equal has-text-warning" title="Year Mismatch" aria-hidden="true"></i>
             </td>`);
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 integrityWarningCount += 1;
                 trElement.insertAdjacentHTML('beforeend', `<td class="is-vcentered">
               <span title="NHTSA Year">
@@ -133,8 +122,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             </td>`);
             }
             /*
-              * Model
-              */
+             * Model
+             */
             trElement.insertAdjacentHTML('beforeend', `<td class="is-vcentered">
           <span title="FASTER Web Model">
             ${cityssm.escapeHTML(record.model ?? '')}
@@ -151,6 +140,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             </td>`);
             }
             else {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 integrityErrorCount += 1;
                 trElement.insertAdjacentHTML('beforeend', `<td class="is-vcentered">
             <i class="fas fa-not-equal has-text-warning" title="Model Mismatch" aria-hidden="true"></i>

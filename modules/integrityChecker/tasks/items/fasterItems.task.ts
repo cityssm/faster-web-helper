@@ -140,6 +140,7 @@ const scheduledTask = new ScheduledTask(taskName, refreshFasterInventory, {
     minute: getScheduledTaskMinutes('integrityChecker_fasterInventory'),
     second: 0
   },
+  
   lastRunMillis: getMaxFasterInventoryItemUpdateMillis(),
   minimumIntervalMillis: getMinimumMillisBetweenRuns(
     'integrityChecker_fasterInventory'

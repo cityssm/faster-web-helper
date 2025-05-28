@@ -46,9 +46,9 @@ async function refreshFasterAssets() {
             vinSerial: fasterAsset.vinSerial,
             vinSerialIsValid: vinSerialIsValid ? 1 : 0,
             license: fasterAsset.license,
-            year: fasterAsset.year,
             make: fasterAsset.make,
             model: fasterAsset.model,
+            year: fasterAsset.year,
             recordUpdate_timeMillis: rightNow
         }, database);
     }

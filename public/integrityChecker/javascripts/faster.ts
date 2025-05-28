@@ -35,21 +35,16 @@ declare const cityssm: cityssmGlobal
     for (const record of exports.integrityRecords) {
       let isRecordIncluded = true
 
+      const recordSearchString = [
+        record.assetNumber.toLowerCase(),
+        record.make?.toLowerCase() ?? '',
+        record.model?.toLowerCase() ?? '',
+        record.vinSerial?.toLowerCase() ?? ''
+      ].join(' ')
+
       if (includeFilter !== '') {
         for (const includeFilterPiece of includeFilterPieces) {
-          if (includeFilterPiece === '') {
-            continue
-          } else if (
-            !(
-              record.assetNumber.toLowerCase().includes(includeFilterPiece) ||
-              (record.make?.toLowerCase().includes(includeFilterPiece) ??
-                false) ||
-              (record.model?.toLowerCase().includes(includeFilterPiece) ??
-                false) ||
-              (record.vinSerial?.toLowerCase().includes(includeFilterPiece) ??
-                false)
-            )
-          ) {
+          if (!recordSearchString.includes(includeFilterPiece)) {
             isRecordIncluded = false
             break
           }
@@ -62,17 +57,7 @@ declare const cityssm: cityssmGlobal
 
       if (excludeFilter !== '') {
         for (const excludeFilterPiece of excludeFilterPieces) {
-          if (excludeFilterPiece === '') {
-            continue
-          } else if (
-            record.assetNumber.toLowerCase().includes(excludeFilterPiece) ||
-            (record.make?.toLowerCase().includes(excludeFilterPiece) ??
-              false) ||
-            (record.model?.toLowerCase().includes(excludeFilterPiece) ??
-              false) ||
-            (record.vinSerial?.toLowerCase().includes(excludeFilterPiece) ??
-              false)
-          ) {
+          if (recordSearchString.includes(excludeFilterPiece)) {
             isRecordIncluded = false
             break
           }
@@ -144,6 +129,7 @@ declare const cityssm: cityssmGlobal
             </td>`
         )
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         integrityWarningCount += 1
 
         trElement.insertAdjacentHTML(
@@ -198,8 +184,8 @@ declare const cityssm: cityssmGlobal
       }
 
       /*
-        * Model
-        */
+       * Model
+       */
 
       trElement.insertAdjacentHTML(
         'beforeend',
@@ -223,6 +209,7 @@ declare const cityssm: cityssmGlobal
             </td>`
         )
       } else {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         integrityErrorCount += 1
 
         trElement.insertAdjacentHTML(

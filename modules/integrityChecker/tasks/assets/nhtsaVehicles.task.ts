@@ -24,9 +24,11 @@ interface DecodeVinValuesResponse {
 
 const variableKeys = {
   SuggestedVIN: 'SuggestedVIN',
+
   Make: 'Make',
   Model: 'Model',
   ModelYear: 'ModelYear',
+  
   ErrorCode: 'ErrorCode',
   ErrorText: 'ErrorText'
 }
@@ -58,14 +60,17 @@ async function refreshNhtsaVehicles(): Promise<void> {
       {
         vin: vinNumberToCheck.vinSerial,
         suggestedVin: decodedVinValues[variableKeys.SuggestedVIN],
+
         make: decodedVinValues[variableKeys.Make],
         model: decodedVinValues[variableKeys.Model],
         year:
           decodedVinValues[variableKeys.ModelYear] === ''
             ? undefined
             : Number.parseInt(decodedVinValues[variableKeys.ModelYear], 10),
+
         errorCode: decodedVinValues[variableKeys.ErrorCode],
         errorText: decodedVinValues[variableKeys.ErrorText],
+
         recordUpdate_timeMillis: Date.now()
       },
       database as sqlite.Database
@@ -84,6 +89,7 @@ const scheduledTask = new ScheduledTask(taskName, refreshNhtsaVehicles, {
     minute: getScheduledTaskMinutes('integrityChecker_nhtsaVehicles'),
     second: 0
   },
+
   minimumIntervalMillis: getMinimumMillisBetweenRuns(
     'integrityChecker_nhtsaVehicles'
   ),

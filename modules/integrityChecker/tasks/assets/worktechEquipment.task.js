@@ -40,9 +40,9 @@ async function refreshWorktechEquipment() {
             equipmentId: worktechEquipment.equipmentId,
             vinSerial: worktechEquipment.serialNumber,
             license: worktechEquipment.plate,
-            year: worktechEquipment.equipmentModelYear,
             make: worktechEquipment.equipmentBrand,
             model: worktechEquipment.equipmentModel,
+            year: worktechEquipment.equipmentModelYear,
             recordUpdate_timeMillis: rightNow
         }, database);
     }

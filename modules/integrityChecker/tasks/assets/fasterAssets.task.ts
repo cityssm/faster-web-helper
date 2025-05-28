@@ -74,10 +74,13 @@ async function refreshFasterAssets(): Promise<void> {
         organization: fasterAsset.organization,
         vinSerial: fasterAsset.vinSerial,
         vinSerialIsValid: vinSerialIsValid ? 1 : 0,
+
         license: fasterAsset.license,
-        year: fasterAsset.year,
+
         make: fasterAsset.make,
         model: fasterAsset.model,
+        year: fasterAsset.year,
+
         recordUpdate_timeMillis: rightNow
       },
       database
@@ -128,6 +131,7 @@ const scheduledTask = new ScheduledTask(taskName, refreshFasterAssets, {
     minute: getScheduledTaskMinutes('integrityChecker_fasterAssets'),
     second: 0
   },
+  
   lastRunMillis: getMaxFasterAssetUpdateMillis(),
   minimumIntervalMillis: getMinimumMillisBetweenRuns(
     'integrityChecker_fasterAssets'
