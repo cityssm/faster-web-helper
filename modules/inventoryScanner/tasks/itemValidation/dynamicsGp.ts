@@ -46,7 +46,7 @@ async function runUpdateItemValidationFromDynamicsGp(): Promise<void> {
   )
 
   if (items.length > 0) {
-    debug(`Syncing ${items.length} inventory items...`)
+    debug(`Caching ${items.length} inventory items...`)
 
     for (const item of items) {
       // Skip records with invalid item numbers

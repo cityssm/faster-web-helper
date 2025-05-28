@@ -57,7 +57,7 @@ async function refreshFasterAssets(): Promise<void> {
    */
 
   debug(
-    `Updating ${fasterAssetsResponse.response.results.length} FASTER asset records...`
+    `Caching ${fasterAssetsResponse.response.results.length} FASTER asset records...`
   )
 
   const database = sqlite(databasePath, {

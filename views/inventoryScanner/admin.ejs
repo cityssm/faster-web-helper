@@ -204,6 +204,10 @@
     <div id="container--inventory"></div>
   </div>
   <% if (configHelpers.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled')) { %>
+    <%
+      const subscribeUrl = configHelpers.getConfigProperty('ntfy.server') + '/' +
+        configHelpers.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.topic');
+    %>
     <div class="is-hidden" id="tab--more">
       <div class="panel is-info">
         <p class="panel-heading">NTFY Notifications</p>
@@ -239,8 +243,8 @@
                       <li>New item requests are made in FASTER Web.</li>
                     </ul>
                     <p>
-                      You can install the NTFY app on your tablet or phone to receive these notifications,
-                      or subscribe to them in your web browser.
+                      You can install the NTFY app on your tablet or phone to receive these notifications, or 
+                      <a href="<%= subscribeUrl %>" target="_blank">subscribe to them in your web browser</a>.
                     </p>
                   </div>
                 </div>

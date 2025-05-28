@@ -19,7 +19,7 @@ declare const cityssm: cityssmGlobal
     '#tbody--integrityChecker'
   ) as HTMLTableSectionElement
 
-  // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
+  // eslint-disable-next-line complexity
   function renderAssetIntegrityRecords(): void {
     let integrityWarningCount = 0
     let integrityErrorCount = 0
@@ -85,7 +85,7 @@ declare const cityssm: cityssmGlobal
 
       const trElement = document.createElement('tr')
 
-      trElement.innerHTML = `<td>
+      trElement.innerHTML = `<td class="is-vcentered">
         ${cityssm.escapeHTML(record.assetNumber)}
         [${cityssm.escapeHTML(record.organization)}]
         </td>`
@@ -97,7 +97,7 @@ declare const cityssm: cityssmGlobal
       // eslint-disable-next-line no-unsanitized/method
       trElement.insertAdjacentHTML(
         'beforeend',
-        `<td>
+        `<td class="is-vcentered">
           <span title="FASTER Web VIN/Serial">
             ${cityssm.escapeHTML(record.vinSerial ?? '')}
           </span>
@@ -117,7 +117,7 @@ declare const cityssm: cityssmGlobal
 
       trElement.insertAdjacentHTML(
         'beforeend',
-        `<td>
+        `<td class="is-vcentered">
           <span title="FASTER Web Year">
             ${cityssm.escapeHTML(record.year?.toString() ?? '')}
           </span>
@@ -127,10 +127,10 @@ declare const cityssm: cityssmGlobal
       if (record.year === record.nhtsaYear) {
         trElement.insertAdjacentHTML(
           'beforeend',
-          `<td>
+          `<td class="is-vcentered">
             <i class="fas fa-equals" title="Matching Years" aria-hidden="true"></i>
             </td>
-            <td class="has-text-grey-light">
+            <td class="has-text-grey-light is-vcentered">
               <span title="NHTSA Year">
                 ${cityssm.escapeHTML(record.nhtsaYear?.toString() ?? '')}
               </span>
@@ -139,7 +139,7 @@ declare const cityssm: cityssmGlobal
       } else {
         trElement.insertAdjacentHTML(
           'beforeend',
-          `<td>
+          `<td class="is-vcentered">
             <i class="fas fa-not-equal has-text-warning" title="Year Mismatch" aria-hidden="true"></i>
             </td>`
         )
@@ -148,7 +148,7 @@ declare const cityssm: cityssmGlobal
 
         trElement.insertAdjacentHTML(
           'beforeend',
-          `<td>
+          `<td class="is-vcentered">
               <span title="NHTSA Year">
                 ${cityssm.escapeHTML(record.nhtsaYear?.toString() ?? '?')}
               </span>
@@ -162,7 +162,7 @@ declare const cityssm: cityssmGlobal
 
       trElement.insertAdjacentHTML(
         'beforeend',
-        `<td>
+        `<td class="is-vcentered">
           <span title="FASTER Web Make">
             ${cityssm.escapeHTML(record.make ?? '')}
           </span>
@@ -172,10 +172,10 @@ declare const cityssm: cityssmGlobal
       if (record.make?.toLowerCase() === record.nhtsaMake?.toLowerCase()) {
         trElement.insertAdjacentHTML(
           'beforeend',
-          `<td>
+          `<td class="is-vcentered">
             <i class="fas fa-equals" title="Matching Makes" aria-hidden="true"></i>
             </td>
-            <td class="has-text-grey-light">
+            <td class="has-text-grey-light is-vcentered">
               <span title="NHTSA Make">
                 ${cityssm.escapeHTML(record.nhtsaMake ?? '')}
               </span>
@@ -186,10 +186,10 @@ declare const cityssm: cityssmGlobal
 
         trElement.insertAdjacentHTML(
           'beforeend',
-          `<td>
+          `<td class="is-vcentered">
             <i class="fas fa-not-equal has-text-warning" title="Make Mismatch" aria-hidden="true"></i>
             </td>
-            <td>
+            <td class="is-vcentered">
               <span title="NHTSA Make">
                 ${cityssm.escapeHTML(record.nhtsaMake ?? '?')}
               </span>
@@ -203,7 +203,7 @@ declare const cityssm: cityssmGlobal
 
       trElement.insertAdjacentHTML(
         'beforeend',
-        `<td>
+        `<td class="is-vcentered">
           <span title="FASTER Web Model">
             ${cityssm.escapeHTML(record.model ?? '')}
           </span>
@@ -213,10 +213,10 @@ declare const cityssm: cityssmGlobal
       if (record.model?.toLowerCase() === record.nhtsaModel?.toLowerCase()) {
         trElement.insertAdjacentHTML(
           'beforeend',
-          `<td>
+          `<td class="is-vcentered">
             <i class="fas fa-equals" title="Matching Models" aria-hidden="true"></i>
             </td>
-            <td class="has-text-grey-light">
+            <td class="has-text-grey-light is-vcentered">
               <span title="NHTSA Model">
                 ${cityssm.escapeHTML(record.nhtsaModel ?? '')}
               </span>
@@ -227,10 +227,10 @@ declare const cityssm: cityssmGlobal
 
         trElement.insertAdjacentHTML(
           'beforeend',
-          `<td>
+          `<td class="is-vcentered">
             <i class="fas fa-not-equal has-text-warning" title="Model Mismatch" aria-hidden="true"></i>
             </td>
-            <td>
+            <td class="is-vcentered">
               <span title="NHTSA Model">
                 ${cityssm.escapeHTML(record.nhtsaModel ?? '?')}
               </span>

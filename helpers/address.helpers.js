@@ -1,12 +1,13 @@
 import { fixSaultSteMarie } from '@cityssm/is-sault-ste-marie';
 import { Countries } from 'country-and-province';
+const acceptedCountries = ['Canada', 'United States'];
 export function normalizeCityProvinceCountry(city, province, country) {
     const normalizedCountryName = normalizeCountry(country.trim());
     const normalizedProvinceName = normalizeProvince(province.trim(), normalizedCountryName);
     const normalizedCityName = fixSaultSteMarie(city.trim());
     return {
         city: normalizedCityName,
-        country: ['Canada', 'United States'].includes(normalizedCountryName)
+        country: acceptedCountries.includes(normalizedCountryName)
             ? normalizedCountryName
             : 'Other',
         province: normalizedProvinceName

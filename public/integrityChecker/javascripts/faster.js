@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const includeFilterElement = document.querySelector('#includeFilter--integrityChecker');
     const excludeFilterElement = document.querySelector('#excludeFilter--integrityChecker');
     const integrityTbodyElement = document.querySelector('#tbody--integrityChecker');
-    // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
+    // eslint-disable-next-line complexity
     function renderAssetIntegrityRecords() {
         let integrityWarningCount = 0;
         let integrityErrorCount = 0;
@@ -56,7 +56,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 continue;
             }
             const trElement = document.createElement('tr');
-            trElement.innerHTML = `<td>
+            trElement.innerHTML = `<td class="is-vcentered">
         ${cityssm.escapeHTML(record.assetNumber)}
         [${cityssm.escapeHTML(record.organization)}]
         </td>`;
@@ -64,7 +64,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
              * VIN / Serial
              */
             // eslint-disable-next-line no-unsanitized/method
-            trElement.insertAdjacentHTML('beforeend', `<td>
+            trElement.insertAdjacentHTML('beforeend', `<td class="is-vcentered">
           <span title="FASTER Web VIN/Serial">
             ${cityssm.escapeHTML(record.vinSerial ?? '')}
           </span>
@@ -77,27 +77,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
             /*
              * Year
              */
-            trElement.insertAdjacentHTML('beforeend', `<td>
+            trElement.insertAdjacentHTML('beforeend', `<td class="is-vcentered">
           <span title="FASTER Web Year">
             ${cityssm.escapeHTML(record.year?.toString() ?? '')}
           </span>
           </td>`);
             if (record.year === record.nhtsaYear) {
-                trElement.insertAdjacentHTML('beforeend', `<td>
+                trElement.insertAdjacentHTML('beforeend', `<td class="is-vcentered">
             <i class="fas fa-equals" title="Matching Years" aria-hidden="true"></i>
             </td>
-            <td class="has-text-grey-light">
+            <td class="has-text-grey-light is-vcentered">
               <span title="NHTSA Year">
                 ${cityssm.escapeHTML(record.nhtsaYear?.toString() ?? '')}
               </span>
             </td>`);
             }
             else {
-                trElement.insertAdjacentHTML('beforeend', `<td>
+                trElement.insertAdjacentHTML('beforeend', `<td class="is-vcentered">
             <i class="fas fa-not-equal has-text-warning" title="Year Mismatch" aria-hidden="true"></i>
             </td>`);
                 integrityWarningCount += 1;
-                trElement.insertAdjacentHTML('beforeend', `<td>
+                trElement.insertAdjacentHTML('beforeend', `<td class="is-vcentered">
               <span title="NHTSA Year">
                 ${cityssm.escapeHTML(record.nhtsaYear?.toString() ?? '?')}
               </span>
@@ -106,16 +106,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
             /*
              * Make
              */
-            trElement.insertAdjacentHTML('beforeend', `<td>
+            trElement.insertAdjacentHTML('beforeend', `<td class="is-vcentered">
           <span title="FASTER Web Make">
             ${cityssm.escapeHTML(record.make ?? '')}
           </span>
           </td>`);
             if (record.make?.toLowerCase() === record.nhtsaMake?.toLowerCase()) {
-                trElement.insertAdjacentHTML('beforeend', `<td>
+                trElement.insertAdjacentHTML('beforeend', `<td class="is-vcentered">
             <i class="fas fa-equals" title="Matching Makes" aria-hidden="true"></i>
             </td>
-            <td class="has-text-grey-light">
+            <td class="has-text-grey-light is-vcentered">
               <span title="NHTSA Make">
                 ${cityssm.escapeHTML(record.nhtsaMake ?? '')}
               </span>
@@ -123,10 +123,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             else {
                 integrityErrorCount += 1;
-                trElement.insertAdjacentHTML('beforeend', `<td>
+                trElement.insertAdjacentHTML('beforeend', `<td class="is-vcentered">
             <i class="fas fa-not-equal has-text-warning" title="Make Mismatch" aria-hidden="true"></i>
             </td>
-            <td>
+            <td class="is-vcentered">
               <span title="NHTSA Make">
                 ${cityssm.escapeHTML(record.nhtsaMake ?? '?')}
               </span>
@@ -135,16 +135,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
             /*
               * Model
               */
-            trElement.insertAdjacentHTML('beforeend', `<td>
+            trElement.insertAdjacentHTML('beforeend', `<td class="is-vcentered">
           <span title="FASTER Web Model">
             ${cityssm.escapeHTML(record.model ?? '')}
           </span>
           </td>`);
             if (record.model?.toLowerCase() === record.nhtsaModel?.toLowerCase()) {
-                trElement.insertAdjacentHTML('beforeend', `<td>
+                trElement.insertAdjacentHTML('beforeend', `<td class="is-vcentered">
             <i class="fas fa-equals" title="Matching Models" aria-hidden="true"></i>
             </td>
-            <td class="has-text-grey-light">
+            <td class="has-text-grey-light is-vcentered">
               <span title="NHTSA Model">
                 ${cityssm.escapeHTML(record.nhtsaModel ?? '')}
               </span>
@@ -152,10 +152,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             else {
                 integrityErrorCount += 1;
-                trElement.insertAdjacentHTML('beforeend', `<td>
+                trElement.insertAdjacentHTML('beforeend', `<td class="is-vcentered">
             <i class="fas fa-not-equal has-text-warning" title="Model Mismatch" aria-hidden="true"></i>
             </td>
-            <td>
+            <td class="is-vcentered">
               <span title="NHTSA Model">
                 ${cityssm.escapeHTML(record.nhtsaModel ?? '?')}
               </span>

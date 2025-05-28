@@ -23,7 +23,7 @@ async function runUpdateItemValidationFromDynamicsGp() {
     const gpDatabase = new DynamicsGP(dynamicsGpDatabaseConfig);
     const items = await gpDatabase.getItemsByLocationCodes(Object.keys(taskConfig.gpLocationCodesToFasterStorerooms));
     if (items.length > 0) {
-        debug(`Syncing ${items.length} inventory items...`);
+        debug(`Caching ${items.length} inventory items...`);
         for (const item of items) {
             // Skip records with invalid item numbers
             if (itemNumberRegex !== undefined &&

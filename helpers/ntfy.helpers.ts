@@ -12,7 +12,7 @@ const ntfyTitle = 'FASTER Web Helper'
 
 type PartialNtfyMessageOptions = Pick<
   NtfyMessageOptions,
-  'topic' | 'message' | 'clickURL'
+  'clickURL' | 'message' | 'topic'
 >
 
 export async function sendNtfyMessage(

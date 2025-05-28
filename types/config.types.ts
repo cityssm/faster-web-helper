@@ -28,6 +28,7 @@ export interface Config {
   webServer?: {
     httpPort: number
     urlPrefix?: string
+    
     session?: {
       cookieName?: string
       secret?: string
@@ -66,8 +67,8 @@ export interface Config {
 
   modules: {
     autocomplete?: ConfigModule<ConfigModuleAutocomplete>
-    inventoryScanner?: ConfigModule<ConfigModuleInventoryScanner>
     integrityChecker?: ConfigModule<ConfigModuleIntegrityChecker>
+    inventoryScanner?: ConfigModule<ConfigModuleInventoryScanner>
     tempFolderCleanup?: ConfigModule<ConfigModuleTempFolderCleanup>
   }
 }

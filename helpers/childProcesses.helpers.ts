@@ -1,7 +1,6 @@
-import type { ChildProcess } from 'node:child_process'
-
 import Debug from 'debug'
 import exitHook from 'exit-hook'
+import type { ChildProcess } from 'node:child_process'
 
 import { DEBUG_NAMESPACE } from '../debug.config.js'
 import type { TaskName, TaskWorkerMessage } from '../types/tasks.types.js'

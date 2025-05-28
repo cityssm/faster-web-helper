@@ -33,7 +33,7 @@ async function refreshFasterAssets() {
     /*
      * Update the database
      */
-    debug(`Updating ${fasterAssetsResponse.response.results.length} FASTER asset records...`);
+    debug(`Caching ${fasterAssetsResponse.response.results.length} FASTER asset records...`);
     const database = sqlite(databasePath, {
         timeout: timeoutMillis
     });

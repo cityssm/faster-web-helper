@@ -44,8 +44,8 @@ export interface Config {
     };
     modules: {
         autocomplete?: ConfigModule<ConfigModuleAutocomplete>;
-        inventoryScanner?: ConfigModule<ConfigModuleInventoryScanner>;
         integrityChecker?: ConfigModule<ConfigModuleIntegrityChecker>;
+        inventoryScanner?: ConfigModule<ConfigModuleInventoryScanner>;
         tempFolderCleanup?: ConfigModule<ConfigModuleTempFolderCleanup>;
     };
 }
