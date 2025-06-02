@@ -1,1 +1,1 @@
-export declare const integrityCheckerUserSettings: "integrityChecker_hasAccess"[];
+export declare const integrityCheckerUserSettingNames: "integrityChecker_hasAccess"[];

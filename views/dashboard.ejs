@@ -46,6 +46,7 @@
                       <span class="icon"><i class="fa-solid fa-play" aria-hidden="true"></i></span>
                       <span>
                         FASTER Web
+                      </span>
                     </a>
                   </li>
                 <% } %>
@@ -61,6 +62,34 @@
                     </a>
                   </li>
                 <% } %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% } %>
+
+    <% if ((user.settings['admin_hasAccess'] ?? 'false') === 'true') { %>
+      <% hasModules = true; %>
+      <div class="box">
+        <div class="columns">
+          <div class="column is-narrow">
+            <i class="fa-solid fa-cog fa-6x" aria-hidden="true"></i>
+          </div>
+          <div class="column">
+            <h3 class="title is-4 mb-0">Administration</h3>
+            <p>Manage users, settings, and other administrative tasks.</p>
+
+            <div class="menu">
+              <ul class="menu-list">
+                <li>
+                  <a href="<%= urlPrefix %>/admin/users">
+                    <span class="icon"><i class="fa-solid fa-users" aria-hidden="true"></i></span>
+                    <span>
+                      User Management
+                    </span>
+                  </a>
+                </li>
               </ul>
             </div>
           </div>

@@ -1,25 +1,19 @@
 import sqlite from 'better-sqlite3';
 import { getUserSettings } from './getUserSettings.js';
 import { databasePath } from './helpers.userDatabase.js';
-function getUserByField(userDataField, userDataValue) {
+export function getUsers() {
     const database = sqlite(databasePath, {
         readonly: true
     });
-    const user = database
+    const users = database
         .prepare(`select userName, fasterWebUserName, emailAddress, userKeyGuid
         from Users
         where recordDelete_timeMillis is null
-        and ${userDataField} = ?`)
-        .get(userDataValue);
-    if (user !== undefined) {
+        order by userName`)
+        .all();
+    for (const user of users) {
         user.settings = getUserSettings(user.userName, database);
     }
     database.close();
-    return user;
-}
-export function getUserByUserName(userName) {
-    return getUserByField('userName', userName);
-}
-export function getUserByUserKeyGuid(userKeyGuid) {
-    return getUserByField('userKeyGuid', userKeyGuid);
+    return users;
 }

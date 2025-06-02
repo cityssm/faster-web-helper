@@ -29,8 +29,8 @@ export const configDefaultValues = {
   'webServer.urlPrefix': '',
 
   'webServer.session.cookieName': 'faster-web-helper-user-sid',
-  'webServer.session.secret': 'cityssm/faster-web-helper',
   'webServer.session.maxAgeMillis': hoursToMillis(12),
+  'webServer.session.secret': 'cityssm/faster-web-helper',
 
   'login.authentication': undefined as
     | {

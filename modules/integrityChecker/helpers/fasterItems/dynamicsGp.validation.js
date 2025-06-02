@@ -101,7 +101,7 @@ export async function updateInventoryInFaster() {
                 continue;
             }
             debug(`Creating Dynamics GP item "${record.itemNumber} [${record.storeroom}]" in FASTER...`);
-            await fasterAPI.issueNonStockedPart({
+            const result = await fasterAPI.issueNonStockedPart({
                 ...createInvoiceDefaults,
                 invoiceNumber: `INV-${record.itemNumber}-${Date.now()}`,
                 invoiceDate: new Date().toISOString(),
@@ -126,6 +126,10 @@ export async function updateInventoryInFaster() {
                 otherChargeUnitPrice: 0,
                 otherChargeTaxCost: 0
             });
+            if (!result.success) {
+                debug(`Error creating Dynamics GP item "${record.itemNumber} [${record.storeroom}]" in FASTER: ${result.error.title}`);
+                continue;
+            }
         }
         else if (record.gpItemName === null) {
             if (record.fasterBinLocation === notFoundInDynamicsGpBinLocation) {

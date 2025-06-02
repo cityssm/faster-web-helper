@@ -1,5 +1,6 @@
 import sqlite from 'better-sqlite3'
 
+import { getUserSettings } from './getUserSettings.js'
 import { databasePath } from './helpers.userDatabase.js'
 
 function getUserByField(
@@ -20,22 +21,7 @@ function getUserByField(
     .get(userDataValue) as FasterWebHelperSessionUser | undefined
 
   if (user !== undefined) {
-    user.settings = {}
-
-    const userSettings = database
-      .prepare(
-        `select propertyName, propertyValue
-          from UserSettings
-          where userName = ?`
-      )
-      .all(user.userName) as Array<{
-      propertyName: string
-      propertyValue: string
-    }>
-
-    for (const setting of userSettings) {
-      user.settings[setting.propertyName] = setting.propertyValue
-    }
+    user.settings = getUserSettings(user.userName, database)
   }
 
   database.close()

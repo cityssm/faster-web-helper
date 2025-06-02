@@ -12,6 +12,7 @@ import { initializeUserDatabase } from '../database/helpers.userDatabase.js'
 import { DEBUG_NAMESPACE } from '../debug.config.js'
 import { sessionCheckHandler } from '../handlers/session.js'
 import configHelpers from '../helpers/config.helpers.js'
+import router_admin from '../modules/admin/handlers/router.js'
 import router_dashboard from '../routers/dashboard.js'
 import router_login from '../routers/login.js'
 import { version } from '../version.js'
@@ -153,6 +154,23 @@ app.get(`${urlPrefix}/`, sessionCheckHandler, (_request, response) => {
 app.use(`${urlPrefix}/login`, router_login)
 
 app.use(`${urlPrefix}/dashboard`, sessionCheckHandler, router_dashboard)
+
+app.use(
+    `${urlPrefix}/admin`,
+    sessionCheckHandler,
+    (request, response, nextFunction) => {
+      if (
+        (request.session.user?.settings.admin_hasAccess ??
+          'false') === 'true'
+      ) {
+        nextFunction()
+        return
+      }
+
+      response.redirect(`${urlPrefix}/dashboard`)
+    },
+    router_admin
+  )
 
 app.get(`${urlPrefix}/logout`, (request, response) => {
   if (

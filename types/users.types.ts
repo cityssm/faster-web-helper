@@ -1,12 +1,16 @@
+import type { userSettingNames } from "../helpers/userSettings.helpers.js"
 
-declare global {
-  export interface FasterWebHelperSessionUser {
+export interface FasterWebHelperUser {
     userName: string
     fasterWebUserName?: string
     emailAddress?: string
     userKeyGuid: string
-    settings: Record<string, string | null>
+
+    settings: Partial<Record<typeof userSettingNames[number], string | null>>
   }
+
+declare global {
+  export type FasterWebHelperSessionUser = FasterWebHelperUser
 }
 
 declare module 'express-session' {

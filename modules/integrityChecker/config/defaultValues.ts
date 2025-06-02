@@ -1,7 +1,5 @@
 import type {
-  GetVendorsFilters,
-  GPItemWithQuantity,
-  GPVendor
+  GPItemWithQuantity
 } from '@cityssm/dynamics-gp'
 
 import type {
@@ -10,8 +8,6 @@ import type {
 } from './types.js'
 
 type GpItemFilterFunction = (item: GPItemWithQuantity) => boolean
-
-type GpVendorFilterFunction = (vendor: GPVendor) => Promise<boolean>
 
 export default {
   'modules.integrityChecker.isEnabled': false,
@@ -47,13 +43,6 @@ export default {
   'modules.integrityChecker.fasterVendors.isEnabled': false,
 
   'modules.integrityChecker.fasterVendors.update.source': '',
-
-  'modules.integrityChecker.fasterVendors.update.gpFilters': {} satisfies
-    | Partial<GetVendorsFilters>
-    | undefined,
-
-  'modules.integrityChecker.fasterVendors.update.gpVendorFilter':
-    undefined as unknown as GpVendorFilterFunction | undefined,
 
   'modules.integrityChecker.fasterVendors.update.vendorCodesToIgnore':
     [] as string[]

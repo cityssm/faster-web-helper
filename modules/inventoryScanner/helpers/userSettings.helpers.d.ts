@@ -1,1 +1,1 @@
-export declare const inventoryScannerUserSettings: "inventoryScanner_hasAccess"[];
+export declare const inventoryScannerUserSettingNames: "inventoryScanner_hasAccess"[];

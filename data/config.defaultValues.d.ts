@@ -22,8 +22,6 @@ export declare const configDefaultValues: {
     'modules.integrityChecker.fasterItems.validation.createInvoiceDefaults': import("../modules/integrityChecker/config/types.js").ConfigIntegrityCheckerItemValidationDynamicsGPCreateInvoiceDefaults | undefined;
     'modules.integrityChecker.fasterVendors.isEnabled': boolean;
     'modules.integrityChecker.fasterVendors.update.source': string;
-    'modules.integrityChecker.fasterVendors.update.gpFilters': {};
-    'modules.integrityChecker.fasterVendors.update.gpVendorFilter': ((vendor: import("@cityssm/dynamics-gp").GPVendor) => Promise<boolean>) | undefined;
     'modules.integrityChecker.fasterVendors.update.vendorCodesToIgnore': string[];
     'modules.inventoryScanner.isEnabled': boolean;
     'modules.inventoryScanner.scannerIpAddressRegex': RegExp;
@@ -51,8 +49,8 @@ export declare const configDefaultValues: {
     'webServer.httpPort': number;
     'webServer.urlPrefix': string;
     'webServer.session.cookieName': string;
-    'webServer.session.secret': string;
     'webServer.session.maxAgeMillis': number;
+    'webServer.session.secret': string;
     'login.authentication': {
         config: ActiveDirectoryAuthenticatorConfiguration;
         type: "activeDirectory";

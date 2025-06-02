@@ -1,0 +1,17 @@
+<%- include('../_header'); -%>
+
+<h1 class="title is-2">FASTER Web Helper: User Management</h1>
+
+<div id="container--users"></div>
+
+<%- include('../_footerA'); -%>
+
+<script>
+  cityssm.htmlModalFolder = "<%= urlPrefix %>/admin/html/";
+
+  exports.users = <%- JSON.stringify(users) %>;
+  exports.userSettingNames = <%- JSON.stringify(userSettingNames) %>;
+</script>
+<script src="<%= urlPrefix %>/admin/javascripts/users.js"></script>
+
+<%- include('../_footerB'); -%>

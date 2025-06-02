@@ -13,7 +13,5 @@ export default {
     'modules.integrityChecker.fasterItems.validation.createInvoiceDefaults': undefined,
     'modules.integrityChecker.fasterVendors.isEnabled': false,
     'modules.integrityChecker.fasterVendors.update.source': '',
-    'modules.integrityChecker.fasterVendors.update.gpFilters': {},
-    'modules.integrityChecker.fasterVendors.update.gpVendorFilter': undefined,
     'modules.integrityChecker.fasterVendors.update.vendorCodesToIgnore': []
 };

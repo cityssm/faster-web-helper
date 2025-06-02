@@ -12,55 +12,35 @@ const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}:vendorValidatio
 const fasterWebConfig = getConfigProperty('fasterWeb');
 const dynamicsGpConfig = getConfigProperty('dynamicsGP');
 const vendorCodesToIgnore = getConfigProperty('modules.integrityChecker.fasterVendors.update.vendorCodesToIgnore');
-const gpVendorFilterFunction = getConfigProperty('modules.integrityChecker.fasterVendors.update.gpVendorFilter');
-function buildFasterVendorMap(fasterVendors) {
-    const vendorCodeToVendor = new Map();
-    for (const vendor of fasterVendors) {
-        if (vendorCodesToIgnore.includes(vendor.vendorCode) ||
-            vendor.vendorStatus === 'Obsolete') {
-            continue;
-        }
-        vendorCodeToVendor.set(vendor.vendorCode, vendor);
-    }
-    return vendorCodeToVendor;
-}
 export async function updateVendorsInFaster(fasterVendors) {
     /*
-     * Build a map of active vendor codes to vendors
-     */
-    const vendorCodeToVendor = buildFasterVendorMap(fasterVendors);
-    /*
-     * Get vendors from Dynamics GP
+     * Connect to Dynamics GP
      */
     if (dynamicsGpConfig === undefined) {
         debug('Missing Dynamics GP configuration.');
         return;
     }
     const dynamicsGp = new DynamicsGP(dynamicsGpConfig);
-    const gpVendors = await dynamicsGp.getVendors(getConfigProperty('modules.integrityChecker.fasterVendors.update.gpFilters'));
-    debug(`Syncing ${gpVendors.length} vendors from Dynamics GP...`);
     /*
-     * Create / Update the vendors in FASTER that are in GP
+     * Update the vendors in FASTER that are in GP
      */
     const fasterApi = new FasterApi(fasterWebConfig.tenantOrBaseUrl, fasterWebConfig.apiUserName ?? '', fasterWebConfig.apiPassword ?? '');
     let syncQueue = [];
     const maxQueueSize = 500;
-    for (const gpVendor of gpVendors) {
-        if (vendorCodesToIgnore.includes(gpVendor.vendorId)) {
+    for (const fasterVendor of fasterVendors) {
+        if (vendorCodesToIgnore.includes(fasterVendor.vendorCode)) {
             continue;
         }
-        // Check if the vendor should be filtered out
-        if (gpVendorFilterFunction !== undefined &&
-            typeof gpVendorFilterFunction === 'function' &&
-            !(await gpVendorFilterFunction(gpVendor))) {
+        const gpVendor = await dynamicsGp.getVendorByVendorId(fasterVendor.vendorCode);
+        if (gpVendor === undefined) {
+            debug(`Vendor ${fasterVendor.vendorCode} not found in Dynamics GP. Skipping...`);
             continue;
         }
-        const fasterVendor = vendorCodeToVendor.get(gpVendor.vendorId);
         const { city, country, province } = normalizeCityProvinceCountry(gpVendor.city, gpVendor.state, gpVendor.country);
         debug(`Syncing vendor ${gpVendor.vendorId} (${gpVendor.vendorName})...`);
         syncQueue.push({
-            vendorID: (fasterVendor?.vendorID ?? '').toString(),
-            vendorCode: gpVendor.vendorId.slice(0, fasterVendorConstants.vendorCode.maxLength),
+            vendorID: fasterVendor.vendorID.toString(),
+            vendorCode: fasterVendor.vendorCode,
             vendorBusinessName: gpVendor.shortName
                 .trim()
                 .slice(0, fasterVendorConstants.vendorBusinessName.maxLength),
@@ -81,43 +61,7 @@ export async function updateVendorsInFaster(fasterVendors) {
             vendorPhone: gpVendor.phoneNumber1,
             federalTaxID: '',
             vendorWebsite: '',
-            vendorCategoryList: fasterVendor === undefined
-                ? ['Asset', 'Inventory', 'Sublet']
-                : splitVendorCategoryString(fasterVendor.vendorCategory)
-        });
-        vendorCodeToVendor.delete(gpVendor.vendorId);
-        if (syncQueue.length >= maxQueueSize) {
-            await fasterApi.syncVendors(syncQueue);
-            syncQueue = [];
-        }
-    }
-    /*
-     * Inactivate any vendors in FASTER that are not in GP
-     */
-    if (vendorCodeToVendor.size > 0) {
-        debug(`Inactivating ${vendorCodeToVendor.size} vendors in FASTER...`);
-    }
-    for (const vendor of vendorCodeToVendor.values()) {
-        if (vendorCodesToIgnore.includes(vendor.vendorCode) ||
-            vendor.vendorStatus === 'Obsolete') {
-            continue;
-        }
-        syncQueue.push({
-            vendorID: vendor.vendorID.toString(),
-            vendorCode: vendor.vendorCode,
-            vendorStatus: 'Obsolete',
-            vendorBusinessName: vendor.vendorBusinessName,
-            vendorName: vendor.vendorName,
-            vendorAddress: vendor.vendorAddress,
-            vendorCity: vendor.vendorCity,
-            vendorState: vendor.vendorState,
-            vendorZip: vendor.vendorZip,
-            vendorCountry: vendor.vendorCountry,
-            vendorFax: vendor.vendorFax,
-            vendorPhone: vendor.vendorPhone,
-            federalTaxID: vendor.federalTaxID,
-            vendorWebsite: vendor.vendorWebsite,
-            vendorCategoryList: []
+            vendorCategoryList: splitVendorCategoryString(fasterVendor.vendorCategory)
         });
         if (syncQueue.length >= maxQueueSize) {
             await fasterApi.syncVendors(syncQueue);
