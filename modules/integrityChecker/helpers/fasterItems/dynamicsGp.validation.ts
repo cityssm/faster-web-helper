@@ -156,7 +156,7 @@ export async function updateInventoryInFaster(): Promise<void> {
     return
   }
 
-  for (const record of recordsToUpdate) {
+  for (const [recordIndex, record] of recordsToUpdate.entries()) {
     const gpItemNameTruncated = (record.gpItemName ?? record.itemNumber).slice(
       0,
       fasterInventoryItemConstants.itemName.maxLength
@@ -207,8 +207,14 @@ export async function updateInventoryInFaster(): Promise<void> {
         debug(
           `Error creating Dynamics GP item "${record.itemNumber} [${record.storeroom}]" in FASTER: ${result.error.title}`
         )
+
         continue
       }
+
+      if (recordIndex < 10) {
+        debug(JSON.stringify(result))
+      }
+
     } else if (record.gpItemName === null) {
       if (record.fasterBinLocation === notFoundInDynamicsGpBinLocation) {
         continue
@@ -245,10 +251,12 @@ export async function updateInventoryInFaster(): Promise<void> {
             binLocation: record.gpBinLocation ?? ''
           }
         )
-      } catch {
+      } catch (error) {
         debug(
           `Error updating FASTER item "${record.itemNumber} [${record.storeroom}]".`
         )
+        
+        debug(error)
       }
     }
   }
