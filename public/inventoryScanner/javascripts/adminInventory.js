@@ -1,13 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
-    const moduleUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/modules/inventoryScanner`;
+    var _a, _b, _c;
+    const moduleUrlPrefix = `${(_b = (_a = document.querySelector('main')) === null || _a === void 0 ? void 0 : _a.dataset.urlPrefix) !== null && _b !== void 0 ? _b : ''}/modules/inventoryScanner`;
     let inventory = exports.inventory;
     const inventoryFilterElement = document.querySelector('#filter--inventory');
     const inventoryFilterZeroQuantityElement = document.querySelector('#filter--showZeroQuantity');
     const inventoryDisplayCountElement = document.querySelector('#displayCount--inventory');
     const inventoryContainerElement = document.querySelector('#container--inventory');
     function renderInventory(event) {
+        var _a;
         if (event !== undefined) {
             event.preventDefault();
         }
@@ -61,7 +63,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             else if (item.availableQuantity < 0) {
                 availableQuantityElement.classList.add('has-background-danger-light');
             }
-            tableElement.querySelector('tbody')?.append(tableRowElement);
+            (_a = tableElement.querySelector('tbody')) === null || _a === void 0 ? void 0 : _a.append(tableRowElement);
         }
         inventoryDisplayCountElement.textContent = `${displayCount} / ${inventory.length}`;
         if (displayCount === 0) {
@@ -87,7 +89,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
     renderInventory();
     inventoryFilterElement.addEventListener('keyup', renderInventory);
     inventoryFilterZeroQuantityElement.addEventListener('change', renderInventory);
-    document
-        .querySelector('#reload--inventory')
-        ?.addEventListener('click', reloadInventory);
+    (_c = document
+        .querySelector('#reload--inventory')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', reloadInventory);
 })();

@@ -1,18 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
-    const scannerUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/apps/inventoryScanner`;
+    var _a, _b;
+    const scannerUrlPrefix = `${(_b = (_a = document.querySelector('main')) === null || _a === void 0 ? void 0 : _a.dataset.urlPrefix) !== null && _b !== void 0 ? _b : ''}/apps/inventoryScanner`;
     const scannerKey = globalThis.localStorage.getItem('scannerKey');
     /*
      * History
      */
     const historyContainerElement = document.querySelector('#history--container');
     function toggleHistoryViewMore(clickEvent) {
+        var _a, _b;
         clickEvent.preventDefault();
-        clickEvent.currentTarget
-            .closest('.panel-block')
-            ?.querySelector('.is-view-more-container')
-            ?.classList.toggle('is-hidden');
+        (_b = (_a = clickEvent.currentTarget
+            .closest('.panel-block')) === null || _a === void 0 ? void 0 : _a.querySelector('.is-view-more-container')) === null || _b === void 0 ? void 0 : _b.classList.toggle('is-hidden');
     }
     function doDeleteScannerRecord(recordId) {
         cityssm.postJSON(`${scannerUrlPrefix}/doDeleteScannerRecord`, {
@@ -43,14 +43,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
             okButton: {
                 text: 'Yes, Delete Record',
                 callbackFunction: () => {
-                    const recordId = buttonElement.closest('.panel-block').dataset
-                        .recordId ?? '';
+                    var _a;
+                    const recordId = (_a = buttonElement.closest('.panel-block').dataset
+                        .recordId) !== null && _a !== void 0 ? _a : '';
                     doDeleteScannerRecord(recordId);
                 }
             }
         });
     }
     function renderScannerHistory() {
+        var _a, _b, _c, _d, _e, _f;
         if (exports.scannerHistory.length === 0) {
             historyContainerElement.replaceChildren();
             historyContainerElement.innerHTML = `<div class="message is-info">
@@ -110,8 +112,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 ? ''
                 : `<span class="tag">${cityssm.escapeHTML(record.itemNumberPrefix)}</span> -`}
                 ${cityssm.escapeHTML(record.itemNumber)}
-                  (${cityssm.escapeHTML(record.itemStoreroom ?? '')})<br />
-                ${cityssm.escapeHTML(record.itemDescription ?? '')}<br />
+                  (${cityssm.escapeHTML((_a = record.itemStoreroom) !== null && _a !== void 0 ? _a : '')})<br />
+                ${cityssm.escapeHTML((_b = record.itemDescription) !== null && _b !== void 0 ? _b : '')}<br />
                 ${cityssm.escapeHTML(record.quantity.toString())}
                   &times;
                   $${cityssm.escapeHTML(record.unitPrice === null ? '--.-' : record.unitPrice.toFixed(2))}
@@ -139,15 +141,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
             </div>
           </div>`;
             if (record.repairId !== null || record.repairDescription !== null) {
-                panelBlockElement.querySelector('.repairContainer')?.insertAdjacentHTML('beforeend', `${cityssm.escapeHTML(record.repairDescription ?? '')}
+                (_c = panelBlockElement.querySelector('.repairContainer')) === null || _c === void 0 ? void 0 : _c.insertAdjacentHTML('beforeend', `${cityssm.escapeHTML((_d = record.repairDescription) !== null && _d !== void 0 ? _d : '')}
               (${cityssm.escapeHTML(record.repairId === null ? '' : record.repairId.toString())})`);
             }
-            panelBlockElement
-                .querySelector('.is-view-more-button')
-                ?.addEventListener('click', toggleHistoryViewMore);
-            panelBlockElement
-                .querySelector('.is-delete-button')
-                ?.addEventListener('click', confirmDeleteScannerRecord);
+            (_e = panelBlockElement
+                .querySelector('.is-view-more-button')) === null || _e === void 0 ? void 0 : _e.addEventListener('click', toggleHistoryViewMore);
+            (_f = panelBlockElement
+                .querySelector('.is-delete-button')) === null || _f === void 0 ? void 0 : _f.addEventListener('click', confirmDeleteScannerRecord);
             panelElement.append(panelBlockElement);
         }
         historyContainerElement.replaceChildren(panelElement);

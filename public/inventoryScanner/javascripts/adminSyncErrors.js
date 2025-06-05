@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
-    const moduleUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/modules/inventoryScanner`;
+    var _a, _b, _c, _d;
+    const moduleUrlPrefix = `${(_b = (_a = document.querySelector('main')) === null || _a === void 0 ? void 0 : _a.dataset.urlPrefix) !== null && _b !== void 0 ? _b : ''}/modules/inventoryScanner`;
     let syncErrorRecords = exports.syncErrorRecords;
     let selectedRecordIds = [];
     const syncErrorsTbodyElement = document.querySelector('#tbody--syncErrors');
@@ -61,15 +62,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function deleteRecord(clickEvent) {
+        var _a, _b;
         clickEvent.preventDefault();
-        const recordId = clickEvent.currentTarget.closest('tr')?.dataset
-            .recordId ?? '';
+        const recordId = (_b = (_a = clickEvent.currentTarget.closest('tr')) === null || _a === void 0 ? void 0 : _a.dataset.recordId) !== null && _b !== void 0 ? _b : '';
         deleteRecordsByRecordIds([recordId]);
     }
     function returnRecordToPending(clickEvent) {
+        var _a, _b;
         clickEvent.preventDefault();
-        const recordId = clickEvent.currentTarget.closest('tr')?.dataset
-            .recordId ?? '';
+        const recordId = (_b = (_a = clickEvent.currentTarget.closest('tr')) === null || _a === void 0 ? void 0 : _a.dataset.recordId) !== null && _b !== void 0 ? _b : '';
         returnRecordsToPendingByRecordIds([recordId]);
     }
     function recountSelectedCheckboxes() {
@@ -80,6 +81,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
     }
     function renderSyncErrorRecords() {
+        var _a, _b, _c, _d, _e;
         const rowElements = [];
         for (const record of syncErrorRecords) {
             const recordIdString = record.recordId.toString();
@@ -94,9 +96,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
           ${cityssm.escapeHTML(record.scanDateString)}<br />
           ${cityssm.escapeHTML(record.scanTimeString)}
         </td>`;
-            rowElement
-                .querySelector('input')
-                ?.addEventListener('change', recountSelectedCheckboxes);
+            (_a = rowElement
+                .querySelector('input')) === null || _a === void 0 ? void 0 : _a.addEventListener('change', recountSelectedCheckboxes);
             const workOrderCellElement = document.createElement('td');
             // eslint-disable-next-line no-unsanitized/property
             workOrderCellElement.innerHTML =
@@ -129,9 +130,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             rowElement.append(workOrderCellElement);
             rowElement.insertAdjacentHTML('beforeend', `<td>
           ${cityssm.escapeHTML(record.itemNumber)}<br />
-          <small>${cityssm.escapeHTML(record.itemDescription ?? '(Unknown Item)')}</small>
+          <small>${cityssm.escapeHTML((_b = record.itemDescription) !== null && _b !== void 0 ? _b : '(Unknown Item)')}</small>
         </td><td class="has-text-danger-dark">
-          ${cityssm.escapeHTML(record.recordSync_message ?? '')}
+          ${cityssm.escapeHTML((_c = record.recordSync_message) !== null && _c !== void 0 ? _c : '')}
         </td><td>
           <div class="field has-addons">
             <div class="control">
@@ -148,20 +149,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
             </div>
           </div>
         </td>`);
-            rowElement
-                .querySelector('button.is-return-to-pending')
-                ?.addEventListener('click', returnRecordToPending);
-            rowElement
-                .querySelector('button.is-delete-record')
-                ?.addEventListener('click', deleteRecord);
+            (_d = rowElement
+                .querySelector('button.is-return-to-pending')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', returnRecordToPending);
+            (_e = rowElement
+                .querySelector('button.is-delete-record')) === null || _e === void 0 ? void 0 : _e.addEventListener('click', deleteRecord);
             rowElements.push(rowElement);
         }
         syncErrorsTbodyElement.replaceChildren(...rowElements);
     }
     renderSyncErrorRecords();
-    document
-        .querySelector('#syncErrors--toggleAll')
-        ?.addEventListener('click', () => {
+    (_c = document
+        .querySelector('#syncErrors--toggleAll')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', () => {
         const checkboxElements = syncErrorsTbodyElement.querySelectorAll('input[type="checkbox"]');
         if (selectedRecordIds.length === syncErrorRecords.length) {
             for (const element of checkboxElements) {
@@ -179,9 +177,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         }
     });
-    document
-        .querySelector('#syncErrors--returnSelected')
-        ?.addEventListener('click', () => {
+    (_d = document
+        .querySelector('#syncErrors--returnSelected')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', () => {
         if (selectedRecordIds.length === 0) {
             bulmaJS.alert({
                 message: 'No records are currently selected.',

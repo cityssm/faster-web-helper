@@ -3,9 +3,10 @@
 /* eslint-disable max-lines */
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
-    const moduleUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/modules/inventoryScanner`;
+    var _a, _b, _c;
+    const moduleUrlPrefix = `${(_b = (_a = document.querySelector('main')) === null || _a === void 0 ? void 0 : _a.dataset.urlPrefix) !== null && _b !== void 0 ? _b : ''}/modules/inventoryScanner`;
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    const fiveMinutesMillis = 5 * 60_000;
+    const fiveMinutesMillis = 5 * 60000;
     /*
      * Item Requests
      */
@@ -13,13 +14,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
     let itemRequestsCount = exports.itemRequestsCount;
     function renderItemRequests() {
         ;
-        (itemRequestsElement?.querySelector('span')).textContent =
+        (itemRequestsElement === null || itemRequestsElement === void 0 ? void 0 : itemRequestsElement.querySelector('span')).textContent =
             itemRequestsCount.toString();
         if (itemRequestsCount === 0) {
-            itemRequestsElement?.classList.add('is-hidden');
+            itemRequestsElement === null || itemRequestsElement === void 0 ? void 0 : itemRequestsElement.classList.add('is-hidden');
         }
         else {
-            itemRequestsElement?.classList.remove('is-hidden');
+            itemRequestsElement === null || itemRequestsElement === void 0 ? void 0 : itemRequestsElement.classList.remove('is-hidden');
         }
     }
     function refreshItemRequests() {
@@ -42,10 +43,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const pendingRecordsTbodyElement = document.querySelector('#tbody--pending');
     const syncRecordsButtonElement = document.querySelector('#pending--doSync');
     function unlockField(clickEvent) {
+        var _a;
         clickEvent.preventDefault();
-        const inputOrSelectElement = clickEvent.currentTarget
-            .closest('.field')
-            ?.querySelector('input, select');
+        const inputOrSelectElement = (_a = clickEvent.currentTarget
+            .closest('.field')) === null || _a === void 0 ? void 0 : _a.querySelector('input, select');
         inputOrSelectElement.removeAttribute('readonly');
         if (inputOrSelectElement.tagName === 'SELECT') {
             const optionElements = inputOrSelectElement.querySelectorAll('option');
@@ -152,14 +153,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     function openUpdateScannerRecord(clickEvent) {
+        var _a, _b;
         clickEvent.preventDefault();
-        const recordIndex = Number.parseInt(clickEvent.currentTarget.closest('tr')?.dataset
-            .recordIndex ?? '');
+        const recordIndex = Number.parseInt((_b = (_a = clickEvent.currentTarget.closest('tr')) === null || _a === void 0 ? void 0 : _a.dataset.recordIndex) !== null && _b !== void 0 ? _b : '');
         lastSearchedWorkOrderNumber = '';
         // eslint-disable-next-line security/detect-object-injection
         const pendingRecord = pendingRecords[recordIndex];
         cityssm.openHtmlModal('scannerRecordEdit', {
             onshow(modalElement) {
+                var _a, _b, _c, _d;
                 ;
                 modalElement.querySelector('#updatePending--recordId').value = pendingRecord.recordId.toString();
                 modalElement.querySelector('#updatePending--recordIdSpan').textContent = pendingRecord.recordId.toString();
@@ -167,13 +169,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     `${pendingRecord.scanDateString} ${pendingRecord.scanTimeString}`;
                 modalElement.querySelector('#updatePending--workOrderNumber').value = pendingRecord.workOrderNumber;
                 const repairSelectElement = modalElement.querySelector('#updatePending--repairId');
-                repairSelectElement.innerHTML = `<option value="${cityssm.escapeHTML(pendingRecord.repairId?.toString() ?? '')}">
-          ${cityssm.escapeHTML(pendingRecord.repairId === null ? '(Auto-Detect)' : pendingRecord.repairDescription ?? `(Unknown Repair ID: ${pendingRecord.repairId})`)}
+                repairSelectElement.innerHTML = `<option value="${cityssm.escapeHTML((_b = (_a = pendingRecord.repairId) === null || _a === void 0 ? void 0 : _a.toString()) !== null && _b !== void 0 ? _b : '')}">
+          ${cityssm.escapeHTML(pendingRecord.repairId === null ? '(Auto-Detect)' : (_c = pendingRecord.repairDescription) !== null && _c !== void 0 ? _c : `(Unknown Repair ID: ${pendingRecord.repairId})`)}
           </option>`;
                 modalElement.querySelector('#updatePending--itemNumberSpan').innerHTML = `${pendingRecord.itemNumberPrefix === ''
                     ? ''
                     : `<span class="tag">${cityssm.escapeHTML(pendingRecord.itemNumberPrefix)}</span> -`} ${cityssm.escapeHTML(pendingRecord.itemNumber)}`;
-                modalElement.querySelector('#updatePending--itemDescription').value = pendingRecord.itemDescription ?? '';
+                modalElement.querySelector('#updatePending--itemDescription').value = (_d = pendingRecord.itemDescription) !== null && _d !== void 0 ? _d : '';
                 modalElement.querySelector('#updatePending--quantity').value = pendingRecord.quantity.toString();
                 modalElement.querySelector('#updatePending--unitPrice').value =
                     pendingRecord.unitPrice === null
@@ -181,11 +183,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         : pendingRecord.unitPrice.toFixed(2);
             },
             onshown(modalElement, closeModalFunction) {
+                var _a, _b, _c;
                 bulmaJS.toggleHtmlClipped();
                 bulmaJS.init(modalElement);
-                modalElement
-                    .querySelector('form')
-                    ?.addEventListener('submit', (formEvent) => {
+                (_a = modalElement
+                    .querySelector('form')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', (formEvent) => {
                     formEvent.preventDefault();
                     updatePendingRecord(formEvent.currentTarget, closeModalFunction);
                 });
@@ -193,15 +195,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 for (const unlockButtonElement of unlockButtonElements) {
                     unlockButtonElement.addEventListener('click', unlockField);
                 }
-                modalElement
-                    .querySelector('#updatePending--workOrderNumber')
-                    ?.addEventListener('keyup', () => {
+                (_b = modalElement
+                    .querySelector('#updatePending--workOrderNumber')) === null || _b === void 0 ? void 0 : _b.addEventListener('keyup', () => {
                     refreshRepairIdSelect(true);
                 });
                 refreshRepairIdSelect(false);
-                modalElement
-                    .querySelector('.is-delete-button')
-                    ?.addEventListener('click', (deleteClickEvent) => {
+                (_c = modalElement
+                    .querySelector('.is-delete-button')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', (deleteClickEvent) => {
                     deleteClickEvent.preventDefault();
                     deletePendingRecord(pendingRecord.recordId, closeModalFunction);
                 });
@@ -224,6 +224,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     // eslint-disable-next-line complexity
     function renderPendingRecords() {
+        var _a, _b, _c;
         const rowElements = [];
         unknownCount = 0;
         errorCount = 0;
@@ -279,7 +280,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 record.itemNumberPrefix !== '') {
                 itemNumberCellElement.classList.add('has-background-danger-light');
             }
-            else if ((record.itemDescription ?? '') === '') {
+            else if (((_a = record.itemDescription) !== null && _a !== void 0 ? _a : '') === '') {
                 itemNumberCellElement.classList.add('has-background-warning-light');
             }
             // eslint-disable-next-line no-unsanitized/property
@@ -287,7 +288,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 ? ''
                 : `<span class="tag">${cityssm.escapeHTML(record.itemNumberPrefix)}</span> -`}
           ${cityssm.escapeHTML(record.itemNumber)}<br />
-          <small>${cityssm.escapeHTML(record.itemDescription ?? '(Unknown Item)')}</small>`;
+          <small>${cityssm.escapeHTML((_b = record.itemDescription) !== null && _b !== void 0 ? _b : '(Unknown Item)')}</small>`;
             rowElement.append(itemNumberCellElement);
             /*
              * Quantity
@@ -323,9 +324,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             <i class="fa-solid fa-gear" aria-hidden="true"></i>
           </button>
         </td>`);
-            rowElement
-                .querySelector('button')
-                ?.addEventListener('click', openUpdateScannerRecord);
+            (_c = rowElement
+                .querySelector('button')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', openUpdateScannerRecord);
             rowElements.push(rowElement);
         }
         pendingRecordsTbodyElement.replaceChildren(...rowElements);
@@ -370,9 +370,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         pendingRecords = exports.pendingRecords;
         renderPendingRecords();
     });
-    document
-        .querySelector('#pending--doRefresh')
-        ?.addEventListener('click', refreshPendingRecords);
+    (_c = document
+        .querySelector('#pending--doRefresh')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', refreshPendingRecords);
     globalThis.setInterval(autoRefreshPendingRecords, fiveMinutesMillis);
     function syncScannerRecords() {
         cityssm.postJSON(`${moduleUrlPrefix}/doSyncScannerRecords`, {}, (rawResponseJSON) => {

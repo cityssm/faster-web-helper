@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
-    const scannerUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/apps/inventoryScanner`;
+    var _a, _b;
+    const scannerUrlPrefix = `${(_b = (_a = document.querySelector('main')) === null || _a === void 0 ? void 0 : _a.dataset.urlPrefix) !== null && _b !== void 0 ? _b : ''}/apps/inventoryScanner`;
     const formElement = document.querySelector('#form--scanner');
     const successMessageElement = document.querySelector('#scanner--successMessage');
     function hideSuccessMessage() {
@@ -85,13 +86,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const itemDescriptionElement = formElement.querySelector('#scanner--itemDescription');
     const unitPriceElement = formElement.querySelector('#scanner--unitPrice');
     function toggleItemTypeFieldsets() {
+        var _a, _b, _c, _d;
         for (const itemTypeTabElement of itemTypeTabElements) {
-            const tabIsActive = itemTypeTabElement.closest('li')?.classList.contains('is-active') ??
-                false;
-            document.querySelector(`#itemTypeTab--${itemTypeTabElement.dataset.itemType ?? ''} fieldset`).disabled = !tabIsActive;
+            const tabIsActive = (_b = (_a = itemTypeTabElement.closest('li')) === null || _a === void 0 ? void 0 : _a.classList.contains('is-active')) !== null && _b !== void 0 ? _b : false;
+            document.querySelector(`#itemTypeTab--${(_c = itemTypeTabElement.dataset.itemType) !== null && _c !== void 0 ? _c : ''} fieldset`).disabled = !tabIsActive;
             if (tabIsActive) {
                 ;
-                document.querySelector('#scanner--itemType').value = itemTypeTabElement.dataset.itemType ?? '';
+                document.querySelector('#scanner--itemType').value = (_d = itemTypeTabElement.dataset.itemType) !== null && _d !== void 0 ? _d : '';
             }
         }
     }
@@ -168,10 +169,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
      * Clear buttons
      */
     function clearFieldAndFocus(event) {
+        var _a;
         event.preventDefault();
-        const inputElement = event.currentTarget
-            .closest('.field')
-            ?.querySelector('input, select');
+        const inputElement = (_a = event.currentTarget
+            .closest('.field')) === null || _a === void 0 ? void 0 : _a.querySelector('input, select');
         inputElement.value = '';
         if (inputElement.name === workOrderNumberInputElement.name) {
             refreshRepairIdSelect();
