@@ -13,6 +13,12 @@ declare const exports: {
 
 declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
+
+// eslint-disable-next-line unicorn/prefer-global-this
+if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
+  // eslint-disable-next-line unicorn/prefer-global-this, @typescript-eslint/no-explicit-any
+  ;(window as any).globalThis = window
+}
 ;(() => {
   const scannerUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/apps/inventoryScanner`
 
@@ -58,6 +64,10 @@ declare const cityssm: cityssmGlobal
     '#scanner--workOrderNumber-validateIcon'
   ) as HTMLElement
 
+  const itemNumberElement = formElement.querySelector(
+    '#scanner--itemNumber'
+  ) as HTMLInputElement
+
   let lastSearchedWorkOrderNumber = ''
 
   const repairIdSelectElement = formElement.querySelector(
@@ -72,6 +82,12 @@ declare const cityssm: cityssmGlobal
         optionElement.value = record.repairId.toString()
         repairIdSelectElement.append(optionElement)
       }
+    }
+  }
+
+  function jumpToItemNumberInput(inputEvent: KeyboardEvent): void {
+    if (inputEvent.key === 'Enter' && workOrderNumberInputElement.validity.valid) {
+      itemNumberElement.focus()
     }
   }
 
@@ -146,6 +162,8 @@ declare const cityssm: cityssmGlobal
 
   refreshRepairIdSelect()
 
+  workOrderNumberInputElement.addEventListener('keyup', jumpToItemNumberInput)
+  
   workOrderNumberInputElement.addEventListener('keyup', refreshRepairIdSelect)
 
   /*
@@ -196,10 +214,6 @@ declare const cityssm: cityssmGlobal
   /*
    * Item Description
    */
-
-  const itemNumberElement = formElement.querySelector(
-    '#scanner--itemNumber'
-  ) as HTMLInputElement
 
   let lastSearchedItemNumber = ''
 

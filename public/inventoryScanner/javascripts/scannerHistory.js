@@ -1,5 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+// eslint-disable-next-line unicorn/prefer-global-this
+if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
+    // eslint-disable-next-line unicorn/prefer-global-this, @typescript-eslint/no-explicit-any
+    ;
+    window.globalThis = window;
+}
+;
 (() => {
     var _a, _b;
     const scannerUrlPrefix = `${(_b = (_a = document.querySelector('main')) === null || _a === void 0 ? void 0 : _a.dataset.urlPrefix) !== null && _b !== void 0 ? _b : ''}/apps/inventoryScanner`;

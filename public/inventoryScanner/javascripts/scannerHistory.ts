@@ -1,9 +1,7 @@
 import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
-import type {
-  InventoryScannerRecord
-} from '../../../modules/inventoryScanner/types.js'
+import type { InventoryScannerRecord } from '../../../modules/inventoryScanner/types.js'
 
 declare const exports: {
   renderScannerHistoryEventName: string
@@ -12,6 +10,13 @@ declare const exports: {
 
 declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
+
+// eslint-disable-next-line unicorn/prefer-global-this
+if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
+  // eslint-disable-next-line unicorn/prefer-global-this, @typescript-eslint/no-explicit-any
+  ;(window as any).globalThis = window
+}
+
 ;(() => {
   const scannerUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/apps/inventoryScanner`
 
@@ -222,11 +227,7 @@ declare const cityssm: cityssmGlobal
   // Ensure the scanner is initialized before retrieving the history
   globalThis.setTimeout(refreshScannerHistory, 500)
 
-  globalThis.addEventListener(
-    exports.renderScannerHistoryEventName,
-    () => {
-      renderScannerHistory()
-    }
-  )
-
+  globalThis.addEventListener(exports.renderScannerHistoryEventName, () => {
+    renderScannerHistory()
+  })
 })()

@@ -1,5 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+// eslint-disable-next-line unicorn/prefer-global-this
+if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
+    // eslint-disable-next-line unicorn/prefer-global-this, @typescript-eslint/no-explicit-any
+    ;
+    window.globalThis = window;
+}
+;
 (() => {
     var _a, _b;
     const scannerUrlPrefix = `${(_b = (_a = document.querySelector('main')) === null || _a === void 0 ? void 0 : _a.dataset.urlPrefix) !== null && _b !== void 0 ? _b : ''}/apps/inventoryScanner`;
@@ -26,6 +33,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
      */
     const workOrderNumberInputElement = formElement.querySelector('#scanner--workOrderNumber');
     const workOrderNumberValidateIconElement = formElement.querySelector('#scanner--workOrderNumber-validateIcon');
+    const itemNumberElement = formElement.querySelector('#scanner--itemNumber');
     let lastSearchedWorkOrderNumber = '';
     const repairIdSelectElement = formElement.querySelector('#scanner--repairId');
     function renderRepairIds(records) {
@@ -36,6 +44,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 optionElement.value = record.repairId.toString();
                 repairIdSelectElement.append(optionElement);
             }
+        }
+    }
+    function jumpToItemNumberInput(inputEvent) {
+        if (inputEvent.key === 'Enter' && workOrderNumberInputElement.validity.valid) {
+            itemNumberElement.focus();
         }
     }
     function refreshRepairIdSelect() {
@@ -77,6 +90,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
     }
     refreshRepairIdSelect();
+    workOrderNumberInputElement.addEventListener('keyup', jumpToItemNumberInput);
     workOrderNumberInputElement.addEventListener('keyup', refreshRepairIdSelect);
     /*
      * Item Type Toggle
@@ -103,7 +117,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
     /*
      * Item Description
      */
-    const itemNumberElement = formElement.querySelector('#scanner--itemNumber');
     let lastSearchedItemNumber = '';
     const itemDescriptionSpanElement = formElement.querySelector('#scanner--itemDescriptionSpan');
     const unitPriceSpanElement = formElement.querySelector('#scanner--unitPriceSpan');

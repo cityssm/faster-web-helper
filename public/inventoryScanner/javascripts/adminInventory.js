@@ -31,7 +31,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             .split(' ');
         for (const item of inventory) {
             let displayItem = true;
-            if (!inventoryFilterZeroQuantityElement.checked && item.availableQuantity === 0) {
+            if (!inventoryFilterZeroQuantityElement.checked &&
+                item.availableQuantity === 0) {
                 continue;
             }
             for (const filterPiece of filterPieces) {

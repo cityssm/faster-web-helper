@@ -16,7 +16,9 @@ declare const cityssm: cityssmGlobal
     '#filter--inventory'
   ) as HTMLInputElement
 
-  const inventoryFilterZeroQuantityElement = document.querySelector('#filter--showZeroQuantity') as HTMLInputElement
+  const inventoryFilterZeroQuantityElement = document.querySelector(
+    '#filter--showZeroQuantity'
+  ) as HTMLInputElement
 
   const inventoryDisplayCountElement = document.querySelector(
     '#displayCount--inventory'
@@ -54,7 +56,10 @@ declare const cityssm: cityssmGlobal
     for (const item of inventory) {
       let displayItem = true
 
-      if (!inventoryFilterZeroQuantityElement.checked && item.availableQuantity === 0) {
+      if (
+        !inventoryFilterZeroQuantityElement.checked &&
+        item.availableQuantity === 0
+      ) {
         continue
       }
 
