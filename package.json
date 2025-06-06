@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@cityssm/authentication-helper": "^0.1.0",
-    "@cityssm/bulma-js": "^1.0.0-rc",
+    "@cityssm/bulma-js": "^1.0.0-rc.1",
     "@cityssm/bulma-webapp-js": "^1.5.0",
     "@cityssm/configurator": "^0.1.0",
     "@cityssm/dynamics-gp": "^1.3.0",
