@@ -11,12 +11,6 @@ declare const exports: {
 declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
 
-// eslint-disable-next-line unicorn/prefer-global-this
-if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
-  // eslint-disable-next-line unicorn/prefer-global-this, @typescript-eslint/no-explicit-any
-  ;(window as any).globalThis = window
-}
-
 ;(() => {
   const scannerUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/apps/inventoryScanner`
 

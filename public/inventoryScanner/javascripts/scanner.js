@@ -1,12 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-// eslint-disable-next-line unicorn/prefer-global-this
-if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
-    // eslint-disable-next-line unicorn/prefer-global-this, @typescript-eslint/no-explicit-any
-    ;
-    window.globalThis = window;
-}
-;
 (() => {
     var _a, _b;
     const scannerUrlPrefix = `${(_b = (_a = document.querySelector('main')) === null || _a === void 0 ? void 0 : _a.dataset.urlPrefix) !== null && _b !== void 0 ? _b : ''}/apps/inventoryScanner`;
@@ -34,6 +27,7 @@ if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
     const workOrderNumberInputElement = formElement.querySelector('#scanner--workOrderNumber');
     const workOrderNumberValidateIconElement = formElement.querySelector('#scanner--workOrderNumber-validateIcon');
     const itemNumberElement = formElement.querySelector('#scanner--itemNumber');
+    const itemNumberSuffixElement = formElement.querySelector('#scanner--itemNumberSuffix');
     let lastSearchedWorkOrderNumber = '';
     const repairIdSelectElement = formElement.querySelector('#scanner--repairId');
     function renderRepairIds(records) {
@@ -47,8 +41,15 @@ if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
         }
     }
     function jumpToItemNumberInput(inputEvent) {
-        if (inputEvent.key === 'Enter' && workOrderNumberInputElement.validity.valid) {
-            itemNumberElement.focus();
+        if (inputEvent.key === 'Enter') {
+            inputEvent.preventDefault();
+            inputEvent.stopPropagation();
+            if (workOrderNumberInputElement.validity.valid) {
+                itemNumberElement.focus();
+                if (document.activeElement !== itemNumberElement) {
+                    itemNumberSuffixElement.focus();
+                }
+            }
         }
     }
     function refreshRepairIdSelect() {
@@ -90,13 +91,12 @@ if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
         });
     }
     refreshRepairIdSelect();
-    workOrderNumberInputElement.addEventListener('keyup', jumpToItemNumberInput);
     workOrderNumberInputElement.addEventListener('keyup', refreshRepairIdSelect);
+    workOrderNumberInputElement.addEventListener('keypress', jumpToItemNumberInput);
     /*
      * Item Type Toggle
      */
     const itemTypeTabElements = document.querySelectorAll('#scanner--itemTypeTabs a');
-    const itemNumberSuffixElement = formElement.querySelector('#scanner--itemNumberSuffix');
     const itemDescriptionElement = formElement.querySelector('#scanner--itemDescription');
     const unitPriceElement = formElement.querySelector('#scanner--unitPrice');
     function toggleItemTypeFieldsets() {
@@ -114,6 +114,20 @@ if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
     for (const itemTypeTabElement of itemTypeTabElements) {
         itemTypeTabElement.addEventListener('click', toggleItemTypeFieldsets);
     }
+    /*
+     * Item Number
+     */
+    const quantityElement = formElement.querySelector('#scanner--quantity');
+    function jumpToQuantityInput(inputEvent) {
+        if (inputEvent.key === 'Enter') {
+            inputEvent.preventDefault();
+            inputEvent.stopPropagation();
+            if (itemNumberElement.validity.valid) {
+                quantityElement.focus();
+            }
+        }
+    }
+    itemNumberElement.addEventListener('keypress', jumpToQuantityInput);
     /*
      * Item Description
      */
@@ -155,7 +169,6 @@ if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
     const quantityLabelElement = formElement.querySelector('label[for="scanner--quantity"]');
     const quantityMultiplierElement = formElement.querySelector('#scanner--quantityMultiplier');
     const quantityMultiplierToggleElement = formElement.querySelector('#is-toggle-quantity-multiplier');
-    const quantityElement = formElement.querySelector('#scanner--quantity');
     const submitButtonElement = formElement.querySelector('button[type="submit"]');
     function renderQuantityMultiplier() {
         if (quantityMultiplierElement.value === '1') {
@@ -199,14 +212,6 @@ if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
     /*
      * Form submit
      */
-    function blockInputSubmit(inputEvent) {
-        if (inputEvent.key === 'Enter') {
-            inputEvent.preventDefault();
-            inputEvent.stopPropagation();
-        }
-    }
-    workOrderNumberInputElement.addEventListener('keypress', blockInputSubmit);
-    itemNumberElement.addEventListener('keypress', blockInputSubmit);
     formElement.addEventListener('submit', (formEvent) => {
         formEvent.preventDefault();
         if (!formElement.checkValidity()) {

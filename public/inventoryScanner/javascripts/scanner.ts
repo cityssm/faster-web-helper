@@ -13,12 +13,6 @@ declare const exports: {
 
 declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
-
-// eslint-disable-next-line unicorn/prefer-global-this
-if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
-  // eslint-disable-next-line unicorn/prefer-global-this, @typescript-eslint/no-explicit-any
-  ;(window as any).globalThis = window
-}
 ;(() => {
   const scannerUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/apps/inventoryScanner`
 
@@ -68,6 +62,10 @@ if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
     '#scanner--itemNumber'
   ) as HTMLInputElement
 
+  const itemNumberSuffixElement = formElement.querySelector(
+    '#scanner--itemNumberSuffix'
+  ) as HTMLInputElement
+
   let lastSearchedWorkOrderNumber = ''
 
   const repairIdSelectElement = formElement.querySelector(
@@ -86,8 +84,17 @@ if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
   }
 
   function jumpToItemNumberInput(inputEvent: KeyboardEvent): void {
-    if (inputEvent.key === 'Enter' && workOrderNumberInputElement.validity.valid) {
-      itemNumberElement.focus()
+    if (inputEvent.key === 'Enter') {
+      inputEvent.preventDefault()
+      inputEvent.stopPropagation()
+
+      if (workOrderNumberInputElement.validity.valid) {
+        itemNumberElement.focus()
+
+        if (document.activeElement !== itemNumberElement) {
+          itemNumberSuffixElement.focus()
+        }
+      }
     }
   }
 
@@ -162,9 +169,12 @@ if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
 
   refreshRepairIdSelect()
 
-  workOrderNumberInputElement.addEventListener('keyup', jumpToItemNumberInput)
-  
   workOrderNumberInputElement.addEventListener('keyup', refreshRepairIdSelect)
+
+  workOrderNumberInputElement.addEventListener(
+    'keypress',
+    jumpToItemNumberInput
+  )
 
   /*
    * Item Type Toggle
@@ -172,10 +182,6 @@ if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
 
   const itemTypeTabElements: NodeListOf<HTMLAnchorElement> =
     document.querySelectorAll('#scanner--itemTypeTabs a')
-
-  const itemNumberSuffixElement = formElement.querySelector(
-    '#scanner--itemNumberSuffix'
-  ) as HTMLInputElement
 
   const itemDescriptionElement = formElement.querySelector(
     '#scanner--itemDescription'
@@ -210,6 +216,27 @@ if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
   for (const itemTypeTabElement of itemTypeTabElements) {
     itemTypeTabElement.addEventListener('click', toggleItemTypeFieldsets)
   }
+
+  /*
+   * Item Number
+   */
+
+  const quantityElement = formElement.querySelector(
+    '#scanner--quantity'
+  ) as HTMLInputElement
+
+  function jumpToQuantityInput(inputEvent: KeyboardEvent): void {
+    if (inputEvent.key === 'Enter') {
+      inputEvent.preventDefault()
+      inputEvent.stopPropagation()
+
+      if (itemNumberElement.validity.valid) {
+        quantityElement.focus()
+      }
+    }
+  }
+
+  itemNumberElement.addEventListener('keypress', jumpToQuantityInput)
 
   /*
    * Item Description
@@ -263,6 +290,7 @@ if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
   }
 
   refreshItemDescription()
+
   itemNumberElement.addEventListener('keyup', refreshItemDescription)
 
   /*
@@ -280,10 +308,6 @@ if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
   const quantityMultiplierToggleElement = formElement.querySelector(
     '#is-toggle-quantity-multiplier'
   ) as HTMLButtonElement
-
-  const quantityElement = formElement.querySelector(
-    '#scanner--quantity'
-  ) as HTMLInputElement
 
   const submitButtonElement = formElement.querySelector(
     'button[type="submit"]'
@@ -343,16 +367,6 @@ if (typeof window !== 'undefined' && typeof globalThis === 'undefined') {
   /*
    * Form submit
    */
-
-  function blockInputSubmit(inputEvent: KeyboardEvent): void {
-    if (inputEvent.key === 'Enter') {
-      inputEvent.preventDefault()
-      inputEvent.stopPropagation()
-    }
-  }
-
-  workOrderNumberInputElement.addEventListener('keypress', blockInputSubmit)
-  itemNumberElement.addEventListener('keypress', blockInputSubmit)
 
   formElement.addEventListener('submit', (formEvent) => {
     formEvent.preventDefault()
