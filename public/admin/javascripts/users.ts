@@ -1,3 +1,4 @@
+import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
 import type { FasterWebHelperUser } from '../../../types/users.types.js'
@@ -7,6 +8,7 @@ declare const exports: {
   userSettingNames: string[]
 }
 
+declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
 ;(() => {
   const moduleUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/admin`
@@ -17,6 +19,104 @@ declare const cityssm: cityssmGlobal
   const usersContainerElement = document.querySelector(
     '#container--users'
   ) as HTMLElement
+
+  function openEditUserModal(clickEvent: MouseEvent): void {
+    const userIndex = Number.parseInt(
+      (clickEvent.currentTarget as HTMLButtonElement).closest('tr')?.dataset
+        .userIndex ?? '-1',
+      10
+    )
+
+    const user = users[userIndex]
+
+    let closeModalFunction: (() => void) | undefined
+
+    function doUpdateUser(formEvent: SubmitEvent): void {
+      formEvent.preventDefault()
+
+      cityssm.postJSON(
+        `${moduleUrlPrefix}/doUpdateUser`,
+        formEvent.currentTarget as HTMLFormElement,
+        (rawResponseJSON) => {
+          const responseJSON = rawResponseJSON as {
+            success: boolean
+            users: FasterWebHelperUser[]
+          }
+
+          if (responseJSON.success) {
+            users = responseJSON.users
+            renderUsers()
+
+            closeModalFunction?.()
+          } else {
+            bulmaJS.alert({
+              message: 'Please try again.',
+              title: 'Error Updating User',
+
+              contextualColorName: 'danger'
+            })
+          }
+        }
+      )
+    }
+
+    cityssm.openHtmlModal('userEdit', {
+      onshow(modalElement): void {
+        const formElement = modalElement.querySelector(
+          'form'
+        ) as HTMLFormElement
+
+        const userNameInputElement = formElement.querySelector(
+          '#updateUser--userName'
+        ) as HTMLInputElement
+        userNameInputElement.value = user.userName
+
+        const fasterWebUserNameInputElement = formElement.querySelector(
+          '#updateUser--fasterWebUserName'
+        ) as HTMLInputElement
+        fasterWebUserNameInputElement.value = user.fasterWebUserName ?? ''
+
+        const emailAddressInputElement = formElement.querySelector(
+          '#updateUser--emailAddress'
+        ) as HTMLInputElement
+        emailAddressInputElement.value = user.emailAddress ?? ''
+
+        const settingsTbodyElement = formElement.querySelector(
+          '#updateUser--settingsTableBody'
+        ) as HTMLTableSectionElement
+
+        for (const settingName of userSettingNames) {
+          const trElement = document.createElement('tr')
+
+          trElement.innerHTML = `<td class="is-vcentered">
+            <label for="updateUserSetting--${cityssm.escapeHTML(settingName)}" class="label">
+            ${cityssm.escapeHTML(settingName)}
+            </label>
+            </td>
+            <td>
+              <input class="input"  name="${cityssm.escapeHTML(settingName)}"
+                id="updateUserSetting--${cityssm.escapeHTML(settingName)}"
+                value="${cityssm.escapeHTML(user.settings[settingName] ?? '')}"
+                maxlength="500" />
+            </td>`
+
+          settingsTbodyElement.append(trElement)
+        }
+      },
+      onshown(modalElement, _closeModalFunction) {
+        bulmaJS.toggleHtmlClipped()
+        closeModalFunction = _closeModalFunction
+
+        modalElement
+          .querySelector('form')
+          ?.addEventListener('submit', doUpdateUser)
+      },
+
+      onremoved(): void {
+        bulmaJS.toggleHtmlClipped()
+      }
+    })
+  }
 
   function renderUsers(): void {
     usersContainerElement.replaceChildren()
@@ -74,6 +174,10 @@ declare const cityssm: cityssmGlobal
       trElement
         .querySelector('.container--tags')
         ?.append(userSettingTagsElement)
+
+      trElement
+        .querySelector('button')
+        ?.addEventListener('click', openEditUserModal)
 
       tbodyElement.append(trElement)
     }
