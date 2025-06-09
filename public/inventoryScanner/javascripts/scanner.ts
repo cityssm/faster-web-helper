@@ -72,6 +72,10 @@ declare const cityssm: cityssmGlobal
     '#scanner--repairId'
   ) as HTMLSelectElement
 
+  const repairIdCountElement = formElement.querySelector(
+    '#scanner--repairIdCount'
+  ) as HTMLSpanElement
+
   function renderRepairIds(records: WorkOrderValidationRecord[]): void {
     for (const record of records) {
       if (record.repairId !== null) {
@@ -87,6 +91,8 @@ declare const cityssm: cityssmGlobal
     if (inputEvent.key === 'Enter') {
       inputEvent.preventDefault()
       inputEvent.stopPropagation()
+
+      workOrderNumberInputElement.value = workOrderNumberInputElement.value.toUpperCase()
 
       if (workOrderNumberInputElement.validity.valid) {
         itemNumberElement.focus()
@@ -111,6 +117,8 @@ declare const cityssm: cityssmGlobal
     repairIdSelectElement.innerHTML = '<option value="">(Auto-Detect)</option>'
     repairIdSelectElement.value = ''
 
+    repairIdCountElement.textContent = '0'
+
     if (!workOrderNumberInputElement.checkValidity()) {
       workOrderNumberValidateIconElement.replaceChildren()
 
@@ -134,6 +142,8 @@ declare const cityssm: cityssmGlobal
       return
     }
 
+    repairIdCountElement.innerHTML = '<span class="icon is-small"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i></span>'
+
     cityssm.postJSON(
       `${scannerUrlPrefix}/doGetRepairRecords`,
       {
@@ -143,6 +153,8 @@ declare const cityssm: cityssmGlobal
         const responseJSON = rawResponseJSON as unknown as {
           records: WorkOrderValidationRecord[]
         }
+
+        repairIdCountElement.textContent = responseJSON.records.length.toString()
 
         workOrderNumberValidateIconElement.replaceChildren()
 

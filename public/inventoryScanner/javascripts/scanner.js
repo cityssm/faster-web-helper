@@ -30,6 +30,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const itemNumberSuffixElement = formElement.querySelector('#scanner--itemNumberSuffix');
     let lastSearchedWorkOrderNumber = '';
     const repairIdSelectElement = formElement.querySelector('#scanner--repairId');
+    const repairIdCountElement = formElement.querySelector('#scanner--repairIdCount');
     function renderRepairIds(records) {
         for (const record of records) {
             if (record.repairId !== null) {
@@ -44,6 +45,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         if (inputEvent.key === 'Enter') {
             inputEvent.preventDefault();
             inputEvent.stopPropagation();
+            workOrderNumberInputElement.value = workOrderNumberInputElement.value.toUpperCase();
             if (workOrderNumberInputElement.validity.valid) {
                 itemNumberElement.focus();
                 if (document.activeElement !== itemNumberElement) {
@@ -61,6 +63,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         repairIdSelectElement.replaceChildren();
         repairIdSelectElement.innerHTML = '<option value="">(Auto-Detect)</option>';
         repairIdSelectElement.value = '';
+        repairIdCountElement.textContent = '0';
         if (!workOrderNumberInputElement.checkValidity()) {
             workOrderNumberValidateIconElement.replaceChildren();
             if (lastSearchedWorkOrderNumber === '') {
@@ -74,10 +77,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
             renderRepairIds([]);
             return;
         }
+        repairIdCountElement.innerHTML = '<span class="icon is-small"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i></span>';
         cityssm.postJSON(`${scannerUrlPrefix}/doGetRepairRecords`, {
             workOrderNumber: lastSearchedWorkOrderNumber
         }, (rawResponseJSON) => {
             const responseJSON = rawResponseJSON;
+            repairIdCountElement.textContent = responseJSON.records.length.toString();
             workOrderNumberValidateIconElement.replaceChildren();
             if (responseJSON.records.length === 0) {
                 workOrderNumberValidateIconElement.insertAdjacentHTML('beforeend', '<i class="fa-solid fa-question-circle has-text-warning" aria-hidden="true"></i>');
