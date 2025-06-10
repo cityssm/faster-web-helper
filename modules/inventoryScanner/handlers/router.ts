@@ -4,6 +4,7 @@ import handler_inventoryScanner from './get-admin/inventoryScanner.js'
 import handler_doDeletePendingRecord from './post-admin/doDeletePendingRecord.js'
 import handler_doDeleteSyncErrorRecords from './post-admin/doDeleteSyncErrorRecords.js'
 import handler_doGetInventory from './post-admin/doGetInventory.js'
+import handler_doGetInventoryItemDetails from './post-admin/doGetInventoryItemDetails.js'
 import handler_doGetItemRequestsCount from './post-admin/doGetItemRequestsCount.js'
 import handler_doGetPendingRecords from './post-admin/doGetPendingRecords.js'
 import handler_doGetRepairRecords from './post-admin/doGetRepairRecords.js'
@@ -47,5 +48,7 @@ router.post('/doDeleteSyncErrorRecords', handler_doDeleteSyncErrorRecords)
  */
 
 router.post('/doGetInventory', handler_doGetInventory)
+
+router.post('/doGetInventoryItemDetails', handler_doGetInventoryItemDetails)
 
 export default router

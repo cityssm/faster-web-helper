@@ -72,6 +72,11 @@ app.use(
 )
 
 app.use(
+  `${urlPrefix}/lib/jsbarcode`,
+  express.static(path.join('node_modules', 'jsbarcode', 'dist'))
+)
+
+app.use(
   `${urlPrefix}/lib/cityssm-bulma-js`,
   express.static(path.join('node_modules', '@cityssm', 'bulma-js', 'dist'))
 )

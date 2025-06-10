@@ -73,7 +73,7 @@ export default function getScannerRecords(filters, userOptions = {}, connectedDa
         when s.itemDescription is null or s.itemDescription = '' then i.itemDescription
         else s.itemDescription
         end as itemDescription,
-      s.quantity, s.unitPrice,
+      s.quantity, s.unitPrice, i.availableQuantity,
       s.recordSync_userName, s.recordSync_timeMillis, s.recordSync_isSuccessful,
       s.recordSync_syncedRecordId, s.recordSync_message
     from InventoryScannerRecords s

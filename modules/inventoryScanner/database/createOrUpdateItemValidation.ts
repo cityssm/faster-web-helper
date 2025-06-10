@@ -23,8 +23,9 @@ export default function createOrUpdateItemValidation(
       .prepare(
         `insert into ItemValidationRecords (
           itemStoreroom, itemNumberPrefix, itemNumber, itemDescription, availableQuantity, unitPrice,
+          rawJsonData,
           recordCreate_timeMillis, recordUpdate_timeMillis)
-          values (?, ?, ?, ?, ?, ?, ?, ?)`
+          values (?, ?, ?, ?, ?, ?, ?, ?, ?)`
       )
       .run(
         validationRecord.itemStoreroom,
@@ -33,6 +34,7 @@ export default function createOrUpdateItemValidation(
         validationRecord.itemDescription,
         validationRecord.availableQuantity,
         validationRecord.unitPrice,
+        validationRecord.rawJsonData ?? {},
         timeMillis,
         timeMillis
       )
@@ -43,6 +45,7 @@ export default function createOrUpdateItemValidation(
           set itemDescription = ?,
           availableQuantity = ?,
           unitPrice = ?,
+          rawJsonData = ?,
           recordUpdate_timeMillis = ?,
           recordDelete_timeMillis = null
           where itemStoreroom = ?
@@ -53,6 +56,7 @@ export default function createOrUpdateItemValidation(
         validationRecord.itemDescription,
         validationRecord.availableQuantity,
         validationRecord.unitPrice,
+        validationRecord.rawJsonData ?? {},
         timeMillis,
         validationRecord.itemStoreroom,
         validationRecord.itemNumberPrefix,

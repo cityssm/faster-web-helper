@@ -8,9 +8,10 @@ export default function createOrUpdateItemValidation(validationRecord, timeMilli
         database
             .prepare(`insert into ItemValidationRecords (
           itemStoreroom, itemNumberPrefix, itemNumber, itemDescription, availableQuantity, unitPrice,
+          rawJsonData,
           recordCreate_timeMillis, recordUpdate_timeMillis)
-          values (?, ?, ?, ?, ?, ?, ?, ?)`)
-            .run(validationRecord.itemStoreroom, validationRecord.itemNumberPrefix, validationRecord.itemNumber, validationRecord.itemDescription, validationRecord.availableQuantity, validationRecord.unitPrice, timeMillis, timeMillis);
+          values (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+            .run(validationRecord.itemStoreroom, validationRecord.itemNumberPrefix, validationRecord.itemNumber, validationRecord.itemDescription, validationRecord.availableQuantity, validationRecord.unitPrice, validationRecord.rawJsonData ?? {}, timeMillis, timeMillis);
     }
     else {
         database
@@ -18,12 +19,13 @@ export default function createOrUpdateItemValidation(validationRecord, timeMilli
           set itemDescription = ?,
           availableQuantity = ?,
           unitPrice = ?,
+          rawJsonData = ?,
           recordUpdate_timeMillis = ?,
           recordDelete_timeMillis = null
           where itemStoreroom = ?
           and itemNumberPrefix = ?
           and itemNumber = ?`)
-            .run(validationRecord.itemDescription, validationRecord.availableQuantity, validationRecord.unitPrice, timeMillis, validationRecord.itemStoreroom, validationRecord.itemNumberPrefix, validationRecord.itemNumber);
+            .run(validationRecord.itemDescription, validationRecord.availableQuantity, validationRecord.unitPrice, validationRecord.rawJsonData ?? {}, timeMillis, validationRecord.itemStoreroom, validationRecord.itemNumberPrefix, validationRecord.itemNumber);
     }
     database.close();
 }

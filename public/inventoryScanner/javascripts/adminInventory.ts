@@ -1,12 +1,19 @@
+import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
+import type { GPItemWithQuantity } from '@cityssm/dynamics-gp'
+import type JsBarcodeType from 'jsbarcode'
 
 import type { ItemValidationRecord } from '../../../modules/inventoryScanner/types.js'
 
 declare const exports: {
   inventory: ItemValidationRecord[]
+
+  openInventoryItemEventName: string
 }
 
+declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
+declare const JsBarcode: typeof JsBarcodeType
 ;(() => {
   const moduleUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/modules/inventoryScanner`
 
@@ -91,11 +98,20 @@ declare const cityssm: cityssmGlobal
           '[data-field="itemStoreroom"]'
         ) as HTMLTableCellElement
       ).textContent = item.itemStoreroom
-      ;(
-        tableRowElement.querySelector(
-          '[data-field="itemNumber"]'
-        ) as HTMLTableCellElement
-      ).textContent = item.itemNumber
+
+      const itemNumberElement = tableRowElement.querySelector(
+        '[data-field="itemNumber"]'
+      ) as HTMLTableCellElement
+
+      itemNumberElement.innerHTML = `<a href="#" class="has-text-weight-bold has-text-link"
+          data-item-storeroom="${cityssm.escapeHTML(item.itemStoreroom)}"
+          data-item-number="${cityssm.escapeHTML(item.itemNumber)}">
+          ${cityssm.escapeHTML(item.itemNumber)}
+          </a>`
+
+      itemNumberElement
+        .querySelector('a')
+        ?.addEventListener('click', openInventoryItem)
       ;(
         tableRowElement.querySelector(
           '[data-field="itemDescription"]'
@@ -152,6 +168,140 @@ declare const cityssm: cityssmGlobal
       }
     )
   }
+
+  function openInventoryItem(event: Event): void {
+    event.preventDefault()
+
+    const linkElement = event.target as HTMLAnchorElement
+
+    const itemStoreroom = linkElement.dataset.itemStoreroom ?? ''
+    const itemNumber = linkElement.dataset.itemNumber ?? ''
+
+    const item = inventory.find(
+      (item) =>
+        item.itemStoreroom === itemStoreroom && item.itemNumber === itemNumber
+    )
+
+    if (item === undefined) {
+      bulmaJS.alert({
+        contextualColorName: 'danger',
+        title: 'Item Not Found',
+
+        message: `The item storeroom "${cityssm.escapeHTML(
+          itemStoreroom
+        )}" and item number "${cityssm.escapeHTML(itemNumber)}" could not be found.`
+      })
+      return
+    }
+
+    cityssm.openHtmlModal('inventoryItemView', {
+      onshow(modalElement) {
+        ;(
+          modalElement.querySelector('.modal-card-title') as HTMLElement
+        ).textContent =
+          `${cityssm.escapeHTML(itemNumber)} [${cityssm.escapeHTML(itemStoreroom)}]`
+        ;(
+          modalElement.querySelector(
+            '#inventoryItemView--itemDescription'
+          ) as HTMLElement
+        ).textContent = item.itemDescription
+
+        cityssm.postJSON(
+          `${moduleUrlPrefix}/doGetInventoryItemDetails`,
+          {
+            itemStoreroom,
+            itemNumber
+          },
+          (rawResponseJSON) => {
+            const responseJSON = rawResponseJSON as
+              | {
+                  success: false
+
+                  message: string
+                }
+              | {
+                  success: true
+
+                  data: GPItemWithQuantity
+                  source: 'dynamicsGP'
+                }
+
+            const detailsElement = modalElement.querySelector(
+              '#inventoryItemView--details'
+            ) as HTMLElement
+
+            if (responseJSON.success) {
+              const data = responseJSON.data
+
+              detailsElement.insertAdjacentHTML(
+                'beforeend',
+                `<hr />
+                  <h2 class="title is-5">Details from Dynamics GP</h2>
+                  <div class="columns">
+                  <div class="column">
+                    <div class="columns mb-0">
+                      <div class="column has-text-weight-bold">Standard Cost:</div>
+                      <div class="column is-narrow has-text-right">
+                        $${cityssm.escapeHTML(data.standardCost.toFixed(2))}
+                      </div>
+                    </div>
+                    <div class="columns">
+                      <div class="column has-text-weight-bold">Current Cost:</div>
+                      <div class="column is-narrow has-text-right">
+                        $${cityssm.escapeHTML(data.currentCost.toFixed(2))}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="column">
+                  <div class="columns mb-0">
+                    <div class="column has-text-weight-bold">Quantity on Hand:</div>
+                    <div class="column is-narrow has-text-right">
+                      ${cityssm.escapeHTML(data.quantityOnHand.toString())}
+                    </div>
+                  </div>
+                  <div class="columns">
+                    <div class="column has-text-weight-bold">Quantity of Order:</div>
+                    <div class="column is-narrow has-text-right">
+                      ${cityssm.escapeHTML(data.quantityOnOrder.toString())}
+                    </div>
+                  </div>
+                </div>`
+              )
+
+
+            } else {
+              detailsElement.innerHTML = `<div class="message is-warning">
+                <p class="message-body">${cityssm.escapeHTML(responseJSON.message)}</p>
+                </div>`
+            }
+          }
+        )
+      },
+      onshown(modalElement) {
+        bulmaJS.toggleHtmlClipped()
+
+        JsBarcode(
+          modalElement.querySelector('#inventoryItemView--barcode'),
+          itemNumber,
+          {
+            format: 'CODE39',
+            displayValue: true,
+            width: 2,
+            height: 80
+          }
+        )
+      },
+
+      onremoved() {
+        bulmaJS.toggleHtmlClipped()
+      }
+    })
+  }
+
+  globalThis.addEventListener(
+    exports.openInventoryItemEventName,
+    openInventoryItem
+  )
 
   renderInventory()
   inventoryFilterElement.addEventListener('keyup', renderInventory)

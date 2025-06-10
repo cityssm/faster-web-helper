@@ -9,14 +9,18 @@ export interface ItemValidationRecord {
   itemDescription: string
   availableQuantity: number
   unitPrice: number
+
+  rawJsonData?: string | null
 }
 
 export interface WorkOrderValidationRecord {
   workOrderNumber: string
   workOrderType: WorkOrderType,
   workOrderDescription: string
+
   technicianId?: string | null
   technicianDescription: string | null
+
   repairId: number | null
   repairDescription: string | null
 }
@@ -24,10 +28,13 @@ export interface WorkOrderValidationRecord {
 export interface InventoryScannerRecord {
   recordId: number
   scannerKey: string
+
   scanDate: number
   scanDateString: DateString
+
   scanTime: number
   scanTimeString: TimeString
+
   workOrderNumber: string
   workOrderType: WorkOrderType,
 
@@ -38,11 +45,12 @@ export interface InventoryScannerRecord {
 
   technicianId: string | null
 
-  repairId: number | null
   repairDescription: string | null
+  repairId: number | null
 
   quantity: number
   unitPrice: number | null
+  availableQuantity: number | null
 
   recordSync_userName: string | null
   recordSync_timeMillis: number | null

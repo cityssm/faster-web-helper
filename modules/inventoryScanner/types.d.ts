@@ -7,6 +7,7 @@ export interface ItemValidationRecord {
     itemDescription: string;
     availableQuantity: number;
     unitPrice: number;
+    rawJsonData?: string | null;
 }
 export interface WorkOrderValidationRecord {
     workOrderNumber: string;
@@ -31,10 +32,11 @@ export interface InventoryScannerRecord {
     itemNumber: string;
     itemDescription: string | null;
     technicianId: string | null;
-    repairId: number | null;
     repairDescription: string | null;
+    repairId: number | null;
     quantity: number;
     unitPrice: number | null;
+    availableQuantity: number | null;
     recordSync_userName: string | null;
     recordSync_timeMillis: number | null;
     recordSync_isSuccessful: boolean | null;

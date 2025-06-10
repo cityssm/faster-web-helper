@@ -71,11 +71,16 @@ async function runUpdateItemValidationFromDynamicsGp(): Promise<void> {
       createOrUpdateItemValidation(
         {
           itemStoreroom,
+
           itemNumberPrefix: '',
           itemNumber: item.itemNumber,
+
           itemDescription: item.itemDescription,
+          
           availableQuantity: item.quantityOnHand,
-          unitPrice: item.currentCost
+          unitPrice: item.currentCost,
+
+          rawJsonData: JSON.stringify(item)
         },
         timeMillis
       )

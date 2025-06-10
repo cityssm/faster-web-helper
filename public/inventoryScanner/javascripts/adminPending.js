@@ -135,9 +135,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
                 else {
                     bulmaJS.alert({
+                        contextualColorName: 'danger',
                         title: 'Error Deleting Record',
-                        message: 'Please try again.',
-                        contextualColorName: 'danger'
+                        message: 'Please try again.'
                     });
                 }
             });
@@ -222,9 +222,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
             (record.repairId === null || record.quantity <= 0)) ||
             (record.workOrderType === 'worktech' && record.itemNumberPrefix !== ''));
     }
+    function openInventoryItem(clickEvent) {
+        var _a;
+        clickEvent.preventDefault();
+        (_a = clickEvent.currentTarget) === null || _a === void 0 ? void 0 : _a.dispatchEvent(new Event(exports.openInventoryItemEventName, {
+            bubbles: true
+        }));
+    }
     // eslint-disable-next-line complexity
     function renderPendingRecords() {
-        var _a, _b, _c;
+        var _a, _b, _c, _d, _e;
         const rowElements = [];
         unknownCount = 0;
         errorCount = 0;
@@ -275,7 +282,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
           <small>Repair ID: ${cityssm.escapeHTML(record.repairId.toString())}</small>`;
             }
             rowElement.append(repairCellElement);
+            /*
+             * Item Number
+             */
             const itemNumberCellElement = document.createElement('td');
+            const isInventoryItem = record.itemStoreroom !== null && record.itemStoreroom !== '';
             if (record.workOrderType === 'worktech' &&
                 record.itemNumberPrefix !== '') {
                 itemNumberCellElement.classList.add('has-background-danger-light');
@@ -283,13 +294,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
             else if (((_a = record.itemDescription) !== null && _a !== void 0 ? _a : '') === '') {
                 itemNumberCellElement.classList.add('has-background-warning-light');
             }
-            // eslint-disable-next-line no-unsanitized/property
-            itemNumberCellElement.innerHTML = `${record.itemNumberPrefix === ''
+            // eslint-disable-next-line no-unsanitized/method
+            itemNumberCellElement.insertAdjacentHTML('beforeend', record.itemNumberPrefix === ''
                 ? ''
-                : `<span class="tag">${cityssm.escapeHTML(record.itemNumberPrefix)}</span> -`}
-          ${cityssm.escapeHTML(record.itemNumber)}<br />
-          <small>${cityssm.escapeHTML((_b = record.itemDescription) !== null && _b !== void 0 ? _b : '(Unknown Item)')}</small>`;
+                : `<span class="tag">${cityssm.escapeHTML(record.itemNumberPrefix)}</span> -`);
+            // eslint-disable-next-line no-unsanitized/method
+            itemNumberCellElement.insertAdjacentHTML('beforeend', isInventoryItem
+                ? `<a href="#" data-item-number="${cityssm.escapeHTML(record.itemNumber)}" data-item-storeroom="${cityssm.escapeHTML((_b = record.itemStoreroom) !== null && _b !== void 0 ? _b : '')}"
+              title="Open Inventory Item">${cityssm.escapeHTML(record.itemNumber)}</a>`
+                : cityssm.escapeHTML(record.itemNumber));
+            itemNumberCellElement.insertAdjacentHTML('beforeend', `<br />
+          <small>${cityssm.escapeHTML((_c = record.itemDescription) !== null && _c !== void 0 ? _c : '(Unknown Item)')}</small>`);
             rowElement.append(itemNumberCellElement);
+            if (isInventoryItem) {
+                (_d = itemNumberCellElement
+                    .querySelector('a')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', openInventoryItem);
+            }
             /*
              * Quantity
              */
@@ -300,6 +320,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             if (record.workOrderType === 'faster' && record.quantity <= 0) {
                 quantityCellElement.classList.add('has-background-danger-light');
+            }
+            else if (record.availableQuantity !== null &&
+                record.quantity > record.availableQuantity) {
+                quantityCellElement.classList.add('has-background-warning-light');
             }
             quantityCellElement.textContent = record.quantity.toString();
             rowElement.append(quantityCellElement);
@@ -324,8 +348,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             <i class="fa-solid fa-gear" aria-hidden="true"></i>
           </button>
         </td>`);
-            (_c = rowElement
-                .querySelector('button')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', openUpdateScannerRecord);
+            (_e = rowElement
+                .querySelector('button')) === null || _e === void 0 ? void 0 : _e.addEventListener('click', openUpdateScannerRecord);
             rowElements.push(rowElement);
         }
         pendingRecordsTbodyElement.replaceChildren(...rowElements);
@@ -377,9 +401,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.postJSON(`${moduleUrlPrefix}/doSyncScannerRecords`, {}, (rawResponseJSON) => {
             const responseJSON = rawResponseJSON;
             bulmaJS.alert({
+                contextualColorName: responseJSON.syncedRecordCount === 0 ? 'info' : 'success',
                 title: `${responseJSON.syncedRecordCount} Record(s) Marked for Syncing`,
-                message: 'The syncing process has started. The records should appear on their respective work orders shortly.',
-                contextualColorName: responseJSON.syncedRecordCount === 0 ? 'info' : 'success'
+                message: 'The syncing process has started. The records should appear on their respective work orders shortly.'
             });
             pendingRecords = responseJSON.pendingRecords;
             renderPendingRecords();
@@ -388,9 +412,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
     syncRecordsButtonElement.addEventListener('click', () => {
         if (errorCount > 0) {
             bulmaJS.alert({
+                contextualColorName: 'danger',
                 title: 'Cannot Sync Records',
-                message: 'There are records with errors which must be resolved before syncing.',
-                contextualColorName: 'danger'
+                message: 'There are records with errors which must be resolved before syncing.'
             });
             return;
         }
@@ -401,10 +425,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
       which may impact the success of the syncing process.`;
         }
         bulmaJS.confirm({
+            contextualColorName: 'warning',
             title: 'Sync Scanner Records',
             message: messageHtml,
             messageIsHtml: true,
-            contextualColorName: 'warning',
             okButton: {
                 text: 'Yes, Sync Pending Scanner Records',
                 callbackFunction: syncScannerRecords

@@ -91,9 +91,11 @@ declare const cityssm: cityssmGlobal
     }
 
     bulmaJS.confirm({
-      title: `Return ${recordIds.length === 1 ? 'Record' : 'Records'} to Pending`,
-      message: `Are you sure you want to return ${recordIds.length === 1 ? 'this record' : 'the selected records'} to the pending list?`,
       contextualColorName: 'warning',
+      title: `Return ${recordIds.length === 1 ? 'Record' : 'Records'} to Pending`,
+      
+      message: `Are you sure you want to return ${recordIds.length === 1 ? 'this record' : 'the selected records'} to the pending list?`,
+
       okButton: {
         text: 'Yes, Return',
         callbackFunction: doReturn

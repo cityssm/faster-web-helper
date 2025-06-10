@@ -11,7 +11,10 @@ import type {
 
 declare const exports: {
   itemRequestsCount: number
+
+  openInventoryItemEventName: string
   refreshPendingRecordsFromExportEventName: string
+
   pendingRecords: InventoryScannerRecord[]
   fasterWorkOrderUrl: string
 }
@@ -236,9 +239,10 @@ declare const cityssm: cityssmGlobal
             renderPendingRecords()
           } else {
             bulmaJS.alert({
+              contextualColorName: 'danger',
               title: 'Error Deleting Record',
-              message: 'Please try again.',
-              contextualColorName: 'danger'
+
+              message: 'Please try again.'
             })
           }
         }
@@ -368,6 +372,7 @@ declare const cityssm: cityssmGlobal
             deletePendingRecord(pendingRecord.recordId, closeModalFunction)
           })
       },
+
       onremoved() {
         bulmaJS.toggleHtmlClipped()
       }
@@ -388,6 +393,16 @@ declare const cityssm: cityssmGlobal
       (record.workOrderType === 'faster' &&
         (record.repairId === null || record.quantity <= 0)) ||
       (record.workOrderType === 'worktech' && record.itemNumberPrefix !== '')
+    )
+  }
+
+  function openInventoryItem(clickEvent: Event): void {
+    clickEvent.preventDefault()
+
+    clickEvent.currentTarget?.dispatchEvent(
+      new Event(exports.openInventoryItemEventName, {
+        bubbles: true
+      })
     )
   }
 
@@ -457,7 +472,14 @@ declare const cityssm: cityssmGlobal
 
       rowElement.append(repairCellElement)
 
+      /*
+       * Item Number
+       */
+
       const itemNumberCellElement = document.createElement('td')
+
+      const isInventoryItem =
+        record.itemStoreroom !== null && record.itemStoreroom !== ''
 
       if (
         record.workOrderType === 'worktech' &&
@@ -468,16 +490,36 @@ declare const cityssm: cityssmGlobal
         itemNumberCellElement.classList.add('has-background-warning-light')
       }
 
-      // eslint-disable-next-line no-unsanitized/property
-      itemNumberCellElement.innerHTML = `${
+      // eslint-disable-next-line no-unsanitized/method
+      itemNumberCellElement.insertAdjacentHTML(
+        'beforeend',
         record.itemNumberPrefix === ''
           ? ''
           : `<span class="tag">${cityssm.escapeHTML(record.itemNumberPrefix)}</span> -`
-      }
-          ${cityssm.escapeHTML(record.itemNumber)}<br />
+      )
+
+      // eslint-disable-next-line no-unsanitized/method
+      itemNumberCellElement.insertAdjacentHTML(
+        'beforeend',
+        isInventoryItem
+          ? `<a href="#" data-item-number="${cityssm.escapeHTML(record.itemNumber)}" data-item-storeroom="${cityssm.escapeHTML(record.itemStoreroom ?? '')}"
+              title="Open Inventory Item">${cityssm.escapeHTML(record.itemNumber)}</a>`
+          : cityssm.escapeHTML(record.itemNumber)
+      )
+
+      itemNumberCellElement.insertAdjacentHTML(
+        'beforeend',
+        `<br />
           <small>${cityssm.escapeHTML(record.itemDescription ?? '(Unknown Item)')}</small>`
+      )
 
       rowElement.append(itemNumberCellElement)
+
+      if (isInventoryItem) {
+        itemNumberCellElement
+          .querySelector('a')
+          ?.addEventListener('click', openInventoryItem)
+      }
 
       /*
        * Quantity
@@ -492,6 +534,11 @@ declare const cityssm: cityssmGlobal
 
       if (record.workOrderType === 'faster' && record.quantity <= 0) {
         quantityCellElement.classList.add('has-background-danger-light')
+      } else if (
+        record.availableQuantity !== null &&
+        record.quantity > record.availableQuantity
+      ) {
+        quantityCellElement.classList.add('has-background-warning-light')
       }
 
       quantityCellElement.textContent = record.quantity.toString()
@@ -617,11 +664,12 @@ declare const cityssm: cityssmGlobal
         }
 
         bulmaJS.alert({
-          title: `${responseJSON.syncedRecordCount} Record(s) Marked for Syncing`,
-          message:
-            'The syncing process has started. The records should appear on their respective work orders shortly.',
           contextualColorName:
-            responseJSON.syncedRecordCount === 0 ? 'info' : 'success'
+            responseJSON.syncedRecordCount === 0 ? 'info' : 'success',
+          title: `${responseJSON.syncedRecordCount} Record(s) Marked for Syncing`,
+
+          message:
+            'The syncing process has started. The records should appear on their respective work orders shortly.'
         })
 
         pendingRecords = responseJSON.pendingRecords
@@ -633,10 +681,11 @@ declare const cityssm: cityssmGlobal
   syncRecordsButtonElement.addEventListener('click', () => {
     if (errorCount > 0) {
       bulmaJS.alert({
+        contextualColorName: 'danger',
         title: 'Cannot Sync Records',
+
         message:
-          'There are records with errors which must be resolved before syncing.',
-        contextualColorName: 'danger'
+          'There are records with errors which must be resolved before syncing.'
       })
       return
     }
@@ -651,11 +700,12 @@ declare const cityssm: cityssmGlobal
     }
 
     bulmaJS.confirm({
-      title: 'Sync Scanner Records',
-      message: messageHtml,
-
-      messageIsHtml: true,
       contextualColorName: 'warning',
+      title: 'Sync Scanner Records',
+
+      message: messageHtml,
+      messageIsHtml: true,
+
       okButton: {
         text: 'Yes, Sync Pending Scanner Records',
         callbackFunction: syncScannerRecords

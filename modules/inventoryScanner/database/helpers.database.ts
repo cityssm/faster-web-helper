@@ -21,6 +21,8 @@ const createStatements = [
     itemDescription varchar(40) not null default '',
     availableQuantity integer not null default 0,
     unitPrice decimal(18, 4) not null default 0,
+    rawJsonData text not null default '{}',
+
     recordCreate_timeMillis integer not null,
     recordUpdate_timeMillis integer not null,
     recordDelete_timeMillis integer,
@@ -34,6 +36,7 @@ const createStatements = [
     repairDescription varchar(500),
     technicianId varchar(22),
     technicianDescription varchar(500),
+
     recordCreate_timeMillis integer not null,
     recordUpdate_timeMillis integer not null,
     recordDelete_timeMillis integer,

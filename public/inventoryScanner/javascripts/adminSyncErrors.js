@@ -52,9 +52,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         }
         bulmaJS.confirm({
+            contextualColorName: 'warning',
             title: `Return ${recordIds.length === 1 ? 'Record' : 'Records'} to Pending`,
             message: `Are you sure you want to return ${recordIds.length === 1 ? 'this record' : 'the selected records'} to the pending list?`,
-            contextualColorName: 'warning',
             okButton: {
                 text: 'Yes, Return',
                 callbackFunction: doReturn
