@@ -156,7 +156,7 @@ export async function updateInventoryInFaster(): Promise<void> {
     return
   }
 
-  for (const [recordIndex, record] of recordsToUpdate.entries()) {
+  for (const record of recordsToUpdate) {
     const gpItemNameTruncated = (record.gpItemName ?? record.itemNumber).slice(
       0,
       fasterInventoryItemConstants.itemName.maxLength
@@ -179,6 +179,7 @@ export async function updateInventoryInFaster(): Promise<void> {
           (record.gpCurrentCost ?? 0) * (record.fasterQuantityInStock ?? 0),
         receivedQty: record.gpQuantityInStock ?? 1,
         unitPrice: record.gpCurrentCost ?? 0,
+
         shipping: 0,
         taxCost: 0,
 
@@ -188,19 +189,19 @@ export async function updateInventoryInFaster(): Promise<void> {
 
         storeroom: record.storeroom,
 
-        purchaseOrderDescription: '',
-        purchaseOrderCardType: '',
-        purchaseOrderCardLast4: '',
         purchaseOrderCardCardholderName: '',
+        purchaseOrderCardLast4: '',
+        purchaseOrderCardType: '',
+        purchaseOrderDescription: '',
 
-        warrantyLength: 0,
-        warrantyLengthUnit: 'Year',
         warrantyCycle: '',
         warrantyCycleCode: '',
+        warrantyLength: 0,
+        warrantyLengthUnit: 'Year',
 
+        otherChargeTaxCost: 0,
         otherChargeTypeId: '',
         otherChargeUnitPrice: 0,
-        otherChargeTaxCost: 0
       })
 
       if (!result.success) {
@@ -210,11 +211,6 @@ export async function updateInventoryInFaster(): Promise<void> {
 
         continue
       }
-
-      if (recordIndex < 10) {
-        debug(JSON.stringify(result))
-      }
-
     } else if (record.gpItemName === null) {
       if (record.fasterBinLocation === notFoundInDynamicsGpBinLocation) {
         continue
@@ -255,7 +251,7 @@ export async function updateInventoryInFaster(): Promise<void> {
         debug(
           `Error updating FASTER item "${record.itemNumber} [${record.storeroom}]".`
         )
-        
+
         debug(error)
       }
     }

@@ -1,2 +1,2 @@
-import type express from 'express';
-export default function initializeInventoryScannerAppHandlers(app: express.Application): void;
+import type { Application } from 'express';
+export default function initializeInventoryScannerAppHandlers(app: Application): void;

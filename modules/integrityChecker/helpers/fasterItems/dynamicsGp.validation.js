@@ -94,7 +94,7 @@ export async function updateInventoryInFaster() {
         debug('No records to update.');
         return;
     }
-    for (const [recordIndex, record] of recordsToUpdate.entries()) {
+    for (const record of recordsToUpdate) {
         const gpItemNameTruncated = (record.gpItemName ?? record.itemNumber).slice(0, fasterInventoryItemConstants.itemName.maxLength);
         if (record.fasterItemName === null) {
             if (record.gpQuantityInStock === 0) {
@@ -114,24 +114,21 @@ export async function updateInventoryInFaster() {
                 partName: gpItemNameTruncated,
                 partDesc: record.gpItemName ?? record.itemNumber,
                 storeroom: record.storeroom,
-                purchaseOrderDescription: '',
-                purchaseOrderCardType: '',
-                purchaseOrderCardLast4: '',
                 purchaseOrderCardCardholderName: '',
-                warrantyLength: 0,
-                warrantyLengthUnit: 'Year',
+                purchaseOrderCardLast4: '',
+                purchaseOrderCardType: '',
+                purchaseOrderDescription: '',
                 warrantyCycle: '',
                 warrantyCycleCode: '',
+                warrantyLength: 0,
+                warrantyLengthUnit: 'Year',
+                otherChargeTaxCost: 0,
                 otherChargeTypeId: '',
                 otherChargeUnitPrice: 0,
-                otherChargeTaxCost: 0
             });
             if (!result.success) {
                 debug(`Error creating Dynamics GP item "${record.itemNumber} [${record.storeroom}]" in FASTER: ${result.error.title}`);
                 continue;
-            }
-            if (recordIndex < 10) {
-                debug(JSON.stringify(result));
             }
         }
         else if (record.gpItemName === null) {

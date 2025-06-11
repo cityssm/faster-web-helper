@@ -1,5 +1,6 @@
 // eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
 /* eslint-disable no-console */
+import mssql from '@cityssm/mssql-multi-pool';
 import { getConfigProperty } from '../helpers/config.helpers.js';
 import { hasFasterApi, hasFasterUnofficialApi } from '../helpers/fasterWeb.helpers.js';
 function outputEnabledModules() {
@@ -32,5 +33,44 @@ async function outputFasterApiStatus() {
     }
     console.log(`${hasFasterUnofficialApi ? '🟢' : '🔴'} - FASTER Unofficial API`);
 }
+async function outputDatabaseStatuses() {
+    console.log();
+    console.log('DATABASE STATUS');
+    console.log('===============');
+    // Dynamics GP
+    const dynamicsGPConfig = getConfigProperty('dynamicsGP');
+    if (dynamicsGPConfig === undefined) {
+        console.log('🔴 - Dynamics GP database is not configured');
+    }
+    else {
+        console.log('🟢 - Dynamics GP database is configured');
+        const dynamicsGP = await mssql.connect(dynamicsGPConfig);
+        try {
+            await dynamicsGP.request().query('SELECT 1 AS status');
+            console.log(`\t🟢 - Dynamics GP API is responding`);
+        }
+        catch {
+            console.log('\t🔴 - Dynamics GP API is not responding');
+        }
+    }
+    // Worktech
+    const worktechConfig = getConfigProperty('worktech');
+    if (worktechConfig === undefined) {
+        console.log('🔴 - Worktech database is not configured');
+    }
+    else {
+        console.log('🟢 - Worktech database is configured');
+        const worktech = await mssql.connect(worktechConfig);
+        try {
+            await worktech.request().query('SELECT 1 AS status');
+            console.log(`\t🟢 - Worktech API is responding`);
+        }
+        catch {
+            console.log('\t🔴 - Worktech API is not responding');
+        }
+    }
+}
 outputEnabledModules();
 await outputFasterApiStatus();
+await outputDatabaseStatuses();
+await mssql.releaseAll();

@@ -1,4 +1,4 @@
-import type express from 'express'
+import type { Application } from 'express'
 
 import { getConfigProperty } from '../../helpers/config.helpers.js'
 
@@ -7,7 +7,7 @@ import router from './handlers/router.js'
 const urlPrefix = getConfigProperty('webServer.urlPrefix')
 
 export default function initializeInventoryScannerAppHandlers(
-  app: express.Application
+  app: Application
 ): void {
   app.use(
     `${urlPrefix}/modules/integrityChecker`,

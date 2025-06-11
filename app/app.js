@@ -53,12 +53,12 @@ app.use(`${urlPrefix}/lib/cityssm-bulma-webapp-js`, express.static(path.join('no
 const sessionCookieName = configHelpers.getConfigProperty('webServer.session.cookieName');
 const FileStoreSession = FileStore(session);
 app.use(session({
+    name: sessionCookieName,
     store: new FileStoreSession({
-        path: './data/sessions',
         logFn: debug,
+        path: './data/sessions',
         retries: 20
     }),
-    name: sessionCookieName,
     secret: configHelpers.getConfigProperty('webServer.session.secret'),
     resave: true,
     saveUninitialized: false,

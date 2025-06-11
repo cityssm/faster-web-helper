@@ -96,6 +96,7 @@ const scheduledTask = new ScheduledTask(taskName, refreshWorktechEquipment, {
     minute: getScheduledTaskMinutes('integrityChecker_worktechEquipment'),
     second: 0
   },
+  
   lastRunMillis: getMaxWorktechEquipmentUpdateMillis(),
   minimumIntervalMillis: getMinimumMillisBetweenRuns(
     'integrityChecker_worktechEquipment'

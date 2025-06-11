@@ -31,7 +31,7 @@ export const configDefaultValues = {
      */
     ...inventoryScannerDefaultValues,
     /*
-     * Worktech Update
+     * Integrity Checker
      */
     ...integrityCheckerDefaultValues,
     /*
