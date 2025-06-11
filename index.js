@@ -49,7 +49,7 @@ const maxAppProcesses = 4;
  * Initialize app workers
  */
 function initializeAppWorkers() {
-    const processCount = Math.min(os.cpus().length, maxAppProcesses);
+    const processCount = Math.min(os.cpus().length * 2, maxAppProcesses);
     debug(`Launching ${processCount} web app processes`);
     const clusterSettings = {
         exec: './app/appProcess.js'
