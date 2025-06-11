@@ -2,8 +2,8 @@ import type { DateString, TimeString } from "@cityssm/utils-datetime";
 export type WorkOrderType = 'faster' | 'worktech';
 export interface ItemValidationRecord {
     itemStoreroom: string;
-    itemNumberPrefix: string;
     itemNumber: string;
+    itemNumberPrefix: string;
     itemDescription: string;
     availableQuantity: number;
     unitPrice: number;
@@ -28,8 +28,8 @@ export interface InventoryScannerRecord {
     workOrderNumber: string;
     workOrderType: WorkOrderType;
     itemStoreroom: string | null;
-    itemNumberPrefix: string;
     itemNumber: string;
+    itemNumberPrefix: string;
     itemDescription: string | null;
     technicianId: string | null;
     repairDescription: string | null;
