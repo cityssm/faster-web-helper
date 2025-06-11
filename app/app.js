@@ -95,8 +95,7 @@ app.get(`${urlPrefix}/`, sessionCheckHandler, (_request, response) => {
 app.use(`${urlPrefix}/login`, router_login);
 app.use(`${urlPrefix}/dashboard`, sessionCheckHandler, router_dashboard);
 app.use(`${urlPrefix}/admin`, sessionCheckHandler, (request, response, nextFunction) => {
-    if ((request.session.user?.settings.admin_hasAccess ??
-        'false') === 'true') {
+    if ((request.session.user?.settings.admin_hasAccess ?? 'false') === 'true') {
         nextFunction();
         return;
     }
@@ -144,6 +143,6 @@ app.use((error, request, response, _next) => {
     response.locals.error =
         request.app.get('env') === 'development' ? error : {};
     // Render the error page
-    response.status(error.status);
+    response.status(Number.isNaN(error.status) ? 500 : error.status);
     response.render('error');
 });

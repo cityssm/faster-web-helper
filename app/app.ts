@@ -161,21 +161,20 @@ app.use(`${urlPrefix}/login`, router_login)
 app.use(`${urlPrefix}/dashboard`, sessionCheckHandler, router_dashboard)
 
 app.use(
-    `${urlPrefix}/admin`,
-    sessionCheckHandler,
-    (request, response, nextFunction) => {
-      if (
-        (request.session.user?.settings.admin_hasAccess ??
-          'false') === 'true'
-      ) {
-        nextFunction()
-        return
-      }
+  `${urlPrefix}/admin`,
+  sessionCheckHandler,
+  (request, response, nextFunction) => {
+    if (
+      (request.session.user?.settings.admin_hasAccess ?? 'false') === 'true'
+    ) {
+      nextFunction()
+      return
+    }
 
-      response.redirect(`${urlPrefix}/dashboard`)
-    },
-    router_admin
-  )
+    response.redirect(`${urlPrefix}/dashboard`)
+  },
+  router_admin
+)
 
 app.get(`${urlPrefix}/logout`, (request, response) => {
   if (
@@ -246,7 +245,7 @@ app.use(
       request.app.get('env') === 'development' ? error : {}
 
     // Render the error page
-    response.status(error.status)
+    response.status(Number.isNaN(error.status) ? 500 : error.status)
     response.render('error')
   }
 )
