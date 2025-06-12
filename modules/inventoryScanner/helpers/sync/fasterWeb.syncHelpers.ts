@@ -4,6 +4,8 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
+import type { RepairResult } from '@cityssm/faster-api'
+import { itemName as itemNameConstants } from '@cityssm/faster-constants/inventory/items'
 import {
   FasterUnofficialAPI,
   integrationNames
@@ -23,6 +25,7 @@ import {
   tempFolderPath
 } from '../../../../helpers/filesystem.helpers.js'
 import { uploadFile } from '../../../../helpers/sftp.helpers.js'
+import getWorkOrderValidationJsonData from '../../database/getWorkOrderValidationJsonData.js'
 import { updateScannerRecordSyncFields } from '../../database/updateScannerRecordSyncFields.js'
 import type { InventoryScannerRecord } from '../../types.js'
 import { moduleName } from '../module.helpers.js'
@@ -62,8 +65,27 @@ function recordToExportDataLine(record: InventoryScannerRecord): string {
   // E - Invoice Number
   dataPieces.push(formatRecordIdAsInvoiceNumber(record.recordId))
 
-  // F - Invoice Date
-  const scanDate = dateIntegerToDate(record.scanDate) as Date
+  /*
+   * F - Invoice Date
+   */
+
+  let scanDate = dateIntegerToDate(record.scanDate) as Date
+
+  // Backdate the scan date to the repair date if available
+  if (record.itemNumberPrefix !== '' && record.repairId !== null) {
+    const workOrderValidationJson = getWorkOrderValidationJsonData(
+      record.workOrderNumber,
+      record.workOrderType,
+      record.repairId
+    ) as RepairResult | undefined
+
+    if (
+      workOrderValidationJson !== undefined &&
+      Object.keys(workOrderValidationJson).length > 0
+    ) {
+      scanDate = new Date(workOrderValidationJson.createdDate)
+    }
+  }
 
   const fasterInvoiceDate =
     (scanDate.getMonth() + 1).toString().padStart(2, '0') +
@@ -104,11 +126,18 @@ function recordToExportDataLine(record: InventoryScannerRecord): string {
   dataPieces.push(itemNumber)
 
   // N - Description
-  let itemDescription = (record.itemDescription ?? itemNumber).slice(0, 40)
+  let itemDescription = (record.itemDescription ?? itemNumber).slice(
+    0,
+    itemNameConstants.maxLength
+  )
 
   if (itemDescription.includes(',')) {
     itemDescription =
-      '"' + itemDescription.replaceAll('"', "''").slice(0, 40) + '"'
+      '"' +
+      itemDescription
+        .replaceAll('"', "''")
+        .slice(0, itemNameConstants.maxLength) +
+      '"'
   }
 
   dataPieces.push(itemDescription)

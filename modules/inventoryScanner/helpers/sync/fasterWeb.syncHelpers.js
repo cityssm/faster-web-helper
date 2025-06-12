@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers, unicorn/prefer-single-call */
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { itemName as itemNameConstants } from '@cityssm/faster-constants/inventory/items';
 import { FasterUnofficialAPI, integrationNames } from '@cityssm/faster-unofficial-api';
 import { dateIntegerToDate } from '@cityssm/utils-datetime';
 import camelcase from 'camelcase';
@@ -11,6 +12,7 @@ import { getConfigProperty } from '../../../../helpers/config.helpers.js';
 import { hasFasterApi, hasFasterUnofficialApi } from '../../../../helpers/fasterWeb.helpers.js';
 import { ensureTempFolderExists, tempFolderPath } from '../../../../helpers/filesystem.helpers.js';
 import { uploadFile } from '../../../../helpers/sftp.helpers.js';
+import getWorkOrderValidationJsonData from '../../database/getWorkOrderValidationJsonData.js';
 import { updateScannerRecordSyncFields } from '../../database/updateScannerRecordSyncFields.js';
 import { moduleName } from '../module.helpers.js';
 import { updateMultipleScannerRecords } from './syncHelpers.js';
@@ -32,8 +34,18 @@ function recordToExportDataLine(record) {
         getConfigProperty('modules.inventoryScanner.fasterSync.defaultTechnicianId').toString());
     // E - Invoice Number
     dataPieces.push(formatRecordIdAsInvoiceNumber(record.recordId));
-    // F - Invoice Date
-    const scanDate = dateIntegerToDate(record.scanDate);
+    /*
+     * F - Invoice Date
+     */
+    let scanDate = dateIntegerToDate(record.scanDate);
+    // Backdate the scan date to the repair date if available
+    if (record.itemNumberPrefix !== '' && record.repairId !== null) {
+        const workOrderValidationJson = getWorkOrderValidationJsonData(record.workOrderNumber, record.workOrderType, record.repairId);
+        if (workOrderValidationJson !== undefined &&
+            Object.keys(workOrderValidationJson).length > 0) {
+            scanDate = new Date(workOrderValidationJson.createdDate);
+        }
+    }
     const fasterInvoiceDate = (scanDate.getMonth() + 1).toString().padStart(2, '0') +
         '/' +
         scanDate.getDate().toString().padStart(2, '0') +
@@ -59,10 +71,14 @@ function recordToExportDataLine(record) {
         record.itemNumber;
     dataPieces.push(itemNumber);
     // N - Description
-    let itemDescription = (record.itemDescription ?? itemNumber).slice(0, 40);
+    let itemDescription = (record.itemDescription ?? itemNumber).slice(0, itemNameConstants.maxLength);
     if (itemDescription.includes(',')) {
         itemDescription =
-            '"' + itemDescription.replaceAll('"', "''").slice(0, 40) + '"';
+            '"' +
+                itemDescription
+                    .replaceAll('"', "''")
+                    .slice(0, itemNameConstants.maxLength) +
+                '"';
     }
     dataPieces.push(itemDescription);
     // O - Ignored
