@@ -107,7 +107,8 @@ function recordToExportDataLine(record: InventoryScannerRecord): string {
   let itemDescription = (record.itemDescription ?? itemNumber).slice(0, 40)
 
   if (itemDescription.includes(',')) {
-    itemDescription = '"' + itemDescription.replaceAll('"', "''") + '"'
+    itemDescription =
+      '"' + itemDescription.replaceAll('"', "''").slice(0, 40) + '"'
   }
 
   dataPieces.push(itemDescription)
