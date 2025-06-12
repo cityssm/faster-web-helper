@@ -64,7 +64,8 @@ async function updateWorkOrderValidationFromFasterApi(): Promise<void> {
             repairId: repair.repairID,
             repairDescription: repair.repairDesc,
             technicianId: undefined,
-            technicianDescription: repair.technicianName
+            technicianDescription: repair.technicianName,
+            rawJsonData: JSON.stringify(repair)
           },
           timeMillis
         )

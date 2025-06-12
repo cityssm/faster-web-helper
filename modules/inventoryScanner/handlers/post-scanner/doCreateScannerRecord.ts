@@ -7,20 +7,22 @@ import getScannerRecords from '../../database/getScannerRecords.js'
 type DoCreateScannerRecordForm = {
   scannerKey: string
   workOrderNumber: string
+
   repairId: string
+
   quantity: string
-  quantityMultiplier: '1' | '-1'
+  quantityMultiplier: '-1' | '1'
 } & (
-  | {
-      itemType: 'stock'
-      itemNumber: string
-    }
   | {
       itemType: 'nonStock'
       itemNumberPrefix: string
       itemNumberSuffix: string
       itemDescription: string
       unitPrice: string
+    }
+  | {
+      itemType: 'stock'
+      itemNumber: string
     }
 )
 

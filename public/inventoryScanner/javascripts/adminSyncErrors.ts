@@ -4,10 +4,10 @@ import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 import type { InventoryScannerRecord } from '../../../modules/inventoryScanner/types.js'
 
 declare const exports: {
-  refreshPendingRecordsFromExportEventName: string
-  pendingRecords: InventoryScannerRecord[]
-  syncErrorRecords: InventoryScannerRecord[]
   fasterWorkOrderUrl: string
+  pendingRecords: InventoryScannerRecord[]
+  refreshPendingRecordsFromExportEventName: string
+  syncErrorRecords: InventoryScannerRecord[]
 }
 
 declare const bulmaJS: BulmaJS

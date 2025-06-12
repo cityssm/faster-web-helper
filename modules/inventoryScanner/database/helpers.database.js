@@ -27,6 +27,7 @@ const createStatements = [
     repairDescription varchar(500),
     technicianId varchar(22),
     technicianDescription varchar(500),
+    rawJsonData text not null default '{}',
 
     recordCreate_timeMillis integer not null,
     recordUpdate_timeMillis integer not null,

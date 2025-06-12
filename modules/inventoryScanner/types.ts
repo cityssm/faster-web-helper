@@ -26,6 +26,8 @@ export interface WorkOrderValidationRecord {
 
   repairId: number | null
   repairDescription: string | null
+
+  rawJsonData?: string | null
 }
 
 export interface InventoryScannerRecord {

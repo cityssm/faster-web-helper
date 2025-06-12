@@ -28,8 +28,9 @@ export default function createOrUpdateWorkOrderValidation(
           workOrderNumber, workOrderType, workOrderDescription,
           technicianId, technicianDescription,
           repairId, repairDescription,
+          rawJsonData,
           recordCreate_timeMillis, recordUpdate_timeMillis)
-          values (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+          values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       )
       .run(
         validationRecord.workOrderNumber,
@@ -39,6 +40,7 @@ export default function createOrUpdateWorkOrderValidation(
         validationRecord.technicianDescription,
         validationRecord.repairId,
         validationRecord.repairDescription,
+        validationRecord.rawJsonData ?? {},
         timeMillis,
         timeMillis
       )
@@ -48,6 +50,7 @@ export default function createOrUpdateWorkOrderValidation(
       validationRecord.technicianId,
       validationRecord.technicianDescription,
       validationRecord.repairDescription,
+      validationRecord.rawJsonData ?? {},
       timeMillis,
       validationRecord.workOrderNumber,
       validationRecord.workOrderType
@@ -64,6 +67,7 @@ export default function createOrUpdateWorkOrderValidation(
           technicianId = ?,
           technicianDescription = ?,
           repairDescription = ?,
+          rawJsonData = ?,
           recordUpdate_timeMillis = ?,
           recordDelete_timeMillis = null
           where workOrderNumber = ?

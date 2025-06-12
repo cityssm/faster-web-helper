@@ -4,16 +4,16 @@ type DoCreateScannerRecordForm = {
     workOrderNumber: string;
     repairId: string;
     quantity: string;
-    quantityMultiplier: '1' | '-1';
+    quantityMultiplier: '-1' | '1';
 } & ({
-    itemType: 'stock';
-    itemNumber: string;
-} | {
     itemType: 'nonStock';
     itemNumberPrefix: string;
     itemNumberSuffix: string;
     itemDescription: string;
     unitPrice: string;
+} | {
+    itemType: 'stock';
+    itemNumber: string;
 });
 export default function handler(request: Request<unknown, unknown, DoCreateScannerRecordForm>, response: Response): void;
 export {};

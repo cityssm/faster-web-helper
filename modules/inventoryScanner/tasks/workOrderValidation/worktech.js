@@ -34,7 +34,8 @@ async function updateWorkOrderValidationFromWorktech() {
                 workOrderDescription: workOrder.details,
                 repairId: null,
                 repairDescription: null,
-                technicianDescription: workOrder.assignedTo
+                technicianDescription: workOrder.assignedTo,
+                rawJsonData: JSON.stringify(workOrder)
             }, timeMillis);
         }
     }

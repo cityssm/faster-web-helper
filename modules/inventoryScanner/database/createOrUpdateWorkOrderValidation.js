@@ -14,9 +14,10 @@ export default function createOrUpdateWorkOrderValidation(validationRecord, time
           workOrderNumber, workOrderType, workOrderDescription,
           technicianId, technicianDescription,
           repairId, repairDescription,
+          rawJsonData,
           recordCreate_timeMillis, recordUpdate_timeMillis)
-          values (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-            .run(validationRecord.workOrderNumber, validationRecord.workOrderType, validationRecord.workOrderDescription, validationRecord.technicianId, validationRecord.technicianDescription, validationRecord.repairId, validationRecord.repairDescription, timeMillis, timeMillis);
+          values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+            .run(validationRecord.workOrderNumber, validationRecord.workOrderType, validationRecord.workOrderDescription, validationRecord.technicianId, validationRecord.technicianDescription, validationRecord.repairId, validationRecord.repairDescription, validationRecord.rawJsonData ?? {}, timeMillis, timeMillis);
     }
     else {
         const sqlParameters = [
@@ -24,6 +25,7 @@ export default function createOrUpdateWorkOrderValidation(validationRecord, time
             validationRecord.technicianId,
             validationRecord.technicianDescription,
             validationRecord.repairDescription,
+            validationRecord.rawJsonData ?? {},
             timeMillis,
             validationRecord.workOrderNumber,
             validationRecord.workOrderType
@@ -37,6 +39,7 @@ export default function createOrUpdateWorkOrderValidation(validationRecord, time
           technicianId = ?,
           technicianDescription = ?,
           repairDescription = ?,
+          rawJsonData = ?,
           recordUpdate_timeMillis = ?,
           recordDelete_timeMillis = null
           where workOrderNumber = ?
