@@ -1,6 +1,3 @@
-// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
-/* eslint-disable no-secrets/no-secrets */
-
 import { getConfigProperty } from '../../../helpers/config.helpers.js'
 import type { InventoryScannerRecord, WorkOrderType } from '../types.js'
 

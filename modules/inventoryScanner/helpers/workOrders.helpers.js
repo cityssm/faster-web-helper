@@ -1,5 +1,3 @@
-// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
-/* eslint-disable no-secrets/no-secrets */
 import { getConfigProperty } from '../../../helpers/config.helpers.js';
 export function getWorkOrderTypeFromWorkOrderNumber(workOrderNumber) {
     if (getConfigProperty('modules.inventoryScanner.workOrders.acceptWorkTech') &&

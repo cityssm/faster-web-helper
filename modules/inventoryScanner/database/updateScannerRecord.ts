@@ -1,10 +1,15 @@
 import sqlite from 'better-sqlite3'
 
+import { getWorkOrderTypeFromWorkOrderNumber } from '../helpers/workOrders.helpers.js'
+
 import { databasePath } from './helpers.database.js'
 
 export interface UpdateScannerRecordForm {
   recordId: string
+
   workOrderNumber: string
+  workOrderType?: 'faster' | 'worktech'
+
   repairId: string
 
   itemDescription: string
@@ -19,10 +24,15 @@ export function updateScannerRecord(
 ): boolean {
   const database = sqlite(databasePath)
 
+  const workOrderType =
+      recordForm.workOrderType ??
+      getWorkOrderTypeFromWorkOrderNumber(recordForm.workOrderNumber)
+
   const result = database
     .prepare(
       `update InventoryScannerRecords
         set workOrderNumber = ?,
+        workOrderType = ?,
         repairId = ?,
         itemDescription = ?,
         quantity = ?,
@@ -35,6 +45,7 @@ export function updateScannerRecord(
     )
     .run(
       recordForm.workOrderNumber,
+      workOrderType,
       recordForm.repairId === '' ? undefined : recordForm.repairId,
       recordForm.itemDescription,
       recordForm.quantity,

@@ -1,6 +1,7 @@
 export interface UpdateScannerRecordForm {
     recordId: string;
     workOrderNumber: string;
+    workOrderType?: 'faster' | 'worktech';
     repairId: string;
     itemDescription: string;
     quantity: string;
