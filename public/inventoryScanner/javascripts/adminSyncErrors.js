@@ -128,7 +128,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
             <small>Repair ID: ${cityssm.escapeHTML(record.repairId.toString())}</small>`);
             }
             rowElement.append(workOrderCellElement);
+            // eslint-disable-next-line no-unsanitized/method
             rowElement.insertAdjacentHTML('beforeend', `<td>
+          ${record.itemNumberPrefix === ''
+                ? ''
+                : `<span class="tag">${cityssm.escapeHTML(record.itemNumberPrefix)}</span> -`}
           ${cityssm.escapeHTML(record.itemNumber)}<br />
           <small>${cityssm.escapeHTML((_b = record.itemDescription) !== null && _b !== void 0 ? _b : '(Unknown Item)')}</small>
         </td><td class="has-text-danger-dark">

@@ -93,7 +93,7 @@ declare const cityssm: cityssmGlobal
     bulmaJS.confirm({
       contextualColorName: 'warning',
       title: `Return ${recordIds.length === 1 ? 'Record' : 'Records'} to Pending`,
-      
+
       message: `Are you sure you want to return ${recordIds.length === 1 ? 'this record' : 'the selected records'} to the pending list?`,
 
       okButton: {
@@ -195,9 +195,15 @@ declare const cityssm: cityssmGlobal
 
       rowElement.append(workOrderCellElement)
 
+      // eslint-disable-next-line no-unsanitized/method
       rowElement.insertAdjacentHTML(
         'beforeend',
         `<td>
+          ${
+            record.itemNumberPrefix === ''
+              ? ''
+              : `<span class="tag">${cityssm.escapeHTML(record.itemNumberPrefix)}</span> -`
+          }
           ${cityssm.escapeHTML(record.itemNumber)}<br />
           <small>${cityssm.escapeHTML(record.itemDescription ?? '(Unknown Item)')}</small>
         </td><td class="has-text-danger-dark">
