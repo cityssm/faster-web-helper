@@ -85,7 +85,41 @@ const createStatements = [
     settingName varchar(100) not null primary key,
     settingValue varchar(500),
     previousSettingValue varchar(500),
-    recordUpdate_timeMillis integer not null)`
+    recordUpdate_timeMillis integer not null)`,
+    `create table if not exists InventoryBatches (
+    batchId integer primary key autoincrement,
+    openDate integer not null,
+    openTime integer not null,
+    closeDate integer,
+    closeTime integer,
+    
+    recordSync_userName varchar(20),
+    recordSync_timeMillis integer,
+    
+    recordCreate_userName varchar(20) not null default '',
+    recordCreate_timeMillis integer not null,
+    recordUpdate_userName varchar(20) not null default '',
+    recordUpdate_timeMillis integer not null,
+    recordDelete_userName varchar(20),
+    recordDelete_timeMillis integer)`,
+    `create table if not exists InventoryBatchItems (
+    batchId integer not null,
+    itemStoreroom varchar(3) not null,
+    itemNumber varchar(22) not null,
+    countedQuantity integer not null default 0,
+
+    scannerKey char(10) not null,
+    scanDate integer not null,
+    scanTime integer not null,
+
+    recordCreate_userName varchar(20) not null default '',
+    recordCreate_timeMillis integer not null,
+    recordUpdate_userName varchar(20) not null default '',
+    recordUpdate_timeMillis integer not null,
+    recordDelete_userName varchar(20),
+    recordDelete_timeMillis integer,
+    
+    primary key (batchId, itemStoreroom, itemNumber))`
 ];
 export function initializeInventoryScannerDatabase() {
     debug(`Checking for ${databasePath}`);
@@ -94,7 +128,7 @@ export function initializeInventoryScannerDatabase() {
     const row = database
         .prepare(`select name from sqlite_master
         where type = 'table'
-        and name = 'InventoryScannerSettings'`)
+        and name = 'InventoryBatchItems'`)
         .get();
     if (row === undefined) {
         debug(`Creating ${databasePath}`);

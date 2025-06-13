@@ -82,3 +82,32 @@ export interface InventoryScannerSyncErrorLogRecord {
   scannerSyncedRecordId: string | null
   scannerRecordId: number | null
 }
+
+export interface InventoryBatch {
+  batchId: number
+  
+  openDate: number
+  openDateString: DateString
+  openTime: number
+  openTimeString: TimeString
+
+  closeDate: number | null
+  closeDateString: DateString | null
+  closeTime: number | null
+  closeTimeString: TimeString | null
+
+  batchItems?: InventoryBatchItem[]
+}
+
+export interface InventoryBatchItem {
+  itemStoreroom: string
+  itemNumber: string
+
+  countedQuantity: number
+
+  scannerKey: string
+  scanDate: number
+  scanDateString: DateString
+  scanTime: number
+  scanTimeString: TimeString
+}

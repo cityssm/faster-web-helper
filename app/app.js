@@ -143,6 +143,6 @@ app.use((error, request, response, _next) => {
     response.locals.error =
         request.app.get('env') === 'development' ? error : {};
     // Render the error page
-    response.status(Number.isNaN(error.status) ? 500 : error.status);
+    response.status(error.status ?? 500);
     response.render('error');
 });

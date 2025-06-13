@@ -9,31 +9,52 @@
 
     <% if (configHelpers.getConfigProperty('modules.inventoryScanner.isEnabled') && (user.settings['inventoryScanner_hasAccess'] ?? 'false') === 'true') { %>
       <% hasModules = true; %>
-      <a class="box" href="<%= urlPrefix %>/modules/inventoryScanner">
+      <div class="box">
         <div class="columns">
-          <div class="column is-narrow">
+          <div class="column is-narrow has-text-centered-mobile">
             <i class="fa-solid fa-barcode fa-6x" aria-hidden="true"></i>
           </div>
           <div class="column">
-            <h3 class="title is-4 mb-0">Inventory Scanner</h3>
+            <h3 class="title is-4 mb-0 has-text-centered-mobile">Inventory Scanner</h3>
             <p>
               Manage scanned inventory transactions.
               Sync scanned transactions with FASTER Web and other systems.
             </p>
+
+            <div class="menu">
+              <ul class="menu-list">
+                <li>
+                  <a href="<%= urlPrefix %>/modules/inventoryScanner">
+                    <span class="icon"><i class="fa-solid fa-barcode" aria-hidden="true"></i></span>
+                    <span>
+                      Issue Scanner
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="<%= urlPrefix %>/modules/inventoryScanner/inventory">
+                    <span class="icon"><i class="fa-solid fa-arrow-down-1-9" aria-hidden="true"></i></span>
+                    <span>
+                      Count Scanner
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-      </a>
+      </div>
     <% } %>
 
     <% if (configHelpers.getConfigProperty('modules.integrityChecker.isEnabled') && (user.settings['integrityChecker_hasAccess'] ?? 'false') === 'true') { %>
       <% hasModules = true; %>
       <div class="box">
         <div class="columns">
-          <div class="column is-narrow">
+          <div class="column is-narrow has-text-centered-mobile">
             <i class="fa-solid fa-shapes fa-6x" aria-hidden="true"></i>
           </div>
           <div class="column">
-            <h3 class="title is-4 mb-0">Integrity Checker</h3>
+            <h3 class="title is-4 mb-0 has-text-centered-mobile">Integrity Checker</h3>
             <p>
               Ensure the integrity of your data.
             </p>
@@ -73,11 +94,11 @@
       <% hasModules = true; %>
       <div class="box">
         <div class="columns">
-          <div class="column is-narrow">
+          <div class="column is-narrow has-text-centered-mobile">
             <i class="fa-solid fa-cog fa-6x" aria-hidden="true"></i>
           </div>
           <div class="column">
-            <h3 class="title is-4 mb-0">Administration</h3>
+            <h3 class="title is-4 mb-0 has-text-centered-mobile">Administration</h3>
             <p>Manage users, settings, and other administrative tasks.</p>
 
             <div class="menu">
@@ -111,7 +132,7 @@
 
     <% if (fasterUrlBuilder !== undefined) { %>
       <a class="box" href="<%= fasterUrlBuilder.baseUrl %>" target="_blank">
-        <div class="columns">
+        <div class="columns is-mobile">
           <div class="column is-narrow">
             <i class="fa-solid fa-fw fa-link fa-3x" aria-hidden="true"></i>
           </div>
@@ -124,7 +145,7 @@
     <% } %>
 
     <a class="box" href="https://github.com/cityssm/faster-web-helper" target="_blank">
-      <div class="columns">
+      <div class="columns is-mobile">
         <div class="column is-narrow">
           <i class="fa-brands fa-fw fa-github fa-3x" aria-hidden="true"></i>
         </div>
@@ -136,7 +157,7 @@
     </a>
 
     <a class="box" href="https://cityssm.github.io/userscripts/#userscripts-for-faster-web" target="_blank">
-      <div class="columns">
+      <div class="columns is-mobile">
         <div class="column is-narrow">
           <i class="fa-solid fa-fw fa-scroll fa-3x" aria-hidden="true"></i>
         </div>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    Inventory Scanner: FASTER Web Helper
+  </title>
+
+  <link rel="icon" href="<%= urlPrefix %>/images/logo.svg" />
+  <link rel="stylesheet" href="<%= urlPrefix %>/lib/bulma/versions/bulma-no-dark-mode.min.css" />
+  <link rel="stylesheet" href="<%= urlPrefix %>/css/all.css" />
+</head>
+
+<body>
+  <main>
+    <div class="columns is-vcentered is-centered">
+      <div class="column is-one-third-widescreen is-half-tablet">
+        <div class="message is-info m-2">
+          <div class="message-header">
+            There is no open inventory batch.
+          </div>
+          <div class="message-body">
+            Use the <strong>Start Inventory</strong> button to create a new inventory batch,
+            or open a currently open batch if created by another user.
+          </div>
+        </div>
+        <div class="columns m-2">
+          <div class="column">
+            <form method="post">
+              <button class="button is-success is-fullwidth" type="submit">
+                <span class="icon is-small"><i class="fa-solid fa-play" aria-hidden="true"></i></span>
+                <span>Start Inventory</span>
+              </button>
+            </form>
+          </div>
+          <div class="column">
+            <a class="button is-light is-danger is-fullwidth" href="<%= urlPrefix %>/apps/inventoryScanner/">
+              <span class="icon is-small"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></span>
+              <span>Back to Scanner</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="<%= urlPrefix %>/lib/fa/js/all.min.js" defer></script>
+</body>

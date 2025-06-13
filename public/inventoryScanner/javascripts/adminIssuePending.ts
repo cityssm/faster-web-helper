@@ -16,6 +16,7 @@ declare const exports: {
   refreshPendingRecordsFromExportEventName: string
 
   pendingRecords: InventoryScannerRecord[]
+  
   fasterWorkOrderUrl: string
 }
 
