@@ -1,14 +1,11 @@
 import type { Request, Response } from 'express'
 
 import { getOpenedInventoryBatch } from '../../database/getInventoryBatch.js'
+import type { InventoryBatch } from '../../types.js'
 
 export default function handler(request: Request, response: Response): void {
+  const batch = getOpenedInventoryBatch(false, true) as InventoryBatch
+  batch.batchItems ??= []
 
-  const openBatch = getOpenedInventoryBatch(true, false)
-
-  response.render('inventoryScanner/adminInventory', {
-    headTitle: 'Inventory Scanner',
-
-    openBatch
-  })
+  response.json({ batch })
 }

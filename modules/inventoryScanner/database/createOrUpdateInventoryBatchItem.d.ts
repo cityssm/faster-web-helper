@@ -1,8 +1,9 @@
 export interface InventoryBatchItemForm {
     batchId: number | string;
-    scannerKey: string;
-    countedQuantity: number | string;
+    scannerKey?: string;
     itemNumber: string;
+    itemStoreroom?: string;
+    countedQuantity: number | string;
 }
 interface CreateOrUpdateInventoryBatchItemResult {
     success: boolean;

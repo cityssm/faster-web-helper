@@ -1,45 +1,6 @@
 <%- include('../_header'); -%>
 
-<div class="columns is-mobile is-vcentered">
-  <div class="column">
-    <h1 class="title">Inventory Issue Scanner</h1>
-  </div>
-  <div class="column is-narrow">
-    <div class="dropdown is-right">
-      <div class="dropdown-trigger">
-        <button class="button" type="button" aria-haspopup="true">
-          <span class="icon is-small">
-            <i class="fa-solid fa-link" aria-hidden="true"></i>
-          </span>
-          <span>Links</span>
-          <span class="icon is-small">
-            <i class="fa-solid fa-angle-down" aria-hidden="true"></i>
-          </span>
-        </button>
-      </div>
-      <div class="dropdown-menu" id="dropdown-menu" role="menu">
-        <div class="dropdown-content">
-          <a class="dropdown-item" href="<%= urlPrefix %>/apps/inventoryScanner" target="_blank">
-            <span class="icon">
-              <i class="fa-solid fa-link" aria-hidden="true"></i>
-            </span>
-            <span>Scanner App</span>
-          </a>
-          <% if (fasterUrlBuilder !== undefined) { %>
-            <hr class="dropdown-divider" />
-            <div class="dropdown-item"><strong>FASTER Web</strong></div>
-            <a class="dropdown-item" href="<%= fasterUrlBuilder.inventorySearchUrl() %>" target="_blank">
-              <span class="icon">
-                <i class="fa-solid fa-link" aria-hidden="true"></i>
-              </span>
-              <span>Inventory Search</span>
-            </a>
-          <% } %>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<h1 class="title">Inventory Issue Scanner</h1>
 
 <div class="tabs is-boxed">
   <ul>
@@ -62,15 +23,14 @@
     <li>
       <a href="#tab--inventory">Inventory List</a>
     </li>
-    <% if (configHelpers.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled')) { %>
-      <li>
-        <a href="#tab--more">
-          <span class="icon is-small">
-            <i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
-          </span>
-          More</a>
-      </li>
-    <% } %>
+    <li>
+      <a href="#tab--more">
+        <span class="icon is-small">
+          <i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
+        </span>
+        More
+      </a>
+    </li>
   </ul>
 </div>
 <div class="tab-container">
@@ -203,57 +163,90 @@
     </div>
     <div id="container--inventory"></div>
   </div>
-  <% if (configHelpers.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled')) { %>
-    <%
-      const subscribeUrl = configHelpers.getConfigProperty('ntfy.server') + '/' +
-        configHelpers.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.topic');
-    %>
-    <div class="is-hidden" id="tab--more">
-      <div class="panel is-info">
-        <p class="panel-heading">NTFY Notifications</p>
-        <div class="panel-block is-block">
-          <div class="columns">
-            <div class="column">
-              <div class="field">
-                <label class="label" for="more--ntfyServer">
-                  NTFY Server
-                  <% if (configHelpers.ntfyServerIsDefault) { %>
-                    <span class="tag">Default</span>
-                  <% } %>
-                </label>
-                <input class="input" id="more--ntfyServer" value="<%= configHelpers.getConfigProperty('ntfy.server') %>" readonly />
-              </div>
-              <div class="field">
-                <label class="label" for="more--ntfyTopic">
-                  NTFY Topic
-                </label>
-                <input class="input" id="more--ntfyTopic" value="<%= configHelpers.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.topic') %>" readonly />
-              </div>
+  <div class="is-hidden" id="tab--more">
+    <% if (configHelpers.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled')) { %>
+      <%
+        const subscribeUrl = configHelpers.getConfigProperty('ntfy.server') + '/' +
+          configHelpers.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.topic');
+      %>
+    <div class="panel is-info">
+      <p class="panel-heading">NTFY Notifications</p>
+      <div class="panel-block is-block">
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label" for="more--ntfyServer">
+                NTFY Server
+                <% if (configHelpers.ntfyServerIsDefault) { %>
+                  <span class="tag">Default</span>
+                <% } %>
+              </label>
+              <input class="input" id="more--ntfyServer" value="<%= configHelpers.getConfigProperty('ntfy.server') %>" readonly />
             </div>
-            <div class="column is-two-thirds">
-              <div class="message is-info">
-                <div class="message-body">
-                  <div class="content">
-                    <p>
-                      The Inventory Scanner module is configured to send notifications to
-                      <a href="https://ntfy.sh/" target="_blank">the NTFY service</a>
-                      when certain actions occur.
-                    </p>
-                    <ul>
-                      <li>New item requests are made in FASTER Web.</li>
-                    </ul>
-                    <p>
-                      You can install the NTFY app on your tablet or phone to receive these notifications, or 
-                      <a href="<%= subscribeUrl %>" target="_blank">subscribe to them in your web browser</a>.
-                    </p>
-                  </div>
+            <div class="field">
+              <label class="label" for="more--ntfyTopic">
+                NTFY Topic
+              </label>
+              <input class="input" id="more--ntfyTopic" value="<%= configHelpers.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.topic') %>" readonly />
+            </div>
+          </div>
+          <div class="column is-two-thirds">
+            <div class="message is-info">
+              <div class="message-body">
+                <div class="content">
+                  <p>
+                    The Inventory Scanner module is configured to send notifications to
+                    <a href="https://ntfy.sh/" target="_blank">the NTFY service</a>
+                    when certain actions occur.
+                  </p>
+                  <ul>
+                    <li>New item requests are made in FASTER Web.</li>
+                  </ul>
+                  <p>
+                    You can install the NTFY app on your tablet or phone to receive these notifications, or 
+                    <a href="<%= subscribeUrl %>" target="_blank">subscribe to them in your web browser</a>.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
+        </div>
       </div>
     </div>
-  <% } %>
+    <% } %>
+    <div class="columns">
+      <div class="column">
+        <a class="box" href="<%= urlPrefix %>/apps/inventoryScanner" target="_blank">
+          <div class="columns is-moblie">
+            <div class="column is-narrow">
+              <i class="fa-solid fa-fw fa-link fa-2x" aria-hidden="true"></i>
+            </div>
+            <div class="column">
+              <h3 class="title is-4">Scanner App</h3>
+              <p>
+                Use the Inventory Scanner app to scan items and manage inventory transactions.
+                Optimized for handheld devices.
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <% if (fasterUrlBuilder !== undefined) { %>
+        <div class="column">
+          <a class="box" href="<%= fasterUrlBuilder.inventorySearchUrl() %>" target="_blank">
+            <div class="columns is-mobile">
+              <div class="column is-narrow">
+                <i class="fa-solid fa-fw fa-link fa-2x" aria-hidden="true"></i>
+              </div>
+              <div class="column">
+                <h3 class="title is-4">FASTER Web Inventory Search</h3>
+              </div>
+            </div>
+          </a>
+        </div>
+      <% } %>
+    </div>
+  </div>
 </div>
 
 <%- include('../_footerA'); -%>

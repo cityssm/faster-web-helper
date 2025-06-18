@@ -1,5 +1,6 @@
 import { dateIntegerToString, dateToInteger, dateToTimeInteger, timeIntegerToString } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
+import { getInventoryBatchItems } from './getInventoryBatchItems.js';
 import { databasePath } from './helpers.database.js';
 function _getInventoryBatch(filters, includeBatchItems = false, connectedDatabase) {
     const sqlParameters = [];
@@ -42,21 +43,7 @@ function _getInventoryBatch(filters, includeBatchItems = false, connectedDatabas
         .prepare(sql)
         .get(...sqlParameters);
     if (result !== undefined && includeBatchItems) {
-        result.batchItems = database
-            .function('userFunction_dateIntegerToString', dateIntegerToString)
-            .function('userFunction_timeIntegerToString', timeIntegerToString)
-            .prepare(`select itemStoreroom, itemNumber, countedQuantity,
-          scannerKey,
-          scanDate,
-          userFunction_timeIntegerToString(scanTime) as scanTimeString,
-          
-          scanTime,
-          userFunction_dateIntegerToString(scanDate) as scanDateString
-          from InventoryBatchItems
-          where batchId = ?
-          and recordDelete_timeMillis is null
-          order by scanDate desc, scanTime desc`)
-            .all(result.batchId);
+        result.batchItems = getInventoryBatchItems(result.batchId, database);
     }
     if (connectedDatabase === undefined) {
         database.close();

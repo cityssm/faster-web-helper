@@ -96,12 +96,14 @@ export interface InventoryBatch {
   closeTime: number | null
   closeTimeString: TimeString | null
 
+  batchItemCount?: number
   batchItems?: InventoryBatchItem[]
 }
 
 export interface InventoryBatchItem {
   itemStoreroom: string
   itemNumber: string
+  itemDescription: string | null
 
   countedQuantity: number
 

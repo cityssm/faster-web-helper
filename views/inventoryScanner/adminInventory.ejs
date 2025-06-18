@@ -2,10 +2,34 @@
 
 <h1 class="title">Inventory Count Scanner</h1>
 
+<div class="columns">
+  <div class="column is-one-third">
+    <div class="box">
+      <div class="field">
+        <label class="label" for="inventory--currentBatch">
+          Current Batch
+        </label>
+        <div class="control">
+          <input class="button is-fullwidth" type="button" id="inventory--currentBatch" value="" />
+        </div>
+      </div>
+      <div id="inventory--currentBatchDetails"></div>
+    </div>
+  </div>
+  <div class="column">
+    <div id="inventory--currentBatchItems"></div>
+  </div>
+</div>
+
 <%- include('../_footerA'); -%>
 
 <script>
   cityssm.htmlModalFolder = "<%= urlPrefix %>/inventoryScanner/html/";
+
+  <% if (typeof openBatch === 'object') { %>
+    exports.openBatch = <%- JSON.stringify(openBatch) %>;
+  <% } %>
 </script>
+<script src="<%= urlPrefix %>/inventoryScanner/javascripts/adminInventory.js"></script>
 
 <%- include('../_footerB'); -%>

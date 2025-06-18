@@ -66,11 +66,13 @@ export interface InventoryBatch {
     closeDateString: DateString | null;
     closeTime: number | null;
     closeTimeString: TimeString | null;
+    batchItemCount?: number;
     batchItems?: InventoryBatchItem[];
 }
 export interface InventoryBatchItem {
     itemStoreroom: string;
     itemNumber: string;
+    itemDescription: string | null;
     countedQuantity: number;
     scannerKey: string;
     scanDate: number;

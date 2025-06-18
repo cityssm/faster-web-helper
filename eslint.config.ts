@@ -14,6 +14,7 @@ export const config = tseslint.config(configWebApp, {
             'autoincrement',
             'fieldsets',
             'fontawesome',
+            'inputmode',
             'jsbarcode',
             'nhtsa',
             'ntfy',

@@ -4,14 +4,18 @@ import handler_inventoryScanner from './get-admin/inventoryScanner.js'
 import handler_issueScanner from './get-admin/issueScanner.js'
 import handler_doDeletePendingRecord from './post-admin/doDeletePendingRecord.js'
 import handler_doDeleteSyncErrorRecords from './post-admin/doDeleteSyncErrorRecords.js'
+import handler_goGetAvailableInventoryBatches from './post-admin/doGetAvailableInventoryBatches.js'
 import handler_doGetInventory from './post-admin/doGetInventory.js'
+import handler_doGetInventoryBatch from './post-admin/doGetInventoryBatch.js'
 import handler_doGetInventoryItemDetails from './post-admin/doGetInventoryItemDetails.js'
 import handler_doGetItemRequestsCount from './post-admin/doGetItemRequestsCount.js'
 import handler_doGetPendingRecords from './post-admin/doGetPendingRecords.js'
 import handler_doGetRepairRecords from './post-admin/doGetRepairRecords.js'
+import handler_doOpenNewInventoryBatch from './post-admin/doOpenNewInventoryBatch.js'
 import handler_doReturnSyncErrorRecordsToPending from './post-admin/doReturnSyncErrorRecordsToPending.js'
 import handler_doSyncScannerRecords from './post-admin/doSyncScannerRecords.js'
 import handler_doUpdatePendingRecord from './post-admin/doUpdatePendingRecord.js'
+import handler_doRecordCountedQuantity from './post-scanner/doRecordCountedQuantity.js'
 
 export const router = Router()
 
@@ -55,6 +59,14 @@ router.post('/doGetInventoryItemDetails', handler_doGetInventoryItemDetails)
  */
 
 router.get('/inventory', handler_inventoryScanner)
+
+router.post('/doGetAvailableInventoryBatches', handler_goGetAvailableInventoryBatches)
+
+router.post('/doOpenNewInventoryBatch', handler_doOpenNewInventoryBatch)
+
+router.post('/doGetInventoryBatch', handler_doGetInventoryBatch)
+
+router.post('/doRecordCountedQuantity', handler_doRecordCountedQuantity)
 
 /*
  * Export the router

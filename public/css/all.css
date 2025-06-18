@@ -7,6 +7,10 @@
   cursor: not-allowed;
 }
 
+.has-width-1 {
+  width: 1px;
+}
+
 /*
  * Tables
  * On hover, highlight the row

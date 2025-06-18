@@ -3,6 +3,7 @@ import sqlite from 'better-sqlite3';
 import { getOpenedInventoryBatch } from './getInventoryBatch.js';
 import { getItemValidationRecordsByItemNumber } from './getItemValidationRecords.js';
 import { databasePath } from './helpers.database.js';
+// eslint-disable-next-line complexity
 export default function createOrUpdateInventoryBatchItem(form, user) {
     /*
      * Ensure the batch is open
@@ -32,43 +33,60 @@ export default function createOrUpdateInventoryBatchItem(form, user) {
      * Get the item storeroom from the item validation records
      */
     const database = sqlite(databasePath);
-    let itemStoreroom = '';
-    const possibleItems = getItemValidationRecordsByItemNumber(form.itemNumber, '', database);
-    if (possibleItems.length > 0) {
-        itemStoreroom = possibleItems[0].itemStoreroom;
+    let itemStoreroom = form.itemStoreroom ?? '';
+    if (itemStoreroom === '') {
+        const possibleItems = getItemValidationRecordsByItemNumber(form.itemNumber, '', database);
+        if (possibleItems.length > 0) {
+            itemStoreroom = possibleItems[0].itemStoreroom;
+        }
     }
     /*
      * Record the item in the batch
      */
     const rightNow = new Date();
     let message = 'Counted quantity recorded successfully.';
-    const result = database
-        .prepare(`insert or ignore into InventoryBatchItems (
-        batchId, itemStoreroom, itemNumber, countedQuantity,
-        scannerKey, scanDate, scanTime,
-        recordCreate_userName, recordCreate_timeMillis,
-        recordUpdate_userName, recordUpdate_timeMillis)
-        values (?, ?, ?, ?,
-        ?, ?, ?,
-        ?, ?, ?, ?)`)
-        .run(batchId, itemStoreroom, form.itemNumber, form.countedQuantity, form.scannerKey, dateToInteger(rightNow), dateToTimeInteger(rightNow), user?.userName ?? `scanner.${form.scannerKey}`, rightNow.getTime(), user?.userName ?? `scanner.${form.scannerKey}`, rightNow.getTime());
-    if (result.changes === 0) {
-        // Update the existing record
+    if (form.countedQuantity === '') {
+        // Delete the existing record
         database
             .prepare(`update InventoryBatchItems
-          set countedQuantity = ?,
-          scannerKey = ?,
-          scanDate = ?,
-          scanTime = ?,
-          recordDelete_userName = null,
-          recordDelete_timeMillis = null,
-          recordUpdate_userName = ?,
-          recordUpdate_timeMillis = ?
+          set recordDelete_userName = ?,
+          recordDelete_timeMillis = ?
           where batchId = ?
           and itemStoreroom = ?
-          and itemNumber = ?`)
-            .run(form.countedQuantity, form.scannerKey, dateToInteger(rightNow), dateToTimeInteger(rightNow), user?.userName ?? `scanner.${form.scannerKey}`, rightNow.getTime(), batchId, itemStoreroom, form.itemNumber);
-        message = 'Counted quantity updated successfully.';
+          and itemNumber = ?
+          and recordDelete_timeMillis is null`)
+            .run(user?.userName ?? `scanner.${form.scannerKey ?? ''}`, rightNow.getTime(), batchId, itemStoreroom, form.itemNumber);
+        message = 'Counted quantity removed successfully.';
+    }
+    else {
+        const result = database
+            .prepare(`insert or ignore into InventoryBatchItems (
+          batchId, itemStoreroom, itemNumber, countedQuantity,
+          scannerKey, scanDate, scanTime,
+          recordCreate_userName, recordCreate_timeMillis,
+          recordUpdate_userName, recordUpdate_timeMillis)
+          values (?, ?, ?, ?,
+            ?, ?, ?,
+            ?, ?, ?, ?)`)
+            .run(batchId, itemStoreroom, form.itemNumber, form.countedQuantity, form.scannerKey ?? '', dateToInteger(rightNow), dateToTimeInteger(rightNow), user?.userName ?? `scanner.${form.scannerKey ?? ''}`, rightNow.getTime(), user?.userName ?? `scanner.${form.scannerKey ?? ''}`, rightNow.getTime());
+        if (result.changes === 0) {
+            // Update the existing record
+            database
+                .prepare(`update InventoryBatchItems
+            set countedQuantity = ?,
+              scannerKey = ?,
+              scanDate = ?,
+              scanTime = ?,
+              recordDelete_userName = null,
+              recordDelete_timeMillis = null,
+              recordUpdate_userName = ?,
+              recordUpdate_timeMillis = ?
+            where batchId = ?
+              and itemStoreroom = ?
+              and itemNumber = ?`)
+                .run(form.countedQuantity, form.scannerKey ?? '', dateToInteger(rightNow), dateToTimeInteger(rightNow), user?.userName ?? `scanner.${form.scannerKey ?? ''}`, rightNow.getTime(), batchId, itemStoreroom, form.itemNumber);
+            message = 'Counted quantity updated successfully.';
+        }
     }
     database.close();
     return {

@@ -6,8 +6,9 @@ import {
 } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
-import type { InventoryBatch, InventoryBatchItem } from '../types.js'
+import type { InventoryBatch } from '../types.js'
 
+import { getInventoryBatchItems } from './getInventoryBatchItems.js'
 import { databasePath } from './helpers.database.js'
 
 function _getInventoryBatch(
@@ -65,23 +66,7 @@ function _getInventoryBatch(
     .get(...sqlParameters) as InventoryBatch | undefined
 
   if (result !== undefined && includeBatchItems) {
-    result.batchItems = database
-      .function('userFunction_dateIntegerToString', dateIntegerToString)
-      .function('userFunction_timeIntegerToString', timeIntegerToString)
-      .prepare(
-        `select itemStoreroom, itemNumber, countedQuantity,
-          scannerKey,
-          scanDate,
-          userFunction_timeIntegerToString(scanTime) as scanTimeString,
-          
-          scanTime,
-          userFunction_dateIntegerToString(scanDate) as scanDateString
-          from InventoryBatchItems
-          where batchId = ?
-          and recordDelete_timeMillis is null
-          order by scanDate desc, scanTime desc`
-      )
-      .all(result.batchId) as InventoryBatchItem[]
+    result.batchItems = getInventoryBatchItems(result.batchId, database)
   }
 
   if (connectedDatabase === undefined) {
@@ -102,7 +87,11 @@ export function getOpenedInventoryBatch(
 ): InventoryBatch | undefined {
   const database = sqlite(databasePath)
 
-  let openBatch = _getInventoryBatch({ isOpened: true }, includeBatchItems, database)
+  let openBatch = _getInventoryBatch(
+    { isOpened: true },
+    includeBatchItems,
+    database
+  )
 
   if (openBatch === undefined && createIfNotExists) {
     const rightNow = new Date()
