@@ -66,6 +66,8 @@ export interface InventoryBatch {
     closeDateString: DateString | null;
     closeTime: number | null;
     closeTimeString: TimeString | null;
+    recordSync_userName: string | null;
+    recordSync_timeMillis: number | null;
     batchItemCount?: number;
     batchItems?: InventoryBatchItem[];
 }

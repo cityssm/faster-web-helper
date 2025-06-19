@@ -1,3 +1,6 @@
+// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
+/* eslint-disable max-lines */
+
 import type { BulmaJS } from '@cityssm/bulma-js/types.js'
 import type { cityssmGlobal } from '@cityssm/bulma-webapp-js/src/types.js'
 
@@ -30,6 +33,122 @@ declare const cityssm: cityssmGlobal
     if (currentBatch === undefined) {
       return
     }
+
+    function doCloseBatch(): void {
+      cityssm.postJSON(
+        `${moduleUrlPrefix}/doCloseInventoryBatch`,
+        { batchId: currentBatch?.batchId },
+        (rawResponseJSON) => {
+          const responseJSON = rawResponseJSON as {
+            success: boolean
+
+            batch?: InventoryBatch
+          }
+
+          bulmaJS.alert({
+            contextualColorName: responseJSON.success ? 'success' : 'danger',
+            message: responseJSON.success
+              ? 'The inventory batch has been closed.'
+              : 'There was an error closing the inventory batch. Please try again.'
+          })
+
+          if (responseJSON.batch !== undefined) {
+            currentBatch = responseJSON.batch
+            renderCurrentBatch()
+          }
+        }
+      )
+    }
+
+    bulmaJS.confirm({
+      contextualColorName: 'warning',
+      message: 'Are you sure you want to close this inventory batch?',
+
+      okButton: {
+        text: 'Close Batch',
+        callbackFunction: doCloseBatch
+      }
+    })
+  }
+
+  function confirmReopenBatch(): void {
+    if (currentBatch === undefined) {
+      return
+    }
+
+    function doReopenBatch(): void {
+      cityssm.postJSON(
+        `${moduleUrlPrefix}/doReopenInventoryBatch`,
+        { batchId: currentBatch?.batchId },
+        (rawResponseJSON) => {
+          const responseJSON = rawResponseJSON as {
+            success: boolean
+            batch?: InventoryBatch
+          }
+
+          bulmaJS.alert({
+            contextualColorName: responseJSON.success ? 'success' : 'danger',
+            message: responseJSON.success
+              ? 'The inventory batch has been reopened.'
+              : 'There was an error reopening the inventory batch. Please try again.'
+          })
+          if (responseJSON.batch !== undefined) {
+            currentBatch = responseJSON.batch
+            renderCurrentBatch()
+          }
+        }
+      )
+    }
+
+    bulmaJS.confirm({
+      contextualColorName: 'warning',
+      message: 'Are you sure you want to reopen this inventory batch?',
+      okButton: {
+        text: 'Reopen Batch',
+        callbackFunction: doReopenBatch
+      }
+    })
+  }
+
+  function confirmSyncBatch(): void {
+    if (currentBatch === undefined) {
+      return
+    }
+
+    function doSyncBatch(): void {
+      cityssm.postJSON(
+        `${moduleUrlPrefix}/doSyncInventoryBatch`,
+        { batchId: currentBatch?.batchId },
+        (rawResponseJSON) => {
+          const responseJSON = rawResponseJSON as {
+            success: boolean
+            batch?: InventoryBatch
+          }
+
+          bulmaJS.alert({
+            contextualColorName: responseJSON.success ? 'success' : 'danger',
+            message: responseJSON.success
+              ? 'The inventory batch has been synced.'
+              : 'There was an error syncing the inventory batch. Please try again.'
+          })
+
+          if (responseJSON.batch !== undefined) {
+            currentBatch = responseJSON.batch
+            renderCurrentBatch()
+          }
+        }
+      )
+    }
+    bulmaJS.confirm({
+      contextualColorName: 'warning',
+      message: `Are you sure you want to sync this inventory batch?<br />
+        Note that once a batch is synced, it cannot be reopened.`,
+      messageIsHtml: true,
+      okButton: {
+        text: 'Sync Batch',
+        callbackFunction: doSyncBatch
+      }
+    })
   }
 
   function updateCountedQuantity(formEvent: SubmitEvent): void {
@@ -99,7 +218,10 @@ declare const cityssm: cityssmGlobal
   function renderUndefinedBatch(): void {
     currentBatchButtonElement.value = '(No Batch Selected)'
     currentBatchDetailsElement.replaceChildren()
-    currentBatchItemsContainerElement.replaceChildren()
+
+    currentBatchItemsContainerElement.innerHTML = `<div class="message is-info">
+      <p class="message-body">No inventory batch has been selected.</p>
+      </div>`
   }
 
   function renderCurrentBatch(): void {
@@ -141,10 +263,47 @@ declare const cityssm: cityssmGlobal
     } else {
       currentBatchDetailsElement.insertAdjacentHTML(
         'beforeend',
-        `<p>
+        `<p class="mb-4">
           <strong>Close Date</strong><br />
           ${cityssm.escapeHTML(currentBatch.closeDateString ?? '')}
           ${cityssm.escapeHTML(currentBatch.closeTimeString ?? '')}
+          </p>`
+      )
+
+      if (currentBatch.recordSync_timeMillis === null) {
+        currentBatchDetailsElement.insertAdjacentHTML(
+          'beforeend',
+          `<div class="columns">
+            <div class="column">
+              <button class="button is-success is-fullwidth" id="inventory--syncBatchButton" type="button">
+                <span class="icon"><i class="fas fa-sync" aria-hidden="true"></i></span>
+                <span>Sync Batch</span>
+              </button>
+            </div>
+            <div class="column">
+              <button class="button is-warning is-fullwidth" id="inventory--reopenBatchButton" type="button">
+                <span class="icon"><i class="fas fa-rotate-left" aria-hidden="true"></i></span>
+                <span>Reopen Batch</span>
+              </button>
+            </div>
+          </div>`
+        )
+
+        currentBatchDetailsElement
+          .querySelector('#inventory--syncBatchButton')
+          ?.addEventListener('click', confirmSyncBatch)
+
+        currentBatchDetailsElement
+          .querySelector('#inventory--reopenBatchButton')
+          ?.addEventListener('click', confirmReopenBatch)
+      }
+    }
+
+    if (currentBatch.recordSync_userName !== null) {
+      currentBatchDetailsElement.insertAdjacentHTML(
+        'beforeend',
+        `<p class="mt-4">
+          <strong>Synced</strong>
           </p>`
       )
     }
@@ -344,6 +503,25 @@ declare const cityssm: cityssmGlobal
               panelBlockElement.dataset.batchId =
                 inventoryBatch.batchId.toString()
 
+              let statusTagHtml = `<span class="tag is-success">
+                <span class="icon"><i class="fas fa-play" aria-hidden="true"></i></span>
+                <span>Open</span>
+                </span>`
+
+              if (inventoryBatch.closeDate !== null) {
+                statusTagHtml = `<span class="tag is-danger">
+                  <span class="icon"><i class="fas fa-stop" aria-hidden="true"></i></span>
+                  <span>Closed</span>
+                  </span>`
+              }
+
+              if (inventoryBatch.recordSync_timeMillis !== null) {
+                statusTagHtml = `<span class="tag is-success" title="Synced">
+                  <span class="icon"><i class="fas fa-sync" aria-hidden="true"></i></span>
+                  <span>Synced</span>
+                  </span>`
+              }
+
               // eslint-disable-next-line no-unsanitized/property
               panelBlockElement.innerHTML = `<div class="columns is-mobile">
                   <div class="column is-narrow">
@@ -360,17 +538,7 @@ declare const cityssm: cityssmGlobal
                       <span class="tag is-light" title="Item Count">
                         ${(inventoryBatch.batchItemCount ?? 0).toLocaleString()}
                       </span>
-                      ${
-                        inventoryBatch.closeDate === null
-                          ? `<span class="tag is-success">
-                              <span class="icon"><i class="fas fa-play" aria-hidden="true"></i></span>
-                              <span>Open</span>
-                              </span>`
-                          : `<span class="tag is-info">
-                              <span class="icon"><i class="fas fa-stop" aria-hidden="true"></i></span>
-                              <span>Closed</span>
-                              </span>`
-                      }
+                      ${statusTagHtml}
                     </div>
                   </div>
                 </div>`

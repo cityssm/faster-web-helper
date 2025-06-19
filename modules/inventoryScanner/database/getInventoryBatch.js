@@ -50,7 +50,7 @@ function _getInventoryBatch(filters, includeBatchItems = false, connectedDatabas
     }
     return result;
 }
-export function getInventoryBatch(batchId) {
+export default function getInventoryBatch(batchId) {
     return _getInventoryBatch({ batchId }, true);
 }
 export function getOpenedInventoryBatch(includeBatchItems = false, createIfNotExists = false, user) {

@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express'
 
-import { getInventoryBatch } from '../../database/getInventoryBatch.js'
+import getInventoryBatch from '../../database/getInventoryBatch.js'
 
 export default function handler(
   request: Request<unknown, unknown, { batchId: number }>,

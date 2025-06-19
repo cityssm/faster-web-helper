@@ -1,4 +1,6 @@
 "use strict";
+// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
+/* eslint-disable max-lines */
 Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
     var _a, _b;
@@ -11,6 +13,87 @@ Object.defineProperty(exports, "__esModule", { value: true });
         if (currentBatch === undefined) {
             return;
         }
+        function doCloseBatch() {
+            cityssm.postJSON(`${moduleUrlPrefix}/doCloseInventoryBatch`, { batchId: currentBatch === null || currentBatch === void 0 ? void 0 : currentBatch.batchId }, (rawResponseJSON) => {
+                const responseJSON = rawResponseJSON;
+                bulmaJS.alert({
+                    contextualColorName: responseJSON.success ? 'success' : 'danger',
+                    message: responseJSON.success
+                        ? 'The inventory batch has been closed.'
+                        : 'There was an error closing the inventory batch. Please try again.'
+                });
+                if (responseJSON.batch !== undefined) {
+                    currentBatch = responseJSON.batch;
+                    renderCurrentBatch();
+                }
+            });
+        }
+        bulmaJS.confirm({
+            contextualColorName: 'warning',
+            message: 'Are you sure you want to close this inventory batch?',
+            okButton: {
+                text: 'Close Batch',
+                callbackFunction: doCloseBatch
+            }
+        });
+    }
+    function confirmReopenBatch() {
+        if (currentBatch === undefined) {
+            return;
+        }
+        function doReopenBatch() {
+            cityssm.postJSON(`${moduleUrlPrefix}/doReopenInventoryBatch`, { batchId: currentBatch === null || currentBatch === void 0 ? void 0 : currentBatch.batchId }, (rawResponseJSON) => {
+                const responseJSON = rawResponseJSON;
+                bulmaJS.alert({
+                    contextualColorName: responseJSON.success ? 'success' : 'danger',
+                    message: responseJSON.success
+                        ? 'The inventory batch has been reopened.'
+                        : 'There was an error reopening the inventory batch. Please try again.'
+                });
+                if (responseJSON.batch !== undefined) {
+                    currentBatch = responseJSON.batch;
+                    renderCurrentBatch();
+                }
+            });
+        }
+        bulmaJS.confirm({
+            contextualColorName: 'warning',
+            message: 'Are you sure you want to reopen this inventory batch?',
+            okButton: {
+                text: 'Reopen Batch',
+                callbackFunction: doReopenBatch
+            }
+        });
+    }
+    function confirmSyncBatch() {
+        if (currentBatch === undefined) {
+            return;
+        }
+        function doSyncBatch() {
+            cityssm.postJSON(`${moduleUrlPrefix}/doSyncInventoryBatch`, { batchId: currentBatch === null || currentBatch === void 0 ? void 0 : currentBatch.batchId }, (rawResponseJSON) => {
+                const responseJSON = rawResponseJSON;
+                bulmaJS.alert({
+                    contextualColorName: responseJSON.success ? 'success' : 'danger',
+                    message: responseJSON.success
+                        ? 'The inventory batch has been synced.'
+                        : 'There was an error syncing the inventory batch. Please try again.'
+                });
+                if (responseJSON.batch !== undefined) {
+                    currentBatch = responseJSON.batch;
+                    renderCurrentBatch();
+                }
+            });
+        }
+        bulmaJS.confirm({
+            contextualColorName: 'warning',
+            message: `Are you sure you want to sync this inventory batch?<br />
+        Note that once a batch is synced, it cannot be reopened.`,
+            messageIsHtml: true,
+            okButton: {
+                text: 'Sync Batch',
+                callbackFunction: doSyncBatch
+            }
+        });
     }
     function updateCountedQuantity(formEvent) {
         formEvent.preventDefault();
@@ -56,10 +139,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
     function renderUndefinedBatch() {
         currentBatchButtonElement.value = '(No Batch Selected)';
         currentBatchDetailsElement.replaceChildren();
-        currentBatchItemsContainerElement.replaceChildren();
+        currentBatchItemsContainerElement.innerHTML = `<div class="message is-info">
+      <p class="message-body">No inventory batch has been selected.</p>
+      </div>`;
     }
     function renderCurrentBatch() {
-        var _a, _b, _c, _d, _e, _f, _g;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         if (currentBatch === undefined) {
             renderUndefinedBatch();
             return;
@@ -87,10 +172,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 .querySelector('#inventory--closeBatchButton')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', confirmCloseBatch);
         }
         else {
-            currentBatchDetailsElement.insertAdjacentHTML('beforeend', `<p>
+            currentBatchDetailsElement.insertAdjacentHTML('beforeend', `<p class="mb-4">
           <strong>Close Date</strong><br />
           ${cityssm.escapeHTML((_b = currentBatch.closeDateString) !== null && _b !== void 0 ? _b : '')}
           ${cityssm.escapeHTML((_c = currentBatch.closeTimeString) !== null && _c !== void 0 ? _c : '')}
+          </p>`);
+            if (currentBatch.recordSync_timeMillis === null) {
+                currentBatchDetailsElement.insertAdjacentHTML('beforeend', `<div class="columns">
+            <div class="column">
+              <button class="button is-success is-fullwidth" id="inventory--syncBatchButton" type="button">
+                <span class="icon"><i class="fas fa-sync" aria-hidden="true"></i></span>
+                <span>Sync Batch</span>
+              </button>
+            </div>
+            <div class="column">
+              <button class="button is-warning is-fullwidth" id="inventory--reopenBatchButton" type="button">
+                <span class="icon"><i class="fas fa-rotate-left" aria-hidden="true"></i></span>
+                <span>Reopen Batch</span>
+              </button>
+            </div>
+          </div>`);
+                (_d = currentBatchDetailsElement
+                    .querySelector('#inventory--syncBatchButton')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', confirmSyncBatch);
+                (_e = currentBatchDetailsElement
+                    .querySelector('#inventory--reopenBatchButton')) === null || _e === void 0 ? void 0 : _e.addEventListener('click', confirmReopenBatch);
+            }
+        }
+        if (currentBatch.recordSync_userName !== null) {
+            currentBatchDetailsElement.insertAdjacentHTML('beforeend', `<p class="mt-4">
+          <strong>Synced</strong>
           </p>`);
         }
         /*
@@ -123,7 +233,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         </td>
         <td>
           ${cityssm.escapeHTML(batchItem.itemNumber)}<br />
-          <span class="is-size-7">${cityssm.escapeHTML((_d = batchItem.itemDescription) !== null && _d !== void 0 ? _d : '')}</span>
+          <span class="is-size-7">${cityssm.escapeHTML((_f = batchItem.itemDescription) !== null && _f !== void 0 ? _f : '')}</span>
         </td>`;
             if (currentBatch.closeDate === null) {
                 rowElement.insertAdjacentHTML('beforeend', `<td class="has-text-right">
@@ -160,12 +270,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 </button>
               </form>
             </td>`);
-                (_e = rowElement
-                    .querySelector('.is-update-form')) === null || _e === void 0 ? void 0 : _e.addEventListener('submit', updateCountedQuantity);
-                (_f = rowElement
-                    .querySelector('.is-delete-form')) === null || _f === void 0 ? void 0 : _f.addEventListener('submit', updateCountedQuantity);
                 (_g = rowElement
-                    .querySelector('.is-update-form input[name="countedQuantity"]')) === null || _g === void 0 ? void 0 : _g.addEventListener('change', highlightUpdatedRow);
+                    .querySelector('.is-update-form')) === null || _g === void 0 ? void 0 : _g.addEventListener('submit', updateCountedQuantity);
+                (_h = rowElement
+                    .querySelector('.is-delete-form')) === null || _h === void 0 ? void 0 : _h.addEventListener('submit', updateCountedQuantity);
+                (_j = rowElement
+                    .querySelector('.is-update-form input[name="countedQuantity"]')) === null || _j === void 0 ? void 0 : _j.addEventListener('change', highlightUpdatedRow);
             }
             else {
                 rowElement.insertAdjacentHTML('beforeend', `<td class="has-text-right">
@@ -228,6 +338,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         panelBlockElement.href = '#';
                         panelBlockElement.dataset.batchId =
                             inventoryBatch.batchId.toString();
+                        let statusTagHtml = `<span class="tag is-success">
+                <span class="icon"><i class="fas fa-play" aria-hidden="true"></i></span>
+                <span>Open</span>
+                </span>`;
+                        if (inventoryBatch.closeDate !== null) {
+                            statusTagHtml = `<span class="tag is-danger">
+                  <span class="icon"><i class="fas fa-stop" aria-hidden="true"></i></span>
+                  <span>Closed</span>
+                  </span>`;
+                        }
+                        if (inventoryBatch.recordSync_timeMillis !== null) {
+                            statusTagHtml = `<span class="tag is-success" title="Synced">
+                  <span class="icon"><i class="fas fa-sync" aria-hidden="true"></i></span>
+                  <span>Synced</span>
+                  </span>`;
+                        }
                         // eslint-disable-next-line no-unsanitized/property
                         panelBlockElement.innerHTML = `<div class="columns is-mobile">
                   <div class="column is-narrow">
@@ -244,15 +370,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                       <span class="tag is-light" title="Item Count">
                         ${((_a = inventoryBatch.batchItemCount) !== null && _a !== void 0 ? _a : 0).toLocaleString()}
                       </span>
-                      ${inventoryBatch.closeDate === null
-                            ? `<span class="tag is-success">
-                              <span class="icon"><i class="fas fa-play" aria-hidden="true"></i></span>
-                              <span>Open</span>
-                              </span>`
-                            : `<span class="tag is-info">
-                              <span class="icon"><i class="fas fa-stop" aria-hidden="true"></i></span>
-                              <span>Closed</span>
-                              </span>`}
+                      ${statusTagHtml}
                     </div>
                   </div>
                 </div>`;

@@ -13,7 +13,7 @@ import { databasePath } from './helpers.database.js'
 
 function _getInventoryBatch(
   filters: {
-    batchId?: number
+    batchId?: number | string
     isOpened?: boolean
   },
   includeBatchItems = false,
@@ -76,7 +76,7 @@ function _getInventoryBatch(
   return result
 }
 
-export function getInventoryBatch(batchId: number): InventoryBatch | undefined {
+export default function getInventoryBatch(batchId: number | string): InventoryBatch | undefined {
   return _getInventoryBatch({ batchId }, true)
 }
 
