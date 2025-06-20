@@ -10,10 +10,6 @@ export const config = tseslint.config(configWebApp, {
                     words: [
                         ...cspellWords,
                         ...eslintConstants.cspellWords,
-                        'autoincrement',
-                        'fieldsets',
-                        'fontawesome',
-                        'inputmode',
                         'jsbarcode',
                         'nhtsa',
                         'ntfy',
