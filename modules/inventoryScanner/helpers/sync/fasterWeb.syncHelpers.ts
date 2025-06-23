@@ -93,7 +93,10 @@ async function recordToExportDataLine(
 
       if (workOrder !== undefined) {
         workOrderCache.set(record.workOrderNumber, workOrder)
-        scanDate = workOrder.dateTimeIn
+
+        if (workOrder.dateTimeOut !== undefined) {
+          scanDate = workOrder.dateTimeIn
+        }
       }
     } else {
       const workOrderValidationJson = getWorkOrderValidationJsonData(

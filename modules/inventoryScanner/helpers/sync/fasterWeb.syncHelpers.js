@@ -48,7 +48,9 @@ async function recordToExportDataLine(record) {
                 : await fasterApi.getWorkOrder(Number.parseInt(record.workOrderNumber, 10));
             if (workOrder !== undefined) {
                 workOrderCache.set(record.workOrderNumber, workOrder);
-                scanDate = workOrder.dateTimeIn;
+                if (workOrder.dateTimeOut !== undefined) {
+                    scanDate = workOrder.dateTimeIn;
+                }
             }
         }
         else {
