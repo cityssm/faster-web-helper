@@ -6,6 +6,7 @@ import path from 'node:path'
 
 import type { RepairResult } from '@cityssm/faster-api'
 import { itemName as itemNameConstants } from '@cityssm/faster-constants/inventory/items'
+import type { W399TechnicianWorkOrderXmlResults } from '@cityssm/faster-report-parser/xml'
 import {
   FasterUnofficialAPI,
   integrationNames
@@ -40,11 +41,15 @@ const exportFileNamePrefix = getConfigProperty(
   'modules.inventoryScanner.fasterSync.exportFileNamePrefix'
 )
 
+const workOrderCache = new Map<string, W399TechnicianWorkOrderXmlResults>()
+
 export function formatRecordIdAsInvoiceNumber(recordId: number): string {
   return recordId.toString().padStart(14, 'X')
 }
 
-function recordToExportDataLine(record: InventoryScannerRecord): string {
+async function recordToExportDataLine(
+  record: InventoryScannerRecord
+): Promise<string> {
   // A - "RDC"
   const dataPieces = ['RDC']
 
@@ -73,17 +78,36 @@ function recordToExportDataLine(record: InventoryScannerRecord): string {
 
   // Backdate the scan date to the repair date if available
   if (record.itemNumberPrefix !== '' && record.repairId !== null) {
-    const workOrderValidationJson = getWorkOrderValidationJsonData(
-      record.workOrderNumber,
-      record.workOrderType,
-      record.repairId
-    ) as RepairResult | undefined
+    if (hasFasterUnofficialApi) {
+      const fasterApi = new FasterUnofficialAPI(
+        fasterApiConfig.tenantOrBaseUrl,
+        fasterApiConfig.appUserName ?? '',
+        fasterApiConfig.appPassword ?? ''
+      )
 
-    if (
-      workOrderValidationJson !== undefined &&
-      Object.keys(workOrderValidationJson).length > 0
-    ) {
-      scanDate = new Date(workOrderValidationJson.createdDate)
+      const workOrder = workOrderCache.has(record.workOrderNumber)
+        ? workOrderCache.get(record.workOrderNumber)
+        : await fasterApi.getWorkOrder(
+            Number.parseInt(record.workOrderNumber, 10)
+          )
+
+      if (workOrder !== undefined) {
+        workOrderCache.set(record.workOrderNumber, workOrder)
+        scanDate = workOrder.dateTimeIn
+      }
+    } else {
+      const workOrderValidationJson = getWorkOrderValidationJsonData(
+        record.workOrderNumber,
+        record.workOrderType,
+        record.repairId
+      ) as RepairResult | undefined
+
+      if (
+        workOrderValidationJson !== undefined &&
+        Object.keys(workOrderValidationJson).length > 0
+      ) {
+        scanDate = new Date(workOrderValidationJson.createdDate)
+      }
     }
   }
 
@@ -214,7 +238,7 @@ export async function syncScannerRecordsWithFaster(
 
   for (const record of records) {
     try {
-      exportFileDataLines.push(recordToExportDataLine(record))
+      exportFileDataLines.push(await recordToExportDataLine(record))
     } catch (error) {
       errorRecordIds.add(record.recordId)
 
