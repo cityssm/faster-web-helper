@@ -4,6 +4,8 @@ import Debug from 'debug'
 import { DEBUG_NAMESPACE } from '../../../../debug.config.js'
 import type { TaskWorkerMessage } from '../../../../types/tasks.types.js'
 import getScannerRecords from '../../database/getScannerRecords.js'
+import getSetting from '../../database/getSetting.js'
+import updateSetting from '../../database/updateSetting.js'
 import { moduleName } from '../../helpers/module.helpers.js'
 import { syncScannerRecordsWithFaster } from '../../helpers/sync/fasterWeb.syncHelpers.js'
 import { syncScannerRecordsWithWorktech } from '../../helpers/sync/worktech.syncHelpers.js'
@@ -47,4 +49,25 @@ async function syncScannerRecordsTask(): Promise<void> {
   debug(`Finished "${taskName}", synced ${recordsToSyncList.length} record(s).`)
 }
 
-await syncScannerRecordsTask()
+/*
+ * Run the task if not already running.
+ */
+
+const isRunningSettingName = 'syncScannerRecords.isRunning'
+const isRunning = getSetting(isRunningSettingName) ?? '0'
+
+if (isRunning === '1') {
+  debug(`"${taskName}" is already running, skipping...`)
+} else {
+  try {
+    // Mark the task as running
+    updateSetting(isRunningSettingName, '1')
+
+    await syncScannerRecordsTask()
+  } finally {
+    // Mark the task as not running
+    updateSetting(isRunningSettingName, '0')
+
+    debug(`"${taskName}" completed.`)
+  }
+}

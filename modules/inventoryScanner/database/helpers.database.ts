@@ -5,7 +5,7 @@ import Debug from 'debug'
 import { DEBUG_NAMESPACE } from '../../../debug.config.js'
 import { moduleName } from '../helpers/module.helpers.js'
 
-export type SettingName = 'itemRequests.count' | 'itemRequests.maxItemRequestId'
+export type SettingName = 'itemRequests.count' | 'itemRequests.maxItemRequestId' | 'syncScannerRecords.isRunning'
 
 const debug = Debug(
   `${DEBUG_NAMESPACE}:${camelcase(moduleName)}:databaseHelpers`
