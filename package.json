@@ -1,6 +1,6 @@
 {
   "name": "@cityssm/faster-web-helper",
-  "version": "1.0.0-alpha",
+  "version": "1.0.0-alpha.1",
   "private": true,
   "description": "A service to support integrations with FASTER Web.",
   "keywords": [
