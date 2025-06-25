@@ -10,9 +10,9 @@ import {
   getScheduledTaskMinutes
 } from '../../../../helpers/tasks.helpers.js'
 import type { ConfigItemValidationDynamicsGP } from '../../config/types.js'
-import createOrUpdateItemValidation from '../../database/createOrUpdateItemValidation.js'
-import deleteExpiredItemValidationRecords from '../../database/deleteExpiredItemValidationRecords.js'
-import getMaxItemValidationRecordUpdateMillis from '../../database/getMaxItemValidationRecordUpdateMillis.js'
+import createOrUpdateItemValidation from '../../database-issue/createOrUpdateItemValidation.js'
+import deleteExpiredItemValidationRecords from '../../database-issue/deleteExpiredItemValidationRecords.js'
+import getMaxItemValidationRecordUpdateMillis from '../../database-issue/getMaxItemValidationRecordUpdateMillis.js'
 import { moduleName } from '../../helpers/module.helpers.js'
 
 export const taskName = 'Inventory Validation - Dynamics GP'

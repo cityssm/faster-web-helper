@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import { getOpenedInventoryBatch } from '../database/getInventoryBatch.js';
-import handler_inventoryScanner from './get-scanner/inventory.js';
-import handler_issueScanner from './get-scanner/issue.js';
-import handler_doCreateScannerRecord from './post-scanner/doCreateScannerRecord.js';
-import handler_doDeleteScannerRecord from './post-scanner/doDeleteScannerRecord.js';
-import handler_doGetItemDescription from './post-scanner/doGetItemDescription.js';
-import handler_doGetRepairRecords from './post-scanner/doGetRepairRecords.js';
-import handler_doGetScannerRecords from './post-scanner/doGetScannerRecords.js';
-import handler_doRecordCountedQuantity from './post-scanner/doRecordCountedQuantity.js';
+import { getOpenedInventoryBatch } from '../database-count/getInventoryBatch.js';
+import handler_doRecordCountedQuantity from './scanner-count-post/doRecordCountedQuantity.js';
+import handler_inventoryScanner from './scanner-get/count.js';
+import handler_issueScanner from './scanner-get/issue.js';
+import handler_doCreateScannerRecord from './scanner-issue-post/doCreateScannerRecord.js';
+import handler_doDeleteScannerRecord from './scanner-issue-post/doDeleteScannerRecord.js';
+import handler_doGetItemDescription from './scanner-issue-post/doGetItemDescription.js';
+import handler_doGetRepairRecords from './scanner-issue-post/doGetRepairRecords.js';
+import handler_doGetScannerRecords from './scanner-issue-post/doGetScannerRecords.js';
 export const router = Router();
 /*
  * Issue Scanner

@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3'
 
-import { type SettingName, databasePath } from './helpers.database.js'
+import { type SettingName, databasePath } from '../helpers/database.helpers.js'
 
 export default function getSetting(
   settingName: SettingName
@@ -25,6 +25,7 @@ export default function getSetting(
 
 interface SettingValues {
   settingValue: string | null
+
   previousSettingValue: string | null
 }
 

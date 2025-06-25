@@ -1,5 +1,5 @@
 import sqlite from 'better-sqlite3';
-import { databasePath } from './helpers.database.js';
+import { databasePath } from '../helpers/database.helpers.js';
 export default function getSetting(settingName) {
     const database = sqlite(databasePath, {
         readonly: true

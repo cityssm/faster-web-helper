@@ -13,9 +13,9 @@ import {
   getScheduledTaskMinutes
 } from '../../../../helpers/tasks.helpers.js'
 import type { TaskWorkerMessage } from '../../../../types/tasks.types.js'
-import createOrUpdateWorkOrderValidation from '../../database/createOrUpdateWorkOrderValidation.js'
-import getMaxWorkOrderValidationRecordUpdateMillis from '../../database/getMaxWorkOrderValidationRecordUpdateMillis.js'
-import getScannerRecords from '../../database/getScannerRecords.js'
+import createOrUpdateWorkOrderValidation from '../../database-issue/createOrUpdateWorkOrderValidation.js'
+import getMaxWorkOrderValidationRecordUpdateMillis from '../../database-issue/getMaxWorkOrderValidationRecordUpdateMillis.js'
+import getScannerRecords from '../../database-issue/getScannerRecords.js'
 import { moduleName } from '../../helpers/module.helpers.js'
 
 export const taskName = 'Work Order Validation - Worktech'

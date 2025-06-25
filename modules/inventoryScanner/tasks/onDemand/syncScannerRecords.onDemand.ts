@@ -3,7 +3,7 @@ import Debug from 'debug'
 
 import { DEBUG_NAMESPACE } from '../../../../debug.config.js'
 import type { TaskWorkerMessage } from '../../../../types/tasks.types.js'
-import getScannerRecords from '../../database/getScannerRecords.js'
+import getScannerRecords from '../../database-issue/getScannerRecords.js'
 import getSetting from '../../database/getSetting.js'
 import updateSetting from '../../database/updateSetting.js'
 import { moduleName } from '../../helpers/module.helpers.js'

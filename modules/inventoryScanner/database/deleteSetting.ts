@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3'
 
-import { type SettingName, databasePath } from './helpers.database.js'
+import { type SettingName, databasePath } from '../helpers/database.helpers.js'
 
 export default function deleteSetting(settingName: SettingName): boolean {
   const database = sqlite(databasePath)

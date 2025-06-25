@@ -1,4 +1,4 @@
-import { type SettingName } from './helpers.database.js';
+import { type SettingName } from '../helpers/database.helpers.js';
 export default function getSetting(settingName: SettingName): string | null | undefined;
 interface SettingValues {
     settingValue: string | null;

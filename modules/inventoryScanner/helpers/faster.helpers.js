@@ -1,6 +1,6 @@
-import getMaxWorkOrderValidationRepairId from '../database/getMaxWorkOrderValidationRecordRepairId.js';
-import getUnsyncedWorkOrderNumbersAndRepairIds from '../database/getUnsyncedWorkOrderNumbersAndRepairIds.js';
-import getWorkOrderValidationRepairIds from '../database/getWorkOrderValidationRepairIds.js';
+import getMaxWorkOrderValidationRepairId from '../database-issue/getMaxWorkOrderValidationRecordRepairId.js';
+import getUnsyncedWorkOrderNumbersAndRepairIds from '../database-issue/getUnsyncedWorkOrderNumbersAndRepairIds.js';
+import getWorkOrderValidationRepairIds from '../database-issue/getWorkOrderValidationRepairIds.js';
 const lookAheadRepairIdCount = 100;
 export function getRepairIdsToRefresh() {
     /*

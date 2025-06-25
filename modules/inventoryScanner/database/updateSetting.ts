@@ -2,9 +2,8 @@ import sqlite from 'better-sqlite3'
 import Debug from 'debug'
 
 import { DEBUG_NAMESPACE } from '../../../debug.config.js'
+import { type SettingName, databasePath } from '../helpers/database.helpers.js'
 import { moduleName } from '../helpers/module.helpers.js'
-
-import { type SettingName, databasePath } from './helpers.database.js'
 
 const debug = Debug(`${DEBUG_NAMESPACE}:${moduleName}:updateSetting`)
 

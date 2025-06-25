@@ -9,9 +9,9 @@ import {
   getMinimumMillisBetweenRuns,
   getScheduledTaskMinutes
 } from '../../../../helpers/tasks.helpers.js'
-import createOrUpdateWorkOrderValidation from '../../database/createOrUpdateWorkOrderValidation.js'
-import deleteWorkOrderValidation from '../../database/deleteWorkOrderValidation.js'
-import getMaxWorkOrderValidationRecordUpdateMillis from '../../database/getMaxWorkOrderValidationRecordUpdateMillis.js'
+import createOrUpdateWorkOrderValidation from '../../database-issue/createOrUpdateWorkOrderValidation.js'
+import deleteWorkOrderValidation from '../../database-issue/deleteWorkOrderValidation.js'
+import getMaxWorkOrderValidationRecordUpdateMillis from '../../database-issue/getMaxWorkOrderValidationRecordUpdateMillis.js'
 import { getRepairIdsToRefresh } from '../../helpers/faster.helpers.js'
 import { moduleName } from '../../helpers/module.helpers.js'
 

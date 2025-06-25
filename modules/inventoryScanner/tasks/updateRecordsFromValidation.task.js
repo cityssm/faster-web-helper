@@ -1,10 +1,10 @@
 import { nodeSchedule, ScheduledTask } from '@cityssm/scheduled-task';
 import { minutesToMillis } from '@cityssm/to-millis';
 import { getConfigProperty } from '../../../helpers/config.helpers.js';
-import { getItemValidationRecordsByItemNumber } from '../database/getItemValidationRecords.js';
-import getScannerRecords from '../database/getScannerRecords.js';
-import getWorkOrderValidationRecords from '../database/getWorkOrderValidationRecords.js';
-import { updateScannerRecordField } from '../database/updateScannerRecordField.js';
+import { getItemValidationRecordsByItemNumber } from '../database-issue/getItemValidationRecords.js';
+import getScannerRecords from '../database-issue/getScannerRecords.js';
+import getWorkOrderValidationRecords from '../database-issue/getWorkOrderValidationRecords.js';
+import { updateScannerRecordField } from '../database-issue/updateScannerRecordField.js';
 export const taskName = 'Update Records from Validation';
 export const taskUserName = 'validationTask';
 function updateRecordsFromValidation() {

@@ -1,4 +1,4 @@
-import { updateScannerRecordSyncFields } from '../../database/updateScannerRecordSyncFields.js'
+import { updateScannerRecordSyncFields } from '../../database-issue/updateScannerRecordSyncFields.js'
 import type { InventoryScannerRecord } from '../../types.js'
 
 export function updateMultipleScannerRecords(

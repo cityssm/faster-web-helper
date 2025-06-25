@@ -45,7 +45,7 @@
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@shaggytools/nhtsa-api-wrapper": "^3.0.4",
     "basic-ftp": "^5.0.5",
-    "better-sqlite3": "^11.10.0",
+    "better-sqlite3": "^12.1.1",
     "bulma": "^1.0.4",
     "camelcase": "^8.0.0",
     "cookie-parser": "^1.4.7",
@@ -64,7 +64,7 @@
     "@types/debug": "^4.1.12",
     "@types/express": "^5.0.3",
     "@types/express-session": "^1.18.2",
-    "@types/node": "^24.0.3",
+    "@types/node": "^24.0.4",
     "@types/node-schedule": "^2.1.7",
     "@types/node-windows": "^0.1.6",
     "@types/session-file-store": "^1.2.5",
@@ -79,6 +79,6 @@
     "@cityssm/sectorflow": "^0.6.0"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   }
 }

@@ -4,7 +4,7 @@ import Debug from 'debug';
 import { DEBUG_NAMESPACE } from '../../debug.config.js';
 import { getConfigProperty } from '../../helpers/config.helpers.js';
 import { hasFasterApi } from '../../helpers/fasterWeb.helpers.js';
-import { initializeInventoryScannerDatabase } from './database/helpers.database.js';
+import { initializeInventoryScannerDatabase } from './helpers/database.helpers.js';
 import { moduleName } from './helpers/module.helpers.js';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:tasks`);
 export default function initializeInventoryScannerTasks() {

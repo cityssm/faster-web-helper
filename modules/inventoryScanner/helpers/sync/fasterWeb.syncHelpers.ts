@@ -26,8 +26,8 @@ import {
   tempFolderPath
 } from '../../../../helpers/filesystem.helpers.js'
 import { uploadFile } from '../../../../helpers/sftp.helpers.js'
-import getWorkOrderValidationJsonData from '../../database/getWorkOrderValidationJsonData.js'
-import { updateScannerRecordSyncFields } from '../../database/updateScannerRecordSyncFields.js'
+import getWorkOrderValidationJsonData from '../../database-issue/getWorkOrderValidationJsonData.js'
+import { updateScannerRecordSyncFields } from '../../database-issue/updateScannerRecordSyncFields.js'
 import type { InventoryScannerRecord } from '../../types.js'
 import { moduleName } from '../module.helpers.js'
 

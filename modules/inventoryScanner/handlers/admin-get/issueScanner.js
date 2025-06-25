@@ -1,0 +1,19 @@
+import getItemValidationRecords from '../../database-issue/getItemValidationRecords.js';
+import getScannerRecords from '../../database-issue/getScannerRecords.js';
+import getSetting from '../../database/getSetting.js';
+export default function handler(request, response) {
+    const pendingRecords = getScannerRecords({ isSynced: false }, { limit: -1 });
+    const syncErrorRecords = getScannerRecords({
+        isSynced: true,
+        isSyncedSuccessfully: false
+    });
+    const inventory = getItemValidationRecords('');
+    const itemRequestsCount = Number.parseInt(getSetting('itemRequests.count') ?? '0');
+    response.render('inventoryScanner/adminIssue', {
+        headTitle: 'Issue Scanner',
+        inventory,
+        pendingRecords,
+        syncErrorRecords,
+        itemRequestsCount
+    });
+}
