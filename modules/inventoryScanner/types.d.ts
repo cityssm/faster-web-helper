@@ -1,4 +1,4 @@
-import type { DateString, TimeString } from "@cityssm/utils-datetime";
+import type { DateString, TimeString } from '@cityssm/utils-datetime';
 export type WorkOrderType = 'faster' | 'worktech';
 export interface ItemValidationRecord {
     itemStoreroom: string;
@@ -75,10 +75,10 @@ export interface InventoryBatchItem {
     itemStoreroom: string;
     itemNumber: string;
     itemDescription: string | null;
-    countedQuantity: number;
-    scannerKey: string;
-    scanDate: number;
-    scanDateString: DateString;
-    scanTime: number;
-    scanTimeString: TimeString;
+    countedQuantity: number | null;
+    scannerKey: string | null;
+    scanDate: number | null;
+    scanDateString: DateString | null;
+    scanTime: number | null;
+    scanTimeString: TimeString | null;
 }

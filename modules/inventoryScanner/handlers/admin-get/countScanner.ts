@@ -6,7 +6,7 @@ export default function handler(request: Request, response: Response): void {
 
   const openBatch = getOpenedInventoryBatch(true, false)
 
-  response.render('inventoryScanner/adminInventory', {
+  response.render('inventoryScanner/adminCount', {
     headTitle: 'Inventory Scanner',
 
     openBatch

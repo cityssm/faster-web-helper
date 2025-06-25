@@ -7,8 +7,15 @@ import sqlite from 'better-sqlite3'
 import { databasePath } from '../helpers/database.helpers.js'
 import type { InventoryBatchItem } from '../types.js'
 
+export interface GetInventoryBatchItemsFilters {
+  itemNumberFilter?: string
+  itemNumberFilterType?: 'contains' | 'endsWith' | 'startsWith'
+  itemsToInclude?: 'all' | 'counted' | 'uncounted'
+}
+
 export function getInventoryBatchItems(
   batchId: number | string,
+  filters: GetInventoryBatchItemsFilters = {},
   connectedDatabase?: sqlite.Database
 ): InventoryBatchItem[] {
   const database =
@@ -17,31 +24,93 @@ export function getInventoryBatchItems(
       readonly: true
     })
 
+  let whereClause = ''
+  const parameters: Array<number | string> = [batchId]
+
+  if ((filters.itemNumberFilter ?? '') !== '') {
+    const itemNumberFilter = (filters.itemNumberFilter ?? '').trim()
+    if (itemNumberFilter.length > 0) {
+      switch (filters.itemNumberFilterType ?? 'contains') {
+        case 'contains': {
+          whereClause = "where i.itemNumber like '%' || ? || '%'"
+          parameters.push(itemNumberFilter)
+          break
+        }
+        case 'endsWith': {
+          whereClause = "where i.itemNumber like '%' || ?"
+          parameters.push(itemNumberFilter)
+          break
+        }
+        case 'startsWith': {
+          whereClause = "where i.itemNumber like ? || '%'"
+          parameters.push(itemNumberFilter)
+          break
+        }
+      }
+    }
+  }
+
+  let havingClause = ''
+
+  switch (filters.itemsToInclude ?? 'counted') {
+    case 'all': {
+      // No filter
+      break
+    }
+    case 'counted': {
+      havingClause = 'having max(i.countedQuantity) is not null'
+      break
+    }
+    case 'uncounted': {
+      havingClause = 'having max(i.countedQuantity) is null'
+      break
+    }
+  }
+
   const result = database
     .function('userFunction_dateIntegerToString', dateIntegerToString)
     .function('userFunction_timeIntegerToString', timeIntegerToString)
     .prepare(
-      `select b.itemStoreroom, b.itemNumber,
-        v.itemDescription,
-        b.countedQuantity,
-        b.scannerKey,
-        b.scanDate,
-        userFunction_timeIntegerToString(b.scanTime) as scanTimeString,
+      `select itemStoreroom, itemNumber,
+        max(itemDescription) as itemDescription,
+        max(countedQuantity) as countedQuantity,
+        max(scannerKey) as scannerKey,
+        max(scanDate) as scanDate,
+        max(scanDateString) as scanDateString,
+        max(scanTime) as scanTime,
+        max(scanTimeString) as scanTimeString
+
+        from (		
+          select v.itemStoreroom, v.itemNumber, v.itemDescription,
+          null as countedQuantity,
+          null as scannerKey,
+          null as scanDate,
+          null as scanDateString,
+          null as scanTime,
+          null as scanTimeString
+          from ItemValidationRecords v
+          where v.recordDelete_timeMillis is null
         
-        b.scanTime,
-        userFunction_dateIntegerToString(b.scanDate) as scanDateString
+          union
+          
+          select i.itemStoreroom, i.itemNumber, null as itemDescription,
+          i.countedQuantity,
+          i.scannerKey,
+          i.scanDate,
+          userFunction_dateIntegerToString(i.scanDate) as scanDateString,
+          i.scanTime,
+          userFunction_timeIntegerToString(i.scanTime) as scanTimeString
+          from InventoryBatchItems i
+          where i.batchId = ?
+            and i.recordDelete_timeMillis is null
+        ) i
 
-        from InventoryBatchItems b
-        left join ItemValidationRecords v on b.itemStoreroom = v.itemStoreroom
-          and b.itemNumber = v.itemNumber
-          and v.recordDelete_timeMillis is null
-
-        where b.batchId = ?
-          and b.recordDelete_timeMillis is null
-
-        order by b.scanDate desc, b.scanTime desc`
+        ${whereClause}
+        group by itemStoreroom, itemNumber
+        ${havingClause}
+        order by itemStoreroom, itemNumber`
     )
-    .all(batchId) as InventoryBatchItem[]
+    .all(parameters) as InventoryBatchItem[]
 
   if (connectedDatabase === undefined) {
     database.close()

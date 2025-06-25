@@ -9,10 +9,13 @@ import sqlite from 'better-sqlite3'
 import { databasePath } from '../helpers/database.helpers.js'
 import type { InventoryBatch } from '../types.js'
 
-import { getInventoryBatchItems } from './getInventoryBatchItems.js'
+import {
+  type GetInventoryBatchItemsFilters,
+  getInventoryBatchItems
+} from './getInventoryBatchItems.js'
 
 function _getInventoryBatch(
-  filters: {
+  filters: GetInventoryBatchItemsFilters & {
     batchId?: number | string
     isOpened?: boolean
   },
@@ -66,7 +69,15 @@ function _getInventoryBatch(
     .get(...sqlParameters) as InventoryBatch | undefined
 
   if (result !== undefined && includeBatchItems) {
-    result.batchItems = getInventoryBatchItems(result.batchId, database)
+    result.batchItems = getInventoryBatchItems(
+      result.batchId,
+      {
+        itemNumberFilter: filters.itemNumberFilter,
+        itemNumberFilterType: filters.itemNumberFilterType,
+        itemsToInclude: filters.itemsToInclude
+      },
+      database
+    )
   }
 
   if (connectedDatabase === undefined) {
@@ -76,8 +87,13 @@ function _getInventoryBatch(
   return result
 }
 
-export default function getInventoryBatch(batchId: number | string): InventoryBatch | undefined {
-  return _getInventoryBatch({ batchId }, true)
+export default function getInventoryBatch(
+  batchId: number | string,
+  batchItemFilters: GetInventoryBatchItemsFilters = {},
+): InventoryBatch | undefined {
+  return _getInventoryBatch({ 
+    ...batchItemFilters,
+    batchId }, true)
 }
 
 export function getOpenedInventoryBatch(

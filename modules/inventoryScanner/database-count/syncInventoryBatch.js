@@ -14,7 +14,7 @@ export default function syncInventoryBatch(batchId, user) {
     if (result.changes > 0) {
         database
             .prepare(`delete from InventoryBatchItems
-            where batchId = ?
+          where batchId = ?
             and recordDelete_timeMillis is not null`)
             .run(batchId);
     }

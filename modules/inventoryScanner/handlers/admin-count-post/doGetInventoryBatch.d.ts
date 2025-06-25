@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
-export default function handler(request: Request<unknown, unknown, {
+import type { GetInventoryBatchItemsFilters } from '../../database-count/getInventoryBatchItems.js';
+export default function handler(request: Request<unknown, unknown, GetInventoryBatchItemsFilters & {
     batchId: number;
 }>, response: Response): void;

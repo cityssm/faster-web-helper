@@ -29,6 +29,10 @@ declare const cityssm: cityssmGlobal
     '#inventory--currentBatchItems'
   ) as HTMLDivElement
 
+  const itemFormElement = document.querySelector(
+    '#inventory--itemForm'
+  ) as HTMLFormElement
+
   function confirmCloseBatch(): void {
     if (currentBatch === undefined) {
       return
@@ -65,8 +69,8 @@ declare const cityssm: cityssmGlobal
       message: 'Are you sure you want to close this inventory batch?',
 
       okButton: {
-        text: 'Close Batch',
-        callbackFunction: doCloseBatch
+        callbackFunction: doCloseBatch,
+        text: 'Close Batch'
       }
     })
   }
@@ -183,17 +187,29 @@ declare const cityssm: cityssmGlobal
             'tr'
           ) as HTMLTableRowElement
 
-          if (removeRow) {
-            rowElement.remove()
-          } else {
-            rowElement.classList.remove('is-warning')
+          if (responseJSON.success) {
+            if (removeRow) {
+              rowElement.remove()
+            } else {
+              rowElement.classList.remove('is-warning')
+            }
+
+            if (
+              currentBatchItemsContainerElement.querySelectorAll(
+                'tbody tr.is-warning'
+              ).length === 0
+            ) {
+              itemFormElement
+                .querySelector('fieldset')
+                ?.removeAttribute('disabled')
+            }
           }
         }
       )
     }
 
     if (countedQuantityInputElement.value.trim() === '') {
-      removeRow = true
+      removeRow = itemsToIncludeSelectElement.value === 'counted'
 
       bulmaJS.confirm({
         contextualColorName: 'warning',
@@ -213,7 +229,25 @@ declare const cityssm: cityssmGlobal
   function highlightUpdatedRow(keyboardEvent: KeyboardEvent): void {
     const targetElement = keyboardEvent.currentTarget as HTMLInputElement
     targetElement.closest('tr')?.classList.add('is-warning')
+
+    itemFormElement.querySelector('fieldset')?.setAttribute('disabled', 'true')
   }
+
+  /*
+   * Render Batches
+   */
+
+  const itemsToIncludeSelectElement = itemFormElement.querySelector(
+    '#inventory--itemsToInclude'
+  ) as HTMLSelectElement
+
+  const itemNumberFilterTypeSelectElement = itemFormElement.querySelector(
+    '#inventory--itemNumberFilterType'
+  ) as HTMLSelectElement
+
+  const itemNumberFilterElement = itemFormElement.querySelector(
+    '#inventory--itemNumberFilter'
+  ) as HTMLInputElement
 
   function renderUndefinedBatch(): void {
     currentBatchButtonElement.value = '(No Batch Selected)'
@@ -224,6 +258,7 @@ declare const cityssm: cityssmGlobal
       </div>`
   }
 
+  // eslint-disable-next-line complexity
   function renderCurrentBatch(): void {
     if (currentBatch === undefined) {
       renderUndefinedBatch()
@@ -312,6 +347,8 @@ declare const cityssm: cityssmGlobal
      * Render Items
      */
 
+    itemFormElement.querySelector('fieldset')?.removeAttribute('disabled')
+
     if (
       currentBatch.batchItems === undefined ||
       currentBatch.batchItems.length === 0
@@ -365,10 +402,10 @@ declare const cityssm: cityssmGlobal
                     type="text" inputmode="numeric"
                     pattern="^[0-9]+" autocomplete="off"
                     maxlength="5"
-                    value="${cityssm.escapeHTML(batchItem.countedQuantity.toString())}" />
+                    value="${cityssm.escapeHTML(batchItem.countedQuantity?.toString() ?? '')}" />
                 </div>
                 <div class="control">
-                  <button class="button" type="submit" title="Update Counted Quantity">
+                  <button class="button" type="submit" title="Update Counted Quantity" tabindex="-1">
                     <span class="icon"><i class="fas fa-save" aria-hidden="true"></i></span>
                   </button>
                 </div>
@@ -383,7 +420,8 @@ declare const cityssm: cityssmGlobal
                 <input type="hidden" name="countedQuantity" value="" />
                 <button class="button is-danger is-light"
                   type="submit"
-                  title="Delete Item from Batch">
+                  title="Delete Item from Batch"
+                  tabindex="-1">
                   <span class="icon"><i class="fas fa-trash" aria-hidden="true"></i></span>
                 </button>
               </form>
@@ -405,7 +443,7 @@ declare const cityssm: cityssmGlobal
         rowElement.insertAdjacentHTML(
           'beforeend',
           `<td class="has-text-right">
-              ${cityssm.escapeHTML(batchItem.countedQuantity.toString())}
+              ${cityssm.escapeHTML(batchItem.countedQuantity?.toString() ?? '')}
             </td>`
         )
       }
@@ -417,6 +455,57 @@ declare const cityssm: cityssmGlobal
   }
 
   renderCurrentBatch()
+
+  function getBatchByBatchId(
+    batchId: number,
+    callbackFunction?: () => void
+  ): void {
+    currentBatchItemsContainerElement.innerHTML = `<div class="message is-info">
+      <p class="message-body">Loading batch items...</p>
+      </div>`
+
+    cityssm.postJSON(
+      `${moduleUrlPrefix}/doGetInventoryBatch`,
+      {
+        batchId,
+
+        itemsToInclude: itemsToIncludeSelectElement.value,
+
+        itemNumberFilter: itemNumberFilterElement.value,
+        itemNumberFilterType: itemNumberFilterTypeSelectElement.value
+      },
+      (rawResponseJSON) => {
+        const responseJSON = rawResponseJSON as {
+          batch: InventoryBatch
+        }
+
+        currentBatch = responseJSON.batch
+
+        callbackFunction?.()
+        renderCurrentBatch()
+      }
+    )
+  }
+
+  function reloadCurrentBatch(): void {
+    if (currentBatch === undefined) {
+      renderUndefinedBatch()
+      return
+    }
+
+    getBatchByBatchId(currentBatch.batchId, renderCurrentBatch)
+  }
+
+  itemFormElement.addEventListener('submit', (formEvent) => {
+    formEvent.preventDefault()
+  })
+
+  itemsToIncludeSelectElement.addEventListener('change', reloadCurrentBatch)
+  itemNumberFilterTypeSelectElement.addEventListener(
+    'change',
+    reloadCurrentBatch
+  )
+  itemNumberFilterElement.addEventListener('change', reloadCurrentBatch)
 
   /*
    * Batch Select
@@ -433,23 +522,13 @@ declare const cityssm: cityssmGlobal
 
       const batchId = Number.parseInt(targetElement.dataset.batchId ?? '', 10)
 
-      cityssm.postJSON(
-        `${moduleUrlPrefix}/doGetInventoryBatch`,
-        { batchId },
-        (rawResponseJSON) => {
-          const responseJSON = rawResponseJSON as {
-            batch: InventoryBatch
-          }
-
-          currentBatch = responseJSON.batch
-
-          closeModalFunction?.()
-          renderCurrentBatch()
-        }
-      )
+      itemFormElement.reset()
+      getBatchByBatchId(batchId, closeModalFunction)
     }
 
     function openNewBatch(): void {
+      itemFormElement.reset()
+      
       cityssm.postJSON(
         `${moduleUrlPrefix}/doOpenNewInventoryBatch`,
         {},

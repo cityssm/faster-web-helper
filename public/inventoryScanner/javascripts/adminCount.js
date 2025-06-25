@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const currentBatchButtonElement = document.querySelector('#inventory--currentBatch');
     const currentBatchDetailsElement = document.querySelector('#inventory--currentBatchDetails');
     const currentBatchItemsContainerElement = document.querySelector('#inventory--currentBatchItems');
+    const itemFormElement = document.querySelector('#inventory--itemForm');
     function confirmCloseBatch() {
         if (currentBatch === undefined) {
             return;
@@ -32,8 +33,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             contextualColorName: 'warning',
             message: 'Are you sure you want to close this inventory batch?',
             okButton: {
-                text: 'Close Batch',
-                callbackFunction: doCloseBatch
+                callbackFunction: doCloseBatch,
+                text: 'Close Batch'
             }
         });
     }
@@ -102,22 +103,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
         let removeRow = false;
         function doUpdate() {
             cityssm.postJSON(`${moduleUrlPrefix}/doRecordCountedQuantity`, formElement, (rawResponseJSON) => {
+                var _a;
                 const responseJSON = rawResponseJSON;
                 bulmaJS.alert({
                     message: responseJSON.message,
                     contextualColorName: responseJSON.success ? 'success' : 'danger'
                 });
                 const rowElement = countedQuantityInputElement.closest('tr');
-                if (removeRow) {
-                    rowElement.remove();
-                }
-                else {
-                    rowElement.classList.remove('is-warning');
+                if (responseJSON.success) {
+                    if (removeRow) {
+                        rowElement.remove();
+                    }
+                    else {
+                        rowElement.classList.remove('is-warning');
+                    }
+                    if (currentBatchItemsContainerElement.querySelectorAll('tbody tr.is-warning').length === 0) {
+                        (_a = itemFormElement
+                            .querySelector('fieldset')) === null || _a === void 0 ? void 0 : _a.removeAttribute('disabled');
+                    }
                 }
             });
         }
         if (countedQuantityInputElement.value.trim() === '') {
-            removeRow = true;
+            removeRow = itemsToIncludeSelectElement.value === 'counted';
             bulmaJS.confirm({
                 contextualColorName: 'warning',
                 message: 'Are you sure you want to delete this counted quantity from the batch?',
@@ -132,10 +140,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
     }
     function highlightUpdatedRow(keyboardEvent) {
-        var _a;
+        var _a, _b;
         const targetElement = keyboardEvent.currentTarget;
         (_a = targetElement.closest('tr')) === null || _a === void 0 ? void 0 : _a.classList.add('is-warning');
+        (_b = itemFormElement.querySelector('fieldset')) === null || _b === void 0 ? void 0 : _b.setAttribute('disabled', 'true');
     }
+    /*
+     * Render Batches
+     */
+    const itemsToIncludeSelectElement = itemFormElement.querySelector('#inventory--itemsToInclude');
+    const itemNumberFilterTypeSelectElement = itemFormElement.querySelector('#inventory--itemNumberFilterType');
+    const itemNumberFilterElement = itemFormElement.querySelector('#inventory--itemNumberFilter');
     function renderUndefinedBatch() {
         currentBatchButtonElement.value = '(No Batch Selected)';
         currentBatchDetailsElement.replaceChildren();
@@ -143,8 +158,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
       <p class="message-body">No inventory batch has been selected.</p>
       </div>`;
     }
+    // eslint-disable-next-line complexity
     function renderCurrentBatch() {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
         if (currentBatch === undefined) {
             renderUndefinedBatch();
             return;
@@ -206,6 +222,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         /*
          * Render Items
          */
+        (_f = itemFormElement.querySelector('fieldset')) === null || _f === void 0 ? void 0 : _f.removeAttribute('disabled');
         if (currentBatch.batchItems === undefined ||
             currentBatch.batchItems.length === 0) {
             currentBatchItemsContainerElement.innerHTML = `<div class="message is-info">
@@ -233,7 +250,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         </td>
         <td>
           ${cityssm.escapeHTML(batchItem.itemNumber)}<br />
-          <span class="is-size-7">${cityssm.escapeHTML((_f = batchItem.itemDescription) !== null && _f !== void 0 ? _f : '')}</span>
+          <span class="is-size-7">${cityssm.escapeHTML((_g = batchItem.itemDescription) !== null && _g !== void 0 ? _g : '')}</span>
         </td>`;
             if (currentBatch.closeDate === null) {
                 rowElement.insertAdjacentHTML('beforeend', `<td class="has-text-right">
@@ -247,10 +264,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     type="text" inputmode="numeric"
                     pattern="^[0-9]+" autocomplete="off"
                     maxlength="5"
-                    value="${cityssm.escapeHTML(batchItem.countedQuantity.toString())}" />
+                    value="${cityssm.escapeHTML((_j = (_h = batchItem.countedQuantity) === null || _h === void 0 ? void 0 : _h.toString()) !== null && _j !== void 0 ? _j : '')}" />
                 </div>
                 <div class="control">
-                  <button class="button" type="submit" title="Update Counted Quantity">
+                  <button class="button" type="submit" title="Update Counted Quantity" tabindex="-1">
                     <span class="icon"><i class="fas fa-save" aria-hidden="true"></i></span>
                   </button>
                 </div>
@@ -265,21 +282,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 <input type="hidden" name="countedQuantity" value="" />
                 <button class="button is-danger is-light"
                   type="submit"
-                  title="Delete Item from Batch">
+                  title="Delete Item from Batch"
+                  tabindex="-1">
                   <span class="icon"><i class="fas fa-trash" aria-hidden="true"></i></span>
                 </button>
               </form>
             </td>`);
-                (_g = rowElement
-                    .querySelector('.is-update-form')) === null || _g === void 0 ? void 0 : _g.addEventListener('submit', updateCountedQuantity);
-                (_h = rowElement
-                    .querySelector('.is-delete-form')) === null || _h === void 0 ? void 0 : _h.addEventListener('submit', updateCountedQuantity);
-                (_j = rowElement
-                    .querySelector('.is-update-form input[name="countedQuantity"]')) === null || _j === void 0 ? void 0 : _j.addEventListener('change', highlightUpdatedRow);
+                (_k = rowElement
+                    .querySelector('.is-update-form')) === null || _k === void 0 ? void 0 : _k.addEventListener('submit', updateCountedQuantity);
+                (_l = rowElement
+                    .querySelector('.is-delete-form')) === null || _l === void 0 ? void 0 : _l.addEventListener('submit', updateCountedQuantity);
+                (_m = rowElement
+                    .querySelector('.is-update-form input[name="countedQuantity"]')) === null || _m === void 0 ? void 0 : _m.addEventListener('change', highlightUpdatedRow);
             }
             else {
                 rowElement.insertAdjacentHTML('beforeend', `<td class="has-text-right">
-              ${cityssm.escapeHTML(batchItem.countedQuantity.toString())}
+              ${cityssm.escapeHTML((_p = (_o = batchItem.countedQuantity) === null || _o === void 0 ? void 0 : _o.toString()) !== null && _p !== void 0 ? _p : '')}
             </td>`);
             }
             tbodyElement.append(rowElement);
@@ -287,6 +305,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
         currentBatchItemsContainerElement.replaceChildren(tableElement);
     }
     renderCurrentBatch();
+    function getBatchByBatchId(batchId, callbackFunction) {
+        currentBatchItemsContainerElement.innerHTML = `<div class="message is-info">
+      <p class="message-body">Loading batch items...</p>
+      </div>`;
+        cityssm.postJSON(`${moduleUrlPrefix}/doGetInventoryBatch`, {
+            batchId,
+            itemsToInclude: itemsToIncludeSelectElement.value,
+            itemNumberFilter: itemNumberFilterElement.value,
+            itemNumberFilterType: itemNumberFilterTypeSelectElement.value
+        }, (rawResponseJSON) => {
+            const responseJSON = rawResponseJSON;
+            currentBatch = responseJSON.batch;
+            callbackFunction === null || callbackFunction === void 0 ? void 0 : callbackFunction();
+            renderCurrentBatch();
+        });
+    }
+    function reloadCurrentBatch() {
+        if (currentBatch === undefined) {
+            renderUndefinedBatch();
+            return;
+        }
+        getBatchByBatchId(currentBatch.batchId, renderCurrentBatch);
+    }
+    itemFormElement.addEventListener('submit', (formEvent) => {
+        formEvent.preventDefault();
+    });
+    itemsToIncludeSelectElement.addEventListener('change', reloadCurrentBatch);
+    itemNumberFilterTypeSelectElement.addEventListener('change', reloadCurrentBatch);
+    itemNumberFilterElement.addEventListener('change', reloadCurrentBatch);
     /*
      * Batch Select
      */
@@ -298,14 +345,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
             clickEvent.preventDefault();
             const targetElement = clickEvent.currentTarget;
             const batchId = Number.parseInt((_a = targetElement.dataset.batchId) !== null && _a !== void 0 ? _a : '', 10);
-            cityssm.postJSON(`${moduleUrlPrefix}/doGetInventoryBatch`, { batchId }, (rawResponseJSON) => {
-                const responseJSON = rawResponseJSON;
-                currentBatch = responseJSON.batch;
-                closeModalFunction === null || closeModalFunction === void 0 ? void 0 : closeModalFunction();
-                renderCurrentBatch();
-            });
+            itemFormElement.reset();
+            getBatchByBatchId(batchId, closeModalFunction);
         }
         function openNewBatch() {
+            itemFormElement.reset();
             cityssm.postJSON(`${moduleUrlPrefix}/doOpenNewInventoryBatch`, {}, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 currentBatch = responseJSON.batch;

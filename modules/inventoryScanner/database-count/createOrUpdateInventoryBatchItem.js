@@ -50,11 +50,11 @@ export default function createOrUpdateInventoryBatchItem(form, user) {
         database
             .prepare(`update InventoryBatchItems
           set recordDelete_userName = ?,
-          recordDelete_timeMillis = ?
+            recordDelete_timeMillis = ?
           where batchId = ?
-          and itemStoreroom = ?
-          and itemNumber = ?
-          and recordDelete_timeMillis is null`)
+            and itemStoreroom = ?
+            and itemNumber = ?
+            and recordDelete_timeMillis is null`)
             .run(user?.userName ?? `scanner.${form.scannerKey ?? ''}`, rightNow.getTime(), batchId, itemStoreroom, form.itemNumber);
         message = 'Counted quantity removed successfully.';
     }

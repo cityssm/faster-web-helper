@@ -95,11 +95,11 @@ export default function createOrUpdateInventoryBatchItem(
       .prepare(
         `update InventoryBatchItems
           set recordDelete_userName = ?,
-          recordDelete_timeMillis = ?
+            recordDelete_timeMillis = ?
           where batchId = ?
-          and itemStoreroom = ?
-          and itemNumber = ?
-          and recordDelete_timeMillis is null`
+            and itemStoreroom = ?
+            and itemNumber = ?
+            and recordDelete_timeMillis is null`
       )
       .run(
         user?.userName ?? `scanner.${form.scannerKey ?? ''}`,

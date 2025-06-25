@@ -43,15 +43,22 @@ function _getInventoryBatch(filters, includeBatchItems = false, connectedDatabas
         .prepare(sql)
         .get(...sqlParameters);
     if (result !== undefined && includeBatchItems) {
-        result.batchItems = getInventoryBatchItems(result.batchId, database);
+        result.batchItems = getInventoryBatchItems(result.batchId, {
+            itemNumberFilter: filters.itemNumberFilter,
+            itemNumberFilterType: filters.itemNumberFilterType,
+            itemsToInclude: filters.itemsToInclude
+        }, database);
     }
     if (connectedDatabase === undefined) {
         database.close();
     }
     return result;
 }
-export default function getInventoryBatch(batchId) {
-    return _getInventoryBatch({ batchId }, true);
+export default function getInventoryBatch(batchId, batchItemFilters = {}) {
+    return _getInventoryBatch({
+        ...batchItemFilters,
+        batchId
+    }, true);
 }
 export function getOpenedInventoryBatch(includeBatchItems = false, createIfNotExists = false, user) {
     const database = sqlite(databasePath);
