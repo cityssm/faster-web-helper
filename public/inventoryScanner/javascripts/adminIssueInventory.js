@@ -100,7 +100,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         const linkElement = event.target;
         const itemStoreroom = (_a = linkElement.dataset.itemStoreroom) !== null && _a !== void 0 ? _a : '';
         const itemNumber = (_b = linkElement.dataset.itemNumber) !== null && _b !== void 0 ? _b : '';
-        const item = inventory.find((item) => item.itemStoreroom === itemStoreroom && item.itemNumber === itemNumber);
+        const item = inventory.find((possibleItem) => possibleItem.itemStoreroom === itemStoreroom &&
+            possibleItem.itemNumber === itemNumber);
         if (item === undefined) {
             bulmaJS.alert({
                 contextualColorName: 'danger',

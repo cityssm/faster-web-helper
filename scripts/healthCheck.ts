@@ -52,7 +52,7 @@ async function outputFasterApiStatus(): Promise<void> {
     try {
       const apiHealth = await fasterApi.getHealthDiagnostics()
 
-      console.log(`\t🟢 - FASTER API is responding`)
+      console.log('\t🟢 - FASTER API is responding')
 
       console.log(
         `\t${apiHealth.success ? '🟢' : '🔴'} - FASTER API Health Check Success`
@@ -85,7 +85,7 @@ async function outputDatabaseStatuses(): Promise<void> {
     try {
       await dynamicsGP.request().query('SELECT 1 AS status')
 
-      console.log(`\t🟢 - Dynamics GP API is responding`)
+      console.log('\t🟢 - Dynamics GP API is responding')
     } catch {
       console.log('\t🔴 - Dynamics GP API is not responding')
     }
@@ -105,7 +105,7 @@ async function outputDatabaseStatuses(): Promise<void> {
     try {
       await worktech.request().query('SELECT 1 AS status')
 
-      console.log(`\t🟢 - Worktech API is responding`)
+      console.log('\t🟢 - Worktech API is responding')
     } catch {
       console.log('\t🔴 - Worktech API is not responding')
     }

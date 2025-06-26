@@ -178,8 +178,9 @@ declare const JsBarcode: typeof JsBarcodeType
     const itemNumber = linkElement.dataset.itemNumber ?? ''
 
     const item = inventory.find(
-      (item) =>
-        item.itemStoreroom === itemStoreroom && item.itemNumber === itemNumber
+      (possibleItem) =>
+        possibleItem.itemStoreroom === itemStoreroom &&
+        possibleItem.itemNumber === itemNumber
     )
 
     if (item === undefined) {
@@ -267,8 +268,6 @@ declare const JsBarcode: typeof JsBarcodeType
                   </div>
                 </div>`
               )
-
-
             } else {
               detailsElement.innerHTML = `<div class="message is-warning">
                 <p class="message-body">${cityssm.escapeHTML(responseJSON.message)}</p>

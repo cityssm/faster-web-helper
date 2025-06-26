@@ -10,6 +10,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const currentBatchDetailsElement = document.querySelector('#inventory--currentBatchDetails');
     const currentBatchItemsContainerElement = document.querySelector('#inventory--currentBatchItems');
     const itemFormElement = document.querySelector('#inventory--itemForm');
+    const itemsToIncludeSelectElement = itemFormElement.querySelector('#inventory--itemsToInclude');
     function confirmCloseBatch() {
         if (currentBatch === undefined) {
             return;
@@ -188,7 +189,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
     /*
      * Render Batches
      */
-    const itemsToIncludeSelectElement = itemFormElement.querySelector('#inventory--itemsToInclude');
     const itemNumberFilterTypeSelectElement = itemFormElement.querySelector('#inventory--itemNumberFilterType');
     const itemNumberFilterElement = itemFormElement.querySelector('#inventory--itemNumberFilter');
     function renderUndefinedBatch() {

@@ -33,6 +33,10 @@ declare const cityssm: cityssmGlobal
     '#inventory--itemForm'
   ) as HTMLFormElement
 
+  const itemsToIncludeSelectElement = itemFormElement.querySelector(
+    '#inventory--itemsToInclude'
+  ) as HTMLSelectElement
+
   function confirmCloseBatch(): void {
     if (currentBatch === undefined) {
       return
@@ -290,10 +294,6 @@ declare const cityssm: cityssmGlobal
   /*
    * Render Batches
    */
-
-  const itemsToIncludeSelectElement = itemFormElement.querySelector(
-    '#inventory--itemsToInclude'
-  ) as HTMLSelectElement
 
   const itemNumberFilterTypeSelectElement = itemFormElement.querySelector(
     '#inventory--itemNumberFilterType'
