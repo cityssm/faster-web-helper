@@ -7,12 +7,12 @@ export default function handler(
   request: Request<unknown, unknown, { batchId: number | string }>,
   response: Response
 ): void {
-  const success = reopenInventoryBatch(
+  const result = reopenInventoryBatch(
     request.body.batchId,
     request.session.user as FasterWebHelperSessionUser
   )
 
   const batch = getInventoryBatch(request.body.batchId)
 
-  response.json({ batch, success })
+  response.json({ batch, success: result.success, message: result.message })
 }

@@ -87,6 +87,7 @@ declare const cityssm: cityssmGlobal
         (rawResponseJSON) => {
           const responseJSON = rawResponseJSON as {
             success: boolean
+            message?: string
             batch?: InventoryBatch
           }
 
@@ -94,8 +95,10 @@ declare const cityssm: cityssmGlobal
             contextualColorName: responseJSON.success ? 'success' : 'danger',
             message: responseJSON.success
               ? 'The inventory batch has been reopened.'
-              : 'There was an error reopening the inventory batch. Please try again.'
+              : responseJSON.message ??
+                'There was an error reopening the inventory batch. Please try again.'
           })
+
           if (responseJSON.batch !== undefined) {
             currentBatch = responseJSON.batch
             renderCurrentBatch()
@@ -155,6 +158,46 @@ declare const cityssm: cityssmGlobal
     })
   }
 
+  function confirmDeleteBatch(): void {
+    if (currentBatch === undefined) {
+      return
+    }
+
+    function doDeleteBatch(): void {
+      cityssm.postJSON(
+        `${moduleUrlPrefix}/doDeleteInventoryBatch`,
+        { batchId: currentBatch?.batchId },
+        (rawResponseJSON) => {
+          const responseJSON = rawResponseJSON as {
+            success: boolean
+            message?: string
+          }
+
+          bulmaJS.alert({
+            contextualColorName: responseJSON.success ? 'success' : 'danger',
+            message: responseJSON.success
+              ? 'The inventory batch has been deleted.'
+              : responseJSON.message ??
+                'There was an error deleting the inventory batch. Please try again.'
+          })
+          if (responseJSON.success) {
+            currentBatch = undefined
+            renderUndefinedBatch()
+          }
+        }
+      )
+    }
+
+    bulmaJS.confirm({
+      contextualColorName: 'warning',
+      message: 'Are you sure you want to delete this inventory batch?',
+      okButton: {
+        text: 'Delete Batch',
+        callbackFunction: doDeleteBatch
+      }
+    })
+  }
+
   function updateCountedQuantity(formEvent: SubmitEvent): void {
     formEvent.preventDefault()
 
@@ -194,11 +237,7 @@ declare const cityssm: cityssmGlobal
               rowElement.classList.remove('is-warning')
             }
 
-            if (
-              currentBatchItemsContainerElement.querySelectorAll(
-                'tbody tr.is-warning'
-              ).length === 0
-            ) {
+            if (!hasUnsavedChanges()) {
               itemFormElement
                 .querySelector('fieldset')
                 ?.removeAttribute('disabled')
@@ -226,11 +265,26 @@ declare const cityssm: cityssmGlobal
     }
   }
 
+  function hasUnsavedChanges(): boolean {
+    const changeCount = currentBatchItemsContainerElement.querySelectorAll(
+      'tbody tr.is-warning'
+    ).length
+
+    if (changeCount > 0) {
+      cityssm.enableNavBlocker()
+      return true
+    }
+
+    cityssm.disableNavBlocker()
+    return false
+  }
+
   function highlightUpdatedRow(keyboardEvent: KeyboardEvent): void {
     const targetElement = keyboardEvent.currentTarget as HTMLInputElement
     targetElement.closest('tr')?.classList.add('is-warning')
 
     itemFormElement.querySelector('fieldset')?.setAttribute('disabled', 'true')
+    cityssm.enableNavBlocker()
   }
 
   /*
@@ -284,25 +338,48 @@ declare const cityssm: cityssmGlobal
     if (currentBatch.closeDate === null) {
       currentBatchDetailsElement.insertAdjacentHTML(
         'beforeend',
-        `<p>
-          <button class="button is-warning is-fullwidth" id="inventory--closeBatchButton" type="button">
-            <span class="icon"><i class="fas fa-stop" aria-hidden="true"></i></span>
-            <span>Close Batch</span>
-          </button>
-          </p>`
+        `<div class="columns is-vcentered">
+          <div class="column">
+            <button class="button is-warning is-fullwidth" id="inventory--closeBatchButton" type="button">
+              <span class="icon"><i class="fas fa-stop" aria-hidden="true"></i></span>
+              <span>Close Batch</span>
+            </button>
+          </div>
+          <div class="column is-narrow">
+            <button class="button is-light is-danger" id="inventory--deleteBatchButton" type="button">
+              <span class="icon"><i class="fas fa-trash" aria-hidden="true"></i></span>
+              <span>Delete</span>
+            </button>
+          </div>
+        </div>`
       )
 
       currentBatchDetailsElement
         .querySelector('#inventory--closeBatchButton')
         ?.addEventListener('click', confirmCloseBatch)
     } else {
+      // eslint-disable-next-line no-unsanitized/method
       currentBatchDetailsElement.insertAdjacentHTML(
         'beforeend',
-        `<p class="mb-4">
-          <strong>Close Date</strong><br />
-          ${cityssm.escapeHTML(currentBatch.closeDateString ?? '')}
-          ${cityssm.escapeHTML(currentBatch.closeTimeString ?? '')}
-          </p>`
+        `<div class="columns is-vcentered">
+          <div class="column">
+            <p>
+              <strong>Close Date</strong><br />
+              ${cityssm.escapeHTML(currentBatch.closeDateString ?? '')}
+              ${cityssm.escapeHTML(currentBatch.closeTimeString ?? '')}
+            </p>
+          </div>
+          ${
+            currentBatch.recordSync_timeMillis === null
+              ? `<div class="column">
+                  <button class="button is-warning is-fullwidth" id="inventory--reopenBatchButton" type="button">
+                    <span class="icon"><i class="fas fa-rotate-left" aria-hidden="true"></i></span>
+                    <span>Reopen</span>
+                  </button>
+                </div>`
+              : ''
+          }
+          </div>`
       )
 
       if (currentBatch.recordSync_timeMillis === null) {
@@ -315,10 +392,10 @@ declare const cityssm: cityssmGlobal
                 <span>Sync Batch</span>
               </button>
             </div>
-            <div class="column">
-              <button class="button is-warning is-fullwidth" id="inventory--reopenBatchButton" type="button">
-                <span class="icon"><i class="fas fa-rotate-left" aria-hidden="true"></i></span>
-                <span>Reopen Batch</span>
+            <div class="column is-narrow">
+              <button class="button is-light is-danger" id="inventory--deleteBatchButton" type="button">
+                <span class="icon"><i class="fas fa-trash" aria-hidden="true"></i></span>
+                <span>Delete</span>
               </button>
             </div>
           </div>`
@@ -334,10 +411,14 @@ declare const cityssm: cityssmGlobal
       }
     }
 
-    if (currentBatch.recordSync_userName !== null) {
+    if (currentBatch.recordSync_userName === null) {
+      currentBatchDetailsElement
+        .querySelector('#inventory--deleteBatchButton')
+        ?.addEventListener('click', confirmDeleteBatch)
+    } else {
       currentBatchDetailsElement.insertAdjacentHTML(
         'beforeend',
-        `<p class="mt-4">
+        `<p>
           <strong>Synced</strong>
           </p>`
       )
@@ -528,7 +609,7 @@ declare const cityssm: cityssmGlobal
 
     function openNewBatch(): void {
       itemFormElement.reset()
-      
+
       cityssm.postJSON(
         `${moduleUrlPrefix}/doOpenNewInventoryBatch`,
         {},
@@ -610,7 +691,10 @@ declare const cityssm: cityssmGlobal
                     <strong>
                       ${cityssm.escapeHTML(inventoryBatch.openDateString)}
                       ${cityssm.escapeHTML(inventoryBatch.openTimeString)}
-                    </strong>
+                    </strong><br />
+                    <span class="is-size-7">
+                      Batch #${cityssm.escapeHTML(inventoryBatch.batchId.toString())}
+                    </span>
                   </div>
                   <div class="column is-narrow has-text-right">
                     <div class="tags">

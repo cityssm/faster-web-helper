@@ -2,10 +2,21 @@ import sqlite from 'better-sqlite3'
 
 import { databasePath } from '../helpers/database.helpers.js'
 
+import { getOpenedInventoryBatch } from './getInventoryBatch.js'
+
 export default function reopenInventoryBatch(
   batchId: number | string,
   user: FasterWebHelperSessionUser
-): boolean {
+): { success: boolean; message?: string } {
+  const openBatch = getOpenedInventoryBatch(false, false, user)
+
+  if (openBatch !== undefined) {
+    return {
+      success: false,
+      message: 'Another inventory batch is already open.'
+    }
+  }
+
   const database = sqlite(databasePath)
 
   const result = database
@@ -20,13 +31,11 @@ export default function reopenInventoryBatch(
           and recordSync_timeMillis is null
           and recordDelete_timeMillis is null`
     )
-    .run(
-      user.userName,
-      Date.now(),
-      batchId
-    )
+    .run(user.userName, Date.now(), batchId)
 
   database.close()
 
-  return result.changes > 0
+  return {
+    success: result.changes > 0
+  }
 }

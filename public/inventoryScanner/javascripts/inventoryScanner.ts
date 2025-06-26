@@ -41,6 +41,7 @@ declare const cityssm: cityssmGlobal
 
       if (itemNumberElement.validity.valid) {
         countedQuantityElement.focus()
+        countedQuantityElement.select()
       }
     }
   }

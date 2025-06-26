@@ -44,12 +44,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         function doReopenBatch() {
             cityssm.postJSON(`${moduleUrlPrefix}/doReopenInventoryBatch`, { batchId: currentBatch === null || currentBatch === void 0 ? void 0 : currentBatch.batchId }, (rawResponseJSON) => {
+                var _a;
                 const responseJSON = rawResponseJSON;
                 bulmaJS.alert({
                     contextualColorName: responseJSON.success ? 'success' : 'danger',
                     message: responseJSON.success
                         ? 'The inventory batch has been reopened.'
-                        : 'There was an error reopening the inventory batch. Please try again.'
+                        : (_a = responseJSON.message) !== null && _a !== void 0 ? _a : 'There was an error reopening the inventory batch. Please try again.'
                 });
                 if (responseJSON.batch !== undefined) {
                     currentBatch = responseJSON.batch;
@@ -96,6 +97,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     }
+    function confirmDeleteBatch() {
+        if (currentBatch === undefined) {
+            return;
+        }
+        function doDeleteBatch() {
+            cityssm.postJSON(`${moduleUrlPrefix}/doDeleteInventoryBatch`, { batchId: currentBatch === null || currentBatch === void 0 ? void 0 : currentBatch.batchId }, (rawResponseJSON) => {
+                var _a;
+                const responseJSON = rawResponseJSON;
+                bulmaJS.alert({
+                    contextualColorName: responseJSON.success ? 'success' : 'danger',
+                    message: responseJSON.success
+                        ? 'The inventory batch has been deleted.'
+                        : (_a = responseJSON.message) !== null && _a !== void 0 ? _a : 'There was an error deleting the inventory batch. Please try again.'
+                });
+                if (responseJSON.success) {
+                    currentBatch = undefined;
+                    renderUndefinedBatch();
+                }
+            });
+        }
+        bulmaJS.confirm({
+            contextualColorName: 'warning',
+            message: 'Are you sure you want to delete this inventory batch?',
+            okButton: {
+                text: 'Delete Batch',
+                callbackFunction: doDeleteBatch
+            }
+        });
+    }
     function updateCountedQuantity(formEvent) {
         formEvent.preventDefault();
         const formElement = formEvent.currentTarget;
@@ -117,7 +147,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     else {
                         rowElement.classList.remove('is-warning');
                     }
-                    if (currentBatchItemsContainerElement.querySelectorAll('tbody tr.is-warning').length === 0) {
+                    if (!hasUnsavedChanges()) {
                         (_a = itemFormElement
                             .querySelector('fieldset')) === null || _a === void 0 ? void 0 : _a.removeAttribute('disabled');
                     }
@@ -139,11 +169,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
             doUpdate();
         }
     }
+    function hasUnsavedChanges() {
+        const changeCount = currentBatchItemsContainerElement.querySelectorAll('tbody tr.is-warning').length;
+        if (changeCount > 0) {
+            cityssm.enableNavBlocker();
+            return true;
+        }
+        cityssm.disableNavBlocker();
+        return false;
+    }
     function highlightUpdatedRow(keyboardEvent) {
         var _a, _b;
         const targetElement = keyboardEvent.currentTarget;
         (_a = targetElement.closest('tr')) === null || _a === void 0 ? void 0 : _a.classList.add('is-warning');
         (_b = itemFormElement.querySelector('fieldset')) === null || _b === void 0 ? void 0 : _b.setAttribute('disabled', 'true');
+        cityssm.enableNavBlocker();
     }
     /*
      * Render Batches
@@ -160,7 +200,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     }
     // eslint-disable-next-line complexity
     function renderCurrentBatch() {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
         if (currentBatch === undefined) {
             renderUndefinedBatch();
             return;
@@ -178,21 +218,42 @@ Object.defineProperty(exports, "__esModule", { value: true });
         ${cityssm.escapeHTML(currentBatch.openTimeString)}
       </p>`;
         if (currentBatch.closeDate === null) {
-            currentBatchDetailsElement.insertAdjacentHTML('beforeend', `<p>
-          <button class="button is-warning is-fullwidth" id="inventory--closeBatchButton" type="button">
-            <span class="icon"><i class="fas fa-stop" aria-hidden="true"></i></span>
-            <span>Close Batch</span>
-          </button>
-          </p>`);
+            currentBatchDetailsElement.insertAdjacentHTML('beforeend', `<div class="columns is-vcentered">
+          <div class="column">
+            <button class="button is-warning is-fullwidth" id="inventory--closeBatchButton" type="button">
+              <span class="icon"><i class="fas fa-stop" aria-hidden="true"></i></span>
+              <span>Close Batch</span>
+            </button>
+          </div>
+          <div class="column is-narrow">
+            <button class="button is-light is-danger" id="inventory--deleteBatchButton" type="button">
+              <span class="icon"><i class="fas fa-trash" aria-hidden="true"></i></span>
+              <span>Delete</span>
+            </button>
+          </div>
+        </div>`);
             (_a = currentBatchDetailsElement
                 .querySelector('#inventory--closeBatchButton')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', confirmCloseBatch);
         }
         else {
-            currentBatchDetailsElement.insertAdjacentHTML('beforeend', `<p class="mb-4">
-          <strong>Close Date</strong><br />
-          ${cityssm.escapeHTML((_b = currentBatch.closeDateString) !== null && _b !== void 0 ? _b : '')}
-          ${cityssm.escapeHTML((_c = currentBatch.closeTimeString) !== null && _c !== void 0 ? _c : '')}
-          </p>`);
+            // eslint-disable-next-line no-unsanitized/method
+            currentBatchDetailsElement.insertAdjacentHTML('beforeend', `<div class="columns is-vcentered">
+          <div class="column">
+            <p>
+              <strong>Close Date</strong><br />
+              ${cityssm.escapeHTML((_b = currentBatch.closeDateString) !== null && _b !== void 0 ? _b : '')}
+              ${cityssm.escapeHTML((_c = currentBatch.closeTimeString) !== null && _c !== void 0 ? _c : '')}
+            </p>
+          </div>
+          ${currentBatch.recordSync_timeMillis === null
+                ? `<div class="column">
+                  <button class="button is-warning is-fullwidth" id="inventory--reopenBatchButton" type="button">
+                    <span class="icon"><i class="fas fa-rotate-left" aria-hidden="true"></i></span>
+                    <span>Reopen</span>
+                  </button>
+                </div>`
+                : ''}
+          </div>`);
             if (currentBatch.recordSync_timeMillis === null) {
                 currentBatchDetailsElement.insertAdjacentHTML('beforeend', `<div class="columns">
             <div class="column">
@@ -201,10 +262,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 <span>Sync Batch</span>
               </button>
             </div>
-            <div class="column">
-              <button class="button is-warning is-fullwidth" id="inventory--reopenBatchButton" type="button">
-                <span class="icon"><i class="fas fa-rotate-left" aria-hidden="true"></i></span>
-                <span>Reopen Batch</span>
+            <div class="column is-narrow">
+              <button class="button is-light is-danger" id="inventory--deleteBatchButton" type="button">
+                <span class="icon"><i class="fas fa-trash" aria-hidden="true"></i></span>
+                <span>Delete</span>
               </button>
             </div>
           </div>`);
@@ -214,15 +275,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     .querySelector('#inventory--reopenBatchButton')) === null || _e === void 0 ? void 0 : _e.addEventListener('click', confirmReopenBatch);
             }
         }
-        if (currentBatch.recordSync_userName !== null) {
-            currentBatchDetailsElement.insertAdjacentHTML('beforeend', `<p class="mt-4">
+        if (currentBatch.recordSync_userName === null) {
+            (_f = currentBatchDetailsElement
+                .querySelector('#inventory--deleteBatchButton')) === null || _f === void 0 ? void 0 : _f.addEventListener('click', confirmDeleteBatch);
+        }
+        else {
+            currentBatchDetailsElement.insertAdjacentHTML('beforeend', `<p>
           <strong>Synced</strong>
           </p>`);
         }
         /*
          * Render Items
          */
-        (_f = itemFormElement.querySelector('fieldset')) === null || _f === void 0 ? void 0 : _f.removeAttribute('disabled');
+        (_g = itemFormElement.querySelector('fieldset')) === null || _g === void 0 ? void 0 : _g.removeAttribute('disabled');
         if (currentBatch.batchItems === undefined ||
             currentBatch.batchItems.length === 0) {
             currentBatchItemsContainerElement.innerHTML = `<div class="message is-info">
@@ -250,7 +315,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         </td>
         <td>
           ${cityssm.escapeHTML(batchItem.itemNumber)}<br />
-          <span class="is-size-7">${cityssm.escapeHTML((_g = batchItem.itemDescription) !== null && _g !== void 0 ? _g : '')}</span>
+          <span class="is-size-7">${cityssm.escapeHTML((_h = batchItem.itemDescription) !== null && _h !== void 0 ? _h : '')}</span>
         </td>`;
             if (currentBatch.closeDate === null) {
                 rowElement.insertAdjacentHTML('beforeend', `<td class="has-text-right">
@@ -264,7 +329,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     type="text" inputmode="numeric"
                     pattern="^[0-9]+" autocomplete="off"
                     maxlength="5"
-                    value="${cityssm.escapeHTML((_j = (_h = batchItem.countedQuantity) === null || _h === void 0 ? void 0 : _h.toString()) !== null && _j !== void 0 ? _j : '')}" />
+                    value="${cityssm.escapeHTML((_k = (_j = batchItem.countedQuantity) === null || _j === void 0 ? void 0 : _j.toString()) !== null && _k !== void 0 ? _k : '')}" />
                 </div>
                 <div class="control">
                   <button class="button" type="submit" title="Update Counted Quantity" tabindex="-1">
@@ -288,16 +353,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 </button>
               </form>
             </td>`);
-                (_k = rowElement
-                    .querySelector('.is-update-form')) === null || _k === void 0 ? void 0 : _k.addEventListener('submit', updateCountedQuantity);
                 (_l = rowElement
-                    .querySelector('.is-delete-form')) === null || _l === void 0 ? void 0 : _l.addEventListener('submit', updateCountedQuantity);
+                    .querySelector('.is-update-form')) === null || _l === void 0 ? void 0 : _l.addEventListener('submit', updateCountedQuantity);
                 (_m = rowElement
-                    .querySelector('.is-update-form input[name="countedQuantity"]')) === null || _m === void 0 ? void 0 : _m.addEventListener('change', highlightUpdatedRow);
+                    .querySelector('.is-delete-form')) === null || _m === void 0 ? void 0 : _m.addEventListener('submit', updateCountedQuantity);
+                (_o = rowElement
+                    .querySelector('.is-update-form input[name="countedQuantity"]')) === null || _o === void 0 ? void 0 : _o.addEventListener('change', highlightUpdatedRow);
             }
             else {
                 rowElement.insertAdjacentHTML('beforeend', `<td class="has-text-right">
-              ${cityssm.escapeHTML((_p = (_o = batchItem.countedQuantity) === null || _o === void 0 ? void 0 : _o.toString()) !== null && _p !== void 0 ? _p : '')}
+              ${cityssm.escapeHTML((_q = (_p = batchItem.countedQuantity) === null || _p === void 0 ? void 0 : _p.toString()) !== null && _q !== void 0 ? _q : '')}
             </td>`);
             }
             tbodyElement.append(rowElement);
@@ -407,7 +472,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     <strong>
                       ${cityssm.escapeHTML(inventoryBatch.openDateString)}
                       ${cityssm.escapeHTML(inventoryBatch.openTimeString)}
-                    </strong>
+                    </strong><br />
+                    <span class="is-size-7">
+                      Batch #${cityssm.escapeHTML(inventoryBatch.batchId.toString())}
+                    </span>
                   </div>
                   <div class="column is-narrow has-text-right">
                     <div class="tags">

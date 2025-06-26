@@ -20,6 +20,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             inputEvent.stopPropagation();
             if (itemNumberElement.validity.valid) {
                 countedQuantityElement.focus();
+                countedQuantityElement.select();
             }
         }
     }

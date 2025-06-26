@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import handler_doCloseInventoryBatch from './admin-count-post/doCloseInventoryBatch.js';
+import handler_doDeleteInventoryBatch from './admin-count-post/doDeleteInventoryBatch.js';
 import handler_goGetAvailableInventoryBatches from './admin-count-post/doGetAvailableInventoryBatches.js';
 import handler_doGetInventoryBatch from './admin-count-post/doGetInventoryBatch.js';
 import handler_doOpenNewInventoryBatch from './admin-count-post/doOpenNewInventoryBatch.js';
@@ -37,12 +38,13 @@ router.post('/doDeleteSyncErrorRecords', handler_doDeleteSyncErrorRecords);
 router.post('/doGetInventory', handler_doGetInventory);
 router.post('/doGetInventoryItemDetails', handler_doGetInventoryItemDetails);
 /*
- * Inventory Scanner
+ * Count Scanner
  */
 router.get('/inventory', handler_inventoryScanner);
 router.post('/doGetAvailableInventoryBatches', handler_goGetAvailableInventoryBatches);
 router.post('/doOpenNewInventoryBatch', handler_doOpenNewInventoryBatch);
 router.post('/doGetInventoryBatch', handler_doGetInventoryBatch);
+router.post('/doDeleteInventoryBatch', handler_doDeleteInventoryBatch);
 router.post('/doRecordCountedQuantity', handler_doRecordCountedQuantity);
 router.post('/doCloseInventoryBatch', handler_doCloseInventoryBatch);
 router.post('/doReopenInventoryBatch', handler_reopenInventoryBatch);
