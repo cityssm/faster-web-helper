@@ -99,6 +99,7 @@ declare const cityssm: cityssmGlobal
 
         if (document.activeElement !== itemNumberElement) {
           itemNumberSuffixElement.focus()
+          itemNumberSuffixElement.select()
         }
       }
     }
@@ -244,6 +245,7 @@ declare const cityssm: cityssmGlobal
 
       if (itemNumberElement.validity.valid) {
         quantityElement.focus()
+        quantityElement.select()
       }
     }
   }

@@ -50,6 +50,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 itemNumberElement.focus();
                 if (document.activeElement !== itemNumberElement) {
                     itemNumberSuffixElement.focus();
+                    itemNumberSuffixElement.select();
                 }
             }
         }
@@ -129,6 +130,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             inputEvent.stopPropagation();
             if (itemNumberElement.validity.valid) {
                 quantityElement.focus();
+                quantityElement.select();
             }
         }
     }
