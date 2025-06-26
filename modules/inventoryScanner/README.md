@@ -110,7 +110,7 @@ to log into the FASTER Web application and click certain buttons.
 For example, there is no other way to retrieve IIU error logs on demand,
 or to execute the IIU integration on demand.
 
-The user use built-in FASTER authentication, not Active Directory.
+The user must use built-in FASTER authentication, not Active Directory.
 At minimum, the user should have access to the "Reports" and "Integrations" domains,
 and access to the appropriate organizations, storerooms, and maintenance shops.
 
