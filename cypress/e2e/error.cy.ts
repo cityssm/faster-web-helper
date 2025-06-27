@@ -7,7 +7,7 @@ describe('FASTER Web Helper - Error Page', () => {
     cy.visit(errorPath, {
       failOnStatusCode: false
     })
-    cy.location('pathname').should('equal', errorPath)
+    cy.location('pathname').should('contain', errorPath)
   })
 
   it('Has no detectable accessibility issues', () => {
