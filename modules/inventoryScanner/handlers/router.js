@@ -6,7 +6,7 @@ import handler_doGetInventoryBatch from './admin-count-post/doGetInventoryBatch.
 import handler_doOpenNewInventoryBatch from './admin-count-post/doOpenNewInventoryBatch.js';
 import handler_reopenInventoryBatch from './admin-count-post/doReopenInventoryBatch.js';
 import handler_doSyncInventoryBatch from './admin-count-post/doSyncInventoryBatch.js';
-import handler_inventoryScanner from './admin-get/countScanner.js';
+import handler_countScanner from './admin-get/countScanner.js';
 import handler_issueScanner from './admin-get/issueScanner.js';
 import handler_doDeletePendingRecord from './admin-issue-post/doDeletePendingRecord.js';
 import handler_doDeleteSyncErrorRecords from './admin-issue-post/doDeleteSyncErrorRecords.js';
@@ -40,7 +40,7 @@ router.post('/doGetInventoryItemDetails', handler_doGetInventoryItemDetails);
 /*
  * Count Scanner
  */
-router.get('/inventory', handler_inventoryScanner);
+router.get('/count', handler_countScanner);
 router.post('/doGetAvailableInventoryBatches', handler_goGetAvailableInventoryBatches);
 router.post('/doOpenNewInventoryBatch', handler_doOpenNewInventoryBatch);
 router.post('/doGetInventoryBatch', handler_doGetInventoryBatch);

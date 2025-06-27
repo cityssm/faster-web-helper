@@ -14,5 +14,5 @@ export default function handler(
 
   const batch = getInventoryBatch(request.body.batchId)
 
-  response.json({ batch, success: result.success, message: result.message })
+  response.json({ batch, message: result.message, success: result.success })
 }

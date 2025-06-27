@@ -2,7 +2,7 @@ import { defineConfig } from 'cypress'
 
 export default defineConfig({
   e2e: {
-    baseUrl: 'http://localhost:9191',
+    baseUrl: 'http://localhost:9191/fwhelper',
     specPattern: 'cypress/e2e/**/*.cy.ts',
     supportFile: false,
     projectId: 'gb2jfr'

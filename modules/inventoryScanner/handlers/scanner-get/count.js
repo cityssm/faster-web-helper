@@ -2,11 +2,11 @@ import { getOpenedInventoryBatch } from '../../database-count/getInventoryBatch.
 export default function handler(request, response) {
     const openBatch = getOpenedInventoryBatch(false, false);
     if (openBatch === undefined) {
-        response.render('inventoryScanner/inventoryScannerCreate', {});
+        response.render('inventoryScanner/countScannerCreate', {});
     }
     else {
-        response.render('inventoryScanner/inventoryScanner', {
-            headTitle: 'Inventory Scanner',
+        response.render('inventoryScanner/countScanner', {
+            headTitle: 'Count Scanner',
             openBatch
         });
     }

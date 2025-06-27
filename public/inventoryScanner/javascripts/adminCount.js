@@ -63,8 +63,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             contextualColorName: 'warning',
             message: 'Are you sure you want to reopen this inventory batch?',
             okButton: {
-                text: 'Reopen Batch',
-                callbackFunction: doReopenBatch
+                callbackFunction: doReopenBatch,
+                text: 'Reopen Batch'
             }
         });
     }
@@ -93,8 +93,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         Note that once a batch is synced, it cannot be reopened.`,
             messageIsHtml: true,
             okButton: {
-                text: 'Sync Batch',
-                callbackFunction: doSyncBatch
+                callbackFunction: doSyncBatch,
+                text: 'Sync Batch'
             }
         });
     }
@@ -122,8 +122,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
             contextualColorName: 'warning',
             message: 'Are you sure you want to delete this inventory batch?',
             okButton: {
-                text: 'Delete Batch',
-                callbackFunction: doDeleteBatch
+                callbackFunction: doDeleteBatch,
+                text: 'Delete Batch'
             }
         });
     }
@@ -161,8 +161,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 contextualColorName: 'warning',
                 message: 'Are you sure you want to delete this counted quantity from the batch?',
                 okButton: {
-                    text: 'Delete Counted Quantity',
-                    callbackFunction: doUpdate
+                    callbackFunction: doUpdate,
+                    text: 'Delete Counted Quantity'
                 }
             });
         }

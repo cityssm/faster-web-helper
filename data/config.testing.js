@@ -1,6 +1,7 @@
 export const config = {
     webServer: {
-        httpPort: 9191
+        httpPort: 9191,
+        urlPrefix: '/fwhelper'
     },
     fasterWeb: {
         tenantOrBaseUrl: 'test-faster-tenant'

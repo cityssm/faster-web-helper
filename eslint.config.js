@@ -10,6 +10,7 @@ export const config = tseslint.config(configWebApp, {
                     words: [
                         ...cspellWords,
                         ...eslintConstants.cspellWords,
+                        'fwhelper',
                         'jsbarcode',
                         'nhtsa',
                         'ntfy',

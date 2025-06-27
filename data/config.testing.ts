@@ -2,7 +2,8 @@ import type { Config } from '../types/config.types.js'
 
 export const config: Config = {
   webServer: {
-    httpPort: 9191
+    httpPort: 9191,
+    urlPrefix: '/fwhelper'
   },
 
   fasterWeb: {
@@ -11,7 +12,7 @@ export const config: Config = {
 
   login: {
     domain: 'testing',
-    
+
     authentication: {
       type: 'plainText',
 

@@ -3,7 +3,7 @@ import { Router } from 'express'
 import { getOpenedInventoryBatch } from '../database-count/getInventoryBatch.js'
 
 import handler_doRecordCountedQuantity from './scanner-count-post/doRecordCountedQuantity.js'
-import handler_inventoryScanner from './scanner-get/count.js'
+import handler_countScanner from './scanner-get/count.js'
 import handler_issueScanner from './scanner-get/issue.js'
 import handler_doCreateScannerRecord from './scanner-issue-post/doCreateScannerRecord.js'
 import handler_doDeleteScannerRecord from './scanner-issue-post/doDeleteScannerRecord.js'
@@ -30,18 +30,18 @@ router.post('/doDeleteScannerRecord', handler_doDeleteScannerRecord)
 router.post('/doGetScannerRecords', handler_doGetScannerRecords)
 
 /*
- * Inventory Scanner
+ * Count Scanner
  */
 
-router.get('/inventory', handler_inventoryScanner)
+router.get('/count', handler_countScanner)
 
 router.post(
-  '/inventory',
+  '/count',
   (_request, _response, next) => {
     getOpenedInventoryBatch(false, true)
     next()
   },
-  handler_inventoryScanner
+  handler_countScanner
 )
 
 router.post('/doRecordCountedQuantity', handler_doRecordCountedQuantity)
