@@ -17,6 +17,7 @@ export interface ConfigModuleInventoryScanner {
         exportFileNamePrefix?: string;
         ftpPath?: string;
         defaultTechnicianId?: number;
+        ntfy?: ConfigNtfyTopic;
     };
     workOrders?: {
         acceptNotValidated?: boolean;

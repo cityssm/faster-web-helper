@@ -164,15 +164,31 @@
     <div id="container--inventory"></div>
   </div>
   <div class="is-hidden" id="tab--more">
-    <% if (configHelpers.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled')) { %>
+    <% if (configHelpers.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled') || configHelpers.getConfigProperty('modules.inventoryScanner.fasterSync.ntfy.isEnabled')) { %>
       <%
-        const subscribeUrl = configHelpers.getConfigProperty('ntfy.server') + '/' +
-          configHelpers.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.topic');
+        const subscribeUrl = configHelpers.getConfigProperty('ntfy.server') + '/app';
       %>
     <div class="panel is-info">
       <p class="panel-heading">NTFY Notifications</p>
       <div class="panel-block is-block">
         <div class="columns">
+          <div class="column is-two-thirds">
+            <div class="message is-info">
+              <div class="message-body">
+                <div class="content">
+                  <p>
+                    The Inventory Scanner module is configured to send notifications to
+                    <a href="https://ntfy.sh/" target="_blank">the NTFY service</a>
+                    when certain actions occur.
+                  </p>
+                  <p>
+                    You can install the NTFY app on your tablet or phone to receive these notifications, or 
+                    <a href="<%= subscribeUrl %>" target="_blank">subscribe to them in your web browser</a>.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="column">
             <div class="field">
               <label class="label" for="more--ntfyServer">
@@ -183,32 +199,24 @@
               </label>
               <input class="input" id="more--ntfyServer" value="<%= configHelpers.getConfigProperty('ntfy.server') %>" readonly />
             </div>
-            <div class="field">
-              <label class="label" for="more--ntfyTopic">
-                NTFY Topic
-              </label>
-              <input class="input" id="more--ntfyTopic" value="<%= configHelpers.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.topic') %>" readonly />
-            </div>
-          </div>
-          <div class="column is-two-thirds">
-            <div class="message is-info">
-              <div class="message-body">
-                <div class="content">
-                  <p>
-                    The Inventory Scanner module is configured to send notifications to
-                    <a href="https://ntfy.sh/" target="_blank">the NTFY service</a>
-                    when certain actions occur.
-                  </p>
-                  <ul>
-                    <li>New item requests are made in FASTER Web.</li>
-                  </ul>
-                  <p>
-                    You can install the NTFY app on your tablet or phone to receive these notifications, or 
-                    <a href="<%= subscribeUrl %>" target="_blank">subscribe to them in your web browser</a>.
-                  </p>
-                </div>
+            <% if (configHelpers.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled')) { %>
+              <div class="field">
+                <label class="label" for="more--ntfyTopicItemRequests">
+                  NTFY Topic for Item Requests
+                </label>
+                <input class="input" id="more--ntfyTopicItemRequests"
+                  value="<%= configHelpers.getConfigProperty('modules.inventoryScanner.fasterItemRequests.ntfy.topic') %>" readonly />
               </div>
-            </div>
+            <% } %>
+            <% if (configHelpers.getConfigProperty('modules.inventoryScanner.fasterSync.ntfy.isEnabled')) { %>
+              <div class="field">
+                <label class="label" for="more--ntfyTopicSync">
+                  NTFY Topic for Sync Notifications
+                </label>
+                <input class="input" id="more--ntfyTopicSync"
+                  value="<%= configHelpers.getConfigProperty('modules.inventoryScanner.fasterSync.ntfy.topic') %>" readonly />
+              </div>
+            <% } %>
           </div>
         </div>
       </div>

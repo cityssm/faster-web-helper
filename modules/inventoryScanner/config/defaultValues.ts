@@ -18,6 +18,9 @@ export default {
 
   'modules.inventoryScanner.fasterSync.defaultTechnicianId': 1,
 
+  'modules.inventoryScanner.fasterSync.ntfy.isEnabled': false,
+  'modules.inventoryScanner.fasterSync.ntfy.topic': undefined as string | undefined,
+
   'modules.inventoryScanner.workOrders.acceptNotValidated': true,
   'modules.inventoryScanner.workOrders.fasterRegex': /^\d+$/,
 

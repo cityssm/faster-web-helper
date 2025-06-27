@@ -1,6 +1,8 @@
 import camelcase from 'camelcase';
 import Debug from 'debug';
 import { DEBUG_NAMESPACE } from '../../../../debug.config.js';
+import { getConfigProperty } from '../../../../helpers/config.helpers.js';
+import { sendNtfyMessage } from '../../../../helpers/ntfy.helpers.js';
 import getScannerRecords from '../../database-issue/getScannerRecords.js';
 import getSetting from '../../database/getSetting.js';
 import updateSetting from '../../database/updateSetting.js';
@@ -10,6 +12,16 @@ import { syncScannerRecordsWithWorktech } from '../../helpers/sync/worktech.sync
 import { sortScannerRecordsByWorkOrderType } from '../../helpers/workOrders.helpers.js';
 export const taskName = 'Sync Scanner Records';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`);
+const ntfyTopic = getConfigProperty('modules.inventoryScanner.fasterSync.ntfy.topic');
+async function sendNtfySyncMessage(messagePiece) {
+    if (getConfigProperty('modules.inventoryScanner.fasterSync.ntfy.isEnabled') &&
+        ntfyTopic !== undefined) {
+        await sendNtfyMessage({
+            message: `${taskName} - ${messagePiece}`,
+            topic: ntfyTopic
+        });
+    }
+}
 async function syncScannerRecordsTask() {
     debug(`Running "${taskName}"...`);
     const recordsToSyncList = getScannerRecords({
@@ -45,13 +57,19 @@ if (isRunning === '1') {
 }
 else {
     try {
+        await sendNtfySyncMessage('Syncing scanner records...');
         // Mark the task as running
         updateSetting(isRunningSettingName, '1');
         await syncScannerRecordsTask();
+    }
+    catch (error) {
+        debug(`Error in "${taskName}":`, error);
+        await sendNtfySyncMessage('Sync finished with errors.');
     }
     finally {
         // Mark the task as not running
         updateSetting(isRunningSettingName, '0');
         debug(`"${taskName}" completed.`);
+        await sendNtfySyncMessage('Sync finished.');
     }
 }

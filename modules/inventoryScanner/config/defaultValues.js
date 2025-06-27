@@ -5,6 +5,8 @@ export default {
     'modules.inventoryScanner.fasterSync.exportFileNamePrefix': '',
     'modules.inventoryScanner.fasterSync.ftpPath': '',
     'modules.inventoryScanner.fasterSync.defaultTechnicianId': 1,
+    'modules.inventoryScanner.fasterSync.ntfy.isEnabled': false,
+    'modules.inventoryScanner.fasterSync.ntfy.topic': undefined,
     'modules.inventoryScanner.workOrders.acceptNotValidated': true,
     'modules.inventoryScanner.workOrders.fasterRegex': /^\d+$/,
     'modules.inventoryScanner.workOrders.acceptWorkTech': false,
