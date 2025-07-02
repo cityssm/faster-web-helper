@@ -15,8 +15,8 @@ export default function handler(
 
   if (batch === undefined) {
     response.status(404).json({
-      success: false,
-      message: `Batch with ID ${batchId} not found.`
+      message: `Batch with ID ${batchId} not found.`,
+      success: false
     })
 
     return
@@ -24,16 +24,16 @@ export default function handler(
 
   if (batch.recordSync_timeMillis === null) {
     response.status(400).json({
-      success: false,
-      message: `Batch with ID ${batchId} has not been synced.`
+      message: `Batch with ID ${batchId} has not been synced.`,
+      success: false
     })
     return
   }
 
   if (batch.batchItems === undefined || batch.batchItems.length === 0) {
     response.status(400).json({
-      success: false,
-      message: `Batch with ID ${batchId} has no counted items.`
+      message: `Batch with ID ${batchId} has no counted items.`,
+      success: false
     })
     return
   }
