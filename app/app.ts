@@ -57,6 +57,10 @@ const urlPrefix = configHelpers.getConfigProperty('webServer.urlPrefix')
 
 if (urlPrefix !== '') {
   debug(`urlPrefix = ${urlPrefix}`)
+
+  app.all('', (_request, response) => {
+    response.redirect(urlPrefix)
+  })
 }
 
 app.use(urlPrefix, express.static(path.join('public')))
@@ -106,10 +110,12 @@ app.use(
       path: './data/sessions',
       retries: 20
     }),
-    secret: configHelpers.getConfigProperty('webServer.session.secret'),
+
     resave: true,
-    saveUninitialized: false,
     rolling: true,
+    saveUninitialized: false,
+    secret: configHelpers.getConfigProperty('webServer.session.secret'),
+
     cookie: {
       maxAge: configHelpers.getConfigProperty('webServer.session.maxAgeMillis'),
       sameSite: 'strict'
