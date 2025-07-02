@@ -45,6 +45,7 @@ export declare const configDefaultValues: {
     'modules.inventoryScanner.fasterItemRequests.ntfy.topic': string | undefined;
     'modules.inventoryScanner.quantities.acceptNegatives': boolean;
     'modules.inventoryScanner.quantities.acceptOverages': boolean;
+    'modules.inventoryScanner.countExport.columns': import("../modules/inventoryScanner/config/types.js").ConfigCountExportColumn[];
     'application.workDays': number[];
     'application.workHours': number[];
     ftp: AccessOptions | undefined;

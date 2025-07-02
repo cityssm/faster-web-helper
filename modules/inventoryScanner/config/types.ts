@@ -19,6 +19,19 @@ export interface ConfigItemValidationFaster {
   w200?: ConfigScheduledFtpReport<ConfigFileSuffixXlsx>
 }
 
+export type ConfigCountExportColumn =
+  | 'batchCloseDate'
+  | 'batchCloseTime'
+  | 'batchId'
+  | 'batchOpenDate'
+  | 'batchOpenTime'
+  | 'countedDate'
+  | 'countedQuantity'
+  | 'countedTime'
+  | 'itemNumber'
+  | 'itemStoreroom'
+  | 'scannerKey'
+
 export interface ConfigModuleInventoryScanner {
   scannerIpAddressRegex?: RegExp
 
@@ -56,5 +69,9 @@ export interface ConfigModuleInventoryScanner {
   quantities?: {
     acceptOverages?: boolean
     acceptNegatives?: boolean
+  }
+
+  countExport?: {
+    columns?: ConfigCountExportColumn[]
   }
 }

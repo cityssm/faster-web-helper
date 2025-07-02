@@ -20,5 +20,12 @@ export default {
     'modules.inventoryScanner.fasterItemRequests.ntfy.isEnabled': false,
     'modules.inventoryScanner.fasterItemRequests.ntfy.topic': undefined,
     'modules.inventoryScanner.quantities.acceptNegatives': true,
-    'modules.inventoryScanner.quantities.acceptOverages': true
+    'modules.inventoryScanner.quantities.acceptOverages': true,
+    'modules.inventoryScanner.countExport.columns': [
+        'itemStoreroom',
+        'itemNumber',
+        'countedQuantity',
+        'countedDate',
+        'countedTime'
+    ]
 };

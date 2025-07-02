@@ -1,4 +1,4 @@
-import type { ConfigItemValidationDynamicsGP, ConfigItemValidationFaster } from './types.js';
+import type { ConfigCountExportColumn, ConfigItemValidationDynamicsGP, ConfigItemValidationFaster } from './types.js';
 declare const _default: {
     'modules.inventoryScanner.isEnabled': boolean;
     'modules.inventoryScanner.scannerIpAddressRegex': RegExp;
@@ -22,5 +22,6 @@ declare const _default: {
     'modules.inventoryScanner.fasterItemRequests.ntfy.topic': string | undefined;
     'modules.inventoryScanner.quantities.acceptNegatives': boolean;
     'modules.inventoryScanner.quantities.acceptOverages': boolean;
+    'modules.inventoryScanner.countExport.columns': ConfigCountExportColumn[];
 };
 export default _default;

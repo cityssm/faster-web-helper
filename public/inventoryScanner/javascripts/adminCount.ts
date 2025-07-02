@@ -173,8 +173,8 @@ declare const cityssm: cityssmGlobal
     }
     bulmaJS.confirm({
       contextualColorName: 'warning',
-      message: `Are you sure you want to sync this inventory batch?<br />
-        Note that once a batch is synced, it cannot be reopened.`,
+      message: `<strong>Are you sure you want to sync this inventory batch?</strong><br />
+        Note that once a batch is synced, it cannot be reopened. Export options will become available.`,
       messageIsHtml: true,
       okButton: {
         callbackFunction: doSyncBatch,
@@ -432,17 +432,28 @@ declare const cityssm: cityssmGlobal
       }
     }
 
-    if (currentBatch.recordSync_userName === null) {
+    if (currentBatch.recordSync_timeMillis === null) {
       currentBatchDetailsElement
         .querySelector('#inventory--deleteBatchButton')
         ?.addEventListener('click', confirmDeleteBatch)
     } else {
+
+      // eslint-disable-next-line no-unsanitized/method
       currentBatchDetailsElement.insertAdjacentHTML(
-        'beforeend',
-        `<p>
-          <strong>Synced</strong>
-          </p>`
-      )
+          'beforeend',
+          `<div class="columns is-vcentered">
+            <div class="column">
+              <strong>Synced</strong>
+            </div>
+            <div class="column is-narrow">
+              <a class="button is-primary" href="${moduleUrlPrefix}/count/${currentBatch.batchId}/export"
+                title="Export Counted Items as CSV">
+                <span class="icon"><i class="fas fa-file-arrow-down" aria-hidden="true"></i></span>
+                <span>Export CSV</span>
+              </a>
+            </div>
+          </div>`
+        )
     }
 
     /*

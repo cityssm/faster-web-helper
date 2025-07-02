@@ -104,8 +104,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
         bulmaJS.confirm({
             contextualColorName: 'warning',
-            message: `Are you sure you want to sync this inventory batch?<br />
-        Note that once a batch is synced, it cannot be reopened.`,
+            message: `<strong>Are you sure you want to sync this inventory batch?</strong><br />
+        Note that once a batch is synced, it cannot be reopened. Export options will become available.`,
             messageIsHtml: true,
             okButton: {
                 callbackFunction: doSyncBatch,
@@ -290,14 +290,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     .querySelector('#inventory--reopenBatchButton')) === null || _e === void 0 ? void 0 : _e.addEventListener('click', confirmReopenBatch);
             }
         }
-        if (currentBatch.recordSync_userName === null) {
+        if (currentBatch.recordSync_timeMillis === null) {
             (_f = currentBatchDetailsElement
                 .querySelector('#inventory--deleteBatchButton')) === null || _f === void 0 ? void 0 : _f.addEventListener('click', confirmDeleteBatch);
         }
         else {
-            currentBatchDetailsElement.insertAdjacentHTML('beforeend', `<p>
-          <strong>Synced</strong>
-          </p>`);
+            // eslint-disable-next-line no-unsanitized/method
+            currentBatchDetailsElement.insertAdjacentHTML('beforeend', `<div class="columns is-vcentered">
+            <div class="column">
+              <strong>Synced</strong>
+            </div>
+            <div class="column is-narrow">
+              <a class="button is-primary" href="${moduleUrlPrefix}/count/${currentBatch.batchId}/export"
+                title="Export Counted Items as CSV">
+                <span class="icon"><i class="fas fa-file-arrow-down" aria-hidden="true"></i></span>
+                <span>Export CSV</span>
+              </a>
+            </div>
+          </div>`);
         }
         /*
          * Render Items

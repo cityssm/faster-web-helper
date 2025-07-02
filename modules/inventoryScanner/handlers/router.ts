@@ -7,8 +7,9 @@ import handler_doGetInventoryBatch from './admin-count-post/doGetInventoryBatch.
 import handler_doOpenNewInventoryBatch from './admin-count-post/doOpenNewInventoryBatch.js'
 import handler_reopenInventoryBatch from './admin-count-post/doReopenInventoryBatch.js'
 import handler_doSyncInventoryBatch from './admin-count-post/doSyncInventoryBatch.js'
-import handler_countScanner from './admin-get/countScanner.js'
-import handler_issueScanner from './admin-get/issueScanner.js'
+import handler_countAdmin from './admin-get/countAdmin.js'
+import handler_countExport from './admin-get/countExport.js'
+import handler_issueAdmin from './admin-get/issueAdmin.js'
 import handler_doDeletePendingRecord from './admin-issue-post/doDeletePendingRecord.js'
 import handler_doDeleteSyncErrorRecords from './admin-issue-post/doDeleteSyncErrorRecords.js'
 import handler_doGetInventory from './admin-issue-post/doGetInventory.js'
@@ -27,7 +28,7 @@ export const router = Router()
  * Issue Scanner
  */
 
-router.get('/', handler_issueScanner)
+router.get('/', handler_issueAdmin)
 
 router.post('/doGetItemRequestsCount', handler_doGetItemRequestsCount)
 
@@ -62,7 +63,7 @@ router.post('/doGetInventoryItemDetails', handler_doGetInventoryItemDetails)
  * Count Scanner
  */
 
-router.get('/count', handler_countScanner)
+router.get('/count', handler_countAdmin)
 
 router.post(
   '/doGetAvailableInventoryBatches',
@@ -82,6 +83,8 @@ router.post('/doCloseInventoryBatch', handler_doCloseInventoryBatch)
 router.post('/doReopenInventoryBatch', handler_reopenInventoryBatch)
 
 router.post('/doSyncInventoryBatch', handler_doSyncInventoryBatch)
+
+router.get('/count/:batchId/export', handler_countExport)
 
 /*
  * Export the router
