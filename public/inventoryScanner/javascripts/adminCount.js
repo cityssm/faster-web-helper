@@ -16,7 +16,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
             return;
         }
         function doCloseBatch() {
-            cityssm.postJSON(`${moduleUrlPrefix}/doCloseInventoryBatch`, { batchId: currentBatch === null || currentBatch === void 0 ? void 0 : currentBatch.batchId }, (rawResponseJSON) => {
+            cityssm.postJSON(`${moduleUrlPrefix}/doCloseInventoryBatch`, {
+                batchId: currentBatch === null || currentBatch === void 0 ? void 0 : currentBatch.batchId,
+                itemsToInclude: itemsToIncludeSelectElement.value,
+                itemNumberFilter: itemNumberFilterElement.value,
+                itemNumberFilterType: itemNumberFilterTypeSelectElement.value
+            }, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 bulmaJS.alert({
                     contextualColorName: responseJSON.success ? 'success' : 'danger',
@@ -44,7 +49,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
             return;
         }
         function doReopenBatch() {
-            cityssm.postJSON(`${moduleUrlPrefix}/doReopenInventoryBatch`, { batchId: currentBatch === null || currentBatch === void 0 ? void 0 : currentBatch.batchId }, (rawResponseJSON) => {
+            cityssm.postJSON(`${moduleUrlPrefix}/doReopenInventoryBatch`, {
+                batchId: currentBatch === null || currentBatch === void 0 ? void 0 : currentBatch.batchId,
+                itemsToInclude: itemsToIncludeSelectElement.value,
+                itemNumberFilter: itemNumberFilterElement.value,
+                itemNumberFilterType: itemNumberFilterTypeSelectElement.value
+            }, (rawResponseJSON) => {
                 var _a;
                 const responseJSON = rawResponseJSON;
                 bulmaJS.alert({
@@ -73,7 +83,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
             return;
         }
         function doSyncBatch() {
-            cityssm.postJSON(`${moduleUrlPrefix}/doSyncInventoryBatch`, { batchId: currentBatch === null || currentBatch === void 0 ? void 0 : currentBatch.batchId }, (rawResponseJSON) => {
+            cityssm.postJSON(`${moduleUrlPrefix}/doSyncInventoryBatch`, {
+                batchId: currentBatch === null || currentBatch === void 0 ? void 0 : currentBatch.batchId,
+                itemsToInclude: itemsToIncludeSelectElement.value,
+                itemNumberFilter: itemNumberFilterElement.value,
+                itemNumberFilterType: itemNumberFilterTypeSelectElement.value
+            }, (rawResponseJSON) => {
                 const responseJSON = rawResponseJSON;
                 bulmaJS.alert({
                     contextualColorName: responseJSON.success ? 'success' : 'danger',

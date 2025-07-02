@@ -45,7 +45,14 @@ declare const cityssm: cityssmGlobal
     function doCloseBatch(): void {
       cityssm.postJSON(
         `${moduleUrlPrefix}/doCloseInventoryBatch`,
-        { batchId: currentBatch?.batchId },
+        {
+          batchId: currentBatch?.batchId,
+
+          itemsToInclude: itemsToIncludeSelectElement.value,
+
+          itemNumberFilter: itemNumberFilterElement.value,
+          itemNumberFilterType: itemNumberFilterTypeSelectElement.value
+        },
         (rawResponseJSON) => {
           const responseJSON = rawResponseJSON as {
             success: boolean
@@ -87,7 +94,14 @@ declare const cityssm: cityssmGlobal
     function doReopenBatch(): void {
       cityssm.postJSON(
         `${moduleUrlPrefix}/doReopenInventoryBatch`,
-        { batchId: currentBatch?.batchId },
+        {
+          batchId: currentBatch?.batchId,
+
+          itemsToInclude: itemsToIncludeSelectElement.value,
+
+          itemNumberFilter: itemNumberFilterElement.value,
+          itemNumberFilterType: itemNumberFilterTypeSelectElement.value
+        },
         (rawResponseJSON) => {
           const responseJSON = rawResponseJSON as {
             success: boolean
@@ -129,7 +143,14 @@ declare const cityssm: cityssmGlobal
     function doSyncBatch(): void {
       cityssm.postJSON(
         `${moduleUrlPrefix}/doSyncInventoryBatch`,
-        { batchId: currentBatch?.batchId },
+        {
+          batchId: currentBatch?.batchId,
+
+          itemsToInclude: itemsToIncludeSelectElement.value,
+
+          itemNumberFilter: itemNumberFilterElement.value,
+          itemNumberFilterType: itemNumberFilterTypeSelectElement.value
+        },
         (rawResponseJSON) => {
           const responseJSON = rawResponseJSON as {
             success: boolean
