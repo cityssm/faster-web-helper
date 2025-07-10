@@ -4,12 +4,20 @@ import Debug from 'debug';
 import { DEBUG_NAMESPACE } from '../../debug.config.js';
 import { getConfigProperty } from '../../helpers/config.helpers.js';
 import { hasFasterApi } from '../../helpers/fasterWeb.helpers.js';
+import updateSetting from './database/updateSetting.js';
 import { initializeInventoryScannerDatabase } from './helpers/database.helpers.js';
 import { moduleName } from './helpers/module.helpers.js';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:tasks`);
 export default function initializeInventoryScannerTasks() {
     debug(`Initializing "${moduleName}"...`);
     initializeInventoryScannerDatabase();
+    /*
+     * On Demand Task Resets
+     */
+    updateSetting('syncScannerRecords.isRunning', '0');
+    /*
+     * Child Processes
+     */
     const childProcesses = {};
     /*
      * Item Validation

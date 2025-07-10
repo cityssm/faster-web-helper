@@ -8,6 +8,7 @@ import { getConfigProperty } from '../../helpers/config.helpers.js'
 import { hasFasterApi } from '../../helpers/fasterWeb.helpers.js'
 import type { TaskName } from '../../types/tasks.types.js'
 
+import updateSetting from './database/updateSetting.js'
 import { initializeInventoryScannerDatabase } from './helpers/database.helpers.js'
 import { moduleName } from './helpers/module.helpers.js'
 
@@ -19,6 +20,16 @@ export default function initializeInventoryScannerTasks(): Partial<
   debug(`Initializing "${moduleName}"...`)
 
   initializeInventoryScannerDatabase()
+
+  /*
+   * On Demand Task Resets
+   */
+
+  updateSetting('syncScannerRecords.isRunning', '0')
+
+  /*
+   * Child Processes
+   */
 
   const childProcesses: Partial<Record<TaskName, ChildProcess>> = {}
 
