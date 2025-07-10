@@ -1,5 +1,6 @@
 import camelcase from 'camelcase';
 import Debug from 'debug';
+import exitHook from 'exit-hook';
 import { DEBUG_NAMESPACE } from '../../../../debug.config.js';
 import { getConfigProperty } from '../../../../helpers/config.helpers.js';
 import { sendNtfyMessage } from '../../../../helpers/ntfy.helpers.js';
@@ -73,3 +74,8 @@ else {
         await sendNtfySyncMessage('Sync finished.');
     }
 }
+exitHook(() => {
+    debug(`Exiting "${taskName}"...`);
+    // Ensure the task is marked as not running on exit
+    updateSetting(isRunningSettingName, '0');
+});
