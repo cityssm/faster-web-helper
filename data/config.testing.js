@@ -11,7 +11,9 @@ export const config = {
         authentication: {
             type: 'plainText',
             config: {
-                'testing/testing': 'testing'
+                users: {
+                    'testing/testing': 'testing'
+                }
             }
         }
     },

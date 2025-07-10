@@ -17,7 +17,9 @@ export const config: Config = {
       type: 'plainText',
 
       config: {
-        'testing/testing': 'testing'
+        users: {
+          'testing/testing': 'testing'
+        }
       }
     }
   },
