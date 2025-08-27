@@ -1,7 +1,7 @@
 import camelcase from 'camelcase';
 import Debug from 'debug';
 import exitHook from 'exit-hook';
-import { DEBUG_NAMESPACE } from '../../../../debug.config.js';
+import { DEBUG_ENABLE_NAMESPACES, DEBUG_NAMESPACE } from '../../../../debug.config.js';
 import { getConfigProperty } from '../../../../helpers/config.helpers.js';
 import { sendNtfyMessage } from '../../../../helpers/ntfy.helpers.js';
 import getScannerRecords from '../../database-issue/getScannerRecords.js';
@@ -11,6 +11,9 @@ import { syncScannerRecordsWithFaster } from '../../helpers/issueSync/fasterWeb.
 import { syncScannerRecordsWithWorktech } from '../../helpers/issueSync/worktech.syncHelpers.js';
 import { moduleName } from '../../helpers/module.helpers.js';
 import { sortScannerRecordsByWorkOrderType } from '../../helpers/workOrders.helpers.js';
+if (process.env.NODE_ENV === 'development') {
+    Debug.enable(DEBUG_ENABLE_NAMESPACES);
+}
 export const taskName = 'Sync Scanner Records';
 const debug = Debug(`${DEBUG_NAMESPACE}:${camelcase(moduleName)}:${camelcase(taskName)}`);
 const ntfyTopic = getConfigProperty('modules.inventoryScanner.fasterSync.ntfy.topic');

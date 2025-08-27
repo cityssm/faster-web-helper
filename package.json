@@ -20,6 +20,7 @@
     "healthCheck": "cross-env NODE_ENV=development node ./scripts/healthCheck.js",
     "start": "node ./index.js",
     "start:debug": "cross-env NODE_ENV=development node ./index.js",
+    "task:inventoryScanner:syncScannerRecords": "cross-env NODE_ENV=development node ./modules/inventoryScanner/tasks/onDemand/syncScannerRecords.onDemand.js",
     "test": "cross-env NODE_ENV=development node --test"
   },
   "dependencies": {
