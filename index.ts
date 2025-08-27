@@ -1,10 +1,11 @@
 import cluster, { type Worker } from 'node:cluster'
 import os from 'node:os'
 
-import { nodeSchedule } from '@cityssm/scheduled-task'
+import { nodeSchedule, ScheduledTask } from '@cityssm/scheduled-task'
 import { millisecondsInOneSecond } from '@cityssm/to-millis'
 import Debug from 'debug'
 import { asyncExitHook } from 'exit-hook'
+import { Range } from 'node-schedule'
 
 import { DEBUG_ENABLE_NAMESPACES, DEBUG_NAMESPACE } from './debug.config.js'
 import {
@@ -16,6 +17,22 @@ import type { TaskWorkerMessage } from './types/tasks.types.js'
 
 if (process.env.NODE_ENV === 'development') {
   Debug.enable(DEBUG_ENABLE_NAMESPACES)
+
+  const hourHeartbeatDebug = Debug(`${DEBUG_NAMESPACE}:heartbeat`)
+
+  new ScheduledTask(
+    'Hour Heartbeat',
+    () => {
+      hourHeartbeatDebug(new Date().toISOString())
+    },
+    {
+      schedule: {
+        hour: new Range(0, 23),
+        minute: 0
+      }
+    }
+  ).startTask()
+
 }
 
 const debug = Debug(`${DEBUG_NAMESPACE}:www:${process.pid}`)
