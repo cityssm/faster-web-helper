@@ -125,6 +125,7 @@ export function initializeInventoryScannerDatabase() {
     debug(`Checking for ${databasePath}`);
     let success = false;
     const database = sqlite(databasePath);
+    database.pragma('journal_mode = WAL');
     const row = database
         .prepare(`select name from sqlite_master
         where type = 'table'

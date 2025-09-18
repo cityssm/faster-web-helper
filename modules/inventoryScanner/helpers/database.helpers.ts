@@ -146,6 +146,7 @@ export function initializeInventoryScannerDatabase(): boolean {
   let success = false
 
   const database = sqlite(databasePath)
+  database.pragma('journal_mode = WAL')
 
   const row = database
     .prepare(
