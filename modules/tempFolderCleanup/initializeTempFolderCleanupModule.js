@@ -11,7 +11,7 @@ const debug = Debug(`${DEBUG_NAMESPACE}:${camelCase(moduleName)}`);
 export function initializeTempFolderCleanupTask() {
     debug(`Initializing "${moduleName}"...`);
     const tempFolderCleanupJob = nodeSchedule.scheduleJob(tempFolderCleanupTaskName, getConfigProperty('modules.tempFolderCleanup.schedule'), runTempFolderCleanupTask);
-    const tempFolderCleanupFirstRunDate = new Date(tempFolderCleanupJob.nextInvocation());
+    const tempFolderCleanupFirstRunDate = new Date(tempFolderCleanupJob.nextInvocation()?.getTime() ?? 0);
     debug(`Scheduled to run "${tempFolderCleanupTaskName}" on ${dateToString(tempFolderCleanupFirstRunDate)} at ${dateToTimePeriodString(tempFolderCleanupFirstRunDate)}`);
     /*
      * Set up exit hook

@@ -60,7 +60,7 @@ export async function initializeAutocompleteTasks(
     )
 
     const updateAssetNumbersFirstRunDate = new Date(
-      updateAssetNumbersJob.nextInvocation().getTime()
+      updateAssetNumbersJob.nextInvocation()?.getTime() ?? 0
     )
 
     debug(
@@ -78,7 +78,7 @@ export async function initializeAutocompleteTasks(
     )
 
     const updateItemNumbersFirstRunDate = new Date(
-      updateItemNumbersJob.nextInvocation().getTime()
+      updateItemNumbersJob.nextInvocation()?.getTime() ?? 0
     )
 
     debug(

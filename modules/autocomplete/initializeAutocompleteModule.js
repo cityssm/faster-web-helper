@@ -32,13 +32,13 @@ export async function initializeAutocompleteTasks() {
     let updateAssetNumbersJob;
     if (assetNumbersConfig !== undefined) {
         updateAssetNumbersJob = schedule.scheduleJob(updateAssetNumbersTaskName, assetNumbersConfig.schedule, runUpdateAssetNumbersTask);
-        const updateAssetNumbersFirstRunDate = new Date(updateAssetNumbersJob.nextInvocation().getTime());
+        const updateAssetNumbersFirstRunDate = new Date(updateAssetNumbersJob.nextInvocation()?.getTime() ?? 0);
         debug(`Scheduled to run "${updateAssetNumbersTaskName}" on ${dateToString(updateAssetNumbersFirstRunDate)} at ${dateToTimePeriodString(updateAssetNumbersFirstRunDate)}`);
     }
     let updateItemNumbersJob;
     if (itemNumbersConfig !== undefined) {
         updateItemNumbersJob = schedule.scheduleJob(updateItemNumbersTaskName, itemNumbersConfig.schedule, runUpdateItemNumbersTask);
-        const updateItemNumbersFirstRunDate = new Date(updateItemNumbersJob.nextInvocation().getTime());
+        const updateItemNumbersFirstRunDate = new Date(updateItemNumbersJob.nextInvocation()?.getTime() ?? 0);
         debug(`Scheduled to run "${updateItemNumbersTaskName}" on ${dateToString(updateItemNumbersFirstRunDate)} at ${dateToTimePeriodString(updateItemNumbersFirstRunDate)}`);
     }
     /*
