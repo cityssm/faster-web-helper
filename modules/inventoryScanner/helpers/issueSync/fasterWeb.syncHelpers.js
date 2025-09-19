@@ -23,6 +23,7 @@ const workOrderCache = new Map();
 export function formatRecordIdAsInvoiceNumber(recordId) {
     return recordId.toString().padStart(14, 'X');
 }
+// eslint-disable-next-line complexity
 async function recordToExportDataLine(record) {
     // A - "RDC"
     const dataPieces = ['RDC'];
@@ -41,23 +42,27 @@ async function recordToExportDataLine(record) {
     let scanDate = dateIntegerToDate(record.scanDate);
     // Backdate the scan date to the repair date if available
     if (record.itemNumberPrefix !== '' && record.repairId !== null) {
+        const workOrderValidationJson = getWorkOrderValidationJsonData(record.workOrderNumber, record.workOrderType, record.repairId);
+        if (workOrderValidationJson !== undefined &&
+            Object.keys(workOrderValidationJson).length > 0) {
+            scanDate = new Date(workOrderValidationJson.createdDate);
+        }
         if (hasFasterUnofficialApi) {
             const fasterApi = new FasterUnofficialAPI(fasterApiConfig.tenantOrBaseUrl, fasterApiConfig.appUserName ?? '', fasterApiConfig.appPassword ?? '');
-            const workOrder = workOrderCache.has(record.workOrderNumber)
-                ? workOrderCache.get(record.workOrderNumber)
-                : await fasterApi.getWorkOrder(Number.parseInt(record.workOrderNumber, 10));
-            if (workOrder !== undefined) {
-                workOrderCache.set(record.workOrderNumber, workOrder);
-                if (workOrder.dateTimeOut !== undefined) {
-                    scanDate = workOrder.dateTimeIn;
+            try {
+                const workOrder = workOrderCache.has(record.workOrderNumber)
+                    ? workOrderCache.get(record.workOrderNumber)
+                    : await fasterApi.getWorkOrder(Number.parseInt(record.workOrderNumber, 10));
+                if (workOrder !== undefined) {
+                    workOrderCache.set(record.workOrderNumber, workOrder);
+                    if (workOrder.dateTimeOut !== undefined &&
+                        scanDate.getTime() < workOrder.dateTimeOut.getTime()) {
+                        scanDate = workOrder.dateTimeIn;
+                    }
                 }
             }
-        }
-        else {
-            const workOrderValidationJson = getWorkOrderValidationJsonData(record.workOrderNumber, record.workOrderType, record.repairId);
-            if (workOrderValidationJson !== undefined &&
-                Object.keys(workOrderValidationJson).length > 0) {
-                scanDate = new Date(workOrderValidationJson.createdDate);
+            catch {
+                debug('Error communicating with FASTER Web.');
             }
         }
     }
