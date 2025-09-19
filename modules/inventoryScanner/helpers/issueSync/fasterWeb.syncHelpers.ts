@@ -111,8 +111,9 @@ async function recordToExportDataLine(
           workOrderCache.set(record.workOrderNumber, workOrder)
 
           if (
-            workOrder.dateTimeOut !== undefined &&
-            scanDate.getTime() < workOrder.dateTimeOut.getTime()
+            scanDate.getTime() < workOrder.dateTimeIn.getTime() ||
+            (workOrder.dateTimeOut !== undefined &&
+              scanDate.getTime() > workOrder.dateTimeOut.getTime())
           ) {
             scanDate = workOrder.dateTimeIn
           }
