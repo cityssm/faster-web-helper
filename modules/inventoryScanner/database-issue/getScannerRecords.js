@@ -1,4 +1,4 @@
-import { dateIntegerToString, timeIntegerToString } from '@cityssm/utils-datetime';
+import { dateIntegerToString, dateStringToInteger, timeIntegerToString } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import { databasePath } from '../helpers/database.helpers.js';
 const defaultOptions = {
@@ -58,6 +58,14 @@ export default function getScannerRecords(filters, userOptions = {}, connectedDa
     if (filters.itemNumberPrefix !== undefined) {
         sqlWhereClause += ' and s.itemNumberPrefix = ?';
         sqlParameters.push(filters.itemNumberPrefix);
+    }
+    if (filters.scanDateStringFrom !== undefined) {
+        sqlWhereClause += ' and s.scanDate >= ?';
+        sqlParameters.push(dateStringToInteger(filters.scanDateStringFrom));
+    }
+    if (filters.scanDateStringTo !== undefined) {
+        sqlWhereClause += ' and s.scanDate <= ?';
+        sqlParameters.push(dateStringToInteger(filters.scanDateStringTo));
     }
     /*
      * Build SQL

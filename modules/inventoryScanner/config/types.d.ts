@@ -12,6 +12,7 @@ export interface ConfigItemValidationFaster {
 }
 export type ConfigCountExportColumn = 'batchCloseDate' | 'batchCloseTime' | 'batchId' | 'batchOpenDate' | 'batchOpenTime' | 'countedDate' | 'countedQuantity' | 'countedTime' | 'itemNumber' | 'itemStoreroom' | 'scannerKey';
 export interface ConfigModuleInventoryScanner {
+    apiIpAddressRegex?: RegExp;
     scannerIpAddressRegex?: RegExp;
     fasterSync?: {
         integrationId?: number;

@@ -33,6 +33,7 @@ export type ConfigCountExportColumn =
   | 'scannerKey'
 
 export interface ConfigModuleInventoryScanner {
+  apiIpAddressRegex?: RegExp
   scannerIpAddressRegex?: RegExp
 
   fasterSync?: {

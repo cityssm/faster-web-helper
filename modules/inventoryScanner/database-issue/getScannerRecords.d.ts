@@ -1,6 +1,7 @@
+import { type DateString } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
 import type { InventoryScannerRecord, WorkOrderType } from '../types.js';
-interface GetScannerRecordsFilters {
+export interface GetScannerRecordsFilters {
     scannerKey?: string;
     isSynced?: boolean;
     isSyncedSuccessfully?: boolean;
@@ -9,6 +10,8 @@ interface GetScannerRecordsFilters {
     hasMissingValidation?: boolean;
     workOrderType?: WorkOrderType;
     itemNumberPrefix?: string;
+    scanDateStringFrom?: DateString;
+    scanDateStringTo?: DateString;
 }
 interface GetScannerRecordsOptions {
     limit: number;

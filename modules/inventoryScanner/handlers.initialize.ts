@@ -3,6 +3,7 @@ import type express from 'express'
 
 import { getConfigProperty } from '../../helpers/config.helpers.js'
 
+import apiRouter from './handlers/router.api.js'
 import router from './handlers/router.js'
 import scannerRouter from './handlers/router.scanner.js'
 
@@ -55,5 +56,31 @@ export default function initializeInventoryScannerAppHandlers(
       })
     },
     scannerRouter
+  )
+
+  /*
+   * Initialize router for api
+   */
+
+  app.use(
+    `${urlPrefix}/api/inventoryScanner`,
+    (request, response, nextFunction) => {
+      const requestIp = request.ip ?? ''
+
+      const requestIpRegex = getConfigProperty(
+        'modules.inventoryScanner.apiIpAddressRegex'
+      )
+
+      if (isLocal(requestIp) || requestIpRegex.test(requestIp)) {
+        nextFunction()
+        return
+      }
+
+      response.json({
+        error: 403,
+        requestIp
+      })
+    },
+    apiRouter
   )
 }

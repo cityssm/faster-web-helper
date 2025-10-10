@@ -7,6 +7,7 @@ import type {
 export default {
   'modules.inventoryScanner.isEnabled': false,
 
+  'modules.inventoryScanner.apiIpAddressRegex': /^$/,
   'modules.inventoryScanner.scannerIpAddressRegex': /^$/,
 
   'modules.inventoryScanner.fasterSync.integrationId': undefined as unknown as

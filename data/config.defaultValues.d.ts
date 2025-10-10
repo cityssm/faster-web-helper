@@ -24,6 +24,7 @@ export declare const configDefaultValues: {
     'modules.integrityChecker.fasterVendors.update.source': string;
     'modules.integrityChecker.fasterVendors.update.vendorCodesToIgnore': string[];
     'modules.inventoryScanner.isEnabled': boolean;
+    'modules.inventoryScanner.apiIpAddressRegex': RegExp;
     'modules.inventoryScanner.scannerIpAddressRegex': RegExp;
     'modules.inventoryScanner.fasterSync.integrationId': number | undefined;
     'modules.inventoryScanner.fasterSync.exportFileNamePrefix': string;

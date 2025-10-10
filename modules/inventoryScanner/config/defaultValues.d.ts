@@ -1,6 +1,7 @@
 import type { ConfigCountExportColumn, ConfigItemValidationDynamicsGP, ConfigItemValidationFaster } from './types.js';
 declare const _default: {
     'modules.inventoryScanner.isEnabled': boolean;
+    'modules.inventoryScanner.apiIpAddressRegex': RegExp;
     'modules.inventoryScanner.scannerIpAddressRegex': RegExp;
     'modules.inventoryScanner.fasterSync.integrationId': number | undefined;
     'modules.inventoryScanner.fasterSync.exportFileNamePrefix': string;

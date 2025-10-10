@@ -1,5 +1,7 @@
 import {
+  type DateString,
   dateIntegerToString,
+  dateStringToInteger,
   timeIntegerToString
 } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
@@ -7,7 +9,7 @@ import sqlite from 'better-sqlite3'
 import { databasePath } from '../helpers/database.helpers.js'
 import type { InventoryScannerRecord, WorkOrderType } from '../types.js'
 
-interface GetScannerRecordsFilters {
+export interface GetScannerRecordsFilters {
   scannerKey?: string
 
   isSynced?: boolean
@@ -18,6 +20,9 @@ interface GetScannerRecordsFilters {
   hasMissingValidation?: boolean
   workOrderType?: WorkOrderType
   itemNumberPrefix?: string
+
+  scanDateStringFrom?: DateString
+  scanDateStringTo?: DateString
 }
 
 interface GetScannerRecordsOptions {
@@ -96,6 +101,16 @@ export default function getScannerRecords(
   if (filters.itemNumberPrefix !== undefined) {
     sqlWhereClause += ' and s.itemNumberPrefix = ?'
     sqlParameters.push(filters.itemNumberPrefix)
+  }
+
+  if (filters.scanDateStringFrom !== undefined) {
+    sqlWhereClause += ' and s.scanDate >= ?'
+    sqlParameters.push(dateStringToInteger(filters.scanDateStringFrom))
+  }
+
+  if (filters.scanDateStringTo !== undefined) {
+    sqlWhereClause += ' and s.scanDate <= ?'
+    sqlParameters.push(dateStringToInteger(filters.scanDateStringTo))
   }
 
   /*
