@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 (() => {
     var _a;
     const includeFilterElement = document.querySelector('#includeFilter--integrityChecker');
