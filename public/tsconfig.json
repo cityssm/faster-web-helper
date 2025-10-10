@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "module": "CommonJS",
+    "target": "es6",
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "isolatedModules": false,
     "declaration": true,
     "noImplicitAny": false,

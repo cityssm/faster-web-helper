@@ -1,7 +1,8 @@
 import eslintConstants from '@cityssm/faster-constants/other/eslint'
-import { configWebApp, cspellWords, tseslint } from 'eslint-config-cityssm'
+import configWebApp, { type ConfigObject, defineConfig } from 'eslint-config-cityssm'
+import { cspellWords } from 'eslint-config-cityssm/exports'
 
-export const config = tseslint.config(configWebApp, {
+export const config: ConfigObject[] = defineConfig(configWebApp, {
   files: ['**/*.ts'],
   rules: {
     '@cspell/spellchecker': [
