@@ -53,7 +53,7 @@
     "country-and-province": "^2.0.0",
     "debug": "^4.4.3",
     "ejs": "^3.1.10",
-    "exit-hook": "^4.0.0",
+    "exit-hook": "^5.0.0",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "jsbarcode": "^3.12.1",
