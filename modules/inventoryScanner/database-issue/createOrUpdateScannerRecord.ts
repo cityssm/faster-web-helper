@@ -8,12 +8,21 @@ import {
 } from '@cityssm/utils-datetime'
 import sqlite from 'better-sqlite3'
 
+import { getConfigProperty } from '../../../helpers/config.helpers.js'
 import { databasePath } from '../helpers/database.helpers.js'
 import { scannerKeyToUserName } from '../helpers/scanner.helpers.js'
 import { getWorkOrderTypeFromWorkOrderNumber } from '../helpers/workOrders.helpers.js'
 import type { WorkOrderType } from '../types.js'
 
 import { getItemValidationRecordsByItemNumber } from './getItemValidationRecords.js'
+
+const secondaryWorkOrderNumber = getConfigProperty(
+  'modules.inventoryScanner.fasterSync.sendCopyToWorktech.worktechWorkOrderNumber'
+)
+const secondarySyncIsEnabled =
+  getConfigProperty(
+    'modules.inventoryScanner.fasterSync.sendCopyToWorktech.isEnabled'
+  ) && secondaryWorkOrderNumber !== ''
 
 export type CreateScannerRecordForm = {
   scannerKey: string
@@ -91,7 +100,7 @@ export default function createOrUpdateScannerRecord(
 
   let quantity =
     typeof scannerRecord.quantity === 'string'
-      ? Number.parseInt(scannerRecord.quantity)
+      ? Number.parseInt(scannerRecord.quantity, 10)
       : scannerRecord.quantity
 
   if (
@@ -178,9 +187,10 @@ export default function createOrUpdateScannerRecord(
           technicianId, repairId,
           itemStoreroom, itemNumberPrefix, itemNumber, itemDescription,
           quantity, unitPrice,
+          secondaryWorkOrderNumber, secondaryWorkOrderType,
           recordCreate_userName, recordCreate_timeMillis,
           recordUpdate_userName, recordUpdate_timeMillis)
-          values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+          values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       )
       .run(
         scannerRecord.scannerKey,
@@ -196,6 +206,12 @@ export default function createOrUpdateScannerRecord(
         itemDescription,
         quantity,
         unitPrice,
+
+        workOrderType === 'faster' && secondarySyncIsEnabled
+          ? secondaryWorkOrderNumber
+          : '',
+        workOrderType === 'faster' && secondarySyncIsEnabled ? 'worktech' : '',
+
         userName,
         rightNow.getTime(),
         userName,

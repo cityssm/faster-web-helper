@@ -1,9 +1,12 @@
 import { dateStringToInteger, dateToInteger, dateToTimeInteger, timeStringToInteger } from '@cityssm/utils-datetime';
 import sqlite from 'better-sqlite3';
+import { getConfigProperty } from '../../../helpers/config.helpers.js';
 import { databasePath } from '../helpers/database.helpers.js';
 import { scannerKeyToUserName } from '../helpers/scanner.helpers.js';
 import { getWorkOrderTypeFromWorkOrderNumber } from '../helpers/workOrders.helpers.js';
 import { getItemValidationRecordsByItemNumber } from './getItemValidationRecords.js';
+const secondaryWorkOrderNumber = getConfigProperty('modules.inventoryScanner.fasterSync.sendCopyToWorktech.worktechWorkOrderNumber');
+const secondarySyncIsEnabled = getConfigProperty('modules.inventoryScanner.fasterSync.sendCopyToWorktech.isEnabled') && secondaryWorkOrderNumber !== '';
 // eslint-disable-next-line complexity
 export default function createOrUpdateScannerRecord(scannerRecord) {
     const rightNow = new Date();
@@ -28,7 +31,7 @@ export default function createOrUpdateScannerRecord(scannerRecord) {
         }
     }
     let quantity = typeof scannerRecord.quantity === 'string'
-        ? Number.parseInt(scannerRecord.quantity)
+        ? Number.parseInt(scannerRecord.quantity, 10)
         : scannerRecord.quantity;
     if (scannerRecord.quantityMultiplier === '-1' ||
         scannerRecord.quantityMultiplier === -1) {
@@ -89,10 +92,13 @@ export default function createOrUpdateScannerRecord(scannerRecord) {
           technicianId, repairId,
           itemStoreroom, itemNumberPrefix, itemNumber, itemDescription,
           quantity, unitPrice,
+          secondaryWorkOrderNumber, secondaryWorkOrderType,
           recordCreate_userName, recordCreate_timeMillis,
           recordUpdate_userName, recordUpdate_timeMillis)
-          values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-            .run(scannerRecord.scannerKey, scanDate, scanTime, scannerRecord.workOrderNumber, workOrderType, scannerRecord.technicianId, scannerRecord.repairId === '' ? undefined : scannerRecord.repairId, itemStoreroom, itemNumberPrefix, itemNumber, itemDescription, quantity, unitPrice, userName, rightNow.getTime(), userName, rightNow.getTime());
+          values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+            .run(scannerRecord.scannerKey, scanDate, scanTime, scannerRecord.workOrderNumber, workOrderType, scannerRecord.technicianId, scannerRecord.repairId === '' ? undefined : scannerRecord.repairId, itemStoreroom, itemNumberPrefix, itemNumber, itemDescription, quantity, unitPrice, workOrderType === 'faster' && secondarySyncIsEnabled
+            ? secondaryWorkOrderNumber
+            : '', workOrderType === 'faster' && secondarySyncIsEnabled ? 'worktech' : '', userName, rightNow.getTime(), userName, rightNow.getTime());
     }
     else {
         const newQuantity = existingRecord.quantity + quantity;

@@ -256,6 +256,7 @@ export async function syncScannerRecordsWithFaster(
       errorRecordIds.add(record.recordId)
 
       updateScannerRecordSyncFields({
+        workOrderType: 'faster',
         recordId: record.recordId,
         isSuccessful: false,
         message: (error as Error).message
@@ -280,6 +281,7 @@ export async function syncScannerRecordsWithFaster(
     await fs.writeFile(exportFilePath, exportFileData)
   } catch {
     updateMultipleScannerRecords(records, errorRecordIds, {
+      workOrderType: 'faster',
       isSuccessful: false,
       message: `Error writing file to temp folder: ${exportFilePath}`
     })
@@ -299,6 +301,7 @@ export async function syncScannerRecordsWithFaster(
     await uploadFile(targetFtpPath, exportFilePath)
   } catch {
     updateMultipleScannerRecords(records, errorRecordIds, {
+      workOrderType: 'faster',
       isSuccessful: false,
       message: `Error uploading file to FTP path: ${targetFtpPath}`
     })
@@ -362,6 +365,7 @@ export async function syncScannerRecordsWithFaster(
   }
 
   updateMultipleScannerRecords(records, errorRecordIds, {
+    workOrderType: 'faster',
     isSuccessful: true,
     message: 'File successfully uploaded to FTP.',
     syncedRecordId: exportFileName

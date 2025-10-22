@@ -6,6 +6,7 @@ export function updateMultipleScannerRecords(records, recordIdsToSkip, fields) {
         }
         updateScannerRecordSyncFields({
             recordId: record.recordId,
+            workOrderType: fields.workOrderType,
             isSuccessful: fields.isSuccessful,
             syncedRecordId: fields.syncedRecordId,
             message: fields.message

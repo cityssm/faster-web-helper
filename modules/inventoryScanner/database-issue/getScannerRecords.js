@@ -82,8 +82,15 @@ export default function getScannerRecords(filters, userOptions = {}, connectedDa
         else s.itemDescription
         end as itemDescription,
       s.quantity, s.unitPrice, i.availableQuantity,
-      s.recordSync_userName, s.recordSync_timeMillis, s.recordSync_isSuccessful,
-      s.recordSync_syncedRecordId, s.recordSync_message
+
+      s.recordSync_userName, s.recordSync_timeMillis,
+      s.recordSync_isSuccessful,
+      s.recordSync_syncedRecordId, s.recordSync_message,
+
+      s.secondaryWorkOrderNumber, s.secondaryWorkOrderType,
+      s.secondaryRecordSync_userName, s.secondaryRecordSync_timeMillis,
+      s.secondaryRecordSync_isSuccessful, s.secondaryRecordSync_syncedRecordId,
+      s.secondaryRecordSync_message
     from InventoryScannerRecords s
     left join ItemValidationRecords i
       on s.itemStoreroom = i.itemStoreroom

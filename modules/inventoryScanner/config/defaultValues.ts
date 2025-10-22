@@ -25,6 +25,10 @@ export default {
     | string
     | undefined,
 
+  'modules.inventoryScanner.fasterSync.sendCopyToWorktech.isEnabled': false,
+  'modules.inventoryScanner.fasterSync.sendCopyToWorktech.worktechWorkOrderNumber':
+    '',
+
   'modules.inventoryScanner.workOrders.acceptNotValidated': true,
   'modules.inventoryScanner.workOrders.fasterRegex': /^\d+$/,
 

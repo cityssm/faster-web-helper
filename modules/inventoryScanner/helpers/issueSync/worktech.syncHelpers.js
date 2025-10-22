@@ -22,18 +22,33 @@ export async function syncScannerRecordsWithWorktech(records) {
         entries: []
     };
     for (const record of records) {
-        batch.entries.push({
-            entryDate: record.scanDateString,
-            workOrderNumber: record.workOrderNumber,
-            itemNumber: record.itemNumber,
-            quantity: record.quantity
-        });
+        if (record.workOrderType === 'worktech') {
+            batch.entries.push({
+                entryDate: record.scanDateString,
+                workOrderNumber: record.workOrderNumber,
+                itemNumber: record.itemNumber,
+                quantity: record.quantity
+            });
+        }
+        else if (record.secondaryWorkOrderType === 'worktech' &&
+            record.secondaryWorkOrderNumber !== null &&
+            record.secondaryWorkOrderNumber !== '' &&
+            record.secondaryRecordSync_timeMillis !== null &&
+            record.secondaryRecordSync_isSuccessful === null) {
+            batch.entries.push({
+                entryDate: record.scanDateString,
+                workOrderNumber: record.secondaryWorkOrderNumber,
+                itemNumber: record.itemNumber,
+                quantity: record.quantity
+            });
+        }
     }
     if (batch.entries.length > 0) {
         const worktech = new WorkTechAPI(worktechConfig);
         try {
             const batchId = await worktech.createStockTransactionBatch(batch);
             updateMultipleScannerRecords(records, new Set(), {
+                workOrderType: 'worktech',
                 isSuccessful: true,
                 message: 'Stock transactions batch created successfully.',
                 syncedRecordId: batchId.toString()
@@ -41,6 +56,7 @@ export async function syncScannerRecordsWithWorktech(records) {
         }
         catch {
             updateMultipleScannerRecords(records, new Set(), {
+                workOrderType: 'worktech',
                 isSuccessful: false,
                 message: 'Error creating stock transactions batch.'
             });

@@ -57,6 +57,15 @@ const createStatements = [
     recordSync_syncedRecordId varchar(50),
     recordSync_message varchar(500),
 
+    secondaryWorkOrderNumber varchar(15) not null,
+    secondaryWorkOrderType varchar(10) not null default 'worktech',
+
+    secondaryRecordSync_userName varchar(20),
+    secondaryRecordSync_timeMillis integer,
+    secondaryRecordSync_isSuccessful bit,
+    secondaryRecordSync_syncedRecordId varchar(50),
+    secondaryRecordSync_message varchar(500),
+
     recordCreate_userName varchar(20) not null default '',
     recordCreate_timeMillis integer not null,
     recordUpdate_userName varchar(20) not null default '',

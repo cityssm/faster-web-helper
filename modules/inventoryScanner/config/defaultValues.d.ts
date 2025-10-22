@@ -9,6 +9,8 @@ declare const _default: {
     'modules.inventoryScanner.fasterSync.defaultTechnicianId': number;
     'modules.inventoryScanner.fasterSync.ntfy.isEnabled': boolean;
     'modules.inventoryScanner.fasterSync.ntfy.topic': string | undefined;
+    'modules.inventoryScanner.fasterSync.sendCopyToWorktech.isEnabled': boolean;
+    'modules.inventoryScanner.fasterSync.sendCopyToWorktech.worktechWorkOrderNumber': string;
     'modules.inventoryScanner.workOrders.acceptNotValidated': boolean;
     'modules.inventoryScanner.workOrders.fasterRegex': RegExp;
     'modules.inventoryScanner.workOrders.acceptWorkTech': boolean;

@@ -20,6 +20,10 @@ export interface ConfigModuleInventoryScanner {
         ftpPath?: string;
         defaultTechnicianId?: number;
         ntfy?: ConfigNtfyTopic;
+        sendCopyToWorktech?: {
+            isEnabled?: boolean;
+            worktechWorkOrderNumber?: string;
+        };
     };
     workOrders?: {
         acceptNotValidated?: boolean;

@@ -68,7 +68,7 @@ async function downloadFasterMessageLog(): Promise<void> {
   const latestLogEntry = getLatestSyncErrorLog('faster', database)
 
   const lastRecordedLogId =
-    latestLogEntry === undefined ? 0 : Number.parseInt(latestLogEntry.logId)
+    latestLogEntry === undefined ? 0 : Number.parseInt(latestLogEntry.logId, 10)
 
   /*
    * Loop through the message log errors
@@ -151,6 +151,7 @@ async function downloadFasterMessageLog(): Promise<void> {
       if (matchingScannerRecord !== undefined) {
         updateScannerRecordSyncFields(
           {
+            workOrderType: 'faster',
             recordId: matchingScannerRecord.recordId,
             isSuccessful: false,
             syncedRecordId:

@@ -43,6 +43,13 @@ export interface InventoryScannerRecord {
     recordSync_isSuccessful: boolean | null;
     recordSync_syncedRecordId: string | null;
     recordSync_message: string | null;
+    secondaryWorkOrderNumber: string | null;
+    secondaryWorkOrderType: WorkOrderType | null;
+    secondaryRecordSync_userName: string | null;
+    secondaryRecordSync_timeMillis: number | null;
+    secondaryRecordSync_isSuccessful: boolean | null;
+    secondaryRecordSync_syncedRecordId: string | null;
+    secondaryRecordSync_message: string | null;
 }
 export interface InventoryScannerSyncErrorLogRecord {
     recordId: number;

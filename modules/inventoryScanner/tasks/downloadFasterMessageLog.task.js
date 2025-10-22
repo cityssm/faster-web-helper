@@ -44,7 +44,7 @@ async function downloadFasterMessageLog() {
      */
     const database = sqlite(databasePath);
     const latestLogEntry = getLatestSyncErrorLog('faster', database);
-    const lastRecordedLogId = latestLogEntry === undefined ? 0 : Number.parseInt(latestLogEntry.logId);
+    const lastRecordedLogId = latestLogEntry === undefined ? 0 : Number.parseInt(latestLogEntry.logId, 10);
     /*
      * Loop through the message log errors
      */
@@ -107,6 +107,7 @@ async function downloadFasterMessageLog() {
             errorsRecords += 1;
             if (matchingScannerRecord !== undefined) {
                 updateScannerRecordSyncFields({
+                    workOrderType: 'faster',
                     recordId: matchingScannerRecord.recordId,
                     isSuccessful: false,
                     syncedRecordId: matchingScannerRecord.recordSync_syncedRecordId ??

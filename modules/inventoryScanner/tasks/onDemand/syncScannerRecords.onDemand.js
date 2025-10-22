@@ -32,6 +32,12 @@ async function syncScannerRecordsTask() {
         isMarkedForSync: true
     });
     const recordsToSync = sortScannerRecordsByWorkOrderType(recordsToSyncList);
+    if (getConfigProperty('modules.inventoryScanner.fasterSync.sendCopyToWorktech.isEnabled')) {
+        recordsToSync.worktech = [
+            ...(recordsToSync.worktech ?? []),
+            ...(recordsToSync.faster ?? [])
+        ];
+    }
     for (const [workOrderType, records] of Object.entries(recordsToSync)) {
         switch (workOrderType) {
             case 'faster': {

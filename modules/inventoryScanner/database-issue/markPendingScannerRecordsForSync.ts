@@ -17,6 +17,18 @@ export function markPendingScannerRecordsForSync(
     )
     .run(updateUser.userName, Date.now())
 
+  database
+    .prepare(
+      `update InventoryScannerRecords
+        set secondaryRecordSync_userName = ?,
+          secondaryRecordSync_timeMillis = ?
+        where recordDelete_timeMillis is null
+          and secondaryRecordSync_timeMillis is null
+          and secondaryWorkOrderType is not null
+          and secondaryWorkOrderNumber is not null`
+    )
+    .run(updateUser.userName, Date.now())
+
   database.close()
 
   return result.changes

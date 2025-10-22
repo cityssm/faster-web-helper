@@ -43,6 +43,11 @@ export interface ConfigModuleInventoryScanner {
     defaultTechnicianId?: number
 
     ntfy?: ConfigNtfyTopic
+
+    sendCopyToWorktech?: {
+      isEnabled?: boolean
+      worktechWorkOrderNumber?: string
+    }
   }
 
   // worktechSync?: {}
