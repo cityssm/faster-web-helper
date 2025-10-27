@@ -70,7 +70,7 @@
     "@types/node-schedule": "^2.1.8",
     "@types/node-windows": "^0.1.6",
     "@types/papaparse": "^5.3.16",
-    "@types/session-file-store": "^1.2.5",
+    "@types/session-file-store": "^1.2.6",
     "cypress": "^15.5.0",
     "cypress-axe": "^1.7.0",
     "eslint-config-cityssm": "^33.2.1",
