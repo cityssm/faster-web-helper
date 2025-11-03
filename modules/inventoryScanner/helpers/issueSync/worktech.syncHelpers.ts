@@ -71,11 +71,11 @@ export async function syncScannerRecordsWithWorktech(
         message: 'Stock transactions batch created successfully.',
         syncedRecordId: batchId.toString()
       })
-    } catch {
+    } catch (error) {
       updateMultipleScannerRecords(records, new Set(), {
         workOrderType: 'worktech',
         isSuccessful: false,
-        message: 'Error creating stock transactions batch.'
+        message: `Error creating stock transactions batch: ${error.message}`
       })
     }
   }
