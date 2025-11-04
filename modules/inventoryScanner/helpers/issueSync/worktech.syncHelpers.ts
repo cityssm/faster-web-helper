@@ -47,6 +47,7 @@ export async function syncScannerRecordsWithWorktech(
       record.secondaryWorkOrderType === 'worktech' &&
       record.secondaryWorkOrderNumber !== null &&
       record.secondaryWorkOrderNumber !== '' &&
+      record.itemNumberPrefix === '' &&
       record.secondaryRecordSync_timeMillis !== null &&
       record.secondaryRecordSync_isSuccessful === null
     ) {
