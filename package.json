@@ -54,7 +54,7 @@
     "debug": "^4.4.3",
     "ejs": "^3.1.10",
     "exit-hook": "^5.0.0",
-    "express": "^5.1.0",
+    "express": "^5.2.0",
     "express-session": "^1.18.2",
     "jsbarcode": "^3.12.1",
     "papaparse": "^5.5.3",
