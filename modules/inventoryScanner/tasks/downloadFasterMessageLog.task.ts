@@ -137,15 +137,21 @@ async function downloadFasterMessageLog(): Promise<void> {
         )
       })
 
-      createSyncErrorLogRecord({
-        workOrderType: 'faster',
-        logId: iiuError.messageId.toString(),
-        logDate: new Date(iiuError.messageDateTime),
-        logMessage: iiuError.message,
-        scannerSyncedRecordId: iiuError.fileName,
-        scannerRecordId: matchingScannerRecord?.recordId,
-        recordCreate_userName: taskUser
-      })
+      try {
+        createSyncErrorLogRecord({
+          workOrderType: 'faster',
+          logId: iiuError.messageId.toString(),
+          logDate: new Date(iiuError.messageDateTime),
+          logMessage: iiuError.message,
+          scannerSyncedRecordId: iiuError.fileName,
+          scannerRecordId: matchingScannerRecord?.recordId,
+          recordCreate_userName: taskUser
+        })
+      } catch {
+        debug(
+          `Failed to create sync error log record for message ID ${iiuError.messageId}.`
+        )
+      }
 
       errorsRecords += 1
 

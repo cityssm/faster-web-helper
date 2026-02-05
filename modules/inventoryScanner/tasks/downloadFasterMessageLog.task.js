@@ -95,15 +95,20 @@ async function downloadFasterMessageLog() {
                     // Work Order Number - Last item, no following comma
                     iiuError.message.includes(`,${possibleMatch.workOrderNumber}`));
             });
-            createSyncErrorLogRecord({
-                workOrderType: 'faster',
-                logId: iiuError.messageId.toString(),
-                logDate: new Date(iiuError.messageDateTime),
-                logMessage: iiuError.message,
-                scannerSyncedRecordId: iiuError.fileName,
-                scannerRecordId: matchingScannerRecord?.recordId,
-                recordCreate_userName: taskUser
-            });
+            try {
+                createSyncErrorLogRecord({
+                    workOrderType: 'faster',
+                    logId: iiuError.messageId.toString(),
+                    logDate: new Date(iiuError.messageDateTime),
+                    logMessage: iiuError.message,
+                    scannerSyncedRecordId: iiuError.fileName,
+                    scannerRecordId: matchingScannerRecord?.recordId,
+                    recordCreate_userName: taskUser
+                });
+            }
+            catch {
+                debug(`Failed to create sync error log record for message ID ${iiuError.messageId}.`);
+            }
             errorsRecords += 1;
             if (matchingScannerRecord !== undefined) {
                 updateScannerRecordSyncFields({
