@@ -42,20 +42,21 @@ async function downloadFasterMessageLog(): Promise<void> {
   )
 
   const today = new Date()
-  const sevenDaysAgo = new Date()
-  sevenDaysAgo.setDate(today.getDate() - 7)
 
-  const messageLogErrors = await fasterApi.getMessageLog(sevenDaysAgo, today)
+  const windowDate = new Date()
+  windowDate.setMonth(windowDate.getMonth() - 4)
+
+  const messageLogErrors = await fasterApi.getMessageLog(windowDate, today)
 
   if (messageLogErrors.length === 0) {
-    debug('No message log errors in the past seven days.')
+    debug('No message log errors in the past four months.')
     return
   }
 
   const iiuErrors = extractInventoryImportErrors(messageLogErrors)
 
   if (iiuErrors.length === 0) {
-    debug('No IIU log errors identified in the past seven days.')
+    debug('No IIU log errors identified in the past four months.')
     return
   }
 
@@ -179,6 +180,8 @@ const scheduledTask = new ScheduledTask(taskName, downloadFasterMessageLog, {
   },
   startTask: true
 })
+
+await scheduledTask.runTask()
 
 /*
  * Listen for messages
