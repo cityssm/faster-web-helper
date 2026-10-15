@@ -1,4 +1,4 @@
-// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
+/* eslint-disable runtime-cleanup/no-unmanaged-event-listeners */
 /* eslint-disable max-lines */
 
 import type { BulmaJS } from '@cityssm/bulma-js/types.js'
@@ -12,7 +12,8 @@ declare const exports: {
 
 declare const bulmaJS: BulmaJS
 declare const cityssm: cityssmGlobal
-;(() => {
+
+;{
   const moduleUrlPrefix = `${document.querySelector('main')?.dataset.urlPrefix ?? ''}/modules/inventoryScanner`
 
   let currentBatch: InventoryBatch | undefined = exports.openBatch
@@ -304,7 +305,7 @@ declare const cityssm: cityssmGlobal
     return false
   }
 
-  function highlightUpdatedRow(keyboardEvent: KeyboardEvent): void {
+  function highlightUpdatedRow(keyboardEvent: Event): void {
     const targetElement = keyboardEvent.currentTarget as HTMLInputElement
     targetElement.closest('tr')?.classList.add('is-warning')
 
@@ -542,15 +543,15 @@ declare const cityssm: cityssmGlobal
         )
 
         rowElement
-          .querySelector('.is-update-form')
+          .querySelector<HTMLFormElement>('.is-update-form')
           ?.addEventListener('submit', updateCountedQuantity)
 
         rowElement
-          .querySelector('.is-delete-form')
+          .querySelector<HTMLFormElement>('.is-delete-form')
           ?.addEventListener('submit', updateCountedQuantity)
 
         rowElement
-          .querySelector('.is-update-form input[name="countedQuantity"]')
+          .querySelector<HTMLInputElement>('.is-update-form input[name="countedQuantity"]')
           ?.addEventListener('change', highlightUpdatedRow)
       } else {
         rowElement.insertAdjacentHTML(
@@ -714,8 +715,8 @@ declare const cityssm: cityssmGlobal
                   </span>`
               }
 
-              // eslint-disable-next-line no-unsanitized/property
-              panelBlockElement.innerHTML = `<div class="columns is-mobile">
+              // eslint-disable-next-line browser-security/no-innerhtml
+              panelBlockElement.innerHTML = /* html */ `<div class="columns is-mobile">
                   <div class="column is-narrow">
                     <i class="fas fa-list-check" aria-hidden="true"></i>
                   </div>
@@ -731,7 +732,7 @@ declare const cityssm: cityssmGlobal
                   <div class="column is-narrow has-text-right">
                     <div class="tags">
                       <span class="tag is-light" title="Item Count">
-                        ${(inventoryBatch.batchItemCount ?? 0).toLocaleString()}
+                        ${cityssm.escapeHTML((inventoryBatch.batchItemCount ?? 0).toLocaleString())}
                       </span>
                       ${statusTagHtml}
                     </div>
@@ -784,4 +785,4 @@ declare const cityssm: cityssmGlobal
   }
 
   currentBatchButtonElement.addEventListener('click', openSelectBatchModal)
-})()
+}

@@ -37,7 +37,9 @@ export interface ConfigIntegrityCheckerItemValidationDynamicsGP {
 export interface ConfigIntegrityCheckerVendorUpdateDynamicsGP {
   source: 'dynamicsGp'
 
-  /** FASTER vendor codes to ignore */
+  /**
+   * FASTER vendor codes to ignore
+   */
   vendorCodesToIgnore?: string[]
 }
 
