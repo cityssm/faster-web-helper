@@ -24,11 +24,25 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: 'npm'
 
-      - name: Install Application
-        run: npm ci
-
       - name: Install Global Dependencies
         run: npm install -g c8 cross-env cypress@16
+
+      - name: Install Application (CI)
+        id: installCi
+        continue-on-error: true
+        run: npm ci
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: 'true'
+
+      - name: Install Application (Install)
+        if: steps.installCi.outcome == 'failure'
+        run: npm install
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: 'true'
+
+      - name: Install Puppeteer Browser
+        continue-on-error: true
+        run: node node_modules/puppeteer/install.mjs
 
       - name: Copy Test Config
         run: cp ./data/config.testing.js ./data/config.js
