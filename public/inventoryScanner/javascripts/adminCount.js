@@ -1,7 +1,7 @@
-// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
+/* eslint-disable runtime-cleanup/no-unmanaged-event-listeners */
 /* eslint-disable max-lines */
-(() => {
-    var _a, _b;
+var _a, _b;
+{
     const moduleUrlPrefix = `${(_b = (_a = document.querySelector('main')) === null || _a === void 0 ? void 0 : _a.dataset.urlPrefix) !== null && _b !== void 0 ? _b : ''}/modules/inventoryScanner`;
     let currentBatch = exports.openBatch;
     const currentBatchButtonElement = document.querySelector('#inventory--currentBatch');
@@ -486,8 +486,8 @@
                   <span>Synced</span>
                   </span>`;
                         }
-                        // eslint-disable-next-line no-unsanitized/property
-                        panelBlockElement.innerHTML = `<div class="columns is-mobile">
+                        // eslint-disable-next-line browser-security/no-innerhtml
+                        panelBlockElement.innerHTML = /* html */ `<div class="columns is-mobile">
                   <div class="column is-narrow">
                     <i class="fas fa-list-check" aria-hidden="true"></i>
                   </div>
@@ -503,7 +503,7 @@
                   <div class="column is-narrow has-text-right">
                     <div class="tags">
                       <span class="tag is-light" title="Item Count">
-                        ${((_a = inventoryBatch.batchItemCount) !== null && _a !== void 0 ? _a : 0).toLocaleString()}
+                        ${cityssm.escapeHTML(((_a = inventoryBatch.batchItemCount) !== null && _a !== void 0 ? _a : 0).toLocaleString())}
                       </span>
                       ${statusTagHtml}
                     </div>
@@ -543,4 +543,4 @@
         });
     }
     currentBatchButtonElement.addEventListener('click', openSelectBatchModal);
-})();
+}
