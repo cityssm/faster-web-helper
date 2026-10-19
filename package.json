@@ -50,7 +50,7 @@
     "@cityssm/faster-url-builder": "^1.1.0",
     "@cityssm/has-package": "^1.0.0",
     "@cityssm/is-private-network-address": "^1.0.0",
-    "@cityssm/is-sault-ste-marie": "^0.4.0",
+    "@cityssm/is-sault-ste-marie": "^1.0.0",
     "@cityssm/mssql-multi-pool": "^5.2.0",
     "@cityssm/ntfy-publish": "^1.1.1",
     "@cityssm/scheduled-task": "^0.3.0",
